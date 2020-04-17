@@ -1,0 +1,27 @@
+#====
+language.code: en-US
+language.name: English
+language.region: United States
+version:  1
+#====
+
+biome.ocean:  Ocean
+biome.deep_ocean: Deep Ocean
+biome.warm_ocean: Warm Ocean
+biome.cold_ocean: Cold Ocean
+biome.beach: Beach
+biome.tundra: Tundra
+biome.snow: Snow
+biome.taiga: Taiga
+biome.grassland: Grassland
+biome.forest: Forest
+biome.desert: Desert
+biome.jungle: Jungle
+biome.savanna: Savanna
+
+tile.water: Water
+tile.sand:  Sand
+tile.grass: Grass
+
+entity.player:  Player
+entity.zombie:  Zombie

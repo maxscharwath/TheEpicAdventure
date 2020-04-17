@@ -1,0 +1,27 @@
+#====
+language.code: fr-FR
+language.name: Français
+language.region: France
+version:  1
+#====
+
+biome.ocean:  Océan
+biome.deep_ocean: Océan Profond
+biome.warm_ocean: Océan Chaud
+biome.cold_ocean: Océan Froid
+biome.beach: Plage
+biome.tundra: Tundra
+biome.snow: Neige
+biome.taiga: Taïga
+biome.grassland: Plaine
+biome.forest: Forêt
+biome.desert: Désert
+biome.jungle: Jungle
+biome.savanna: Savane
+
+tile.water: Eau
+tile.sand:  Sable
+tile.grass: Herbe
+
+entity.player:  Joueur
+entity.zombie:  Zombie

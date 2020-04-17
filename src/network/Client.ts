@@ -1,0 +1,35 @@
+import io from "socket.io-client";
+import Game from "../core/Game";
+
+export default class Client {
+
+    private static openSocket(host: string): any {
+        console.log(host);
+        return io(host, {
+            query: {},
+        });
+    }
+
+    private readonly socket: SocketIOClient.Socket;
+
+    constructor(username: string, hostName: string) {
+        Game.ISONLINE = true;
+        Game.ISHOST = false;
+        this.socket = io(hostName, {
+            query: {},
+        });
+        this.socket.on("connect", (d: any) => {
+            console.log(d);
+            console.log("Connected to ");
+        });
+    }
+
+    public endConnection(): void {
+        this.socket.close();
+    }
+
+    public isConnected(): boolean {
+        return this.socket != null && !this.socket.disconnected && this.socket.connected;
+    }
+
+}
