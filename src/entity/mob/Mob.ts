@@ -5,6 +5,7 @@ import Vector from "../../utility/Vector";
 import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
+import * as PIXI from "pixi.js";
 
 export default class Mob extends Entity {
 
@@ -26,6 +27,29 @@ export default class Mob extends Entity {
     protected mass = 20;
     private hurtCooldown: number;
     private attackCooldown: number;
+
+    constructor(x?: number, y?: number) {
+        super(x, y);
+        this.interactive = true;
+        this.on("click", () => {
+            this.die();
+        });
+    }
+
+    public die(): void {
+        for (const slot of this.inventory.slots) {
+            if (slot.isItem()) {
+                if (Random.int(5) === 0) { continue; }
+                for (let i = 0; i < slot.nb; i++) {
+                    if (Random.int(5) !== 0) { continue; }
+                    const x = this.x + Random.int(0, 16);
+                    const y = this.y + Random.int(0, 16);
+                    this.level.add(new ItemEntity(slot.item, x, y));
+                }
+            }
+        }
+        this.remove();
+    }
 
     public hurtByEntity(dmg: number, entity: Entity): void {
         console.log(`Hurted by ${entity.toString()}`);
@@ -65,9 +89,10 @@ export default class Mob extends Entity {
     protected move(xa: number, ya: number): boolean {
 
         let entities = this.getChunk().getEntities();
-        if (entities.length > 300) {
-            const i = Random.int(entities.length - 300);
-            entities = entities.slice(i, i + 300);
+        const maxEntities = 10;
+        if (entities.length > maxEntities) {
+            const i = Random.int(entities.length - maxEntities);
+            entities = entities.slice(i, i + maxEntities);
         }
 
         const a = new Vector();
@@ -88,9 +113,9 @@ export default class Mob extends Entity {
                 }
             }
         }
-        a.magnitude = 0.1;
-        xa += a.x;
-        ya += a.y;
+        a.magnitude = 0.2;
+        this.a.x += a.x;
+        this.a.y += a.y;
 
         if (this.isSwimming()) {
             xa /= 4;

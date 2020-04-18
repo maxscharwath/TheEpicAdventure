@@ -68,7 +68,7 @@ export default class Game {
         this.player = new Player();
         this.level.add(this.player, 0, 0, true);
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 100; i++) {
             this.level.add(new Zombie(), 0, 0, true);
         }
         for (let i = 0; i < 100; i++) {

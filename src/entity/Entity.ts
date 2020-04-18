@@ -78,7 +78,7 @@ export default class Entity extends PIXI.Container implements Tickable {
 
         this.move(this.a.x, this.a.y);
 
-        this.zIndex = this.y;
+        this.zIndex = this.y + this.hitbox.y + this.hitbox.height / 2;
         this.container.pivot.y = this.z;
     }
 

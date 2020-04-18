@@ -11,9 +11,6 @@ export default class Zombie extends HostileMob {
         return false;
     }
 
-    public die(): void {
-    }
-
     public tick(): void {
         super.tick();
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {

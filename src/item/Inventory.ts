@@ -2,7 +2,7 @@ import Item from "./Item";
 import Slot from "./Slot";
 
 export default class Inventory {
-    private slots: Slot[] = [];
+    public slots: Slot[] = [];
     private STACK_MAX: number = 64;
 
     constructor(nbSlot: number = 8) {

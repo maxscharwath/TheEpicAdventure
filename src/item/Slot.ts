@@ -14,6 +14,10 @@ export default class Slot {
         this.nb = 0;
     }
 
+    public isItem() {
+        return this.item instanceof Item;
+    }
+
     // @BUG
     public removeItem(nb: number): number {
         const n = this.nb -= nb;
