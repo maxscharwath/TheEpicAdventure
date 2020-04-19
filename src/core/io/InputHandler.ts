@@ -12,6 +12,66 @@ export default class InputHandler {
     private keymap = new Map();
     private keyboard = new Map();
 
+    private initKeyMap(): void {
+        this.keymap.set("MOVE-UP", "KEY-W|ARROW-UP");
+        this.keymap.set("MOVE-DOWN", "KEY-S|ARROW-DOWN");
+        this.keymap.set("MOVE-LEFT", "KEY-A|ARROW-LEFT");
+        this.keymap.set("MOVE-RIGHT", "KEY-D|ARROW-RIGHT");
+
+        this.keymap.set("JUMP", "SPACE");
+
+        this.keymap.set("CURSOR-UP", "ARROW-UP");
+        this.keymap.set("CURSOR-DOWN", "ARROW-DOWN");
+        this.keymap.set("CURSOR-LEFT", "ARROW-LEFT");
+        this.keymap.set("CURSOR-RIGHT", "ARROW-RIGHT");
+
+        this.keymap.set("SELECT", "ENTER");
+        this.keymap.set("EXIT", "ESCAPE");
+
+        this.keymap.set("ATTACK", "KEY-C|ENTER");
+        this.keymap.set("MENU", "KEY-X|KEY-E");
+        this.keymap.set("CRAFT", "KEY-Z|SHIFT-LEFT&KEY-E");
+        this.keymap.set("PICKUP", "KEY-V|KEY-P");
+        this.keymap.set("DROP-ONE", "KEY-Q");
+        this.keymap.set("DROP-STACK", "SHIFT-LEFT&KEY-Q");
+
+        this.keymap.set("PAUSE", "ESCAPE");
+
+        this.keymap.set("EXIT", "ESCAPE");
+        this.keymap.set("POTIONEFFECTS", "KEY-P");
+        this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
+        this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
+    }
+
+
+    private toggle(keyCode: string, pressed: boolean): void {
+        const keytext: string = keyCode.toUpperCase();
+        this.getPhysKey(keytext).toggle(pressed);
+    }
+
+    private getPhysKey(keytext: string): Key {
+        keytext = keytext.toUpperCase();
+        if (this.keyboard.has(keytext)) {
+            return this.keyboard.get(keytext);
+        } else {
+            return new Key();
+        }
+    }
+
+    private keyPressed(e: KeyboardEvent): void {
+        e.preventDefault();
+        this.toggle(e.code.spinalCase(), true);
+    }
+
+    private keyReleased(e: KeyboardEvent): void {
+        e.preventDefault();
+        this.toggle(e.code.spinalCase(), false);
+    }
+
+    private keyTyped(e: Event): void {
+        e.preventDefault();
+    }
+
     constructor() {
         this.initKeyMap();
         document.addEventListener("keyup", (e) => this.keyReleased(e));
@@ -126,66 +186,6 @@ export default class InputHandler {
             key = new Key();
         }
         return key;
-    }
-
-    private initKeyMap(): void {
-        this.keymap.set("MOVE-UP", "KEY-W|ARROW-UP");
-        this.keymap.set("MOVE-DOWN", "KEY-S|ARROW-DOWN");
-        this.keymap.set("MOVE-LEFT", "KEY-A|ARROW-LEFT");
-        this.keymap.set("MOVE-RIGHT", "KEY-D|ARROW-RIGHT");
-
-        this.keymap.set("JUMP", "SPACE");
-
-        this.keymap.set("CURSOR-UP", "ARROW-UP");
-        this.keymap.set("CURSOR-DOWN", "ARROW-DOWN");
-        this.keymap.set("CURSOR-LEFT", "ARROW-LEFT");
-        this.keymap.set("CURSOR-RIGHT", "ARROW-RIGHT");
-
-        this.keymap.set("SELECT", "ENTER");
-        this.keymap.set("EXIT", "ESCAPE");
-
-        this.keymap.set("ATTACK", "KEY-C|ENTER");
-        this.keymap.set("MENU", "KEY-X|KEY-E");
-        this.keymap.set("CRAFT", "KEY-Z|SHIFT-LEFT&KEY-E");
-        this.keymap.set("PICKUP", "KEY-V|KEY-P");
-        this.keymap.set("DROP-ONE", "KEY-Q");
-        this.keymap.set("DROP-STACK", "SHIFT-LEFT&KEY-Q");
-
-        this.keymap.set("PAUSE", "ESCAPE");
-
-        this.keymap.set("EXIT", "ESCAPE");
-        this.keymap.set("POTIONEFFECTS", "KEY-P");
-        this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
-        this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
-    }
-
-
-    private toggle(keyCode: string, pressed: boolean): void {
-        const keytext: string = keyCode.toUpperCase();
-        this.getPhysKey(keytext).toggle(pressed);
-    }
-
-    private getPhysKey(keytext: string): Key {
-        keytext = keytext.toUpperCase();
-        if (this.keyboard.has(keytext)) {
-            return this.keyboard.get(keytext);
-        } else {
-            return new Key();
-        }
-    }
-
-    private keyPressed(e: KeyboardEvent): void {
-        e.preventDefault();
-        this.toggle(e.code.spinalCase(), true);
-    }
-
-    private keyReleased(e: KeyboardEvent): void {
-        e.preventDefault();
-        this.toggle(e.code.spinalCase(), false);
-    }
-
-    private keyTyped(e: Event): void {
-        e.preventDefault();
     }
 }
 

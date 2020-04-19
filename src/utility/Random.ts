@@ -2,6 +2,10 @@ import System from "../core/System";
 
 export default class Random {
 
+    private static $ = Random.create();
+    private nextGaussian: number;
+    private haveNextGaussian: boolean = false;
+
     public static int(num1: number, num2?: number): number {
         return Random.$.int(num1, num2);
     }
@@ -25,11 +29,7 @@ export default class Random {
     public static create(seed?: number): Random {
         return new Random(seed);
     }
-
-    private static $ = Random.create();
     public seed: number;
-    private nextGaussian: number;
-    private haveNextGaussian: boolean = false;
 
     constructor(seed = System.currentTimeMillis()) {
         this.seed = seed;

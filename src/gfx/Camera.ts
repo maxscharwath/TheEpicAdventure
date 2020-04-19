@@ -22,15 +22,45 @@ export default class Camera {
         }
         this._zoom = value;
     }
+    private container: PIXI.Container;
+
+    private _zoom: number = 4;
+
+    private move() {
+        if (this.follow instanceof Object) {
+            if ("x" in this.follow && "y" in this.follow) {
+                this.fx = this.follow.x;
+                this.fy = this.follow.y;
+            }
+        }
+        this.fx += 3;
+
+        const dX = this.cx - this.fx;
+        const dY = this.cy - this.fy;
+        const dist = Math.hypot(dX, dY);
+        if (dist <= 0) {
+            return;
+        }
+        let angle;
+        if (dY < 0) {
+            angle = Math.acos(dX / dist);
+        } else {
+            angle = Math.PI + Math.acos(-dX / dist);
+        }
+        const d = (Math.hypot((this.fx - this.cx), (this.fy - this.cy)));
+
+        // console.log(d);
+        const speed = d / (30 / this.zoom) * Updater.delta;
+
+        this.cx += -speed * Math.cos(angle);
+        this.cy += speed * Math.sin(angle);
+    }
 
     public follow: { x: number; y: number; } = null;
     public fx: number = 0;
     public fy: number = 0;
     public cx: number = 0;
     public cy: number = 0;
-    private container: PIXI.Container;
-
-    private _zoom: number = 4;
 
     constructor() {
     }
@@ -62,35 +92,5 @@ export default class Camera {
 
     public setContainer(container: PIXI.Container) {
         this.container = container;
-    }
-
-    private move() {
-        if (this.follow instanceof Object) {
-            if ("x" in this.follow && "y" in this.follow) {
-                this.fx = this.follow.x;
-                this.fy = this.follow.y;
-            }
-        }
-        this.fx += 3;
-
-        const dX = this.cx - this.fx;
-        const dY = this.cy - this.fy;
-        const dist = Math.hypot(dX, dY);
-        if (dist <= 0) {
-            return;
-        }
-        let angle;
-        if (dY < 0) {
-            angle = Math.acos(dX / dist);
-        } else {
-            angle = Math.PI + Math.acos(-dX / dist);
-        }
-        const d = (Math.hypot((this.fx - this.cx), (this.fy - this.cy)));
-
-        // console.log(d);
-        const speed = d / (30 / this.zoom) * Updater.delta;
-
-        this.cx += -speed * Math.cos(angle);
-        this.cy += speed * Math.sin(angle);
     }
 }

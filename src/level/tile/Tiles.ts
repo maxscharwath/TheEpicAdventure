@@ -7,6 +7,8 @@ import WaterTile from "./WaterTile";
 type Type<T> = new (...args: any[]) => T;
 export default class Tiles {
 
+    private static tiles = new Map<string, Type<Tile>>();
+
     public static add(tag: string, tile: Type<Tile>): void {
         tag = tag.toLowerCase();
         console.log("adding " + tile.name + " to tile list with tag " + tag);
@@ -28,6 +30,4 @@ export default class Tiles {
         Tiles.add("sand", SandTile);
         Tiles.add("rock", RockTile);
     }
-
-    private static tiles = new Map<string, Type<Tile>>();
 }

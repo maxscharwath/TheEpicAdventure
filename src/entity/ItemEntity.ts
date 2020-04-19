@@ -3,9 +3,9 @@ import Entity from "./Entity";
 import Mob from "./mob/Mob";
 
 export default class ItemEntity extends Entity {
-    public item: Item;
     private readonly lifeTime: number;
     private time: number = 0;
+    public item: Item;
 
     constructor(item: Item, x?: number, y?: number) {
         super(x, y);

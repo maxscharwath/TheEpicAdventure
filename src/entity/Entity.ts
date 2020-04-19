@@ -15,8 +15,88 @@ export default class Entity extends PIXI.Container implements Tickable {
     protected get aSpeed(): number {
         return Math.hypot(this.a.x, this.a.y);
     }
+    protected random = this.constructor.random;
+    protected level: Level;
+    protected removed: boolean;
+    protected isMoving: boolean;
+    protected container = new PIXI.Container();
+
+    protected init() {
+    }
+
+    protected move(xa: number, ya: number): boolean {
+        xa *= Updater.delta;
+        ya *= Updater.delta;
+        let stopped = true;
+        if (this.move2(xa, 0)) {
+            stopped = false;
+        }
+        if (this.move2(0, ya)) {
+            stopped = false;
+        }
+        if (!stopped) {
+            this.isMoving = Math.hypot(xa, ya) > 0;
+            if (this.isMoving) {
+                this.steppedOn();
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    protected steppedOn() {
+        if (this.z > 0) {
+            return;
+        }
+        const xt = this.x >> 4;
+        const yt = this.y >> 4;
+        this.level.getTile(xt, yt).steppedOn(this);
+    }
+
+    protected move2(xa: number, ya: number): boolean {
+        const xto0 = ((this.x) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yto0 = ((this.y) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+        const xto1 = ((this.x) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yto1 = ((this.y) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+
+        const xt0 = ((this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yt0 = ((this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+        const xt1 = ((this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yt1 = ((this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+
+        let blocked = false;
+        for (let yt = yt0; yt <= yt1; yt++) {
+            for (let xt = xt0; xt <= xt1; xt++) {
+                if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) {
+                    continue;
+                }
+
+                // this.level.getTile(xt, yt).bumpedInto(this.level, xt, yt, this);
+                if (!this.getLevel().getTile(xt, yt).mayPass(this)) {
+                    blocked = true;
+                    return false;
+                }
+            }
+        }
+        if (blocked) {
+            return false;
+        }
+
+        this.x += xa;
+        this.y += ya;
+        return true;
+    }
 
     private static random = new Random();
+    private lastTick: number = Updater.tickCount;
+
+    private getCentredPos() {
+        return {
+            x: this.x + this.hitbox.x + this.hitbox.width / 2,
+            y: this.y + this.hitbox.y + this.hitbox.height / 2,
+        };
+    }
     public ["constructor"]: typeof Entity;
     public uid: string = uniqid();
     public x: number = 0;
@@ -25,12 +105,6 @@ export default class Entity extends PIXI.Container implements Tickable {
     public a: Vector3D = new Vector3D();
     public hitbox: Hitbox = new Hitbox();
     public ticks: number = 0;
-    protected random = this.constructor.random;
-    protected level: Level;
-    protected removed: boolean;
-    protected isMoving: boolean;
-    protected container = new PIXI.Container();
-    private lastTick: number = Updater.tickCount;
 
     constructor(x: number = 0, y: number = 0) {
         super();
@@ -174,79 +248,5 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public touchedBy(entity: Entity): void {
-    }
-
-    protected init() {
-    }
-
-    protected move(xa: number, ya: number): boolean {
-        xa *= Updater.delta;
-        ya *= Updater.delta;
-        let stopped = true;
-        if (this.move2(xa, 0)) {
-            stopped = false;
-        }
-        if (this.move2(0, ya)) {
-            stopped = false;
-        }
-        if (!stopped) {
-            this.isMoving = Math.hypot(xa, ya) > 0;
-            if (this.isMoving) {
-                this.steppedOn();
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    protected steppedOn() {
-        if (this.z > 0) {
-            return;
-        }
-        const xt = this.x >> 4;
-        const yt = this.y >> 4;
-        this.level.getTile(xt, yt).steppedOn(this);
-    }
-
-    protected move2(xa: number, ya: number): boolean {
-        const xto0 = ((this.x) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yto0 = ((this.y) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-        const xto1 = ((this.x) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yto1 = ((this.y) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-
-        const xt0 = ((this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yt0 = ((this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-        const xt1 = ((this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yt1 = ((this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-
-        let blocked = false;
-        for (let yt = yt0; yt <= yt1; yt++) {
-            for (let xt = xt0; xt <= xt1; xt++) {
-                if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) {
-                    continue;
-                }
-
-                // this.level.getTile(xt, yt).bumpedInto(this.level, xt, yt, this);
-                if (!this.getLevel().getTile(xt, yt).mayPass(this)) {
-                    blocked = true;
-                    return false;
-                }
-            }
-        }
-        if (blocked) {
-            return false;
-        }
-
-        this.x += xa;
-        this.y += ya;
-        return true;
-    }
-
-    private getCentredPos() {
-        return {
-            x: this.x + this.hitbox.x + this.hitbox.width / 2,
-            y: this.y + this.hitbox.y + this.hitbox.height / 2,
-        };
     }
 }

@@ -3,6 +3,8 @@ import Color from "../../utility/Color";
 
 export default class Biome {
 
+    private static biomes: { [key: string]: Biome } = {};
+
     public static add(tag: string, biome: Biome): void {
         tag = tag.toLowerCase();
         console.log(`adding ${biome.name} to biome list with tag "${tag}"`);
@@ -33,8 +35,6 @@ export default class Biome {
         Biome.add("jungle", new Biome("Jungle", Color.fromHex("#1a561a")));
         Biome.add("savanna", new Biome("Savanna", Color.fromHex("#9ce749")));
     }
-
-    private static biomes: { [key: string]: Biome } = {};
     public readonly name: string;
     public readonly color: Color;
     public tag: string;

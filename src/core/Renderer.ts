@@ -35,6 +35,17 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
+    private static mainStage = new PIXI.Container();
+    private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
+    private static DEBUG = false;
+    private static nbCanvas = 0;
+    private static renderer = new PIXI.Renderer({
+        width: 960,
+        height: 540,
+        backgroundColor: Color.black.getInt(),
+        autoDensity: true,
+        resolution: 2,
+    });
 
     public static readonly DEFAULT_WIDTH: number = 240;
     public static readonly DEFAULT_HEIGHT: number = 160;
@@ -78,15 +89,4 @@ export default class Renderer {
     public static addDisplay(display: Display) {
         this.stages[1].addChild(display);
     }
-    private static mainStage = new PIXI.Container();
-    private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
-    private static DEBUG = false;
-    private static nbCanvas = 0;
-    private static renderer = new PIXI.Renderer({
-        width: 960,
-        height: 540,
-        backgroundColor: Color.black.getInt(),
-        autoDensity: true,
-        resolution: 2,
-    });
 }

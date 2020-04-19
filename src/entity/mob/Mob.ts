@@ -16,75 +16,11 @@ export default class Mob extends Entity {
     protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
-
-    public maxHealth: number = 10;
-    public health: number = this.maxHealth;
-    public inventory = new Inventory(8);
     protected speedMax: number = 1;
     protected potionEffect: any[] = [];
     protected walkDist: number = 0;
     protected dir: Direction = Direction.DOWN;
     protected mass = 20;
-    private hurtCooldown: number;
-    private attackCooldown: number;
-
-    constructor(x?: number, y?: number) {
-        super(x, y);
-        this.interactive = true;
-        this.on("click", () => {
-            this.die();
-        });
-    }
-
-    public die(): void {
-        for (const slot of this.inventory.slots) {
-            if (slot.isItem()) {
-                if (Random.int(5) === 0) { continue; }
-                for (let i = 0; i < slot.nb; i++) {
-                    if (Random.int(5) !== 0) { continue; }
-                    const x = this.x + Random.int(0, 16);
-                    const y = this.y + Random.int(0, 16);
-                    this.level.add(new ItemEntity(slot.item, x, y));
-                }
-            }
-        }
-        this.remove();
-    }
-
-    public hurtByEntity(dmg: number, entity: Entity): void {
-        console.log(`Hurted by ${entity.toString()}`);
-        this.hurt(dmg, Mob.getAttackDir(entity, this));
-    }
-
-    public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
-        if (this.hurtCooldown > 0) {
-            return;
-        }
-        this.hurtCooldown = 60;
-        this.a.z = 2;
-        this.a.x = attackDir.getX() * 2;
-        this.a.y = attackDir.getY() * 2;
-        this.health -= dmg;
-    }
-
-    public tick(): void {
-        super.tick();
-        if (this.hurtCooldown > 0) {
-            this.hurtCooldown--;
-        }
-        if (this.attackCooldown > 0) {
-            this.attackCooldown--;
-        }
-        if (this.health <= 0) {
-            this.die();
-        }
-    }
-
-    public touchItem(itemEntity: ItemEntity) {
-        if (this.inventory.addItem(itemEntity.item, 1)) {
-            itemEntity.take(this);
-        }
-    }
 
     protected move(xa: number, ya: number): boolean {
 
@@ -192,5 +128,69 @@ export default class Mob extends Entity {
         }
 
         return entities;
+    }
+    private hurtCooldown: number;
+    private attackCooldown: number;
+
+    public maxHealth: number = 10;
+    public health: number = this.maxHealth;
+    public inventory = new Inventory(8);
+
+    constructor(x?: number, y?: number) {
+        super(x, y);
+        this.interactive = true;
+        this.on("click", () => {
+            this.die();
+        });
+    }
+
+    public die(): void {
+        for (const slot of this.inventory.slots) {
+            if (slot.isItem()) {
+                if (Random.int(5) === 0) { continue; }
+                for (let i = 0; i < slot.nb; i++) {
+                    if (Random.int(5) !== 0) { continue; }
+                    const x = this.x + Random.int(0, 16);
+                    const y = this.y + Random.int(0, 16);
+                    this.level.add(new ItemEntity(slot.item, x, y));
+                }
+            }
+        }
+        this.remove();
+    }
+
+    public hurtByEntity(dmg: number, entity: Entity): void {
+        console.log(`Hurted by ${entity.toString()}`);
+        this.hurt(dmg, Mob.getAttackDir(entity, this));
+    }
+
+    public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
+        if (this.hurtCooldown > 0) {
+            return;
+        }
+        this.hurtCooldown = 60;
+        this.a.z = 2;
+        this.a.x = attackDir.getX() * 2;
+        this.a.y = attackDir.getY() * 2;
+        this.health -= dmg;
+    }
+
+    public tick(): void {
+        super.tick();
+        if (this.hurtCooldown > 0) {
+            this.hurtCooldown--;
+        }
+        if (this.attackCooldown > 0) {
+            this.attackCooldown--;
+        }
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    public touchItem(itemEntity: ItemEntity) {
+        if (this.inventory.addItem(itemEntity.item, 1)) {
+            itemEntity.take(this);
+        }
     }
 }

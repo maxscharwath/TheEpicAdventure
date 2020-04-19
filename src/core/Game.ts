@@ -77,7 +77,7 @@ export default class Game {
         }
 
         // (new InfoDisplay()).show();
-         (new InventoryDisplay(this.player.inventory)).show();
+        (new InventoryDisplay(this.player.inventory)).show();
 
         Initializer.createAndDisplayFrame();
         Initializer.run();

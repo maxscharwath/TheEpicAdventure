@@ -2,6 +2,12 @@ import fs from "fs";
 import YAML from "yaml";
 
 export default class Language {
+
+    private static loadFile(path: string): string {
+        return fs.readFileSync("src/resources/lang/" + path, "utf8");
+    }
+    private readonly path: string;
+    private data = new Map<string, any>();
     public static all: Language[] = (() => {
         return fs.readdirSync("src/resources/lang").map((file) => new Language(file));
     })();
@@ -10,13 +16,7 @@ export default class Language {
     public static find(name: string): Language {
         return Language.all.find((lang) => lang.path === name);
     }
-
-    private static loadFile(path: string): string {
-        return fs.readFileSync("src/resources/lang/" + path, "utf8");
-    }
     public isLoaded: boolean = false;
-    private readonly path: string;
-    private data = new Map<string, any>();
 
     constructor(path: string) {
         this.path = path;
