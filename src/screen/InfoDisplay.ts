@@ -10,7 +10,7 @@ export default class InfoDisplay extends Display {
     private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
     constructor() {
-        super();
+        super(false);
         this.textArea = new PIXI.Text("", {
             fontFamily: "Arial",
             fontSize: 24,
@@ -23,7 +23,7 @@ export default class InfoDisplay extends Display {
         this.textBg.tint = Color.black.getInt();
         this.textBg.alpha = 0.5;
 
-        this.container.addChild(this.textBg, this.textArea);
+        this.addChild(this.textBg, this.textArea);
     }
 
     public tick(): void {
@@ -33,11 +33,10 @@ export default class InfoDisplay extends Display {
         }
         this.textArea.text = text;
 
-        const b = this.textArea.getBounds();
-        this.textBg.x = b.x;
-        this.textBg.y = b.y;
-        this.textBg.width = b.width;
-        this.textBg.height = b.height;
+        this.textBg.x = this.textArea.x;
+        this.textBg.y = this.textArea.y;
+        this.textBg.width = this.textArea.width;
+        this.textBg.height = this.textArea.height;
     }
 
     private text(): string {

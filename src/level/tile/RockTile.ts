@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import Tile from "./Tile";
 
-export default class SandTile extends Tile {
+export default class RockTile extends Tile {
     protected updateMask() {
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
@@ -12,10 +12,10 @@ export default class SandTile extends Tile {
         const l = test(-1, 0);
         const r = test(1, 0);
 
-        this.sprites[0].texture =  SandTile.masks[(!u && !l) ? 4 : (u && l) ? 0 : (u) ? 1 : 3 ];
-        this.sprites[1].texture =  SandTile.masks[(!u && !r) ? 4 : (u && r) ? 2 : (u) ? 1 : 5 ];
-        this.sprites[2].texture =  SandTile.masks[(!d && !l) ? 4 : (d && l) ? 6 : (d) ? 7 : 3 ];
-        this.sprites[3].texture =  SandTile.masks[(!d && !r) ? 4 : (d && r) ? 8 : (d) ? 7 : 5 ];
+        this.sprites[0].texture =  RockTile.masks[(!u && !l) ? 4 : (u && l) ? 0 : (u) ? 1 : 3 ];
+        this.sprites[1].texture =  RockTile.masks[(!u && !r) ? 4 : (u && r) ? 2 : (u) ? 1 : 5 ];
+        this.sprites[2].texture =  RockTile.masks[(!d && !l) ? 4 : (d && l) ? 6 : (d) ? 7 : 3 ];
+        this.sprites[3].texture =  RockTile.masks[(!d && !r) ? 4 : (d && r) ? 8 : (d) ? 7 : 5 ];
     }
     protected init(): void {
         this.sprites = [ new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
@@ -23,12 +23,12 @@ export default class SandTile extends Tile {
         this.sprites[1].position.set(8, 0);
         this.sprites[2].position.set(0, 8);
         this.sprites[3].position.set(8, 8);
-        this.levelTile.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/sand.png")), ...this.sprites);
+        this.levelTile.addChild(...this.sprites);
         this.updateMask();
     }
-    private static masks = SandTile.loadMaskTextures("src/resources/sand_mask.png");
+    private static masks = RockTile.loadMaskTextures("src/resources/rock.png");
     private sprites: PIXI.Sprite[];
-    public static readonly TAG = "sand";
+    public static readonly TAG = "rock";
 
     public tick(): void {
         super.tick();

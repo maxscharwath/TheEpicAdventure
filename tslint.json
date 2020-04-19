@@ -17,7 +17,32 @@
     "no-empty": false,
     "variable-name": false,
     "interface-name": false,
-    "ordered-imports": false
+    "ordered-imports": false,
+    "max-classes-per-file": false,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "protected-static-field",
+          "protected-static-method",
+          "protected-instance-field",
+          "protected-constructor",
+          "protected-instance-method",
+
+          "private-static-field",
+          "private-static-method",
+          "private-instance-field",
+          "private-constructor",
+          "private-instance-method",
+
+          "public-static-field",
+          "public-static-method",
+          "public-instance-field",
+          "public-constructor",
+          "public-instance-method"
+        ]
+      }
+    ]
   },
   "jsRules": {
     "max-line-length": {

@@ -1,6 +1,7 @@
 import Item from "./Item";
 
 export default class Slot {
+
     public nb: number = 0;
     public item: Item = null;
 
@@ -32,7 +33,7 @@ export default class Slot {
     }
 
     public isEmpty(): boolean {
-        return this.item == null || this.nb <= 0 || this.nb == null;
+        return this.item == null || this.nb == null || this.nb <= 0;
     }
 
     public toJSON() {

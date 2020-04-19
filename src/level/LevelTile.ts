@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import Updater from "../core/Updater";
 import Entity from "../entity/Entity";
 import TileRandom from "../utility/TileRandom";
 import Biome from "./biome/Biome";
@@ -6,9 +7,11 @@ import Chunk from "./Chunk";
 import Level from "./Level";
 import Tile from "./tile/Tile";
 import Tiles from "./tile/Tiles";
+import WaterTile from "./tile/WaterTile";
 
 type Type<T> = new (...args: any[]) => T;
 export default class LevelTile extends PIXI.Container {
+    private chunk: Chunk;
     public static SIZE = 16;
     public biome: Biome;
     public tile: Tile;
@@ -18,7 +21,7 @@ export default class LevelTile extends PIXI.Container {
     public random: TileRandom = new TileRandom(this);
     public readonly x: number;
     public readonly y: number;
-    private chunk: Chunk;
+    public bg: PIXI.Sprite;
 
     constructor(level: Level, x: number, y: number, biome?: Biome, tile?: Type<Tile>) {
         super();
@@ -28,11 +31,11 @@ export default class LevelTile extends PIXI.Container {
         this.level = level;
         {
             this.visible = false;
-            const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-            bg.tint = this.biome.color.getInt();
-            bg.width = LevelTile.SIZE;
-            bg.height = LevelTile.SIZE;
-            this.addChild(bg);
+            this.bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+            this.bg.width = LevelTile.SIZE;
+            this.bg.height = LevelTile.SIZE;
+            this.bg.tint = this.biome.color.getInt();
+            this.addChild(this.bg);
             this.level.tilesContainer.addChild(this);
         }
         this.tile = new tile(this);
@@ -74,18 +77,23 @@ export default class LevelTile extends PIXI.Container {
         this.tile.tick();
     }
 
-    public getRelativeTile(x: number, y: number): LevelTile {
-        return this.level.getTile(this.x + x, this.y + y);
+    public getRelativeTile(x: number, y: number, generate= true): LevelTile {
+        return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
-    public getNeighbourTiles(radius: number = 1): LevelTile[] {
+    public getNeighbourTiles(radius: number = 1, generate= true): LevelTile[] {
         const lt = [];
-        for (let i = this.x - radius; i < this.x + radius; i++) {
-            for (let j = this.y - radius; j < this.y + radius; j++) {
-                if (i === this.x && j === this.y) {
+        const x = this.getLocalX();
+        const y = this.getLocalY();
+        for (let i = x - radius; i < x + radius; i++) {
+            for (let j = y - radius; j < y + radius; j++) {
+                if (i === x && j === y) {
                     continue;
                 }
-                lt.push(this.level.getTile(i, j));
+                const t = this.level.getTile(i, j, generate);
+                if (t) {
+                    lt.push(t);
+                }
             }
         }
         return lt;
@@ -115,4 +123,9 @@ export default class LevelTile extends PIXI.Container {
     public getFriction() {
         return this.tile.friction;
     }
+
+    public instanceOf(tileClass: Type<Tile>) {
+        return this.tile instanceof tileClass;
+    }
+
 }

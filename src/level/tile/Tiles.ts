@@ -1,4 +1,5 @@
 import GrassTile from "./GrassTile";
+import RockTile from "./RockTile";
 import SandTile from "./SandTile";
 import Tile from "./Tile";
 import WaterTile from "./WaterTile";
@@ -25,6 +26,7 @@ export default class Tiles {
         Tiles.add("water", WaterTile);
         Tiles.add("lava", Tile);
         Tiles.add("sand", SandTile);
+        Tiles.add("rock", RockTile);
     }
 
     private static tiles = new Map<string, Type<Tile>>();

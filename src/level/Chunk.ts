@@ -5,14 +5,25 @@ import Level from "./Level";
 import LevelTile from "./LevelTile";
 
 export default class Chunk {
-    public static SIZE = 16;
-    public readonly level: Level;
     private entities: Entity[] = [];
     private readonly x: number;
     private readonly y: number;
     private isGenerated: boolean = false;
     private map: LevelTile[] = [];
     private lastTick = 0;
+
+    private generate() {
+        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y, () => {
+            this.isGenerated = true;
+        });
+    }
+
+    private moveEntity(entity: Entity, chunk: Chunk) {
+        this.remove(entity);
+        chunk.add(entity);
+    }
+    public static SIZE = 16;
+    public readonly level: Level;
 
     constructor(level: Level, x: number, y: number, generate: boolean = true) {
         console.log("new Chunk!", x, y);
@@ -102,16 +113,5 @@ export default class Chunk {
             entities: this.entities,
             map: this.map,
         };
-    }
-
-    private generate() {
-        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y, () => {
-            this.isGenerated = true;
-        });
-    }
-
-    private moveEntity(entity: Entity, chunk: Chunk) {
-        this.remove(entity);
-        chunk.add(entity);
     }
 }

@@ -76,7 +76,7 @@ export default class Renderer {
     }
 
     public static addDisplay(display: Display) {
-        this.stages[1].addChild(display.container);
+        this.stages[1].addChild(display);
     }
     private static mainStage = new PIXI.Container();
     private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());

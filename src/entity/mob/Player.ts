@@ -4,9 +4,34 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import Mob from "./Mob";
 
 export default class Player extends Mob {
-    private static spriteSheet = new SpriteSheet("player.json");
     protected speedMax: number = 1;
+
+    protected init() {
+        super.init();
+        this.sprite = new AnimatedSprite([Texture.EMPTY], true);
+        this.sprite.anchor.set(0.5);
+        this.container.addChild(this.sprite);
+        this.playAnimation("walk");
+    }
+    private static spriteSheet = new SpriteSheet("player.json");
     private sprite: AnimatedSprite;
+
+    private playAnimation(name: string, loop: boolean = true): AnimatedSprite {
+        const a = Player.spriteSheet.getAnimation(name, this.dir);
+        if (this.sprite.textures === a) {
+            return;
+        }
+        this.sprite.textures = a;
+        this.sprite.animationSpeed = 0.1;
+        this.sprite.play();
+        this.sprite.loop = loop;
+        return this.sprite;
+    }
+
+    constructor() {
+        super();
+        this.inventory.addSlots(19);
+    }
 
     public canSwim(): boolean {
         return true;
@@ -49,25 +74,5 @@ export default class Player extends Mob {
             this.a.x += ax / 5;
             this.a.y += ay / 5;
         }
-    }
-
-    protected init() {
-        super.init();
-        this.sprite = new AnimatedSprite([Texture.EMPTY], true);
-        this.sprite.anchor.set(0.5);
-        this.container.addChild(this.sprite);
-        this.playAnimation("walk");
-    }
-
-    private playAnimation(name: string, loop: boolean = true): AnimatedSprite {
-        const a = Player.spriteSheet.getAnimation(name, this.dir);
-        if (this.sprite.textures === a) {
-            return;
-        }
-        this.sprite.textures = a;
-        this.sprite.animationSpeed = 0.1;
-        this.sprite.play();
-        this.sprite.loop = loop;
-        return this.sprite;
     }
 }

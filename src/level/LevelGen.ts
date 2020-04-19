@@ -9,16 +9,64 @@ import Tiles from "./tile/Tiles";
 
 export default class LevelGen {
 
-    public static create(seed?: number | string) {
-        return new LevelGen(seed);
-    }
-
     private static chunkSize = 16;
-    public seed = 0;
     private elevationNoise: SimplexNoise;
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
     private random: Random;
+
+    private biome(e: number, m: number, t: number) {
+        if (e < 0.025) {
+            return Biome.get("deep_ocean");
+        }
+        if (e < 0.1) {
+            if (t > 0.9) {
+                return Biome.get("warm_ocean");
+            }
+            if (t < 0.3) {
+                return Biome.get("cold_ocean");
+            }
+            return Biome.get("ocean");
+        }
+        if (e < 0.18 && t > 0.4) {
+            return Biome.get("beach");
+        }
+        if (t > 0.7) {
+            if (m < 0.7) {
+                return Biome.get("desert");
+            }
+            if (m > 0.8) {
+                return Biome.get("jungle");
+            }
+        }
+        if (t > 0.6) {
+            if (m < 0.5) {
+                return Biome.get("savanna");
+            }
+        }
+        if (t < 0.20) {
+            return Biome.get("snow");
+        }
+        if (t < 0.30) {
+            return Biome.get("tundra");
+        }
+        if (t < 0.5) {
+            if (m > 0.6) {
+                return Biome.get("taiga");
+            }
+        }
+        if (t < 6) {
+            if (m > 0.4 && m < 0.6) {
+                return Biome.get("forest");
+            }
+        }
+        return Biome.get("grassland");
+    }
+
+    public static create(seed?: number | string) {
+        return new LevelGen(seed);
+    }
+    public seed = 0;
 
     constructor(seed: number | string) {
         this.seed = Seed.create(seed);
@@ -56,7 +104,11 @@ export default class LevelGen {
                 } else if (biome.tag.includes("desert") || biome.tag.includes("savanna")) {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
                 } else {
-                    map.push(new LevelTile(level, x, y, biome, Tiles.get("grass")));
+                    if (e > 0.8) {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("rock")));
+                    } else {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("grass")));
+                    }
                 }
             }
         }
@@ -65,53 +117,5 @@ export default class LevelGen {
             callback();
         }
         return map;
-    }
-
-    private biome(e: number, m: number, t: number) {
-        if (e < 0.025) {
-            return Biome.get("deep_ocean");
-        }
-        if (e < 0.1) {
-            if (t > 0.9) {
-                return Biome.get("warm_ocean");
-            }
-            if (t < 0.3) {
-                return Biome.get("cold_ocean");
-            }
-            return Biome.get("ocean");
-        }
-        if (e < 0.15) {
-            return Biome.get("beach");
-        }
-        if (t > 0.7) {
-            if (m < 0.7) {
-                return Biome.get("desert");
-            }
-            if (m > 0.8) {
-                return Biome.get("jungle");
-            }
-        }
-        if (t > 0.6) {
-            if (m < 0.5) {
-                return Biome.get("savanna");
-            }
-        }
-        if (t < 0.20) {
-            return Biome.get("snow");
-        }
-        if (t < 0.30) {
-            return Biome.get("tundra");
-        }
-        if (t < 0.5) {
-            if (m > 0.6) {
-                return Biome.get("taiga");
-            }
-        }
-        if (t < 6) {
-            if (m > 0.4 && m < 0.6) {
-                return Biome.get("forest");
-            }
-        }
-        return Biome.get("grassland");
     }
 }

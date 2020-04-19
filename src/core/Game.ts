@@ -9,8 +9,10 @@ import Tiles from "../level/tile/Tiles";
 import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
+import BackgroundDisplay from "../screen/BackgroundDisplay";
 import Display from "../screen/Display";
 import InfoDisplay from "../screen/InfoDisplay";
+import InventoryDisplay from "../screen/InventoryDisplay";
 import Initializer from "./Initializer";
 import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
@@ -32,9 +34,7 @@ export default class Game {
     public static levels: Level[] = [];
     public static currentLevel: number = 0;
     public static input: InputHandler;
-    public static displays: Display[] = [
-        new InfoDisplay(),
-    ];
+    public static displays: Display[] = [];
 
     public static get level(): Level {
         return this.levels[this.currentLevel];
@@ -68,7 +68,7 @@ export default class Game {
         this.player = new Player();
         this.level.add(this.player, 0, 0, true);
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 0; i++) {
             this.level.add(new Zombie(), 0, 0, true);
         }
         for (let i = 0; i < 100; i++) {
@@ -76,7 +76,8 @@ export default class Game {
                 0, 0, true);
         }
 
-        this.displays[0].show();
+        // (new InfoDisplay()).show();
+         (new InventoryDisplay(this.player.inventory)).show();
 
         Initializer.createAndDisplayFrame();
         Initializer.run();

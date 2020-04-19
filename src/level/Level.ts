@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import {Error} from "tslint/lib/error";
 import Renderer from "../core/Renderer";
 import Entity from "../entity/Entity";
 import Player from "../entity/mob/Player";
@@ -10,6 +11,32 @@ import LevelTile from "./LevelTile";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
+    private random: Random = new Random();
+    private players: Player[] = [];
+    private entities: Entity[] = [];
+    private entitiesToAdd: Entity[] = [];
+    private entitiesToRemove: Entity[] = [];
+    private chunks: { [key: string]: Chunk } = {};
+    private loadedChunks: Chunk[] = [];
+
+    private getChunksRadius(r: number = 1): Chunk[] {
+        const chunks = [];
+        for (let x = -r; x < r; x++) {
+            for (let y = -r; y < r; y++) {
+                chunks.push(this.getChunk(
+                    x + ((Renderer.camera.x + 16 * 8) >> 8),
+                    y + ((Renderer.camera.y + 16 * 8) >> 8)));
+            }
+        }
+        return chunks;
+    }
+
+    private trySpawn(): void {
+        const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
+        if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
+            return;
+        }
+    }
     public w: number;
     public h: number;
     public monsterDensity: number = 16;
@@ -21,13 +48,6 @@ export default class Level {
     public container: PIXI.Container = new PIXI.Container();
     public tilesContainer: PIXI.Container = new PIXI.Container();
     public entitiesContainer: PIXI.Container = new PIXI.Container();
-    private random: Random = new Random();
-    private players: Player[] = [];
-    private entities: Entity[] = [];
-    private entitiesToAdd: Entity[] = [];
-    private entitiesToRemove: Entity[] = [];
-    private chunks: { [key: string]: Chunk } = {};
-    private loadedChunks: Chunk[] = [];
 
     constructor() {
         Renderer.setLevel(this);
@@ -45,10 +65,11 @@ export default class Level {
         }
     }
 
-    public getChunk(x: number, y: number): Chunk {
+    public getChunk(x: number, y: number, generate= true): Chunk {
         x = ~~x;
         y = ~~y;
         if (!this.chunks[x + ":" + y]) {
+            if (!generate) { return undefined; }
             this.chunks[x + ":" + y] = new Chunk(this, x, y);
         }
         return this.chunks[x + ":" + y];
@@ -66,8 +87,10 @@ export default class Level {
         return chunks;
     }
 
-    public getTile(x: number, y: number): LevelTile {
-        return this.getChunk(x >> 4, y >> 4).getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
+    public getTile(x: number, y: number, generate= true): LevelTile {
+        const chunk = this.getChunk(x >> 4, y >> 4, generate);
+        if (!chunk) {return undefined; }
+        return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
     public tick(): void {
@@ -169,24 +192,5 @@ export default class Level {
 
     public save() {
         return JSON.stringify(this);
-    }
-
-    private getChunksRadius(r: number = 1): Chunk[] {
-        const chunks = [];
-        for (let x = -r; x < r; x++) {
-            for (let y = -r; y < r; y++) {
-                chunks.push(this.getChunk(
-                    x + ((Renderer.camera.x + 16 * 8) >> 8),
-                    y + ((Renderer.camera.y + 16 * 8) >> 8)));
-            }
-        }
-        return chunks;
-    }
-
-    private trySpawn(): void {
-        const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
-        if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
-            return;
-        }
     }
 }
