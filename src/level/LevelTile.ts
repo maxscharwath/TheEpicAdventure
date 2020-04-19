@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import Updater from "../core/Updater";
 import Entity from "../entity/Entity";
 import TileRandom from "../utility/TileRandom";
 import Biome from "./biome/Biome";
@@ -7,7 +6,6 @@ import Chunk from "./Chunk";
 import Level from "./Level";
 import Tile from "./tile/Tile";
 import Tiles from "./tile/Tiles";
-import WaterTile from "./tile/WaterTile";
 
 type Type<T> = new (...args: any[]) => T;
 export default class LevelTile extends PIXI.Container {
@@ -85,8 +83,8 @@ export default class LevelTile extends PIXI.Container {
         const lt = [];
         const x = this.getLocalX();
         const y = this.getLocalY();
-        for (let i = x - radius; i < x + radius; i++) {
-            for (let j = y - radius; j < y + radius; j++) {
+        for (let i = x - radius; i <= x + radius; i++) {
+            for (let j = y - radius; j <= y + radius; j++) {
                 if (i === x && j === y) {
                     continue;
                 }
@@ -97,6 +95,15 @@ export default class LevelTile extends PIXI.Container {
             }
         }
         return lt;
+    }
+
+    public getDirectNeighbourTiles( generate= true): LevelTile[] {
+        return [
+            this.getRelativeTile(-1, 0, generate),
+            this.getRelativeTile(0, 1, generate),
+            this.getRelativeTile(0, -1, generate),
+            this.getRelativeTile(1, 0, generate),
+        ];
     }
 
     public getTile(tile: string): number {
@@ -124,8 +131,8 @@ export default class LevelTile extends PIXI.Container {
         return this.tile.friction;
     }
 
-    public instanceOf(tileClass: Type<Tile>) {
-        return this.tile instanceof tileClass;
+    public instanceOf(...tileClass: Array<Type<Tile>>) {
+        return tileClass.some((c) => this.tile instanceof c);
     }
 
 }

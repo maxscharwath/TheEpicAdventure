@@ -1,6 +1,6 @@
+import * as PIXI from "pixi.js";
 import Entity from "../../entity/Entity";
 import LevelTile from "../../level/LevelTile";
-import * as PIXI from "pixi.js";
 
 export default class Resource {
     public texture: PIXI.BaseTexture;

@@ -1,3 +1,6 @@
+import electron from "electron";
+
+const app: electron.App = (electron.app || electron.remote.app);
 export default class Version {
 
     private static parseInt(n: any): number {
@@ -29,7 +32,7 @@ export default class Version {
     private readonly minor: number;
     private readonly dev: number;
 
-    constructor(version: string) {
+    constructor(version: string = app.getVersion()) {
         const nums: string[] = version.split(".");
         try {
             if (nums.length > 0) {

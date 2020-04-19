@@ -9,13 +9,13 @@ import Tiles from "../level/tile/Tiles";
 import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
-import BackgroundDisplay from "../screen/BackgroundDisplay";
 import Display from "../screen/Display";
 import InfoDisplay from "../screen/InfoDisplay";
 import InventoryDisplay from "../screen/InventoryDisplay";
 import Initializer from "./Initializer";
 import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
+import Network from "./Network";
 import Settings from "./Settings";
 
 export default class Game {
@@ -76,11 +76,14 @@ export default class Game {
                 0, 0, true);
         }
 
-        // (new InfoDisplay()).show();
-        (new InventoryDisplay(this.player.inventory)).show();
+        (new InfoDisplay()).show();
+
+       //  (new InventoryDisplay(this.player.inventory)).show();
 
         Initializer.createAndDisplayFrame();
         Initializer.run();
+
+        Network.startMultiplayerServer();
     }
 
     public static quit(): void {

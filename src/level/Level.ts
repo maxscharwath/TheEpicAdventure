@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import {Error} from "tslint/lib/error";
 import Renderer from "../core/Renderer";
 import Entity from "../entity/Entity";
 import Player from "../entity/mob/Player";

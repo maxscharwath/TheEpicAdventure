@@ -13,6 +13,10 @@ export default class Player extends Mob {
         this.container.addChild(this.sprite);
         this.playAnimation("walk");
     }
+
+    protected steppedOn() {
+        super.steppedOn();
+    }
     private static spriteSheet = new SpriteSheet("player.json");
     private sprite: AnimatedSprite;
 

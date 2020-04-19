@@ -3,6 +3,7 @@
     <words>
       <w>gamespeed</w>
       <w>hitbox</w>
+      <w>socketio</w>
       <w>tickable</w>
     </words>
   </dictionary>

@@ -5,7 +5,6 @@ import Vector from "../../utility/Vector";
 import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
-import * as PIXI from "pixi.js";
 
 export default class Mob extends Entity {
 

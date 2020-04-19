@@ -1,7 +1,7 @@
 import {app, BrowserWindow} from "electron";
-import * as path from "path";
 // @ts-ignore
 import electron_reload from "electron-reload";
+import * as path from "path";
 
 electron_reload(__dirname);
 

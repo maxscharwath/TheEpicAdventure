@@ -101,8 +101,10 @@ export default class LevelGen {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("water")));
                 } else if (biome.tag.includes("beach")) {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
-                } else if (biome.tag.includes("desert") || biome.tag.includes("savanna")) {
+                } else if (biome.tag.includes("desert")) {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
+                } else if (biome.tag.includes("savanna")) {
+                    map.push(new LevelTile(level, x, y, biome, Tiles.get("dirt")));
                 } else {
                     if (e > 0.8) {
                         map.push(new LevelTile(level, x, y, biome, Tiles.get("rock")));

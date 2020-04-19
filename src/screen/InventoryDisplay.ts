@@ -3,7 +3,6 @@ import Inventory from "../item/Inventory";
 import Item from "../item/Item";
 import Slot from "../item/Slot";
 import BackgroundDisplay from "./BackgroundDisplay";
-import Display from "./Display";
 
 class InventorySlot extends PIXI.Container {
     private slot: Slot;

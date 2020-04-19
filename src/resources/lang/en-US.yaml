@@ -22,6 +22,7 @@ biome.savanna: Savanna
 tile.water: Water
 tile.sand:  Sand
 tile.grass: Grass
+tile.dirt: Dirt
 
 entity.player:  Player
 entity.zombie:  Zombie

@@ -1,8 +1,8 @@
+import * as PIXI from "pixi.js";
 import Mob from "../entity/mob/Mob";
 import LevelTile from "../level/LevelTile";
 import Item from "./Item";
 import Resource from "./resources/Resource";
-import * as PIXI from "pixi.js";
 
 export default class ResourceItem extends Item {
     private resource: Resource;

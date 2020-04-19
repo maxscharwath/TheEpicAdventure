@@ -64,9 +64,6 @@ export default class Renderer {
     }
 
     public static render(dlt: number): void {
-        if (Game.isValidServer()) {
-            return;
-        }
         Game.level.render();
         this.mainStage.addChild(...this.stages);
         this.renderer.render(this.mainStage);

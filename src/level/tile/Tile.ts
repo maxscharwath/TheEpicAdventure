@@ -1,22 +1,11 @@
 import * as PIXI from "pixi.js";
 import Localization from "../../core/io/Localization";
-import Updater from "../../core/Updater";
 import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
+import Tiles from "./Tiles";
 
 export default class Tile {
-
-    protected static loadMaskTextures(path: string): PIXI.Texture[] {
-        const textures = [];
-        const baseTexture = PIXI.BaseTexture.from(path);
-        for (let y = 0; y < 3; y++) {
-            for (let x = 0; x < 3; x++) {
-                textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(x * 8, y * 8, 8, 8)));
-            }
-        }
-        return textures;
-    }
 
     protected random: Random = new Random();
     protected levelTile: LevelTile;
@@ -44,7 +33,6 @@ export default class Tile {
     }
 
     public steppedOn(entity: Entity) {
-
     }
 
     public tick(): void {
