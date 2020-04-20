@@ -5,11 +5,12 @@ import Tile from "./Tile";
 
 export default class RockTile extends AutoTilingTile  {
     protected static autoTileTextures = RockTile.loadMaskTextures("src/resources/rock.png");
-    protected init(): void {
+    public static readonly TAG = "rock";
+
+    public init() {
         super.init();
         this.initAutoTile();
     }
-    public static readonly TAG = "rock";
 
     public tick(): void {
         super.tick();

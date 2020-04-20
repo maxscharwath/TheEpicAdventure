@@ -1,21 +1,17 @@
-import * as PIXI from "pixi.js";
 import Localization from "../../core/io/Localization";
 import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
-import Tiles from "./Tiles";
 
+type Type<T> = new (...args: any[]) => T;
 export default class Tile {
 
     protected random: Random = new Random();
     protected levelTile: LevelTile;
 
-    protected init() {
-
-    }
-
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
+    public groundTile?: Tile;
 
     public ["constructor"]: typeof Tile;
 
@@ -26,6 +22,10 @@ export default class Tile {
     constructor(levelTile: LevelTile) {
         this.levelTile = levelTile;
         this.init();
+    }
+
+    public init() {
+
     }
 
     public mayPass(e: Entity): boolean {
@@ -53,5 +53,10 @@ export default class Tile {
         this.levelTile = levelTile;
         this.init();
         return this;
+    }
+
+    public instanceOf(...tileClass: Array<Type<Tile>>) {
+        const ground = this.groundTile;
+        return tileClass.some((c) => this instanceof c || ground instanceof c);
     }
 }

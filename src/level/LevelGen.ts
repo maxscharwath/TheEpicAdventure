@@ -1,5 +1,5 @@
 import System from "../core/System";
-import Random from "../utility/Random";
+import ChunkRandom from "../utility/ChunkRandom";
 import Seed from "../utility/Seed";
 import SimplexNoise from "../utility/SimplexNoise";
 import Biome from "./biome/Biome";
@@ -13,7 +13,6 @@ export default class LevelGen {
     private elevationNoise: SimplexNoise;
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
-    private random: Random;
 
     private biome(e: number, m: number, t: number) {
         if (e < 0.025) {
@@ -66,6 +65,7 @@ export default class LevelGen {
     public static create(seed?: number | string) {
         return new LevelGen(seed);
     }
+
     public seed = 0;
 
     constructor(seed: number | string) {
@@ -73,10 +73,10 @@ export default class LevelGen {
         this.elevationNoise = new SimplexNoise(this.seed);
         this.moistureNoise = new SimplexNoise(this.seed * 32);
         this.temperatureNoise = new SimplexNoise(this.seed * 16);
-        this.random = new Random(this.seed);
     }
 
     public genChunk(level: Level, cX: number, cY: number, callback?: () => void): LevelTile[] {
+        const random = new ChunkRandom(this.seed, cX, cY);
         const t1 = System.nanoTime();
         const map = [];
         const x1 = cX * LevelGen.chunkSize;
@@ -105,6 +105,16 @@ export default class LevelGen {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
                 } else if (biome.tag.includes("savanna")) {
                     map.push(new LevelTile(level, x, y, biome, Tiles.get("dirt")));
+                } else if (biome.tag.includes("forest")) {
+                    if (random.probability(0.7)) {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("tree")));
+                    } else if (random.probability(0.3)) {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("palm")));
+                    }  else if (random.probability(0.3)) {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("spruce")));
+                    } else {
+                        map.push(new LevelTile(level, x, y, biome, Tiles.get("grass")));
+                    }
                 } else {
                     if (e > 0.8) {
                         map.push(new LevelTile(level, x, y, biome, Tiles.get("rock")));

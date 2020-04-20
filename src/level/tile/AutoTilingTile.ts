@@ -17,7 +17,19 @@ export default class AutoTilingTile extends Tile {
         return textures;
     }
 
-    protected autoTiling() {
+    protected initAutoTile() {
+        this.sprites = [ new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
+        this.sprites[0].position.set(0, 0);
+        this.sprites[1].position.set(8, 0);
+        this.sprites[2].position.set(0, 8);
+        this.sprites[3].position.set(8, 8);
+        this.levelTile.addChild(...this.sprites);
+        this.autoTiling();
+    }
+    private sprites: PIXI.Sprite[];
+    public ["constructor"]: typeof AutoTilingTile;
+
+    public autoTiling() {
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
             return !(t && t.instanceOf(...[this.constructor, ...Tiles.getSome(...this.constructor.canConnectTo)]));
@@ -32,18 +44,6 @@ export default class AutoTilingTile extends Tile {
         this.sprites[2].texture =  this.constructor.autoTileTextures[(!d && !l) ? 4 : (d && l) ? 6 : (d) ? 7 : 3 ];
         this.sprites[3].texture =  this.constructor.autoTileTextures[(!d && !r) ? 4 : (d && r) ? 8 : (d) ? 7 : 5 ];
     }
-
-    protected initAutoTile() {
-        this.sprites = [ new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
-        this.sprites[0].position.set(0, 0);
-        this.sprites[1].position.set(8, 0);
-        this.sprites[2].position.set(0, 8);
-        this.sprites[3].position.set(8, 8);
-        this.levelTile.addChild(...this.sprites);
-        this.autoTiling();
-    }
-    private sprites: PIXI.Sprite[];
-    public ["constructor"]: typeof AutoTilingTile;
 
     public tick(): void {
         super.tick();

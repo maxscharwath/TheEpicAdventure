@@ -75,11 +75,11 @@ export default class LevelTile extends PIXI.Container {
         this.tile.tick();
     }
 
-    public getRelativeTile(x: number, y: number, generate= true): LevelTile {
+    public getRelativeTile(x: number, y: number, generate = true): LevelTile {
         return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
-    public getNeighbourTiles(radius: number = 1, generate= true): LevelTile[] {
+    public getNeighbourTiles(radius: number = 1, generate = true): LevelTile[] {
         const lt = [];
         const x = this.getLocalX();
         const y = this.getLocalY();
@@ -97,7 +97,7 @@ export default class LevelTile extends PIXI.Container {
         return lt;
     }
 
-    public getDirectNeighbourTiles( generate= true): LevelTile[] {
+    public getDirectNeighbourTiles(generate = true): LevelTile[] {
         return [
             this.getRelativeTile(-1, 0, generate),
             this.getRelativeTile(0, 1, generate),
@@ -132,7 +132,7 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public instanceOf(...tileClass: Array<Type<Tile>>) {
-        return tileClass.some((c) => this.tile instanceof c);
+        return this.tile.instanceOf(...tileClass);
     }
 
 }

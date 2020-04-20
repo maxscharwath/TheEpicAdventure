@@ -8,7 +8,7 @@
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "fix": "tslint -c tslint.json -p tsconfig.json --fix",
-    "start": "yarn build && electron ./index.js"
+    "start": "yarn build && electron ./dist/index.js"
   },
   "author": "Maxime Scharwath",
   "repository": "https://github.com/maxscharwath/TheEpicAdventure.git",

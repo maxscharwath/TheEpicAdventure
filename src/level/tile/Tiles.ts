@@ -2,9 +2,12 @@ import DirtTile from "./DirtTile";
 import GrassTile from "./GrassTile";
 import HoleTile from "./HoleTile";
 import LavaTile from "./LavaTile";
+import PalmTreeTile from "./PalmTreeTile";
 import RockTile from "./RockTile";
 import SandTile from "./SandTile";
+import SpruceTreeTile from "./SpruceTreeTile";
 import Tile from "./Tile";
+import TreeTile from "./TreeTile";
 import WaterTile from "./WaterTile";
 
 type Type<T> = new (...args: any[]) => T;
@@ -46,5 +49,8 @@ export default class Tiles {
         Tiles.add("rock", RockTile);
         Tiles.add("hole", HoleTile);
         Tiles.add("dirt", DirtTile);
+        Tiles.add("tree", TreeTile);
+        Tiles.add("palm", PalmTreeTile);
+        Tiles.add("spruce", SpruceTreeTile);
     }
 }
