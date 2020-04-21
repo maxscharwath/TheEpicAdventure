@@ -8,7 +8,7 @@ export default class SandTile extends AutoTilingTile  {
 
     public init() {
         super.init();
-        this.levelTile.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/sand.png")));
+        this.container.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/sand.png")));
         this.initAutoTile();
     }
 

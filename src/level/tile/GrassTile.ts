@@ -6,9 +6,9 @@ export default class GrassTile extends AutoTilingTile {
     public static readonly TAG = "grass";
 
     public init() {
-            super.init();
-            this.levelTile.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/grass.png")));
-            this.initAutoTile();
+        super.init();
+        this.container.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/grass.png")));
+        this.initAutoTile();
     }
 
     public tick(): void {

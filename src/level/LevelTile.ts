@@ -37,6 +37,7 @@ export default class LevelTile extends PIXI.Container {
             this.level.tilesContainer.addChild(this);
         }
         this.tile = new tile(this);
+        this.addChild(this.tile.container);
     }
 
     public getLocalX() {
@@ -58,7 +59,19 @@ export default class LevelTile extends PIXI.Container {
     public setTile(tile: Type<Tile>) {
         this.removeChildren();
         this.tile = new tile(this);
+        this.addChild(this.tile.container);
+    }
 
+    public findTileRadius(radius: number, ...tiles: Array<Type<Tile>>) {
+        for (let x = -radius; x < radius; x++) {
+            const height = ~~(Math.sqrt(radius * radius - x * x));
+            for (let y = -height; y < height; y++) {
+                if (this.getRelativeTile(x, y, false).instanceOf(...tiles)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public toJSON() {

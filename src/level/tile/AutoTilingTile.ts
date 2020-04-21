@@ -23,7 +23,7 @@ export default class AutoTilingTile extends Tile {
         this.sprites[1].position.set(8, 0);
         this.sprites[2].position.set(0, 8);
         this.sprites[3].position.set(8, 8);
-        this.levelTile.addChild(...this.sprites);
+        this.container.addChild(...this.sprites);
         this.autoTiling();
     }
     private sprites: PIXI.Sprite[];

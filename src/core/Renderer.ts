@@ -35,6 +35,7 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
+
     private static mainStage = new PIXI.Container();
     private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
     private static DEBUG = false;
@@ -43,8 +44,7 @@ export default class Renderer {
         width: 960,
         height: 540,
         backgroundColor: Color.black.getInt(),
-        autoDensity: true,
-        resolution: 2,
+        autoDensity: true
     });
 
     public static readonly DEFAULT_WIDTH: number = 240;

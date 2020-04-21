@@ -6,6 +6,9 @@ import Tiles from "./Tiles";
 export default class TreeTile extends Tile {
 
     protected treeTilingInit(source: string) {
+        this.container.addChild(this.groundTile.container);
+        this.groundTile.init();
+
         const texture = PIXI.BaseTexture.from(source);
         this.layersTreeSprite = [
             new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(8, 8, 8, 8))),
@@ -19,11 +22,16 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[2].position.set(0, 8);
         this.layersTreeSprite[3].position.set(8, 8);
 
-        this.levelTile.addChild(this.layersTreeSprite[0]);
-        this.levelTile.addChild(this.layersTreeSprite[1]);
-        this.levelTile.addChild(new PIXI.Sprite(new PIXI.Texture(texture)));
-        this.levelTile.addChild(this.layersTreeSprite[2]);
-        this.levelTile.addChild(this.layersTreeSprite[3]);
+        this.container.addChild(this.layersTreeSprite[0]);
+        this.container.addChild(this.layersTreeSprite[1]);
+        this.container.addChild(new PIXI.Sprite(new PIXI.Texture(texture)));
+        this.container.addChild(this.layersTreeSprite[2]);
+        this.container.addChild(this.layersTreeSprite[3]);
+    }
+
+    protected initTree() {
+        this.groundTile = new (Tiles.get("grass"))(this.levelTile);
+        this.treeTilingInit("src/resources/tree.png");
     }
 
     private layersTreeSprite: PIXI.Sprite[];
@@ -51,9 +59,7 @@ export default class TreeTile extends Tile {
 
     public init() {
         super.init();
-        this.groundTile = new (Tiles.get("grass"))(this.levelTile);
-        this.groundTile.init();
-        this.treeTilingInit("src/resources/tree.png");
+        this.initTree();
     }
 
     public tick(): void {

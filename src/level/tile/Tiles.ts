@@ -1,4 +1,5 @@
 import DirtTile from "./DirtTile";
+import FarmlandTile from "./FarmlandTile";
 import GrassTile from "./GrassTile";
 import HoleTile from "./HoleTile";
 import LavaTile from "./LavaTile";
@@ -49,6 +50,7 @@ export default class Tiles {
         Tiles.add("rock", RockTile);
         Tiles.add("hole", HoleTile);
         Tiles.add("dirt", DirtTile);
+        Tiles.add("farmland", FarmlandTile);
         Tiles.add("tree", TreeTile);
         Tiles.add("palm", PalmTreeTile);
         Tiles.add("spruce", SpruceTreeTile);

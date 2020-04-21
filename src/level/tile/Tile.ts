@@ -1,3 +1,4 @@
+import * as PIXI from "pixi.js";
 import Localization from "../../core/io/Localization";
 import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
@@ -11,6 +12,7 @@ export default class Tile {
 
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
+    public container = new PIXI.Container();
     public groundTile?: Tile;
 
     public ["constructor"]: typeof Tile;
@@ -25,7 +27,6 @@ export default class Tile {
     }
 
     public init() {
-
     }
 
     public mayPass(e: Entity): boolean {
