@@ -159,4 +159,11 @@ export default class LevelTile extends PIXI.Container {
     public onRender() {
         this.tile.onRender();
     }
+
+    /**
+     * @todo
+     */
+    public onUpdate() {
+
+    }
 }

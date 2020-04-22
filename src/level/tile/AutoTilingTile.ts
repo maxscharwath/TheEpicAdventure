@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+
 export default class AutoTilingTile extends Tile {
 
     protected static canConnectTo: string[] = [];
@@ -14,11 +15,16 @@ export default class AutoTilingTile extends Tile {
                 textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(x * 8, y * 8, 8, 8)));
             }
         }
+        for (let y = 0; y < 2; y++) {
+            for (let x = 0; x < 2; x++) {
+                textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(24 + x * 8, y * 8, 8, 8)));
+            }
+        }
         return textures;
     }
 
     protected initAutoTile() {
-        this.sprites = [ new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
+        this.sprites = [new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
         this.sprites[0].position.set(0, 0);
         this.sprites[1].position.set(8, 0);
         this.sprites[2].position.set(0, 8);
@@ -26,6 +32,7 @@ export default class AutoTilingTile extends Tile {
         this.container.addChild(...this.sprites);
         this.autoTiling();
     }
+
     private sprites: PIXI.Sprite[];
     public ["constructor"]: typeof AutoTilingTile;
 
@@ -39,10 +46,15 @@ export default class AutoTilingTile extends Tile {
         const l = test(-1, 0);
         const r = test(1, 0);
 
-        this.sprites[0].texture =  this.constructor.autoTileTextures[(!u && !l) ? 4 : (u && l) ? 0 : (u) ? 1 : 3 ];
-        this.sprites[1].texture =  this.constructor.autoTileTextures[(!u && !r) ? 4 : (u && r) ? 2 : (u) ? 1 : 5 ];
-        this.sprites[2].texture =  this.constructor.autoTileTextures[(!d && !l) ? 4 : (d && l) ? 6 : (d) ? 7 : 3 ];
-        this.sprites[3].texture =  this.constructor.autoTileTextures[(!d && !r) ? 4 : (d && r) ? 8 : (d) ? 7 : 5 ];
+        const ul = test(-1, -1);
+        const ur = test(1, -1);
+        const dl = test(-1, 1);
+        const dr = test(1, 1);
+
+        this.sprites[0].texture = this.constructor.autoTileTextures[!u && !l ? !ul ? 4 : 12 : u && l ? 0 : u ? 1 : 3];
+        this.sprites[1].texture = this.constructor.autoTileTextures[!u && !r ? !ur ? 4 : 11 : u && r ? 2 : u ? 1 : 5];
+        this.sprites[2].texture = this.constructor.autoTileTextures[!d && !l ? !dl ? 4 : 10 : d && l ? 6 : d ? 7 : 3];
+        this.sprites[3].texture = this.constructor.autoTileTextures[!d && !r ? !dr ? 4 : 9 : d && r ? 8 : d ? 7 : 5];
     }
 
     public onTick(): void {

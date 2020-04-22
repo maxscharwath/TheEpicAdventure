@@ -107,7 +107,10 @@ export default class LevelGen {
                 }
 
                 if (biome.tag.includes("ocean")) {
-                    tile.setTile(Tiles.get("lava"));
+                    tile.setTile(Tiles.get("water"));
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.get("lilypad"));
+                    }
                 }
                 if (biome.tag.includes("beach")) {
                     tile.setTile(Tiles.get("sand"));
