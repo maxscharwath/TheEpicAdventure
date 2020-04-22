@@ -107,7 +107,7 @@ export default class LevelGen {
                 }
 
                 if (biome.tag.includes("ocean")) {
-                    tile.setTile(Tiles.get("water"));
+                    tile.setTile(Tiles.get("lava"));
                 }
                 if (biome.tag.includes("beach")) {
                     tile.setTile(Tiles.get("sand"));
@@ -119,11 +119,11 @@ export default class LevelGen {
                     tile.setTile(Tiles.get("dirt"));
                 }
                 if (biome.tag.includes("forest")) {
-                    if (random.probability(0.7)) {
+                    if (random.probability(2)) {
                         tile.setTile(Tiles.get("tree"));
-                    } else if (random.probability(0.3)) {
+                    } else if (random.probability(2)) {
                         tile.setTile(Tiles.get("palm"));
-                    } else if (random.probability(0.3)) {
+                    } else if (random.probability(2)) {
                         tile.setTile(Tiles.get("spruce"));
                     } else {
                         tile.setTile(Tiles.get("grass"));

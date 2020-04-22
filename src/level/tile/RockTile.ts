@@ -12,8 +12,8 @@ export default class RockTile extends AutoTilingTile  {
         this.initAutoTile();
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
     }
 
     public mayPass(e: Entity): boolean {

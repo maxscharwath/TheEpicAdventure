@@ -31,8 +31,12 @@ export default class Zombie extends HostileMob {
         return false;
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
+    }
+
+    public onRender() {
+        super.onRender();
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
             this.playAnimation("walk");
         } else {

@@ -46,10 +46,10 @@ export default class Tile {
     public steppedOn(entity: Entity) {
     }
 
-    public tick(): void {
+    public onTick(): void {
     }
 
-    public render(): void {
+    public onRender() {
     }
 
     public toJSON() {
@@ -70,4 +70,5 @@ export default class Tile {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
     }
+
 }

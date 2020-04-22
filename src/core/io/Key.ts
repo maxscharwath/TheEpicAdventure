@@ -18,7 +18,7 @@ export default class Key {
         }
     }
 
-    public tick(): void {
+    public onTick(): void {
         if (this.absorbs < this.presses) {
             this.absorbs++;
             if (this.presses - this.absorbs > 3) {

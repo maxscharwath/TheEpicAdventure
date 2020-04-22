@@ -93,12 +93,12 @@ export default class InputHandler {
         }
     }
 
-    public tick() {
+    public onTick() {
         if (!Game.HASFOCUS) {
             this.releaseAll();
         }
         for (const key of this.keyboard.values()) {
-            key.tick();
+            key.onTick();
         }
     }
 

@@ -92,13 +92,13 @@ export default class Level {
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
-    public tick(): void {
+    public onTick(): void {
         const chunks = this.getChunksRadius(1);
         chunks.forEach((chunk) => {
             if (!this.loadedChunks.includes(chunk)) {
                 chunk.load();
             }
-            chunk.tick();
+            chunk.onTick();
         });
         this.loadedChunks.forEach((c) => {
             if (!chunks.includes(c)) {
@@ -122,13 +122,6 @@ export default class Level {
             this.entitiesToAdd.splice(this.entitiesToAdd.indexOf(entity), 1);
         }
 
-        // for (let entity of this.entities) {
-        //     if (!(entity instanceof Entity)) continue;
-        //     entity.tick();
-        //     if (entity instanceof Mob)
-        //         count++;
-        // }
-
         while (this.entitiesToRemove.length > 0) {
             const entity: Entity = this.entitiesToRemove[0];
             entity.getChunk().remove(entity);
@@ -147,15 +140,17 @@ export default class Level {
         if (count < this.maxMobCount) {
             this.trySpawn();
         }
-        this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    public render() {
+    public onRender() {
         if (!this.players[0]) {
             return;
         }
         Renderer.camera.setContainer(this.container);
         Renderer.camera.setFollow(this.players[0]);
+
+        this.loadedChunks.forEach((chunk) => chunk.onRender());
+        this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     public add(entity: Entity, x: number = null, y: number = null, tileCoords: boolean = false): void {

@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
+import Entity from "../entity/Entity";
 
 export default class Camera {
 
@@ -27,14 +28,19 @@ export default class Camera {
 
     private _zoom: number = 4;
 
+    private follow: { x: number; y: number; } = null;
+    private fx: number = 0;
+    private fy: number = 0;
+    private cx: number = 0;
+    private cy: number = 0;
+
     private move() {
-        if (this.follow instanceof Object) {
+        if (this.follow instanceof Entity) {
             if ("x" in this.follow && "y" in this.follow) {
                 this.fx = this.follow.x;
                 this.fy = this.follow.y;
             }
         }
-        this.fx += 3;
 
         const dX = this.cx - this.fx;
         const dY = this.cy - this.fy;
@@ -57,12 +63,6 @@ export default class Camera {
         this.cy += speed * Math.sin(angle);
     }
 
-    public follow: { x: number; y: number; } = null;
-    public fx: number = 0;
-    public fy: number = 0;
-    public cx: number = 0;
-    public cy: number = 0;
-
     constructor() {
     }
 
@@ -72,12 +72,10 @@ export default class Camera {
         this.follow = null;
     }
 
-    public setFollow(obj: { x: number, y: number }) {
+    public setFollow(obj: Entity) {
         if (obj instanceof Object) {
-            if ("x" in obj && "y" in obj) {
-                this.follow = obj;
-                return true;
-            }
+            this.follow = obj;
+            return true;
         }
         return false;
     }

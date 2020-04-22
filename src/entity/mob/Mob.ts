@@ -174,8 +174,8 @@ export default class Mob extends Entity {
         this.health -= dmg;
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
         if (this.hurtCooldown > 0) {
             this.hurtCooldown--;
         }

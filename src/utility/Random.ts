@@ -57,7 +57,8 @@ export default class Random {
     }
 
     public probability(prob: number): boolean {
-        return this.random() <= prob;
+        if (prob === 0) {return false; }
+        return this.random() <= 1 / prob;
     }
 
     public gaussian(): number {

@@ -92,8 +92,8 @@ export default class LevelTile extends PIXI.Container {
         };
     }
 
-    public tick() {
-        this.tile.tick();
+    public onTick() {
+        this.tile.onTick();
     }
 
     public getRelativeTile(x: number, y: number, generate = true): LevelTile {
@@ -156,4 +156,7 @@ export default class LevelTile extends PIXI.Container {
         return this.tile.instanceOf(...tileClass);
     }
 
+    public onRender() {
+        this.tile.onRender();
+    }
 }

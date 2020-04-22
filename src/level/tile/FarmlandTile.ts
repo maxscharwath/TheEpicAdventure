@@ -14,9 +14,9 @@ export default class FarmlandTile extends Tile {
         this.container.addChild(new PIXI.Sprite(PIXI.Texture.from("src/resources/farmland.png")));
     }
 
-    public tick(): void {
-        super.tick();
-        if (this.random.probability(0.01)) {
+    public onTick(): void {
+        super.onTick();
+        if (this.random.probability(100)) {
             if (!this.levelTile.findTileRadius(3, Tiles.get("water"))) {
                 --this.humidity;
                 this.filter.brightness(this.humidity / -50 + 1, false);

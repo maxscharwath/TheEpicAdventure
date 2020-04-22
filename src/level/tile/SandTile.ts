@@ -12,8 +12,8 @@ export default class SandTile extends AutoTilingTile  {
         this.initAutoTile();
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
     }
 
 }

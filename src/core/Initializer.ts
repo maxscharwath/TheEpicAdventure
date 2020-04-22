@@ -5,10 +5,11 @@ import Updater from "./Updater";
 
 export default class Initializer {
 
-    private static ticker: PIXI.Ticker = new PIXI.Ticker();
+    private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
+    private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 
     public static getCurFps(): number {
-        return this.ticker.FPS;
+        return this.tickerRender.FPS;
     }
 
     public static createAndDisplayFrame(): void {
@@ -20,9 +21,12 @@ export default class Initializer {
     }
 
     public static run() {
-        this.ticker.add((dlt) => Renderer.render(dlt), PIXI.UPDATE_PRIORITY.INTERACTION);
-        this.ticker.add((dlt) => Updater.tick(dlt), PIXI.UPDATE_PRIORITY.NORMAL);
-        this.ticker.start();
+        this.tickerRender.add((dlt) => Renderer.render(dlt), PIXI.UPDATE_PRIORITY.INTERACTION);
+        this.tickerUpdater.add((dlt) => Updater.onTick(dlt), PIXI.UPDATE_PRIORITY.LOW);
+        this.tickerUpdater.minFPS = 20;
+        this.tickerUpdater.maxFPS = 20;
+        this.tickerRender.start();
+        this.tickerUpdater.start();
     }
 }
 

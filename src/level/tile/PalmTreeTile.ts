@@ -8,7 +8,7 @@ export default class PalmTreeTile extends TreeTile {
         this.treeTilingInit("src/resources/palm.png");
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
     }
 }

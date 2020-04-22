@@ -65,8 +65,8 @@ export default class InventoryDisplay extends BackgroundDisplay {
         this.width = b.width + b.x;
         this.height = b.height + b.y;
     }
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
         this.slots.forEach((slot) => slot.update());
     }
 }

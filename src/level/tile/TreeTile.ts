@@ -62,9 +62,9 @@ export default class TreeTile extends Tile {
         this.initTree();
     }
 
-    public tick(): void {
-        super.tick();
-        this.groundTile.tick();
+    public onTick(): void {
+        super.onTick();
+        this.groundTile.onTick();
         this.treeTiling();
     }
 

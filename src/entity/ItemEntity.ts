@@ -21,8 +21,8 @@ export default class ItemEntity extends Entity {
         this.container.addChild(this.item.getSprite(true));
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
         this.time++;
         if (this.time >= this.lifeTime) {
             this.remove();

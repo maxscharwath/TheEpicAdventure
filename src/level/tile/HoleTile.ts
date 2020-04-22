@@ -14,8 +14,8 @@ export default class HoleTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
 
         if (Random.probability(0.05)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);

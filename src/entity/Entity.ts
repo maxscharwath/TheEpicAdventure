@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import uniqid from "uniqid";
+import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
 import Chunk from "../level/Chunk";
 import Level from "../level/Level";
@@ -25,8 +26,8 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     protected move(xa: number, ya: number): boolean {
-        xa *= Updater.delta;
-        ya *= Updater.delta;
+        xa *= Renderer.delta;
+        ya *= Renderer.delta;
         let stopped = true;
         if (this.move2(xa, 0)) {
             stopped = false;
@@ -73,7 +74,7 @@ export default class Entity extends PIXI.Container implements Tickable {
                 }
 
                 // this.level.getTile(xt, yt).bumpedInto(this.level, xt, yt, this);
-                if (!this.getLevel().getTile(xt, yt).mayPass(this)) {
+                if (!this.level.getTile(xt, yt).mayPass(this)) {
                     blocked = true;
                     return false;
                 }
@@ -123,9 +124,12 @@ export default class Entity extends PIXI.Container implements Tickable {
         return (Updater.tickCount - this.lastTick) < 50;
     }
 
-    public tick(): void {
+    public onTick(): void {
         this.lastTick = Updater.tickCount;
         this.ticks++;
+    }
+
+    public onRender() {
         this.z += this.a.z;
         if (this.z < 0) {
             if (this.a.z < -2) {
@@ -148,7 +152,7 @@ export default class Entity extends PIXI.Container implements Tickable {
         if (Maths.abs(this.a.y) < 0.05) {
             this.a.y = 0;
         }
-        this.a.z -= this.getLevel().gravity;
+        this.a.z -= this.level.gravity;
 
         this.move(this.a.x, this.a.y);
 

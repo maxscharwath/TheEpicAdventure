@@ -18,8 +18,15 @@ export default class HostileMob extends Mob {
         this.newTarget();
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
+        if (!(this.target instanceof Entity) && this.random.int(100) === 0) {
+            this.newTarget();
+        }
+    }
+
+    public onRender() {
+        super.onRender();
         let speedX = this.speed;
         let speedY = this.speed;
         let xa = 0;
@@ -52,10 +59,6 @@ export default class HostileMob extends Mob {
         if (this.aSpeed < this.speed) {
             this.a.x += xa / 10;
             this.a.y += ya / 10;
-        }
-
-        if (!(this.target instanceof Entity) && this.random.int(100) === 0) {
-            this.newTarget();
         }
     }
 

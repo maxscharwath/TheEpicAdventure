@@ -4,7 +4,7 @@ import Tiles from "./Tiles";
 export default class AutoTilingTile extends Tile {
 
     protected static canConnectTo: string[] = [];
-    protected static autoTileTextures = AutoTilingTile.loadMaskTextures("src/resources/water.png");
+    protected static autoTileTextures: PIXI.Texture[];
 
     protected static loadMaskTextures(path: string): PIXI.Texture[] {
         const textures = [];
@@ -45,8 +45,8 @@ export default class AutoTilingTile extends Tile {
         this.sprites[3].texture =  this.constructor.autoTileTextures[(!d && !r) ? 4 : (d && r) ? 8 : (d) ? 7 : 5 ];
     }
 
-    public tick(): void {
-        super.tick();
+    public onTick(): void {
+        super.onTick();
         this.autoTiling();
     }
 }

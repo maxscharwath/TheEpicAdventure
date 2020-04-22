@@ -17,6 +17,7 @@ export default class InfoDisplay extends Display {
             `s: ${Game.level.seed}`,
             `x: ${(Game.player.x / 16).toFixed(2)}`,
             `y: ${(Game.player.y / 16).toFixed(2)}`,
+            `y: ${(Game.player.a)}`,
             `b: ${tile.biome.getDisplayName()}`,
             `t: ${tile.tile.getDisplayName()}`,
         ].join("\n");
@@ -39,16 +40,18 @@ export default class InfoDisplay extends Display {
         this.addChild(this.textBg, this.textArea);
     }
 
-    public tick(): void {
+    public onTick(): void {
         const text = this.text();
         if (this.textArea.text === text) {
             return;
         }
         this.textArea.text = text;
-
         this.textBg.x = this.textArea.x;
         this.textBg.y = this.textArea.y;
         this.textBg.width = this.textArea.width;
         this.textBg.height = this.textArea.height;
+    }
+
+    public  onRender(): void {
     }
 }

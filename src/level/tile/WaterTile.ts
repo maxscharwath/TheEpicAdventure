@@ -7,8 +7,8 @@ export default class WaterTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "hole"];
     protected static autoTileTextures = WaterTile.loadMaskTextures("src/resources/water_mask.png");
     private static tileTextures = WaterTile.loadTextures("src/resources/water.png", 10);
-    public static readonly TAG = "water";
     private animSprite: PIXI.AnimatedSprite;
+    public static readonly TAG = "water";
 
     public init() {
         super.init();
@@ -21,9 +21,9 @@ export default class WaterTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
-    public tick(): void {
-        super.tick();
-        if (!this.animSprite.playing && Random.probability(0.0001)) {
+    public onTick(): void {
+        super.onTick();
+        if (!this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
     }

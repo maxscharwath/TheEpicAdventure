@@ -48,10 +48,10 @@ export default class Chunk {
         return (Updater.tickCount - this.lastTick) < 50;
     }
 
-    public tick(): void {
+    public onTick(): void {
         this.lastTick = Updater.tickCount;
         for (const lt of this.map) {
-            lt.tick();
+            lt.onTick();
         }
         let count = 0;
         for (const entity of this.entities) {
@@ -61,7 +61,7 @@ export default class Chunk {
             if (entity.getRemoved()) {
                 continue;
             }
-            entity.tick();
+            entity.onTick();
             if (entity instanceof Mob) {
                 count++;
             }
@@ -104,7 +104,14 @@ export default class Chunk {
         });
     }
 
-    public render() {
+    public onRender() {
+        this.map.forEach((lt) => lt.onRender());
+        for (const entity of this.entities) {
+            if (!(entity instanceof Entity) || entity.getRemoved()) {
+                continue;
+            }
+            entity.onRender();
+        }
     }
 
     public toJSON() {

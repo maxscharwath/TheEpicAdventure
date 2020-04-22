@@ -20,18 +20,17 @@ export default class Updater {
     };
     public static delta: number;
 
-    public static tick(dlt: number): void {
+    public static onTick(dlt: number): void {
         Updater.delta = dlt;
-        Game.input.tick();
+        Game.input.onTick();
         if (!Game.HASFOCUS) {
             return;
         }
         Updater.setTime(Updater.tickCount + 1);
-        Renderer.camera.update();
         Game.displays.forEach((display) => {
-            display.tick();
+            display.onTick();
         });
-        Game.level.tick();
+        Game.level.onTick();
     }
 
     public static setTime(ticks: number): void {

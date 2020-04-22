@@ -77,7 +77,11 @@ export default class Display extends PIXI.Container {
         Game.displays.splice(Game.displays.indexOf(this));
     }
 
-    public tick(): void {
+    public onRender(): void {
+
+    }
+
+    public onTick(): void {
 
     }
 }

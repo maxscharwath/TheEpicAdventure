@@ -44,8 +44,9 @@ export default class Renderer {
         width: 960,
         height: 540,
         backgroundColor: Color.black.getInt(),
-        autoDensity: true
+        autoDensity: true,
     });
+    public static delta: number;
 
     public static readonly DEFAULT_WIDTH: number = 240;
     public static readonly DEFAULT_HEIGHT: number = 160;
@@ -64,14 +65,21 @@ export default class Renderer {
     }
 
     public static render(dlt: number): void {
-        Game.level.render();
-        this.mainStage.addChild(...this.stages);
+        Renderer.delta = dlt;
+        if (!Game.HASFOCUS) {
+            return;
+        }
+        Game.level.onRender();
+        Renderer.camera.update();
+        Game.displays.forEach((display) => {
+            display.onRender();
+        });
         this.renderer.render(this.mainStage);
-
     }
 
     public static init() {
         document.body.appendChild(this.renderer.view);
+        this.mainStage.addChild(...this.stages);
     }
 
     public static getScreen() {
