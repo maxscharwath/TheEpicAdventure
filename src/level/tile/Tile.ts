@@ -7,7 +7,16 @@ import LevelTile from "../LevelTile";
 type Type<T> = new (...args: any[]) => T;
 export default class Tile {
 
-    protected random: Random = new Random();
+    protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
+        const bt = PIXI.BaseTexture.from(path);
+        const textures = [];
+        for (let x = 0; x < nb; x++) {
+            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * 16, 0, 16, 16)));
+        }
+        return textures;
+    }
+
+    protected random: Random;
     protected levelTile: LevelTile;
 
     public static SIZE = 16;
@@ -23,6 +32,7 @@ export default class Tile {
 
     constructor(levelTile: LevelTile) {
         this.levelTile = levelTile;
+        this.random = levelTile.random;
         this.init();
     }
 

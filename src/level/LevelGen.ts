@@ -97,29 +97,36 @@ export default class LevelGen {
                 const t = this.temperatureNoise.noise2D(x / 100 / zoom, y / 100 / zoom) +
                     this.temperatureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2;
                 const biome = this.biome(e, m, t);
-                if (biome.tag.includes("ocean")) {
-                    map.push(new LevelTile(level, x, y, biome, Tiles.get("water")));
-                } else if (biome.tag.includes("beach")) {
-                    map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
-                } else if (biome.tag.includes("desert")) {
-                    map.push(new LevelTile(level, x, y, biome, Tiles.get("sand")));
-                } else if (biome.tag.includes("savanna")) {
-                    map.push(new LevelTile(level, x, y, biome, Tiles.get("dirt")));
-                } else if (biome.tag.includes("forest")) {
-                    if (random.probability(0.7)) {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("tree")));
-                    } else if (random.probability(0.3)) {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("palm")));
-                    }  else if (random.probability(0.3)) {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("spruce")));
-                    } else {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("grass")));
-                    }
+                const tile = new LevelTile(level, x, y, biome);
+                map.push(tile);
+
+                if (e > 0.8) {
+                    tile.setTile(Tiles.get("rock"));
                 } else {
-                    if (e > 0.8) {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("rock")));
+                    tile.setTile(Tiles.get("grass"));
+                }
+
+                if (biome.tag.includes("ocean")) {
+                    tile.setTile(Tiles.get("water"));
+                }
+                if (biome.tag.includes("beach")) {
+                    tile.setTile(Tiles.get("sand"));
+                }
+                if (biome.tag.includes("desert")) {
+                    tile.setTile(Tiles.get("sand"));
+                }
+                if (biome.tag.includes("savanna")) {
+                    tile.setTile(Tiles.get("dirt"));
+                }
+                if (biome.tag.includes("forest")) {
+                    if (random.probability(0.7)) {
+                        tile.setTile(Tiles.get("tree"));
+                    } else if (random.probability(0.3)) {
+                        tile.setTile(Tiles.get("palm"));
+                    } else if (random.probability(0.3)) {
+                        tile.setTile(Tiles.get("spruce"));
                     } else {
-                        map.push(new LevelTile(level, x, y, biome, Tiles.get("grass")));
+                        tile.setTile(Tiles.get("grass"));
                     }
                 }
             }

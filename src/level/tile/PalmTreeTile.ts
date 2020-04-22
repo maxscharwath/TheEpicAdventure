@@ -4,7 +4,7 @@ import TreeTile from "./TreeTile";
 export default class PalmTreeTile extends TreeTile {
 
     protected initTree() {
-        this.groundTile = new (Tiles.get("grass"))(this.levelTile);
+        this.groundTile = new (Tiles.get("sand"))(this.levelTile);
         this.treeTilingInit("src/resources/palm.png");
     }
 

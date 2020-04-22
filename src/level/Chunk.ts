@@ -13,15 +13,16 @@ export default class Chunk {
     private lastTick = 0;
 
     private generate() {
-        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y, () => {
-            this.isGenerated = true;
-        });
+        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
+        this.isGenerated = true;
+        this.map.forEach((lt) => lt.init());
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {
         this.remove(entity);
         chunk.add(entity);
     }
+
     public static SIZE = 16;
     public readonly level: Level;
 

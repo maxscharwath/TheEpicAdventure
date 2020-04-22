@@ -10,6 +10,7 @@ import Tiles from "./tile/Tiles";
 type Type<T> = new (...args: any[]) => T;
 export default class LevelTile extends PIXI.Container {
     private chunk: Chunk;
+    private tileClass: Type<Tile>;
     public static SIZE = 16;
     public biome: Biome;
     public tile: Tile;
@@ -21,22 +22,28 @@ export default class LevelTile extends PIXI.Container {
     public readonly y: number;
     public bg: PIXI.Sprite;
 
-    constructor(level: Level, x: number, y: number, biome?: Biome, tile?: Type<Tile>) {
+    constructor(level: Level, x: number, y: number, biome?: Biome, tileClass?: Type<Tile>) {
         super();
         this.biome = biome;
         this.x = x << 4;
         this.y = y << 4;
         this.level = level;
-        {
-            this.visible = false;
-            this.bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-            this.bg.width = LevelTile.SIZE;
-            this.bg.height = LevelTile.SIZE;
-            this.bg.tint = this.biome.color.getInt();
-            this.addChild(this.bg);
-            this.level.tilesContainer.addChild(this);
+        this.tileClass = tileClass;
+        this.visible = false;
+    }
+
+    public init() {
+        this.removeChildren();
+        this.bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+        this.bg.width = LevelTile.SIZE;
+        this.bg.height = LevelTile.SIZE;
+        this.bg.tint = this.biome.color.getInt();
+        this.addChild(this.bg);
+        if (!(this.tileClass.prototype instanceof Tile)) {
+            throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
-        this.tile = new tile(this);
+        this.tile = new this.tileClass(this);
+        this.level.tilesContainer.addChild(this);
         this.addChild(this.tile.container);
     }
 
@@ -56,10 +63,11 @@ export default class LevelTile extends PIXI.Container {
         return this.tile instanceof Tiles.get(name);
     }
 
-    public setTile(tile: Type<Tile>) {
-        this.removeChildren();
-        this.tile = new tile(this);
-        this.addChild(this.tile.container);
+    public setTile(tileClass: Type<Tile>, init: boolean = true) {
+        this.tileClass = tileClass;
+        if (init) {
+            this.init();
+        }
     }
 
     public findTileRadius(radius: number, ...tiles: Array<Type<Tile>>) {
