@@ -6,6 +6,7 @@ export default class Language {
     private static loadFile(path: string): string {
         return fs.readFileSync("src/resources/lang/" + path, "utf8");
     }
+
     private readonly path: string;
     private data = new Map<string, any>();
     public static all: Language[] = (() => {
@@ -16,6 +17,7 @@ export default class Language {
     public static find(name: string): Language {
         return Language.all.find((lang) => lang.path === name);
     }
+
     public isLoaded: boolean = false;
 
     constructor(path: string) {
@@ -48,6 +50,7 @@ export default class Language {
         if (this.data.has(id)) {
             return this.data.get(id);
         }
+        console.warn(`'${id}' didnt exist on ${this.path}`);
         return id;
     }
 }

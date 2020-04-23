@@ -36,7 +36,7 @@
     "pixi.js": "^5.2.1",
     "socket.io": "^2.3.0",
     "uniqid": "^5.2.0",
-    "yaml": "1.9.0"
+    "yaml": "^1.9.2"
   },
   "main": "index.js"
 }
