@@ -1,7 +1,7 @@
+import Mob from "./Mob";
+import {Entity} from "../";
 import Renderer from "../../core/Renderer";
 import Maths from "../../utility/Maths";
-import Entity from "../Entity";
-import Mob from "./Mob";
 
 export default class HostileMob extends Mob {
     protected target = {x: 0, y: 0};

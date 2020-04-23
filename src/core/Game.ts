@@ -1,6 +1,4 @@
-import Player from "../entity/mob/Player";
-import Zombie from "../entity/mob/Zombie";
-import ItemEntity from "../entity/ItemEntity";
+import {ItemEntity, Player, Zombie} from "../entity/";
 import ResourceItem from "../item/ResourceItem";
 import Resource from "../item/resources/Resource";
 import Biome from "../level/biome/Biome";
@@ -11,7 +9,6 @@ import Server from "../network/Server";
 import Version from "../saveload/Version";
 import Display from "../screen/Display";
 import InfoDisplay from "../screen/InfoDisplay";
-import InventoryDisplay from "../screen/InventoryDisplay";
 import Initializer from "./Initializer";
 import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
@@ -68,7 +65,6 @@ export default class Game {
         this.player = new Player();
         // max tile 134217720
         this.level.add(this.player, 0, 0, true);
-
         for (let i = 0; i < 10; i++) {
             this.level.add(new Zombie(), 0, 0, true);
         }

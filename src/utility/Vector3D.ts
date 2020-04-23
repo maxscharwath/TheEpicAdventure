@@ -9,8 +9,8 @@ export default class Vector3D {
         this.z = z;
     }
 
-    public get angle() {
-        return Math.atan2(this.x, this.y) * 180 / Math.PI;
+    public get rotation() {
+        return Math.atan2(this.x, this.y);
     }
 
     public get magnitude() {

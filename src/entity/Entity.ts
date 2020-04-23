@@ -16,9 +16,10 @@ export default class Entity extends PIXI.Container implements Tickable {
     protected get aSpeed(): number {
         return Math.hypot(this.a.x, this.a.y);
     }
+
     protected random = this.constructor.random;
     protected level: Level;
-    protected removed: boolean;
+    protected deleted: boolean;
     protected isMoving: boolean;
     protected container = new PIXI.Container();
 
@@ -89,6 +90,10 @@ export default class Entity extends PIXI.Container implements Tickable {
         return true;
     }
 
+    protected calculateZIndex() {
+        return this.y + this.hitbox.y + this.hitbox.height / 2;
+    }
+
     private static random = new Random();
     private lastTick: number = Updater.tickCount;
 
@@ -98,6 +103,7 @@ export default class Entity extends PIXI.Container implements Tickable {
             y: this.y + this.hitbox.y + this.hitbox.height / 2,
         };
     }
+
     public ["constructor"]: typeof Entity;
     public uid: string = uniqid();
     public x: number = 0;
@@ -156,7 +162,7 @@ export default class Entity extends PIXI.Container implements Tickable {
 
         this.move(this.a.x, this.a.y);
 
-        this.zIndex = this.y + this.hitbox.y + this.hitbox.height / 2;
+        this.zIndex = this.calculateZIndex();
         this.container.pivot.y = this.z;
     }
 
@@ -201,7 +207,7 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public getRemoved(): boolean {
-        return this.removed;
+        return this.deleted;
     }
 
     public getLightRadius(): number {
@@ -209,27 +215,36 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public die(): void {
-        this.remove();
+        this.delete();
     }
 
-    public remove(level?: Level): void {
-        if (this.parent) {this.parent.removeChild(this); }
+    public remove() {
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
+    }
+
+    public add() {
+        this.level.entitiesContainer.addChild(this);
+    }
+
+    public delete(level?: Level): void {
+        this.remove();
         if (level === undefined) {
-            this.removed = true;
+            this.deleted = true;
             if (this.level instanceof Level) {
                 this.level.remove(this);
             }
             return;
         }
         if (level === this.level) {
-            this.removed = true;
+            this.deleted = true;
             this.level = null;
         }
     }
 
     public setLevel(level: Level, x: number, y: number): void {
         this.level = level;
-        this.level.entitiesContainer.addChild(this);
         this.x = x;
         this.y = y;
     }

@@ -1,9 +1,8 @@
 import * as PIXI from "pixi.js";
 import uniqid from "uniqid";
 import Localization from "../core/io/Localization";
-import Entity from "../entity/Entity";
+import {Entity, Player} from "../entity/";
 import Mob from "../entity/mob/Mob";
-import Player from "../entity/mob/Player";
 import LevelTile from "../level/LevelTile";
 
 export default class Item {
@@ -12,9 +11,11 @@ export default class Item {
     public readonly tag: string;
     public uid: string = uniqid();
 
-    public getSprite(centred: boolean= false) {
+    public getSprite(centred: boolean = false) {
         const sprite = new PIXI.Sprite(this.texture);
-        if (centred) {sprite.anchor.set(0.5); }
+        if (centred) {
+            sprite.anchor.set(0.5);
+        }
         return sprite;
     }
 

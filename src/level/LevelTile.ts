@@ -29,7 +29,6 @@ export default class LevelTile extends PIXI.Container {
         this.y = y << 4;
         this.level = level;
         this.tileClass = tileClass;
-        this.visible = false;
     }
 
     public init() {
@@ -43,8 +42,17 @@ export default class LevelTile extends PIXI.Container {
             throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
         this.tile = new this.tileClass(this);
-        this.level.tilesContainer.addChild(this);
         this.addChild(this.tile.container);
+    }
+
+    public remove() {
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
+    }
+
+    public add() {
+        this.level.tilesContainer.addChild(this);
     }
 
     public getLocalX() {

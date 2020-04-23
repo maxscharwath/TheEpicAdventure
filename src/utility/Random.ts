@@ -29,6 +29,7 @@ export default class Random {
     public static create(seed?: number): Random {
         return new Random(seed);
     }
+
     public seed: number;
 
     constructor(seed = System.currentTimeMillis()) {
@@ -48,6 +49,14 @@ export default class Random {
         }
     }
 
+    public number(num1: number, num2?: number): number {
+        if (num2 === undefined) {
+            return this.random() * num1;
+        } else {
+            return this.random() * (num2 - num1) + num1;
+        }
+    }
+
     public float(): number {
         return this.random();
     }
@@ -57,7 +66,9 @@ export default class Random {
     }
 
     public probability(prob: number): boolean {
-        if (prob === 0) {return false; }
+        if (prob === 0) {
+            return false;
+        }
         return this.random() <= 1 / prob;
     }
 

@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
-import Entity from "../entity/Entity";
-import Player from "../entity/mob/Player";
+import {Entity, Player} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./LevelGen";
@@ -36,6 +35,7 @@ export default class Level {
             return;
         }
     }
+
     public w: number;
     public h: number;
     public monsterDensity: number = 16;
@@ -64,11 +64,13 @@ export default class Level {
         }
     }
 
-    public getChunk(x: number, y: number, generate= true): Chunk {
+    public getChunk(x: number, y: number, generate = true): Chunk {
         x = ~~x;
         y = ~~y;
         if (!this.chunks[x + ":" + y]) {
-            if (!generate) { return undefined; }
+            if (!generate) {
+                return undefined;
+            }
             this.chunks[x + ":" + y] = new Chunk(this, x, y);
         }
         return this.chunks[x + ":" + y];
@@ -86,9 +88,11 @@ export default class Level {
         return chunks;
     }
 
-    public getTile(x: number, y: number, generate= true): LevelTile {
+    public getTile(x: number, y: number, generate = true): LevelTile {
         const chunk = this.getChunk(x >> 4, y >> 4, generate);
-        if (!chunk) {return undefined; }
+        if (!chunk) {
+            return undefined;
+        }
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
@@ -125,7 +129,7 @@ export default class Level {
         while (this.entitiesToRemove.length > 0) {
             const entity: Entity = this.entitiesToRemove[0];
             entity.getChunk().remove(entity);
-            entity.remove(this);
+            entity.delete(this);
             this.entities.splice(this.entities.indexOf(entity), 1);
 
             if (entity instanceof Player) {

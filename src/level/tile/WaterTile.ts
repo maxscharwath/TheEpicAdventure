@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import Entity from "../../entity/Entity";
+import {Entity, Fish} from "../../entity/";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 
@@ -26,10 +26,14 @@ export default class WaterTile extends AutoTilingTile {
         if (!this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
+        if (Random.probability(10000)) {
+            this.levelTile.level.add(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
+        }
     }
 
     public mayPass(e: Entity): boolean {
         return e.canSwim() || e.canFly();
     }
+
 
 }

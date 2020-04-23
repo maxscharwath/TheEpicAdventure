@@ -1,9 +1,9 @@
+import Entity from "../Entity";
 import Inventory from "../../item/Inventory";
 import Maths from "../../utility/Maths";
 import Random from "../../utility/Random";
 import Vector from "../../utility/Vector";
 import Direction from "../Direction";
-import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
 
 export default class Mob extends Entity {
@@ -15,6 +15,7 @@ export default class Mob extends Entity {
     protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
+
     protected speedMax: number = 1;
     protected potionEffect: any[] = [];
     protected walkDist: number = 0;
@@ -128,6 +129,7 @@ export default class Mob extends Entity {
 
         return entities;
     }
+
     private hurtCooldown: number;
     private attackCooldown: number;
 
@@ -146,16 +148,20 @@ export default class Mob extends Entity {
     public die(): void {
         for (const slot of this.inventory.slots) {
             if (slot.isItem()) {
-                if (Random.int(5) === 0) { continue; }
+                if (Random.int(5) === 0) {
+                    continue;
+                }
                 for (let i = 0; i < slot.nb; i++) {
-                    if (Random.int(5) !== 0) { continue; }
+                    if (Random.int(5) !== 0) {
+                        continue;
+                    }
                     const x = this.x + Random.int(0, 16);
                     const y = this.y + Random.int(0, 16);
-                    this.level.add(new ItemEntity(slot.item, x, y));
+                    // this.level.add(new ItemEntity(slot.item, x, y));
                 }
             }
         }
-        this.remove();
+        this.delete();
     }
 
     public hurtByEntity(dmg: number, entity: Entity): void {

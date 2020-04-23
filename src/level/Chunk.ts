@@ -11,6 +11,7 @@ export default class Chunk {
     private isGenerated: boolean = false;
     private map: LevelTile[] = [];
     private lastTick = 0;
+    private loaded: boolean = false;
 
     private generate() {
         this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
@@ -19,6 +20,9 @@ export default class Chunk {
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {
+        if (!chunk.loaded) {
+            entity.remove();
+        }
         this.remove(entity);
         chunk.add(entity);
     }
@@ -92,15 +96,22 @@ export default class Chunk {
     }
 
     public unload() {
+        this.loaded = false;
         this.map.forEach((tile) => {
-            tile.visible = false;
-            // tile.container.destroy({children: true});
+            tile.remove();
+        });
+        this.entities.forEach((entity) => {
+            entity.remove();
         });
     }
 
     public load() {
+        this.loaded = true;
         this.map.forEach((tile) => {
-            tile.visible = true;
+            tile.add();
+        });
+        this.entities.forEach((entity) => {
+            entity.add();
         });
     }
 

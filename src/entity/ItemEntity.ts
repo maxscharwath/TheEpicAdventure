@@ -1,6 +1,6 @@
+import {Mob} from ".";
 import Item from "../item/Item";
 import Entity from "./Entity";
-import Mob from "./mob/Mob";
 
 export default class ItemEntity extends Entity {
     private readonly lifeTime: number;
@@ -25,7 +25,7 @@ export default class ItemEntity extends Entity {
         super.onTick();
         this.time++;
         if (this.time >= this.lifeTime) {
-            this.remove();
+            this.delete();
             return;
         }
     }
@@ -39,6 +39,6 @@ export default class ItemEntity extends Entity {
     }
 
     public take(entity: Entity) {
-        this.remove();
+        this.delete();
     }
 }

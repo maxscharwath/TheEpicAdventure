@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import Game from "../core/Game";
 import Initializer from "../core/Initializer";
+import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
 import Color from "../utility/Color";
 import Display from "./Display";
@@ -20,6 +21,7 @@ export default class InfoDisplay extends Display {
             `y: ${(Game.player.a)}`,
             `b: ${tile.biome.getDisplayName()}`,
             `t: ${tile.tile.getDisplayName()}`,
+            `c: ${Renderer.getNbChildren()}`,
         ].join("\n");
     }
 

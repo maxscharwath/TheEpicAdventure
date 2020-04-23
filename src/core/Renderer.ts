@@ -6,6 +6,7 @@ import Color from "../utility/Color";
 import Game from "./Game";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+PIXI.settings.ROUND_PIXELS = true;
 export default class Renderer {
 
     public static get ZOOM() {
@@ -44,7 +45,10 @@ export default class Renderer {
         width: 960,
         height: 540,
         backgroundColor: Color.black.getInt(),
-        autoDensity: true,
+        autoDensity: false,
+        antialias: false,
+        clearBeforeRender: false,
+        powerPreference: "high-performance",
     });
     public static delta: number;
 
@@ -93,5 +97,11 @@ export default class Renderer {
 
     public static addDisplay(display: Display) {
         this.stages[1].addChild(display);
+    }
+
+    public static getNbChildren() {
+        const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
+            container.children.length + container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
+        return f(this.mainStage);
     }
 }
