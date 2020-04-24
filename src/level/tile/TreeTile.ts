@@ -64,7 +64,6 @@ export default class TreeTile extends Tile {
 
     public onTick(): void {
         super.onTick();
-        this.groundTile.onTick();
         this.treeTiling();
     }
 

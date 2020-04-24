@@ -59,6 +59,10 @@ export default class AutoTilingTile extends Tile {
 
     public onTick(): void {
         super.onTick();
+    }
+
+    public onRender() {
+        super.onRender();
         this.autoTiling();
     }
 }

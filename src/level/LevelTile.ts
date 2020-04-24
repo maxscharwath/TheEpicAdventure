@@ -12,6 +12,7 @@ export default class LevelTile extends PIXI.Container {
     private chunk: Chunk;
     private tileClass: Type<Tile>;
     public static SIZE = 16;
+    public skipTick: boolean = false;
     public biome: Biome;
     public tile: Tile;
     public data: object = {};
@@ -52,6 +53,9 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public add() {
+        if (!this.level) {
+            return;
+        }
         this.level.tilesContainer.addChild(this);
     }
 
@@ -72,6 +76,7 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public setTile(tileClass: Type<Tile>, init: boolean = true) {
+        this.skipTick = true;
         this.tileClass = tileClass;
         if (init) {
             this.init();
@@ -101,6 +106,10 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public onTick() {
+        if (this.skipTick) {
+            this.skipTick = false;
+            return;
+        }
         this.tile.onTick();
     }
 
@@ -127,12 +136,19 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public getDirectNeighbourTiles(generate = true): LevelTile[] {
-        return [
-            this.getRelativeTile(-1, 0, generate),
-            this.getRelativeTile(0, 1, generate),
-            this.getRelativeTile(0, -1, generate),
-            this.getRelativeTile(1, 0, generate),
-        ];
+        const lt = [];
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                if (Math.abs(i) === Math.abs(j)) {
+                    continue;
+                }
+                const t = this.getRelativeTile(i, j, generate);
+                if (t) {
+                    lt.push(t);
+                }
+            }
+        }
+        return lt;
     }
 
     public getTile(tile: string): number {

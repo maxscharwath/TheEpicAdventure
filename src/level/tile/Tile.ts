@@ -47,9 +47,15 @@ export default class Tile {
     }
 
     public onTick(): void {
+        if (this.groundTile) {
+            this.groundTile.onTick();
+        }
     }
 
     public onRender() {
+        if (this.groundTile) {
+            this.groundTile.onRender();
+        }
     }
 
     public toJSON() {

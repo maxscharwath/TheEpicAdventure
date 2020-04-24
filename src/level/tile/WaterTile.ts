@@ -26,7 +26,7 @@ export default class WaterTile extends AutoTilingTile {
         if (!this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
-        if (Random.probability(10000)) {
+        if (Random.probability(100000)) {
             this.levelTile.level.add(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
         }
     }

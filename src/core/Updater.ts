@@ -1,5 +1,4 @@
 import Game from "./Game";
-import Renderer from "./Renderer";
 
 export default class Updater {
     public static readonly normSpeed: number = 60;
@@ -26,11 +25,11 @@ export default class Updater {
         if (!Game.HASFOCUS) {
             return;
         }
-        Updater.setTime(Updater.tickCount + 1);
         Game.displays.forEach((display) => {
             display.onTick();
         });
         Game.level.onTick();
+        Updater.setTime(Updater.tickCount + 1);
     }
 
     public static setTime(ticks: number): void {
@@ -50,5 +49,9 @@ export default class Updater {
             ticks = 0;
         }
         Updater.tickCount = ticks;
+    }
+
+    public static every(tick: number): boolean {
+        return (this.tickCount % tick) === 0;
     }
 }

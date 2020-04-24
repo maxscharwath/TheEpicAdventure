@@ -1,3 +1,4 @@
+import Updater from "../../core/Updater";
 import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
@@ -17,12 +18,12 @@ export default class HoleTile extends AutoTilingTile {
     public onTick(): void {
         super.onTick();
 
-        if (Random.probability(0.05)) {
+        if (Updater.every(5)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
-            if (n.some((l) => l.instanceOf(Tiles.get("water")))) {
+            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("water")))) {
                 this.levelTile.setTile(Tiles.get("water"));
             }
-            if (n.some((l) => l.instanceOf(Tiles.get("lava")))) {
+            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("lava")))) {
                 this.levelTile.setTile(Tiles.get("lava"));
             }
         }

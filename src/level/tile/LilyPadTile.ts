@@ -21,7 +21,6 @@ export default class LilyPadTile extends Tile {
 
     public onTick(): void {
         super.onTick();
-        this.groundTile.onTick();
     }
 
     public onRender() {
