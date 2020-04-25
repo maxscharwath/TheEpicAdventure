@@ -7,6 +7,8 @@ export default class SpruceTreeTile extends TreeTile {
         this.treeTilingInit("src/resources/spruce.png");
     }
 
+    public static readonly TAG: string = "spruce";
+
     public onTick(): void {
         super.onTick();
     }

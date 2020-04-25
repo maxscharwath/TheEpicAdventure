@@ -58,6 +58,12 @@ export default class Tile {
         }
     }
 
+    public onUpdate() {
+        if (this.groundTile) {
+            this.groundTile.onUpdate();
+        }
+    }
+
     public toJSON() {
         return this.constructor.TAG;
     }
@@ -76,5 +82,4 @@ export default class Tile {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
     }
-
 }

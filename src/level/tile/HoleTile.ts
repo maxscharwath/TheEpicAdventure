@@ -1,6 +1,5 @@
 import Updater from "../../core/Updater";
 import Entity from "../../entity/Entity";
-import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 

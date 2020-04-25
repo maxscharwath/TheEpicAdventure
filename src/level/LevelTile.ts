@@ -11,6 +11,7 @@ type Type<T> = new (...args: any[]) => T;
 export default class LevelTile extends PIXI.Container {
     private chunk: Chunk;
     private tileClass: Type<Tile>;
+    private needToUpdate: boolean = true;
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
@@ -78,6 +79,7 @@ export default class LevelTile extends PIXI.Container {
     public setTile(tileClass: Type<Tile>, init: boolean = true) {
         this.skipTick = true;
         this.tileClass = tileClass;
+        this.update();
         if (init) {
             this.init();
         }
@@ -87,7 +89,8 @@ export default class LevelTile extends PIXI.Container {
         for (let x = -radius; x < radius; x++) {
             const height = ~~(Math.sqrt(radius * radius - x * x));
             for (let y = -height; y < height; y++) {
-                if (this.getRelativeTile(x, y, false).instanceOf(...tiles)) {
+                const lt = this.getRelativeTile(x, y, false);
+                if (lt && lt.instanceOf(...tiles)) {
                     return true;
                 }
             }
@@ -111,6 +114,18 @@ export default class LevelTile extends PIXI.Container {
             return;
         }
         this.tile.onTick();
+    }
+
+    public onUpdate() {
+        this.tile.onUpdate();
+    }
+
+    public onRender() {
+        if (this.needToUpdate) {
+            this.needToUpdate = false;
+            this.onUpdate();
+        }
+        this.tile.onRender();
     }
 
     public getRelativeTile(x: number, y: number, generate = true): LevelTile {
@@ -180,14 +195,10 @@ export default class LevelTile extends PIXI.Container {
         return this.tile.instanceOf(...tileClass);
     }
 
-    public onRender() {
-        this.tile.onRender();
-    }
-
-    /**
-     * @todo
-     */
-    public onUpdate() {
-
+    public update() {
+        this.needToUpdate = true;
+        this.getNeighbourTiles(1, false).forEach((levelTile) => {
+            levelTile.needToUpdate = true;
+        });
     }
 }

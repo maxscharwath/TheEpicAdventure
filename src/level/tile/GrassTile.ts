@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import {Entity} from "../../entity";
 import AutoTilingTile from "./AutoTilingTile";
-import Tiles from "./Tiles";
 
 export default class GrassTile extends AutoTilingTile {
     protected static autoTileTextures = GrassTile.loadMaskTextures("src/resources/grass_mask.png");
@@ -18,6 +17,10 @@ export default class GrassTile extends AutoTilingTile {
 
     public onTick(): void {
         super.onTick();
+    }
+
+    public steppedOn(entity: Entity) {
+        super.steppedOn(entity);
     }
 
 }

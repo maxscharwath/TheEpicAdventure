@@ -26,8 +26,11 @@ export default class LavaTile extends AutoTilingTile {
         if (!this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
-        const n = this.levelTile.getDirectNeighbourTiles(false);
-        if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("water")))) {
+    }
+
+    public onUpdate() {
+        super.onUpdate();
+        if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.get("water")))) {
             this.levelTile.setTile(Tiles.get("rock"));
         }
     }

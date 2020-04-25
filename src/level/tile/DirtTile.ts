@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js";
+import Random from "../../utility/Random";
 import Tile from "./Tile";
+import Tiles from "./Tiles";
 
 export default class DirtTile extends Tile {
     private static tileTextures = DirtTile.loadTextures("src/resources/dirt.png", 4);
@@ -13,6 +15,15 @@ export default class DirtTile extends Tile {
 
     public onTick(): void {
         super.onTick();
+        if (Random.probability(500)) {
+            const n = this.levelTile.getDirectNeighbourTiles(false);
+            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("grass")))) {
+                this.levelTile.setTile(Tiles.get("grass"));
+            }
+            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("sand")))) {
+                this.levelTile.setTile(Tiles.get("sand"));
+            }
+        }
     }
 
 }

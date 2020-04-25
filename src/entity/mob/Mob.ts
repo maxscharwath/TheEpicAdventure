@@ -1,9 +1,9 @@
-import Entity from "../Entity";
 import Inventory from "../../item/Inventory";
 import Maths from "../../utility/Maths";
 import Random from "../../utility/Random";
 import Vector from "../../utility/Vector";
 import Direction from "../Direction";
+import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
 
 export default class Mob extends Entity {
@@ -197,5 +197,9 @@ export default class Mob extends Entity {
         if (this.inventory.addItem(itemEntity.item, 1)) {
             itemEntity.take(this);
         }
+    }
+
+    public getDir() {
+        return this.dir;
     }
 }

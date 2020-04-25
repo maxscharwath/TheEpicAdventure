@@ -50,4 +50,12 @@ export default class Direction {
     public valueOf(): number {
         return this.num;
     }
+
+    public isY() {
+        return this.x === 0 && this.y !== 0;
+    }
+
+    public isX() {
+        return this.y === 0 && this.x !== 0;
+    }
 }

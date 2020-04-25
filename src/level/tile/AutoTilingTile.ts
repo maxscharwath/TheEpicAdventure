@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import LevelTile from "../LevelTile";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
@@ -63,6 +64,10 @@ export default class AutoTilingTile extends Tile {
 
     public onRender() {
         super.onRender();
+    }
+
+    public onUpdate() {
+        super.onUpdate();
         this.autoTiling();
     }
 }

@@ -22,6 +22,11 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[2].position.set(0, 8);
         this.layersTreeSprite[3].position.set(8, 8);
 
+        this.layersTreeSprite[0].visible = false;
+        this.layersTreeSprite[1].visible = false;
+        this.layersTreeSprite[2].visible = false;
+        this.layersTreeSprite[3].visible = false;
+
         this.container.addChild(this.layersTreeSprite[0]);
         this.container.addChild(this.layersTreeSprite[1]);
         this.container.addChild(new PIXI.Sprite(new PIXI.Texture(texture)));
@@ -57,6 +62,8 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[3].visible = (d && dr && r);
     }
 
+    public static readonly TAG: string = "tree";
+
     public init() {
         super.init();
         this.initTree();
@@ -64,6 +71,14 @@ export default class TreeTile extends Tile {
 
     public onTick(): void {
         super.onTick();
+    }
+
+    public onRender() {
+        super.onRender();
+    }
+
+    public onUpdate() {
+        super.onUpdate();
         this.treeTiling();
     }
 
