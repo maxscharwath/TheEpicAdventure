@@ -37,6 +37,10 @@ export default class Vector {
         this.constant = constant;
     }
 
+    public get rotation() {
+        return Math.atan2(this.x, this.y);
+    }
+
     public negative(): Vector {
         this.vector.x *= -1;
         this.vector.y *= -1;

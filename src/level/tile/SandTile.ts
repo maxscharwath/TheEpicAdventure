@@ -30,7 +30,7 @@ export default class SandTile extends AutoTilingTile {
         if (this.step > 0) {
             this.step--;
         }
-        this.footprintSprite.texture.frame = new PIXI.Rectangle(this.stepDir * 16, 0, 16, 16);
+        this.footprintSprite.texture.frame = new PIXI.Rectangle(this.stepDir ? 16 : 0, 0, 16, 16);
         this.footprintSprite.visible = this.step > 0;
     }
 

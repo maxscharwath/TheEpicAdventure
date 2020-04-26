@@ -1,6 +1,8 @@
 import * as PIXI from "pixi.js";
 import Localization from "../../core/io/Localization";
+import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
+import Item from "../../item/Item";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
 
@@ -46,6 +48,10 @@ export default class Tile {
     public steppedOn(entity: Entity) {
     }
 
+    public onInteract(mob: Mob, item?: Item): boolean {
+        return false;
+    }
+
     public onTick(): void {
         if (this.groundTile) {
             this.groundTile.onTick();
@@ -81,5 +87,17 @@ export default class Tile {
     public instanceOf(...tileClass: Array<Type<Tile>>) {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
+    }
+
+    protected get level() {
+        return this.levelTile.level;
+    }
+
+    protected get x() {
+        return this.levelTile.getLocalX();
+    }
+
+    protected get y() {
+        return this.levelTile.getLocalY();
     }
 }

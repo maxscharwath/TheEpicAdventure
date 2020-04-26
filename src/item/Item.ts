@@ -11,6 +11,11 @@ export default class Item {
     public readonly tag: string;
     public uid: string = uniqid();
 
+    constructor(tag?: string) {
+        this.tag = tag;
+    }
+
+
     public getSprite(centred: boolean = false) {
         const sprite = new PIXI.Sprite(this.texture);
         if (centred) {

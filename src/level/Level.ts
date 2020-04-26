@@ -5,8 +5,9 @@ import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./LevelGen";
 import LevelTile from "./LevelTile";
+import Tile from "./tile/Tile";
 
-
+type Type<T> = new (...args: any[]) => T;
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
     private random: Random = new Random();
@@ -36,9 +37,6 @@ export default class Level {
         }
     }
 
-    public w: number;
-    public h: number;
-    public monsterDensity: number = 16;
     public maxMobCount: number = 300;
     public mobCount: number = 0;
     public readonly seed = 0;
@@ -94,6 +92,39 @@ export default class Level {
             return undefined;
         }
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
+    }
+
+    public getRandomTileInEntityRadius(
+        tiles: Array<Type<Tile>>,
+        entity: Entity,
+        radiusEnd: number,
+        radiusStart = 0,
+    ): LevelTile | false {
+        if (!(entity instanceof Entity) || radiusStart >= radiusEnd) {
+            return false;
+        }
+
+        const i = performance.now();
+        while (true) {
+            const rx = Random.int(radiusEnd * 2) - radiusEnd;
+            const ry = Random.int(radiusEnd * 2) - radiusEnd;
+            if (Math.abs(rx) < radiusStart || Math.abs(ry) < radiusStart) {
+                continue;
+            }
+            const x = (entity.x >> 4) + rx;
+            const y = (entity.y >> 4) + ry;
+
+            const lt = this.getTile(x, y, false);
+            if (lt) {
+                if (lt.instanceOf(...tiles)) {
+                    return lt;
+                }
+            }
+
+            if ((performance.now() - i) > 5) {
+                return false;
+            }
+        }
     }
 
     public onTick(): void {

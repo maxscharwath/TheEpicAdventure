@@ -29,10 +29,21 @@ export default class Inventory {
         return true;
 
     }
+
+    public selectedSlot: number;
+
     public slots: Slot[] = [];
 
     constructor(nbSlot: number = 8) {
         this.addSlots(nbSlot);
+    }
+
+    public selectedItem(): Item {
+        const slot = this.slots[this.selectedSlot];
+        if (!(slot && slot.isItem())) {
+            return undefined;
+        }
+        return slot.item;
     }
 
     public addSlots(nb: number): void {

@@ -1,19 +1,25 @@
 import {Entity} from "../";
-import Mob from "./Mob";
-import Renderer from "../../core/Renderer";
+import Tiles from "../../level/tile/Tiles";
 import Maths from "../../utility/Maths";
 import Random from "../../utility/Random";
 import Vector from "../../utility/Vector";
 import Direction from "../Direction";
+import Mob from "./Mob";
 
 export default class AquaticMob extends Mob {
     protected target = {x: 0, y: 0};
 
     protected newTarget() {
-        this.target = {
-            x: this.random.int(Renderer.WIDTH * -10, Renderer.WIDTH * 10),
-            y: this.random.int(Renderer.HEIGHT * -10, Renderer.HEIGHT * 10),
-        };
+        if (!this.level) {
+            return;
+        }
+        const tile = this.level.getRandomTileInEntityRadius([Tiles.get("water")], this, 10);
+        if (tile) {
+            this.target = {
+                x: tile.getLocalX() << 4,
+                y: tile.getLocalY() << 4,
+            };
+        }
     }
 
     protected move(xa: number, ya: number): boolean {

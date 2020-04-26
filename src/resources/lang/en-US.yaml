@@ -26,6 +26,7 @@ tile.dirt: Dirt
 tile.lilypad: Lilypad
 tile.lava: Lava
 tile.farmland: Farmland
+tile.wheat: Wheat
 tile.tree: Tree
 tile.spruce: Spruce Tree
 tile.palm: Palm Tree

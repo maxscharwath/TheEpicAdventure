@@ -8,6 +8,7 @@ import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
 import Display from "../screen/Display";
+import HotbarDisplay from "../screen/HotbaryDisplay";
 import InfoDisplay from "../screen/InfoDisplay";
 import Initializer from "./Initializer";
 import InputHandler from "./io/InputHandler";
@@ -75,7 +76,7 @@ export default class Game {
 
         (new InfoDisplay()).show();
 
-       //  (new InventoryDisplay(this.player.inventory)).show();
+        (new HotbarDisplay(this.player)).show();
 
         Initializer.createAndDisplayFrame();
         Initializer.run();

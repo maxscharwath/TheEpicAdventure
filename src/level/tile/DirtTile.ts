@@ -15,7 +15,7 @@ export default class DirtTile extends Tile {
 
     public onTick(): void {
         super.onTick();
-        if (Random.probability(500)) {
+        if (!this.levelTile.biome.is("savanna") && Random.probability(500)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("grass")))) {
                 this.levelTile.setTile(Tiles.get("grass"));

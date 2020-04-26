@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import Vector from "../../utility/Vector";
 import AquaticMob from "./AquaticMob";
 
 export default class Fish extends AquaticMob {
@@ -22,14 +23,15 @@ export default class Fish extends AquaticMob {
         return -Infinity;
     }
 
-    protected steppedOn() {
-        super.steppedOn();
-    }
+    private lifeDuration = 0;
+
+    private vector: Vector = new Vector();
 
     private points: PIXI.Point[];
 
     constructor() {
         super();
+        this.lifeDuration = 1000;
     }
 
     public canSwim(): boolean {
@@ -41,11 +43,20 @@ export default class Fish extends AquaticMob {
 
     public onTick(): void {
         super.onTick();
+        if (--this.lifeDuration <= 0) {
+            this.delete();
+        }
     }
 
     public onRender() {
         super.onRender();
-        this.container.rotation = -this.a.rotation - Math.PI / 2;
+
+        if (this.a.magnitude > 0.5) {
+            this.vector.x -= (this.vector.x - this.a.x) / 30;
+            this.vector.y -= (this.vector.y - this.a.y) / 30;
+        }
+
+        this.container.rotation = -this.vector.rotation - Math.PI / 2;
         this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
     }
 }

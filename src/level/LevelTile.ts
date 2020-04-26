@@ -8,25 +8,50 @@ import Tile from "./tile/Tile";
 import Tiles from "./tile/Tiles";
 
 type Type<T> = new (...args: any[]) => T;
+
+interface LevelTileConstructor {
+    level: Level;
+    x: number;
+    y: number;
+    biome: Biome;
+    temperature: number;
+    elevation: number;
+    moisture: number;
+    tileClass?: Type<Tile>;
+}
+
 export default class LevelTile extends PIXI.Container {
+    get tile(): Tile {
+        return this._tile;
+    }
+
     private chunk: Chunk;
     private tileClass: Type<Tile>;
     private needToUpdate: boolean = true;
+    private isInitiated = false;
+    private _tile: Tile;
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
-    public tile: Tile;
     public data: object = {};
-    public updateRender: boolean = true;
     public level: Level;
     public random: TileRandom = new TileRandom(this);
+
+    public readonly temperature: number;
+    public readonly elevation: number;
+    public readonly moisture: number;
+
     public readonly x: number;
     public readonly y: number;
+
     public bg: PIXI.Sprite;
 
-    constructor(level: Level, x: number, y: number, biome?: Biome, tileClass?: Type<Tile>) {
+    constructor({level, x, y, biome, temperature, elevation, moisture, tileClass}: LevelTileConstructor) {
         super();
         this.biome = biome;
+        this.temperature = temperature;
+        this.elevation = elevation;
+        this.moisture = moisture;
         this.x = x << 4;
         this.y = y << 4;
         this.level = level;
@@ -34,6 +59,7 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public init() {
+        this.isInitiated = true;
         this.removeChildren();
         this.bg = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.bg.width = LevelTile.SIZE;
@@ -43,8 +69,9 @@ export default class LevelTile extends PIXI.Container {
         if (!(this.tileClass.prototype instanceof Tile)) {
             throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
-        this.tile = new this.tileClass(this);
-        this.addChild(this.tile.container);
+        this._tile = new this.tileClass(this);
+        this.update();
+        this.addChild(this._tile.container);
     }
 
     public remove() {
@@ -69,20 +96,17 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public steppedOn(entity: Entity) {
-        this.tile.steppedOn(entity);
+        this._tile.steppedOn(entity);
     }
 
     public is(name: string) {
-        return this.tile instanceof Tiles.get(name);
+        return this._tile instanceof Tiles.get(name);
     }
 
-    public setTile(tileClass: Type<Tile>, init: boolean = true) {
+    public setTile(tileClass: Type<Tile>) {
+        this.isInitiated = false;
         this.skipTick = true;
         this.tileClass = tileClass;
-        this.update();
-        if (init) {
-            this.init();
-        }
     }
 
     public findTileRadius(radius: number, ...tiles: Array<Type<Tile>>) {
@@ -103,29 +127,35 @@ export default class LevelTile extends PIXI.Container {
             biome: this.biome.tag,
             x: this.x,
             y: this.y,
-            tile: this.tile,
+            tile: this._tile,
             data: this.data,
         };
     }
 
     public onTick() {
+        if (!this.isInitiated) {
+            this.init();
+        }
         if (this.skipTick) {
             this.skipTick = false;
             return;
         }
-        this.tile.onTick();
+        this._tile.onTick();
     }
 
     public onUpdate() {
-        this.tile.onUpdate();
+        this._tile.onUpdate();
     }
 
     public onRender() {
+        if (!this.isInitiated) {
+            this.init();
+        }
         if (this.needToUpdate) {
             this.needToUpdate = false;
             this.onUpdate();
         }
-        this.tile.onRender();
+        this._tile.onRender();
     }
 
     public getRelativeTile(x: number, y: number, generate = true): LevelTile {
@@ -166,33 +196,16 @@ export default class LevelTile extends PIXI.Container {
         return lt;
     }
 
-    public getTile(tile: string): number {
-        let n = 0;
-        if (this.getRelativeTile(0, -1).is(tile)) {
-            n = n | (1 << 0);
-        }// UP
-        if (this.getRelativeTile(0, 1).is(tile)) {
-            n = n | (1 << 1);
-        }// DOWN
-        if (this.getRelativeTile(-1, 0).is(tile)) {
-            n = n | (1 << 2);
-        }// LEFT
-        if (this.getRelativeTile(1, 0).is(tile)) {
-            n = n | (1 << 3);
-        }// RIGHT
-        return n;
-    }
-
     public mayPass(entity: Entity) {
-        return this.tile.mayPass(entity);
+        return this._tile.mayPass(entity);
     }
 
     public getFriction() {
-        return this.tile.friction;
+        return this._tile.friction;
     }
 
     public instanceOf(...tileClass: Array<Type<Tile>>) {
-        return this.tile.instanceOf(...tileClass);
+        return this._tile.instanceOf(...tileClass);
     }
 
     public update() {

@@ -88,11 +88,15 @@ export default class Chunk {
     public add(entity: Entity) {
         if (!this.entities.includes(entity)) {
             this.entities.push(entity);
+            if (this.loaded) {
+                entity.add();
+            }
         }
     }
 
     public remove(entity: Entity) {
         this.entities.splice(this.entities.indexOf(entity), 1);
+        entity.remove();
     }
 
     public unload() {
