@@ -14,54 +14,6 @@ export default class LevelGen {
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
 
-    private biome(e: number, m: number, t: number) {
-        if (e < 0.025) {
-            return Biome.get("deep_ocean");
-        }
-        if (e < 0.1) {
-            if (t > 0.9) {
-                return Biome.get("warm_ocean");
-            }
-            if (t < 0.3) {
-                return Biome.get("cold_ocean");
-            }
-            return Biome.get("ocean");
-        }
-        if (e < 0.18 && t > 0.4) {
-            return Biome.get("beach");
-        }
-        if (t > 0.7) {
-            if (m < 0.7) {
-                return Biome.get("desert");
-            }
-            if (m > 0.8) {
-                return Biome.get("jungle");
-            }
-        }
-        if (t > 0.6) {
-            if (m < 0.5) {
-                return Biome.get("savanna");
-            }
-        }
-        if (t < 0.20) {
-            return Biome.get("snow");
-        }
-        if (t < 0.30) {
-            return Biome.get("tundra");
-        }
-        if (t < 0.5) {
-            if (m > 0.6) {
-                return Biome.get("taiga");
-            }
-        }
-        if (t < 6) {
-            if (m > 0.4 && m < 0.6) {
-                return Biome.get("forest");
-            }
-        }
-        return Biome.get("grassland");
-    }
-
     public static create(seed?: number | string) {
         return new LevelGen(seed);
     }
@@ -86,21 +38,21 @@ export default class LevelGen {
         const zoom = 2;
         for (let y = y1; y < y2; y++) {
             for (let x = x1; x < x2; x++) {
-                const elevation = Math.pow(
+                const elevation = ~~(Math.pow(
                     this.elevationNoise.noise2D(x / 32 / zoom, y / 32 / zoom) +
                     this.elevationNoise.noise2D(x / 8 / zoom, y / 8 / zoom) * 0.2 -
                     Math.pow(this.elevationNoise.noise2D(x / 6 / zoom, y / 6 / zoom) * 0.9, 6), 3,
-                );
-                const moisture = this.moistureNoise.noise2D(x / 50 / zoom, y / 50 / zoom) +
-                    this.moistureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2;
+                ) * 255);
+                const moisture = ~~((this.moistureNoise.noise2D(x / 50 / zoom, y / 50 / zoom) +
+                    this.moistureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2) * 255);
 
-                const temperature = this.temperatureNoise.noise2D(x / 100 / zoom, y / 100 / zoom) +
-                    this.temperatureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2;
-                const biome = this.biome(elevation, moisture, temperature);
+                const temperature = ~~((this.temperatureNoise.noise2D(x / 100 / zoom, y / 100 / zoom) +
+                    this.temperatureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2) * 255);
+                const biome = Biome.from(elevation, moisture, temperature);
                 const tile = new LevelTile({level, x, y, biome, moisture, temperature, elevation});
                 map.push(tile);
 
-                if (elevation > 0.8) {
+                if (elevation > 204) {
                     tile.setTile(Tiles.get("rock"));
                 } else {
                     tile.setTile(Tiles.get("grass"));
@@ -142,7 +94,7 @@ export default class LevelGen {
                 }
             }
         }
-        console.log(`chunk generate in ${(System.nanoTime() - t1) / 1000000}ms`);
+        console.log(`chunk ${cX} ${cY} generated in ${(System.nanoTime() - t1) / 1000000}ms`);
         if (callback instanceof Function) {
             callback();
         }

@@ -44,7 +44,7 @@ export default class TreeTile extends Tile {
     private treeTiling() {
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
-            return (t && t.tile.constructor === this.constructor);
+            return (t && t.tile?.constructor === this.constructor);
         };
         const u = test(0, -1);
         const d = test(0, 1);

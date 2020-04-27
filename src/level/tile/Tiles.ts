@@ -1,3 +1,4 @@
+import KeyedMap from "../../utility/KeyedMap";
 import CactusTile from "./CactusTile";
 import DirtTile from "./DirtTile";
 import FarmlandTile from "./FarmlandTile";
@@ -15,50 +16,47 @@ import WaterTile from "./WaterTile";
 import WheatTile from "./WheatTile";
 
 type Type<T> = new (...args: any[]) => T;
+
 export default class Tiles {
 
-    private static tiles = new Map<string, Type<Tile>>();
+    private static tiles = new KeyedMap<Type<Tile>>();
 
-    public static add(tag: string, tile: Type<Tile>): void {
+    public static add(idx: number, tag: string, tile: Type<Tile>): void {
         tag = tag.toLowerCase();
-        console.log("adding " + tile.name + " to tile list with tag " + tag);
-        Tiles.tiles.set(tag, tile);
+        if (this.tiles.add(idx, tag, tile)) {
+            console.log(`adding ${tile.name} => ${tag}#${idx}`);
+        } else {
+            throw new Error(`tag: ${tag}#${idx} already exist.`);
+        }
     }
 
-    public static get(tag: string): Type<Tile> {
-        tag = tag.toLowerCase();
-        if (!this.tiles.has(tag)) {
-            return Tile;
-        }
-        return this.tiles.get(tag);
+    public static get(index: string | number): Type<Tile> {
+        const tileData = this.tiles.get(index);
+        return !tileData ? Tile : tileData;
     }
 
     public static getSome(...tags: string[]): Array<Type<Tile>> {
-        const results: Array<Type<Tile>> = [];
-        tags.forEach((tag) => {
-            tag = tag.toLowerCase();
-            if (!this.tiles.has(tag)) {
-                return;
-            }
-            results.push(this.tiles.get(tag));
-        });
-        return results;
+        return this.tiles.getSome(...tags);
+    }
+
+    public static getKeys(tile: Type<Tile>): { idx: number; tag: string } {
+        return this.tiles.getKeys(tile);
     }
 
     public static initTileList() {
-        Tiles.add("grass", GrassTile);
-        Tiles.add("water", WaterTile);
-        Tiles.add("lava", LavaTile);
-        Tiles.add("lilypad", LilyPadTile);
-        Tiles.add("sand", SandTile);
-        Tiles.add("rock", RockTile);
-        Tiles.add("hole", HoleTile);
-        Tiles.add("dirt", DirtTile);
-        Tiles.add("farmland", FarmlandTile);
-        Tiles.add("wheat", WheatTile);
-        Tiles.add("tree", TreeTile);
-        Tiles.add("palm", PalmTreeTile);
-        Tiles.add("spruce", SpruceTreeTile);
-        Tiles.add("cactus", CactusTile);
+        Tiles.add(0, "dirt", DirtTile);
+        Tiles.add(1, "grass", GrassTile);
+        Tiles.add(2, "water", WaterTile);
+        Tiles.add(3, "lava", LavaTile);
+        Tiles.add(4, "lilypad", LilyPadTile);
+        Tiles.add(5, "sand", SandTile);
+        Tiles.add(6, "rock", RockTile);
+        Tiles.add(7, "hole", HoleTile);
+        Tiles.add(8, "farmland", FarmlandTile);
+        Tiles.add(9, "wheat", WheatTile);
+        Tiles.add(10, "tree", TreeTile);
+        Tiles.add(11, "palm", PalmTreeTile);
+        Tiles.add(12, "spruce", SpruceTreeTile);
+        Tiles.add(13, "cactus", CactusTile);
     }
 }

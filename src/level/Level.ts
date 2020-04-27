@@ -69,7 +69,7 @@ export default class Level {
             if (!generate) {
                 return undefined;
             }
-            this.chunks[x + ":" + y] = new Chunk(this, x, y);
+            this.chunks[x + ":" + y] = Chunk.fromFile(this, x, y) ?? new Chunk(this, x, y);
         }
         return this.chunks[x + ":" + y];
     }

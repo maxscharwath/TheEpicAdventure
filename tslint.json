@@ -19,6 +19,7 @@
     "interface-name": false,
     "ordered-imports": false,
     "max-classes-per-file": false,
+    "unified-signatures": false,
     "member-ordering": [
       true,
       {

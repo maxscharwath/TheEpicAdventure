@@ -20,10 +20,10 @@ export default class InfoDisplay extends Display {
             `y: ${(Game.player.y / 16).toFixed(2)}`,
             `y: ${(Game.player.a)}`,
             `b: ${tile.biome.getDisplayName()}`,
-            `tt: ${tile.temperature.toFixed(2)}`,
-            `te: ${tile.elevation.toFixed(2)}`,
-            `tm: ${tile.moisture.toFixed(2)}`,
-            `t: ${tile.tile.getDisplayName()}`,
+            `tt: ${tile.temperature}`,
+            `te: ${tile.elevation}`,
+            `tm: ${tile.moisture}`,
+            `t: ${tile.tile?.getDisplayName()}`,
             `c: ${Renderer.getNbChildren()}`,
         ].join("\n");
     }
