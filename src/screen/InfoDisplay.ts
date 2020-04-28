@@ -19,11 +19,11 @@ export default class InfoDisplay extends Display {
             `x: ${(Game.player.x / 16).toFixed(2)}`,
             `y: ${(Game.player.y / 16).toFixed(2)}`,
             `y: ${(Game.player.a)}`,
-            `b: ${tile.biome.getDisplayName()}`,
-            `tt: ${tile.temperature}`,
-            `te: ${tile.elevation}`,
-            `tm: ${tile.moisture}`,
-            `t: ${tile.tile?.getDisplayName()}`,
+            `b: ${tile?.biome.getDisplayName()}`,
+            `tt: ${tile?.temperature}`,
+            `te: ${tile?.elevation}`,
+            `tm: ${tile?.moisture}`,
+            `t: ${tile?.tile.getDisplayName()}`,
             `c: ${Renderer.getNbChildren()}`,
         ].join("\n");
     }
@@ -57,6 +57,6 @@ export default class InfoDisplay extends Display {
         this.textBg.height = this.textArea.height;
     }
 
-    public  onRender(): void {
+    public onRender(): void {
     }
 }

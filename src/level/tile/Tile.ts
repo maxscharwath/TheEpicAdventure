@@ -8,6 +8,7 @@ import LevelTile from "../LevelTile";
 
 type Type<T> = new (...args: any[]) => T;
 export default class Tile {
+    public isInit: boolean = false;
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
@@ -35,10 +36,10 @@ export default class Tile {
     constructor(levelTile: LevelTile) {
         this.levelTile = levelTile;
         this.random = levelTile.random;
-        this.init();
     }
 
     public init() {
+        this.isInit = true;
     }
 
     public mayPass(e: Entity): boolean {

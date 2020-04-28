@@ -75,7 +75,8 @@ export default class Entity extends PIXI.Container implements Tickable {
                 }
 
                 // this.level.getTile(xt, yt).bumpedInto(this.level, xt, yt, this);
-                if (!this.level.getTile(xt, yt).mayPass(this)) {
+                const tile = this.level.getTile(xt, yt);
+                if (!tile || !tile.mayPass(this)) {
                     blocked = true;
                     return false;
                 }

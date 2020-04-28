@@ -22,9 +22,12 @@ export default class Level {
         const chunks = [];
         for (let x = -r; x < r; x++) {
             for (let y = -r; y < r; y++) {
-                chunks.push(this.getChunk(
+                const chunk = this.getChunk(
                     x + ((Renderer.camera.x + 16 * 8) >> 8),
-                    y + ((Renderer.camera.y + 16 * 8) >> 8)));
+                    y + ((Renderer.camera.y + 16 * 8) >> 8));
+                if (chunk.isActive()) {
+                    chunks.push(chunk);
+                }
             }
         }
         return chunks;
@@ -69,7 +72,7 @@ export default class Level {
             if (!generate) {
                 return undefined;
             }
-            this.chunks[x + ":" + y] = Chunk.fromFile(this, x, y) ?? new Chunk(this, x, y);
+            this.chunks[x + ":" + y] = Chunk.fromFile(this, x, y);
         }
         return this.chunks[x + ":" + y];
     }

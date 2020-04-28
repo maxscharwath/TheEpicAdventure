@@ -13,7 +13,7 @@ export default class Biome {
         biome.tag = tag;
     }
 
-    public static get(tag: string): Biome {
+    public static get(tag: string | number): Biome {
         const biome = this.biomes.get(tag);
         if (!biome) {
             throw new Error(`this tag '${tag}' doesn't exist!`);

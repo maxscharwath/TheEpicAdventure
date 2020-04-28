@@ -1,9 +1,10 @@
 import BSON from "bson";
-import fs from "fs";
+import {promises as fs} from "fs";
 import System from "../core/System";
 import Updater from "../core/Updater";
 import Entity from "../entity/Entity";
 import Mob from "../entity/mob/Mob";
+import RLE from "../utility/RLE";
 import Biome from "./biome/Biome";
 import Level from "./Level";
 import LevelTile from "./LevelTile";
@@ -36,52 +37,46 @@ export default class Chunk {
     public static SIZE = 16;
 
     public static fromFile(level: Level, cX: number, cY: number): Chunk {
-        try {
-            const bson = BSON.deserialize(fs.readFileSync(`./tmp/c.${cX}.${cY}.bson`));
-            const b = bson.tiles.buffer;
-            const buffer = new Uint16Array(b.buffer, b.byteOffset, b.byteLength / Uint16Array.BYTES_PER_ELEMENT);
-
-            const chunk = new Chunk(level, cX, cY, false);
+        const chunk = new Chunk(level, cX, cY, false);
+        fs.readFile(`./tmp/c.${cX}.${cY}.bson`).then((buffer) => {
+            const bson = BSON.deserialize(buffer);
 
             const map: LevelTile[] = [];
             const oX = cX * Chunk.SIZE;
             const oY = cY * Chunk.SIZE;
             const t1 = System.nanoTime();
-            for (const v of buffer) {
-                const nb = ((v >> 8) & 0b11111111);
-                const id = (v & 0b11111111);
-                for (let i = 0; i < nb; i++) {
-                    const index = map.length;
-                    const x = oX + index % Chunk.SIZE;
-                    const y = oY + ~~(index / Chunk.SIZE);
+            const biomes = RLE.decode(bson.biomes.buffer);
+            // const biomes = new Array(256).fill(0);
+            RLE.decode(bson.tiles.buffer, (id, index) => {
+                const x = oX + index % Chunk.SIZE;
+                const y = oY + ~~(index / Chunk.SIZE);
 
-                    const moisture = bson.moisture.buffer[index];
-                    const temperature = bson.temperature.buffer[index];
-                    const elevation = bson.elevation.buffer[index];
-                    const biome = Biome.get(bson.biome.buffer[index]);
+                const moisture = bson.moisture.buffer[index];
+                const temperature = bson.temperature.buffer[index];
+                const elevation = bson.elevation.buffer[index];
+                const biome = Biome.get(biomes[index]);
 
-                    const lt = new LevelTile({
-                        x,
-                        y,
-                        level,
-                        tileClass: Tiles.get(id),
-                        moisture,
-                        temperature,
-                        elevation,
-                        biome,
-                    });
-                    lt.init();
-                    map.push(lt);
-                }
-            }
+                const lt = new LevelTile({
+                    x,
+                    y,
+                    level,
+                    tileClass: Tiles.get(id),
+                    moisture,
+                    temperature,
+                    elevation,
+                    biome,
+                });
+                lt.init();
+                map.push(lt);
+            });
             console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
             chunk.isGenerated = true;
             chunk.map = map;
-            return chunk;
-        } catch (e) {
-            console.error(e);
-            return undefined;
-        }
+        }).catch((e) => {
+            console.warn(e);
+            chunk.generate();
+        });
+        return chunk;
     }
 
     public readonly level: Level;
@@ -104,10 +99,13 @@ export default class Chunk {
     }
 
     public isActive() {
-        return (Updater.tickCount - this.lastTick) < 50;
+        return this.isGenerated;
     }
 
     public onTick(): void {
+        if (!this.isActive()) {
+            return;
+        }
         this.lastTick = Updater.tickCount;
         for (const lt of this.map) {
             lt.onTick();
@@ -175,6 +173,9 @@ export default class Chunk {
     }
 
     public onRender() {
+        if (!this.isActive()) {
+            return;
+        }
         this.map.forEach((lt) => lt.onRender());
         for (const entity of this.entities) {
             if (!(entity instanceof Entity) || entity.getRemoved()) {
@@ -185,25 +186,23 @@ export default class Chunk {
     }
 
     public save() {
-        const data = [];
-        for (let index = 0, howMany = 0; index < this.map.length; index++) {
-            const aV = this.map[index + 1];
-            const cV = this.map[index];
-            howMany++;
-            if (cV?.getTileClass() !== aV?.getTileClass()) {
-                data.push(((howMany) << 8) + Tiles.getKeys(cV.getTileClass()).idx);
-                howMany = 0;
-            }
-        }
-        const buffer = Buffer.from(Uint16Array.from(data).buffer);
+        const tiles = RLE.encode(
+            this.map,
+            (a, b) => a?.getTileClass() === b?.getTileClass(),
+            (a) => Tiles.getKeys(a.getTileClass()).idx,
+        );
+        const biomes = RLE.encode(
+            this.map.map((lt) => Biome.getKeys(lt.biome).idx),
+            (a, b) => a === b,
+            (a) => a,
+        );
         const bson = BSON.serialize({
-            tiles: buffer,
-            biome: Buffer.from(Uint8Array.from(this.map.map((lt) => Biome.getKeys(lt.biome).idx)).buffer),
+            tiles,
+            biomes,
             elevation: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.elevation)).buffer),
             moisture: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.moisture)).buffer),
             temperature: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.temperature)).buffer),
         });
-        fs.writeFile(`./tmp/c.${this.x}.${this.y}.bson`, bson, "binary", () => {
-        });
+        fs.writeFile(`./tmp/c.${this.x}.${this.y}.bson`, bson, "binary");
     }
 }
