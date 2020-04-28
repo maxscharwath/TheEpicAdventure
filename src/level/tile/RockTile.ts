@@ -1,10 +1,11 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Entity from "../../entity/Entity";
 import AutoTilingTile from "./AutoTilingTile";
 import Tile from "./Tile";
 
 export default class RockTile extends AutoTilingTile  {
-    protected static autoTileTextures = RockTile.loadMaskTextures("src/resources/rock.png");
+    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("rock.png"));
     public static readonly TAG = "rock";
 
     public init() {

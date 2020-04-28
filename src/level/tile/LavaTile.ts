@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
@@ -6,8 +7,8 @@ import Tiles from "./Tiles";
 
 export default class LavaTile extends AutoTilingTile {
     protected static canConnectTo = ["hole", "water"];
-    protected static autoTileTextures = LavaTile.loadMaskTextures("src/resources/lava_mask.png");
-    private static tileTextures = LavaTile.loadTextures("src/resources/lava.png", 6);
+    protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("lava_mask.png"));
+    private static tileTextures = LavaTile.loadTextures(System.getResource("lava.png"), 6);
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "lava";
 

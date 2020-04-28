@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../core/System";
 import Display from "./Display";
 import Texture = PIXI.Texture;
 
@@ -21,7 +22,7 @@ export default class BackgroundDisplay extends Display {
     constructor(draggable: boolean) {
         super(draggable);
         const container = new PIXI.Container();
-        const baseTexture = PIXI.BaseTexture.from("src/resources/gui_window.png");
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("gui_window.png"));
         this.addChild(container);
         baseTexture.once("loaded", () => {
             const w = baseTexture.width / 3;

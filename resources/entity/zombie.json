@@ -1,5 +1,5 @@
 {
-  "url": "src/resources/entity/zombie.png",
+  "url": "entity/zombie.png",
   "width": 16,
   "height": 16,
   "type": {

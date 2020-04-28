@@ -15,6 +15,7 @@ import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
 import Network from "./Network";
 import Settings from "./Settings";
+import System from "./System";
 
 export default class Game {
     public static player: Player;
@@ -71,7 +72,8 @@ export default class Game {
             this.level.add(new Zombie(), 0, 0, true);
         }
         for (let i = 0; i < 100; i++) {
-            this.level.add(new ItemEntity(new ResourceItem(new Resource("apple", "src/resources/items/apple.png"))),
+            this.level.add(
+                new ItemEntity(new ResourceItem(new Resource("apple", System.getResource("items/apple.png")))),
                 0, 0, true);
         }
 

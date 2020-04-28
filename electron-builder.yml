@@ -1,0 +1,9 @@
+appId: "ch.studimax.tea"
+productName: "The Epic Adventure"
+files:
+  - "dist/"
+  - "resources/"
+  - "node_modules/"
+  - "package.json"
+directories:
+  output: "release"

@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Random from "../../utility/Random";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
@@ -24,7 +25,7 @@ export default class FarmlandTile extends Tile {
     public init() {
         super.init();
         this.filter = new PIXI.filters.ColorMatrixFilter();
-        const sprite = new PIXI.Sprite(PIXI.Texture.from("src/resources/farmland.png"));
+        const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("farmland.png")));
         sprite.filters = [this.filter];
         this.container.addChild(sprite);
     }

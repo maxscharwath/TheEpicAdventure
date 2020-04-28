@@ -1,3 +1,4 @@
+import System from "../../core/System";
 import Updater from "../../core/Updater";
 import Entity from "../../entity/Entity";
 import AutoTilingTile from "./AutoTilingTile";
@@ -5,7 +6,7 @@ import Tiles from "./Tiles";
 
 export default class HoleTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "water"];
-    protected static autoTileTextures = HoleTile.loadMaskTextures("src/resources/hole.png");
+    protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("hole.png"));
 
     public static readonly TAG = "hole";
 

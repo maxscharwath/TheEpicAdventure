@@ -1,16 +1,17 @@
 import fs from "fs";
 import YAML from "yaml";
+import System from "../System";
 
 export default class Language {
 
     private static loadFile(path: string): string {
-        return fs.readFileSync("src/resources/lang/" + path, "utf8");
+        return fs.readFileSync(System.getResource("lang/" + path), "utf8");
     }
 
     private readonly path: string;
     private data = new Map<string, any>();
     public static all: Language[] = (() => {
-        return fs.readdirSync("src/resources/lang").map((file) => new Language(file));
+        return fs.readdirSync(System.getResource("lang")).map((file) => new Language(file));
     })();
     public static loaded?: Language = Language.all[0];
 

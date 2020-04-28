@@ -7,10 +7,13 @@
     "baseUrl": ".",
     "target": "ES2019",
     "esModuleInterop": true,
-    "paths": {
-      "*": ["node_modules/*"]
-    }
+    "removeComments": true,
+    "moduleResolution": "node",
+    "suppressImplicitAnyIndexErrors": true
   },
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
     "src/**/*"
   ]

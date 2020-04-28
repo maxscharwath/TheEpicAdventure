@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Vector from "../../utility/Vector";
 import AquaticMob from "./AquaticMob";
 
@@ -13,7 +14,7 @@ export default class Fish extends AquaticMob {
         this.points.push(new PIXI.Point(0, 0));
         this.points.push(new PIXI.Point(8, 0));
         this.points.push(new PIXI.Point(16, 0));
-        const strip = new PIXI.SimpleRope(PIXI.Texture.from("src/resources/entity/fish_shadow.png"), this.points);
+        const strip = new PIXI.SimpleRope(PIXI.Texture.from(System.getResource("entity/fish_shadow.png")), this.points);
         strip.pivot.x = 5;
         strip.blendMode = PIXI.BLEND_MODES.MULTIPLY;
         this.container.addChild(strip);

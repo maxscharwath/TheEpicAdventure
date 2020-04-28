@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import {ItemEntity, Mob} from "../../entity";
 import Item from "../../item/Item";
 import ResourceItem from "../../item/ResourceItem";
@@ -23,7 +24,7 @@ export default class WheatTile extends FarmlandTile {
 
     public init() {
         super.init();
-        const baseTexture = new PIXI.BaseTexture("src/resources/wheat.png");
+        const baseTexture = new PIXI.BaseTexture(System.getResource("wheat.png"));
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.container.addChild(this.sprite);
     }

@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import {Entity, Fish} from "../../entity/";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 
 export default class WaterTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "hole"];
-    protected static autoTileTextures = WaterTile.loadMaskTextures("src/resources/water_mask.png");
-    private static tileTextures = WaterTile.loadTextures("src/resources/water.png", 10);
+    protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("water_mask.png"));
+    private static tileTextures = WaterTile.loadTextures(System.getResource("water.png"), 10);
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "water";
 

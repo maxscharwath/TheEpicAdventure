@@ -1,10 +1,11 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import {Entity} from "../../entity";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class CactusTile extends Tile {
-    private static tileTexture = PIXI.Texture.from("src/resources/cactus.png");
+    private static tileTexture = PIXI.Texture.from(System.getResource("cactus.png"));
     public static readonly TAG = "dirt";
 
     public init() {

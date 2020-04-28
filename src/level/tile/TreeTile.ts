@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Entity from "../../entity/Entity";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
@@ -36,7 +37,7 @@ export default class TreeTile extends Tile {
 
     protected initTree() {
         this.groundTile = new (Tiles.get("grass"))(this.levelTile);
-        this.treeTilingInit("src/resources/tree.png");
+        this.treeTilingInit(System.getResource("tree.png"));
     }
 
     private layersTreeSprite: PIXI.Sprite[];

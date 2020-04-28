@@ -1,10 +1,11 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Random from "../../utility/Random";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class DirtTile extends Tile {
-    private static tileTextures = DirtTile.loadTextures("src/resources/dirt.png", 4);
+    private static tileTextures = DirtTile.loadTextures(System.getResource("dirt.png"), 4);
     public static readonly TAG = "dirt";
     public init() {
         super.init();

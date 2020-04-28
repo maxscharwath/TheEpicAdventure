@@ -1,6 +1,6 @@
 {
   "name": "tea",
-  "version": "0.1-dev1",
+  "version": "0.1.1",
   "productName": "The Epic Adventure",
   "description": "The Epic Adventure, the game",
   "scripts": {
@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "fix": "tslint -c tslint.json -p tsconfig.json --fix",
-    "start": "yarn build && electron ./dist/index.js"
+    "start": "yarn build && electron ./dist/index.js",
+    "pack": "yarn build && electron-builder"
   },
   "author": "Maxime Scharwath",
   "repository": "https://github.com/maxscharwath/TheEpicAdventure.git",
@@ -21,6 +22,7 @@
     "@types/socket.io-client": "^1.4.32",
     "@types/uniqid": "^4.1.3",
     "electron": "^6.0.8",
+    "electron-builder": "^22.5.1",
     "electron-reload": "^1.5.0",
     "socket.io-client": "^2.3.0",
     "tslint": "^5.19.0",
@@ -42,5 +44,5 @@
     "uniqid": "^5.2.0",
     "yaml": "^1.9.2"
   },
-  "main": "index.js"
+  "main": "./dist/index.js"
 }

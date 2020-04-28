@@ -1,13 +1,14 @@
 import fs from "fs";
 import {BaseTexture, Rectangle, Texture} from "pixi.js";
+import System from "../core/System";
 import Direction from "../entity/Direction";
 
 export default class SpriteSheet {
     private animations: Map<string, Texture[][]> = new Map<string, Texture[][]>();
 
     constructor(url: string) {
-        const data = JSON.parse(fs.readFileSync(`src/resources/entity/${url}`, "utf8"));
-        const baseTexture = BaseTexture.from(data.url);
+        const data = JSON.parse(fs.readFileSync(System.getResource("entity/" + url), "utf8"));
+        const baseTexture = BaseTexture.from(System.getResource(data.url));
         for (const i in data.animations) {
             if (!data.animations.hasOwnProperty(i)) {
                 continue;
