@@ -35,14 +35,4 @@ export default class Slot {
     public isEmpty(): boolean {
         return this.item == null || this.nb == null || this.nb <= 0;
     }
-
-    public toJSON() {
-        if (this.isEmpty()) {
-            return null;
-        }
-        return {
-            item: this.item,
-            nb: this.nb,
-        };
-    }
 }

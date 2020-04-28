@@ -28,7 +28,7 @@ export default class KeyedMap<T> {
     }
 
     public get(index: string | number): T {
-        return isNaN(index as number) ? this.getByTag(index.toString()) : this.getByIdx(index as number);
+        return isNaN(index as number) ? this.getByTag(index as string) : this.getByIdx(index as number);
     }
 
     public getKeys(data: T): { idx: number, tag: string } {

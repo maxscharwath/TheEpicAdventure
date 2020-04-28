@@ -160,26 +160,4 @@ export default class Inventory {
         }
         return inventory;
     }
-
-    public toJSON() {
-        const slots = [];
-        for (const i in this.slots) {
-            if (!this.slots.hasOwnProperty(i)) {
-                continue;
-            }
-            const slot = this.slots[i];
-            if (!(slot instanceof Slot)) {
-                continue;
-            }
-            if (slot.isEmpty()) {
-                continue;
-            }
-            slots.push({
-                pos: i,
-                item: slot.item,
-                nb: slot.nb,
-            });
-        }
-        return {nbSlots: this.slots.length, slots};
-    }
 }

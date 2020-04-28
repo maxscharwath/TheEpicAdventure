@@ -17,6 +17,7 @@ export default class Player extends Mob {
     protected steppedOn() {
         super.steppedOn();
     }
+
     private static spriteSheet = new SpriteSheet("player.json");
     private sprite: AnimatedSprite;
 
@@ -35,6 +36,10 @@ export default class Player extends Mob {
     constructor() {
         super();
         this.inventory.addSlots(19);
+    }
+
+    public destroy(): void {
+        return;
     }
 
     public canSwim(): boolean {

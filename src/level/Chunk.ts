@@ -1,7 +1,9 @@
 import BSON from "bson";
 import {promises as fs} from "fs";
+import {gzip, ungzip} from "node-gzip";
 import System from "../core/System";
 import Updater from "../core/Updater";
+import Entities from "../entity/Entities";
 import Entity from "../entity/Entity";
 import Mob from "../entity/mob/Mob";
 import RLE from "../utility/RLE";
@@ -12,8 +14,6 @@ import Tiles from "./tile/Tiles";
 
 export default class Chunk {
     protected entities: Entity[] = [];
-    protected readonly x: number;
-    protected readonly y: number;
     protected isGenerated: boolean = false;
     protected map: LevelTile[] = [];
     protected lastTick = 0;
@@ -21,24 +21,24 @@ export default class Chunk {
 
     private generate() {
         this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
+        this.save();
         this.isGenerated = true;
         this.map.forEach((lt) => lt.init());
-        this.save();
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {
         if (!chunk.loaded) {
             entity.remove();
         }
-        this.remove(entity);
-        chunk.add(entity);
+        this.removeEntity(entity);
+        chunk.addEntity(entity);
     }
 
     public static SIZE = 16;
 
     public static fromFile(level: Level, cX: number, cY: number): Chunk {
         const chunk = new Chunk(level, cX, cY, false);
-        fs.readFile(`./tmp/c.${cX}.${cY}.bson`).then((buffer) => {
+        fs.readFile(`./tmp/c.${cX}.${cY}.bin`).then((buffer) => ungzip(buffer)).then((buffer) => {
             const bson = BSON.deserialize(buffer);
 
             const map: LevelTile[] = [];
@@ -46,7 +46,6 @@ export default class Chunk {
             const oY = cY * Chunk.SIZE;
             const t1 = System.nanoTime();
             const biomes = RLE.decode(bson.biomes.buffer);
-            // const biomes = new Array(256).fill(0);
             RLE.decode(bson.tiles.buffer, (id, index) => {
                 const x = oX + index % Chunk.SIZE;
                 const y = oY + ~~(index / Chunk.SIZE);
@@ -69,6 +68,10 @@ export default class Chunk {
                 lt.init();
                 map.push(lt);
             });
+            for (const data of bson.entities) {
+                const e = new (Entities.get(data.id))();
+                level.add(e, data.x, data.y, false);
+            }
             console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
             chunk.isGenerated = true;
             chunk.map = map;
@@ -78,6 +81,9 @@ export default class Chunk {
         });
         return chunk;
     }
+
+    public readonly x: number;
+    public readonly y: number;
 
     public readonly level: Level;
 
@@ -138,7 +144,7 @@ export default class Chunk {
         }
     }
 
-    public add(entity: Entity) {
+    public addEntity(entity: Entity) {
         if (!this.entities.includes(entity)) {
             this.entities.push(entity);
             if (this.loaded) {
@@ -147,9 +153,21 @@ export default class Chunk {
         }
     }
 
-    public remove(entity: Entity) {
+    public removeEntity(entity: Entity) {
         this.entities.splice(this.entities.indexOf(entity), 1);
         entity.remove();
+    }
+
+    public destroy() {
+        this.loaded = false;
+        this.map.forEach((tile) => {
+            tile.remove();
+            tile.destroy({children: true});
+        });
+        this.entities.forEach((entity) => {
+            entity.remove();
+            entity.destroy({children: true});
+        });
     }
 
     public unload() {
@@ -197,12 +215,15 @@ export default class Chunk {
             (a) => a,
         );
         const bson = BSON.serialize({
+            x: this.x,
+            y: this.y,
             tiles,
             biomes,
             elevation: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.elevation)).buffer),
             moisture: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.moisture)).buffer),
             temperature: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.temperature)).buffer),
+            entities: this.entities,
         });
-        fs.writeFile(`./tmp/c.${this.x}.${this.y}.bson`, bson, "binary");
+        gzip(bson).then((buffer) => fs.writeFile(`./tmp/c.${this.x}.${this.y}.bin`, buffer, "binary"));
     }
 }

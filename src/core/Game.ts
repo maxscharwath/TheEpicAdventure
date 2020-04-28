@@ -64,6 +64,7 @@ export default class Game {
         ];
         this.input = new InputHandler();
         this.player = new Player();
+
         // max tile 134217720
         this.level.add(this.player, 0, 0, true);
         for (let i = 0; i < 10; i++) {
@@ -80,7 +81,6 @@ export default class Game {
 
         Initializer.createAndDisplayFrame();
         Initializer.run();
-
         Network.startMultiplayerServer();
     }
 

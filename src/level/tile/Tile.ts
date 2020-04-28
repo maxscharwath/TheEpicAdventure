@@ -8,7 +8,18 @@ import LevelTile from "../LevelTile";
 
 type Type<T> = new (...args: any[]) => T;
 export default class Tile {
-    public isInit: boolean = false;
+
+    protected get level() {
+        return this.levelTile.level;
+    }
+
+    protected get x() {
+        return this.levelTile.getLocalX();
+    }
+
+    protected get y() {
+        return this.levelTile.getLocalY();
+    }
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
@@ -24,6 +35,7 @@ export default class Tile {
 
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
+    public isInit: boolean = false;
     public container = new PIXI.Container();
     public groundTile?: Tile;
 
@@ -71,10 +83,6 @@ export default class Tile {
         }
     }
 
-    public toJSON() {
-        return this.constructor.TAG;
-    }
-
     public getDisplayName(): string {
         return Localization.get(`tile.${this.constructor.TAG}`);
     }
@@ -88,17 +96,5 @@ export default class Tile {
     public instanceOf(...tileClass: Array<Type<Tile>>) {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
-    }
-
-    protected get level() {
-        return this.levelTile.level;
-    }
-
-    protected get x() {
-        return this.levelTile.getLocalX();
-    }
-
-    protected get y() {
-        return this.levelTile.getLocalY();
     }
 }

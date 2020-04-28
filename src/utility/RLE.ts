@@ -10,14 +10,10 @@ export default class RLE {
                 howMany = 0;
             }
         }
-        console.log(`${iterable.length}=>${data.length}: ${100 - data.length / iterable.length * 100}%`);
-        const b = Buffer.from(Uint16Array.from(data).buffer);
-        console.log("encode", b.byteOffset, b.byteLength);
-        return b;
+        return Buffer.from(Uint16Array.from(data).buffer);
     }
 
     public static decode(b: Buffer, each?: (id: number, index: number) => void) {
-        console.log("decode", b.byteOffset, b.byteLength);
         const data = [];
         for (let j = 0; j < b.length; j += 2) {
             const nb = b[j + 1];

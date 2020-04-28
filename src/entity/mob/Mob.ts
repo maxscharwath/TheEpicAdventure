@@ -157,7 +157,7 @@ export default class Mob extends Entity {
                     }
                     const x = this.x + Random.int(0, 16);
                     const y = this.y + Random.int(0, 16);
-                    // this.level.add(new ItemEntity(slot.item, x, y));
+                    // this.level.addEntity(new ItemEntity(slot.item, x, y));
                 }
             }
         }

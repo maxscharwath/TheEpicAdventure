@@ -41,7 +41,6 @@ export default class Camera {
                 this.fy = this.follow.y;
             }
         }
-
         const dX = this.cx - this.fx;
         const dY = this.cy - this.fy;
         const dist = Math.hypot(dX, dY);

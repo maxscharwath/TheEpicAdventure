@@ -127,16 +127,6 @@ export default class LevelTile extends PIXI.Container {
         return this.tileClass;
     }
 
-    public toJSON() {
-        return {
-            biome: this.biome.tag,
-            x: this.x,
-            y: this.y,
-            tile: this._tile,
-            data: this.data,
-        };
-    }
-
     public onTick() {
         if (!this.isInitiated) {
             this.init();

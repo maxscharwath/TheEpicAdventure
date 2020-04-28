@@ -9,6 +9,7 @@ import Hitbox from "../utility/Hitbox";
 import Maths from "../utility/Maths";
 import Random from "../utility/Random";
 import Vector3D from "../utility/Vector3D";
+import Entities from "./Entities";
 import Tickable from "./Tickable";
 
 export default class Entity extends PIXI.Container implements Tickable {
@@ -97,6 +98,7 @@ export default class Entity extends PIXI.Container implements Tickable {
 
     private static random = new Random();
     private lastTick: number = Updater.tickCount;
+    private uid: string = uniqid();
 
     private getCentredPos() {
         return {
@@ -106,7 +108,6 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public ["constructor"]: typeof Entity;
-    public uid: string = uniqid();
     public x: number = 0;
     public y: number = 0;
     public z: number = 0;
@@ -146,7 +147,7 @@ export default class Entity extends PIXI.Container implements Tickable {
             this.a.z *= -0.5;
         }
         if (this.z <= 0) {
-            const friction = this.getTile().getFriction();
+            const friction = this.getTile()?.getFriction() ?? 1;
             this.a.x -= this.a.x * friction;
             this.a.y -= this.a.y * friction;
         } else {
@@ -187,7 +188,7 @@ export default class Entity extends PIXI.Container implements Tickable {
             return false;
         }
         const tile = this.getTile();
-        return tile.is("water") || tile.is("lava");
+        return tile && (tile.is("water") || tile.is("lava"));
     }
 
     public getChunk(): Chunk {
@@ -261,10 +262,14 @@ export default class Entity extends PIXI.Container implements Tickable {
         return `${this.getName()}#${this.uid}`;
     }
 
-    public toJSON() {
+    public getKeys() {
+        return Entities.getKeys(this.constructor);
+    }
+
+    public toBSON() {
         return {
-            class: this.getName(),
-            id: this.uid,
+            id: this.getKeys().tag,
+            uid: this.uid,
             x: ~~this.x,
             y: ~~this.y,
         };

@@ -12,31 +12,29 @@ export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
     private random: Random = new Random();
     private players: Player[] = [];
-    private entities: Entity[] = [];
     private entitiesToAdd: Entity[] = [];
     private entitiesToRemove: Entity[] = [];
+    private chunksToRemove: string[] = [];
     private chunks: { [key: string]: Chunk } = {};
     private loadedChunks: Chunk[] = [];
-
-    private getChunksRadius(r: number = 1): Chunk[] {
-        const chunks = [];
-        for (let x = -r; x < r; x++) {
-            for (let y = -r; y < r; y++) {
-                const chunk = this.getChunk(
-                    x + ((Renderer.camera.x + 16 * 8) >> 8),
-                    y + ((Renderer.camera.y + 16 * 8) >> 8));
-                if (chunk.isActive()) {
-                    chunks.push(chunk);
-                }
-            }
-        }
-        return chunks;
-    }
 
     private trySpawn(): void {
         const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
         if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
             return;
+        }
+    }
+
+    private deleteQueuedChunk() {
+        while (this.chunksToRemove.length > 0) {
+            const chunkId = this.chunksToRemove[0];
+            const chunk = this.chunks[chunkId];
+            if (chunk) {
+                chunk.save();
+                chunk.destroy();
+            }
+            delete this.chunks[chunkId];
+            this.chunksToRemove.splice(0, 1);
         }
     }
 
@@ -54,8 +52,23 @@ export default class Level {
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
     }
 
-    public getEntities(): Entity[] {
-        return this.entities;
+    public flushChunks() {
+        this.chunksToRemove.push(...Object.keys(this.chunks));
+    }
+
+    public getChunksRadius(r: number = 1): Chunk[] {
+        const chunks = [];
+        for (let x = -r; x < r; x++) {
+            for (let y = -r; y < r; y++) {
+                const chunk = this.getChunk(
+                    x + ((Renderer.camera.x + 16 * 8) >> 8),
+                    y + ((Renderer.camera.y + 16 * 8) >> 8));
+                if (chunk.isActive()) {
+                    chunks.push(chunk);
+                }
+            }
+        }
+        return chunks;
     }
 
     public remove(e: Entity): void {
@@ -63,6 +76,10 @@ export default class Level {
         if (!this.entitiesToRemove.includes(e)) {
             this.entitiesToRemove.push(e);
         }
+    }
+
+    public deleteChunk(x: number, y: number) {
+        this.chunksToRemove.push(x + ":" + y);
     }
 
     public getChunk(x: number, y: number, generate = true): Chunk {
@@ -131,6 +148,7 @@ export default class Level {
     }
 
     public onTick(): void {
+        this.deleteQueuedChunk();
         const chunks = this.getChunksRadius(1);
         chunks.forEach((chunk) => {
             if (!this.loadedChunks.includes(chunk)) {
@@ -140,7 +158,8 @@ export default class Level {
         });
         this.loadedChunks.forEach((c) => {
             if (!chunks.includes(c)) {
-                c.unload();
+                // c.unload();
+                this.deleteChunk(c.x, c.y);
             }
         });
         this.loadedChunks = chunks;
@@ -150,22 +169,17 @@ export default class Level {
 
         while (this.entitiesToAdd.length > 0) {
             const entity: Entity = this.entitiesToAdd[0];
-            const inLevel: boolean = this.entities.includes(entity);
-            if (!inLevel) {
-                this.entities.push(entity);
-                if (entity instanceof Player) {
-                    this.players.push(entity as Player);
-                }
+            entity.getChunk().addEntity(entity);
+            if (entity instanceof Player && !this.players.includes(entity)) {
+                this.players.push(entity as Player);
             }
             this.entitiesToAdd.splice(this.entitiesToAdd.indexOf(entity), 1);
         }
 
         while (this.entitiesToRemove.length > 0) {
             const entity: Entity = this.entitiesToRemove[0];
-            entity.getChunk().remove(entity);
+            entity.getChunk().removeEntity(entity);
             entity.delete(this);
-            this.entities.splice(this.entities.indexOf(entity), 1);
-
             if (entity instanceof Player) {
                 this.players.splice(this.players.indexOf(entity), 1);
             }
@@ -204,8 +218,6 @@ export default class Level {
             y = y * 16 + 8;
         }
         entity.setLevel(this, x, y);
-        this.getChunk(x >> 8, y >> 8).add(entity);
-
         this.entitiesToRemove.splice(this.entitiesToRemove.indexOf(entity), 1);
         if (!this.entitiesToAdd.includes(entity)) {
             this.entitiesToAdd.push(entity);
@@ -214,12 +226,6 @@ export default class Level {
 
     public toString(): string {
         return "Level";
-    }
-
-    public toJSON() {
-        return {
-            chunks: this.chunks,
-        };
     }
 
     public save() {
