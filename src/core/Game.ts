@@ -73,7 +73,7 @@ export default class Game {
         }
         for (let i = 0; i < 100; i++) {
             this.level.add(
-                new ItemEntity(new ResourceItem(new Resource("apple", System.getResource("items/apple.png")))),
+                new ItemEntity(new ResourceItem(new Resource("apple", System.getResource("items", "apple.png")))),
                 0, 0, true);
         }
 

@@ -5,7 +5,7 @@ import System from "../System";
 export default class Language {
 
     private static loadFile(path: string): string {
-        return fs.readFileSync(System.getResource("lang/" + path), "utf8");
+        return fs.readFileSync(System.getResource("lang", path), "utf8");
     }
 
     private readonly path: string;

@@ -107,6 +107,15 @@ export default class Entity extends PIXI.Container implements Tickable {
         };
     }
 
+    public static create(data: any): Entity {
+        const EntityClass = Entities.getByTag(data.id);
+        if (!EntityClass) {
+            return;
+        }
+        const entity = new EntityClass();
+        return entity;
+    }
+
     public ["constructor"]: typeof Entity;
     public x: number = 0;
     public y: number = 0;

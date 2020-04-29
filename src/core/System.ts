@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as electron from "electron";
 import path from "path";
 
 export default class System {
@@ -10,10 +10,15 @@ export default class System {
         return (hr[0] * 1e9 + hr[1]) / 1e3;
     }
 
+    public static appData: string = (electron.app || electron.remote.app).getPath("userData");
     public static resources: string = path.dirname(require.main.filename);
 
-    public static getResource(url: string): string {
-        return path.join(this.resources, url);
+    public static getAppData(...url: string[]): string {
+        return path.join(this.appData, ...url);
+    }
+
+    public static getResource(...url: string[]): string {
+        return path.join(this.resources, ...url);
     }
 
     public static nanoTime(): number {

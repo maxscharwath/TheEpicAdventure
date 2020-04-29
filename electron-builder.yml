@@ -7,3 +7,6 @@ files:
   - "package.json"
 directories:
   output: "release"
+mac:
+  target: dmg
+  category: "public.app-category.games"

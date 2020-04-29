@@ -3,13 +3,14 @@
   "version": "0.1.1",
   "productName": "The Epic Adventure",
   "description": "The Epic Adventure, the game",
+  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "start": "yarn build && electron ./dist/index.js",
-    "pack": "yarn build && electron-builder"
+    "packBuilder": "yarn build && electron-builder"
   },
   "author": "Maxime Scharwath",
   "repository": "https://github.com/maxscharwath/TheEpicAdventure.git",

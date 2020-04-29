@@ -1,5 +1,5 @@
 import BSON from "bson";
-import {promises as fs} from "fs";
+import fs, {promises as fsp} from "fs";
 import {gzip, ungzip} from "node-gzip";
 import System from "../core/System";
 import Updater from "../core/Updater";
@@ -38,45 +38,44 @@ export default class Chunk {
 
     public static fromFile(level: Level, cX: number, cY: number): Chunk {
         const chunk = new Chunk(level, cX, cY, false);
-        fs.readFile(`./tmp/c.${cX}.${cY}.bin`).then((buffer) => ungzip(buffer)).then((buffer) => {
-            const bson = BSON.deserialize(buffer);
+        fsp.readFile(System.getAppData("tmp", `c.${cX}.${cY}.bin`))
+            .then((buffer) => ungzip(buffer))
+            .then((buffer) => {
+                const bson = BSON.deserialize(buffer);
+                const map: LevelTile[] = [];
+                const oX = cX * Chunk.SIZE;
+                const oY = cY * Chunk.SIZE;
+                const t1 = System.nanoTime();
+                const biomes = RLE.decode(bson.biomes.buffer);
+                RLE.decode(bson.tiles.buffer, (id, index) => {
+                    const x = oX + index % Chunk.SIZE;
+                    const y = oY + ~~(index / Chunk.SIZE);
 
-            const map: LevelTile[] = [];
-            const oX = cX * Chunk.SIZE;
-            const oY = cY * Chunk.SIZE;
-            const t1 = System.nanoTime();
-            const biomes = RLE.decode(bson.biomes.buffer);
-            RLE.decode(bson.tiles.buffer, (id, index) => {
-                const x = oX + index % Chunk.SIZE;
-                const y = oY + ~~(index / Chunk.SIZE);
+                    const moisture = bson.moisture.buffer[index];
+                    const temperature = bson.temperature.buffer[index];
+                    const elevation = bson.elevation.buffer[index];
+                    const biome = Biome.get(biomes[index]);
 
-                const moisture = bson.moisture.buffer[index];
-                const temperature = bson.temperature.buffer[index];
-                const elevation = bson.elevation.buffer[index];
-                const biome = Biome.get(biomes[index]);
-
-                const lt = new LevelTile({
-                    x,
-                    y,
-                    level,
-                    tileClass: Tiles.get(id),
-                    moisture,
-                    temperature,
-                    elevation,
-                    biome,
+                    const lt = new LevelTile({
+                        x,
+                        y,
+                        level,
+                        tileClass: Tiles.get(id),
+                        moisture,
+                        temperature,
+                        elevation,
+                        biome,
+                    });
+                    lt.init();
+                    map.push(lt);
                 });
-                lt.init();
-                map.push(lt);
-            });
-            for (const data of bson.entities) {
-                const e = new (Entities.get(data.id))();
-                level.add(e, data.x, data.y, false);
-            }
-            console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
-            chunk.isGenerated = true;
-            chunk.map = map;
-        }).catch((e) => {
-            console.warn(e);
+                for (const data of bson.entities) {
+                    level.add((Entities.get(data.id) as typeof Entity).create(data));
+                }
+                console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
+                chunk.isGenerated = true;
+                chunk.map = map;
+            }).catch((e) => {
             chunk.generate();
         });
         return chunk;
@@ -224,6 +223,9 @@ export default class Chunk {
             temperature: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.temperature)).buffer),
             entities: this.entities,
         });
-        gzip(bson).then((buffer) => fs.writeFile(`./tmp/c.${this.x}.${this.y}.bin`, buffer, "binary"));
+        if (!fs.existsSync(System.getAppData("tmp"))) {
+            fs.mkdirSync(System.getAppData("tmp"));
+        }
+        gzip(bson).then((buffer) => fsp.writeFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`), buffer, "binary"));
     }
 }
