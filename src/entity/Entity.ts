@@ -236,9 +236,6 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public add() {
-        if (!this.level) {
-            return;
-        }
         this.level.entitiesContainer.addChild(this);
     }
 

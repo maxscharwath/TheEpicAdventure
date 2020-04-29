@@ -23,8 +23,8 @@ export default class LevelGen {
     constructor(seed: number | string) {
         this.seed = Seed.create(seed);
         this.elevationNoise = new SimplexNoise(this.seed);
-        this.moistureNoise = new SimplexNoise(this.seed * 32);
-        this.temperatureNoise = new SimplexNoise(this.seed * 16);
+        this.moistureNoise = new SimplexNoise((this.seed + 1) * 16);
+        this.temperatureNoise = new SimplexNoise((this.seed + 2) * 32);
     }
 
     public genChunk(level: Level, cX: number, cY: number, callback?: () => void): LevelTile[] {
@@ -38,25 +38,21 @@ export default class LevelGen {
         const zoom = 2;
         for (let y = y1; y < y2; y++) {
             for (let x = x1; x < x2; x++) {
-                const elevation = ~~(Math.pow(
-                    this.elevationNoise.noise2D(x / 32 / zoom, y / 32 / zoom) +
-                    this.elevationNoise.noise2D(x / 8 / zoom, y / 8 / zoom) * 0.2 -
-                    Math.pow(this.elevationNoise.noise2D(x / 6 / zoom, y / 6 / zoom) * 0.9, 6), 3,
-                ) * 255);
-                const moisture = ~~((this.moistureNoise.noise2D(x / 50 / zoom, y / 50 / zoom) +
-                    this.moistureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2) * 255);
+                const elevation = ~~(this.elevationNoise.get(x, y,
+                    {frequency: 32, zoom, octaves: 2, amplitude: 3, persistence: 0.5, evolution: 4}) * 255);
+                const moisture = ~~(this.moistureNoise.get(x, y,
+                    {zoom, frequency: 50, octaves: 3, amplitude: 2, persistence: 0.5, evolution: 2}) * 255);
+                const temperature = ~~(this.temperatureNoise.get(x, y,
+                    {zoom, frequency: 75, octaves: 3, amplitude: 2, persistence: 0.5, evolution: 2}) * 255);
+                const river = ~~(( 2 * (0.5 - Math.abs(0.5 - this.elevationNoise.get(x, y,
+                    {zoom: 2, frequency: 150, octaves: 4, evolution: 2.5, persistence: 1, amplitude: 1})))) * 255);
 
-                const temperature = ~~((this.temperatureNoise.noise2D(x / 100 / zoom, y / 100 / zoom) +
-                    this.temperatureNoise.noise2D(x / 10 / zoom, y / 10 / zoom) * 0.2) * 255);
-                const biome = Biome.from(elevation, moisture, temperature);
+                let biome = Biome.from(elevation, moisture, temperature);
+                if (!biome.tag.includes("ocean") && river > 240) { biome = Biome.get("river"); }
                 const tile = new LevelTile({level, x, y, biome, moisture, temperature, elevation});
                 map.push(tile);
 
-                if (elevation > 204) {
-                    tile.setTile(Tiles.get("rock"));
-                } else {
-                    tile.setTile(Tiles.get("grass"));
-                }
+                tile.setTile(Tiles.get("grass"));
 
                 if (biome.tag.includes("ocean")) {
                     tile.setTile(Tiles.get("water"));
@@ -90,6 +86,15 @@ export default class LevelGen {
                 if (biome.tag.includes("grassland")) {
                     if (random.probability(5)) {
                         tile.setTile(Tiles.get("tree"));
+                    }
+                }
+                if (elevation > 210) {
+                    tile.setTile(Tiles.get("rock"));
+                }
+                if (biome.is("river")) {
+                    tile.setTile(Tiles.get("dirt"));
+                    if (river > 245) {
+                        tile.setTile(Tiles.get("water"));
                     }
                 }
             }

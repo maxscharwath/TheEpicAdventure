@@ -18,6 +18,13 @@ export default class Player extends Mob {
         super.steppedOn();
     }
 
+    // GODMOD
+    protected move2(xa: number, ya: number): boolean {
+        this.x += xa;
+        this.y += ya;
+        return true;
+    }
+
     private static spriteSheet = new SpriteSheet("player.json");
     private sprite: AnimatedSprite;
 

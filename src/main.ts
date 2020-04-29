@@ -3,7 +3,6 @@
 import Game from "./core/Game";
 document.addEventListener("DOMContentLoaded", () => {
     Game.main();
-}, false);
-
+});
 // @ts-ignore
 global.game = Game;

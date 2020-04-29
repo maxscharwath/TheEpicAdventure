@@ -56,6 +56,26 @@ export default class SimplexNoise {
         }
     }
 
+    public get(x: number, y: number, {
+        amplitude= 1,
+        zoom= 1,
+        frequency= 1,
+        octaves= 1,
+        evolution= 2,
+        persistence= 0.5,
+    }= {}): number {
+        let value = this.noise2D(x / frequency / zoom, y / frequency / zoom);
+        let tot = 1;
+        for (let octave = 1; octave < octaves; octave++) {
+            frequency /= evolution;
+            persistence /= octave;
+            value += this.noise2D(x / frequency / zoom, y / frequency / zoom) * persistence;
+            tot += persistence / 2;
+        }
+        value = Math.pow(value / tot, amplitude);
+        return value > 1 ? 1 : value;
+    }
+
     public noise2D(xin: number, yin: number): number {
         const permMod12 = this.permMod12;
         const perm = this.perm;
