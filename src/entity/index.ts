@@ -1,3 +1,4 @@
+import Chicken from "./mob/Chicken";
 import Player from "./mob/Player";
 import Zombie from "./mob/Zombie";
 import Fish from "./mob/Fish";
@@ -12,6 +13,7 @@ Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
 Entities.add(2, "fish", Fish);
 Entities.add(3, "itemEntity", ItemEntity);
+Entities.add(4, "chicken", Chicken);
 
 export {
     Entity,
@@ -22,4 +24,5 @@ export {
     HostileMob,
     Player,
     Zombie,
+    Chicken,
 };

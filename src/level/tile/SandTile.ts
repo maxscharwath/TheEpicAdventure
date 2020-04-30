@@ -22,7 +22,9 @@ export default class SandTile extends AutoTilingTile {
         const baseTexture = PIXI.BaseTexture.from(System.getResource("sand_footprint.png"));
         this.footprintSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.footprintSprite.visible = false;
-        this.container.addChild(new PIXI.Sprite(PIXI.Texture.from(System.getResource("sand.png"))), this.footprintSprite);
+        this.container.addChild(
+            new PIXI.Sprite(PIXI.Texture.from(System.getResource("sand.png"))), this.footprintSprite,
+        );
         this.initAutoTile();
     }
 

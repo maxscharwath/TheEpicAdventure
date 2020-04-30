@@ -1,4 +1,4 @@
-import {ItemEntity, Player, Zombie} from "../entity/";
+import {Chicken, ItemEntity, Player, Zombie} from "../entity/";
 import ResourceItem from "../item/ResourceItem";
 import Resource from "../item/resources/Resource";
 import Biome from "../level/biome/Biome";
@@ -69,7 +69,7 @@ export default class Game {
         // max tile 134217720
         this.level.add(this.player, 0, 0, true);
         for (let i = 0; i < 10; i++) {
-            this.level.add(new Zombie(), 0, 0, true);
+            this.level.add(new Chicken(), 0, 0, true);
         }
         for (let i = 0; i < 100; i++) {
             this.level.add(

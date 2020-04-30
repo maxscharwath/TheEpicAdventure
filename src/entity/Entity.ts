@@ -54,7 +54,7 @@ export default class Entity extends PIXI.Container implements Tickable {
         }
         const xt = this.x >> 4;
         const yt = this.y >> 4;
-        this.level.getTile(xt, yt).steppedOn(this);
+        this.level.getTile(xt, yt)?.steppedOn(this);
     }
 
     protected move2(xa: number, ya: number): boolean {
@@ -112,8 +112,7 @@ export default class Entity extends PIXI.Container implements Tickable {
         if (!EntityClass) {
             return;
         }
-        const entity = new EntityClass();
-        return entity;
+        return new EntityClass();
     }
 
     public ["constructor"]: typeof Entity;

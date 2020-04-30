@@ -32,12 +32,13 @@ export default class Tile {
 
     protected random: Random;
     protected levelTile: LevelTile;
+    protected groundTile?: Tile;
+    protected groundContainer = new PIXI.Container();
 
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
     public isInit: boolean = false;
     public container = new PIXI.Container();
-    public groundTile?: Tile;
 
     public ["constructor"]: typeof Tile;
 
@@ -48,6 +49,16 @@ export default class Tile {
     constructor(levelTile: LevelTile) {
         this.levelTile = levelTile;
         this.random = levelTile.random;
+        this.container.addChild(this.groundContainer);
+    }
+
+    public setGroundTile(tile: Type<Tile>) {
+        if (this.groundTile instanceof tile) {return; }
+        this.groundContainer.removeChildren();
+        this.groundTile = new (tile)(this.levelTile);
+        this.levelTile.update();
+        this.groundTile.init();
+        this.groundContainer.addChild(this.groundTile.container);
     }
 
     public init() {

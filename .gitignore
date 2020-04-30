@@ -1,4 +1,4 @@
-node_modules
-dist
-release
-tmp
+/node_modules/
+/dist/
+/tmp/
+/release/

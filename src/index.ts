@@ -3,6 +3,9 @@ import * as path from "path";
 
 let mainWindow: Electron.BrowserWindow;
 
+// tslint:disable-next-line:no-var-requires
+require("electron-reload")(__dirname);
+
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({

@@ -55,7 +55,7 @@ export default class Biome {
             }
             return Biome.get("ocean");
         }
-        if (e < 45 && t > 102) {
+        if (e < 45 && t > 100) {
             return Biome.get("beach");
         }
         if (t > 178) {

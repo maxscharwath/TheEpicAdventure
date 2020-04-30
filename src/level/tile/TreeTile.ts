@@ -7,9 +7,6 @@ import Tiles from "./Tiles";
 export default class TreeTile extends Tile {
 
     protected treeTilingInit(source: string) {
-        this.container.addChild(this.groundTile.container);
-        this.groundTile.init();
-
         const texture = PIXI.BaseTexture.from(source);
         this.layersTreeSprite = [
             new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(8, 8, 8, 8))),
@@ -36,7 +33,7 @@ export default class TreeTile extends Tile {
     }
 
     protected initTree() {
-        this.groundTile = new (Tiles.get("grass"))(this.levelTile);
+        this.setGroundTile(Tiles.get("grass"));
         this.treeTilingInit(System.getResource("tree.png"));
     }
 

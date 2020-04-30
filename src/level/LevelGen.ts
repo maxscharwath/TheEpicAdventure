@@ -38,17 +38,22 @@ export default class LevelGen {
         const zoom = 2;
         for (let y = y1; y < y2; y++) {
             for (let x = x1; x < x2; x++) {
+
                 const elevation = ~~(this.elevationNoise.get(x, y,
                     {frequency: 32, zoom, octaves: 2, amplitude: 3, persistence: 0.5, evolution: 4}) * 255);
+
                 const moisture = ~~(this.moistureNoise.get(x, y,
                     {zoom, frequency: 50, octaves: 3, amplitude: 2, persistence: 0.5, evolution: 2}) * 255);
+
                 const temperature = ~~(this.temperatureNoise.get(x, y,
                     {zoom, frequency: 75, octaves: 3, amplitude: 2, persistence: 0.5, evolution: 2}) * 255);
+
                 const river = ~~(( 2 * (0.5 - Math.abs(0.5 - this.elevationNoise.get(x, y,
                     {zoom: 2, frequency: 150, octaves: 4, evolution: 2.5, persistence: 1, amplitude: 1})))) * 255);
 
                 let biome = Biome.from(elevation, moisture, temperature);
                 if (!biome.tag.includes("ocean") && river > 240) { biome = Biome.get("river"); }
+
                 const tile = new LevelTile({level, x, y, biome, moisture, temperature, elevation});
                 map.push(tile);
 
@@ -59,23 +64,26 @@ export default class LevelGen {
                     if (random.probability(50)) {
                         tile.setTile(Tiles.get("lilypad"));
                     }
+                    if (temperature < 40 && random.probability(temperature / 25)) {
+                        tile.setTile(Tiles.get("ice"));
+                    }
                 }
-                if (biome.tag.includes("beach")) {
+                if (biome.is("beach")) {
                     tile.setTile(Tiles.get("sand"));
                     if (random.probability(25)) {
                         tile.setTile(Tiles.get("palm"));
                     }
                 }
-                if (biome.tag.includes("desert")) {
+                if (biome.is("desert")) {
                     tile.setTile(Tiles.get("sand"));
-                    if (random.probability(5)) {
+                    if (random.probability(50)) {
                         tile.setTile(Tiles.get("cactus"));
                     }
                 }
-                if (biome.tag.includes("savanna")) {
+                if (biome.is("savanna")) {
                     tile.setTile(Tiles.get("dirt"));
                 }
-                if (biome.tag.includes("forest")) {
+                if (biome.is("forest")) {
                     tile.setTile(Tiles.get("grass"));
                     if (random.probability(2)) {
                         tile.setTile(Tiles.get("tree"));
@@ -83,11 +91,19 @@ export default class LevelGen {
                         tile.setTile(Tiles.get("spruce"));
                     }
                 }
-                if (biome.tag.includes("grassland")) {
+                if (biome.is("grassland")) {
                     if (random.probability(5)) {
                         tile.setTile(Tiles.get("tree"));
                     }
                 }
+
+                if (biome.is("tundra") || biome.is("snow")) {
+                    tile.setTile(Tiles.get("snow"));
+                    if (random.probability(5)) {
+                        tile.setTile(Tiles.get("spruce"));
+                    }
+                }
+
                 if (elevation > 210) {
                     tile.setTile(Tiles.get("rock"));
                 }

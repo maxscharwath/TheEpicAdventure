@@ -4,11 +4,13 @@ import DirtTile from "./DirtTile";
 import FarmlandTile from "./FarmlandTile";
 import GrassTile from "./GrassTile";
 import HoleTile from "./HoleTile";
+import IceTile from "./IceTile";
 import LavaTile from "./LavaTile";
 import LilyPadTile from "./LilyPadTile";
 import PalmTreeTile from "./PalmTreeTile";
 import RockTile from "./RockTile";
 import SandTile from "./SandTile";
+import SnowTile from "./SnowTile";
 import SpruceTreeTile from "./SpruceTreeTile";
 import Tile from "./Tile";
 import TreeTile from "./TreeTile";
@@ -58,5 +60,7 @@ export default class Tiles {
         Tiles.add(11, "palm", PalmTreeTile);
         Tiles.add(12, "spruce", SpruceTreeTile);
         Tiles.add(13, "cactus", CactusTile);
+        Tiles.add(14, "snow", SnowTile);
+        Tiles.add(15, "ice", IceTile);
     }
 }
