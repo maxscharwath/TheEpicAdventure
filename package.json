@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "dev": "yarn build && electron ./dist/index.js && tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "start": "yarn build && electron ./dist/index.js",

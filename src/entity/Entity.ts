@@ -112,7 +112,10 @@ export default class Entity extends PIXI.Container implements Tickable {
         if (!EntityClass) {
             return;
         }
-        return new EntityClass();
+        const e = new EntityClass();
+        e.x = data.x;
+        e.y = data.y;
+        return e;
     }
 
     public ["constructor"]: typeof Entity;
@@ -170,7 +173,9 @@ export default class Entity extends PIXI.Container implements Tickable {
         }
         this.a.z -= this.level.gravity;
 
-        this.move(this.a.x, this.a.y);
+        if (!(this.a.x === 0 && this.a.y === 0)) {
+            this.move(this.a.x, this.a.y);
+        }
 
         this.zIndex = this.calculateZIndex();
         this.container.pivot.y = this.z;

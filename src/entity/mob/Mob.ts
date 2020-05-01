@@ -23,7 +23,6 @@ export default class Mob extends Entity {
     protected mass = 20;
 
     protected move(xa: number, ya: number): boolean {
-
         let entities = this.getChunk().getEntities();
         const maxEntities = 10;
         if (entities.length > maxEntities) {

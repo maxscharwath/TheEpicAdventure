@@ -13,7 +13,10 @@ export default class InfoDisplay extends Display {
     private text(): string {
         const tile = Game.player.getTile();
         return [
+            `v: ${Game.VERSION.toString()}`,
             `fps: ${Math.round(Initializer.getCurFps())}`,
+            `tU: ${Updater.getTickTime().toFixed(2)}ms`,
+            `tR: ${Renderer.getTickTime().toFixed(2)}ms`,
             `t: ${Updater.tickCount} (${Updater.time})`,
             `s: ${Game.level.seed}`,
             `x: ${(Game.player.x / 16).toFixed(2)}`,

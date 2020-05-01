@@ -4,10 +4,12 @@ import Level from "../level/Level";
 import Display from "../screen/Display";
 import Color from "../utility/Color";
 import Game from "./Game";
+import System from "./System";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
 export default class Renderer {
+    private static ticksTime: number[] = [];
 
     public static get ZOOM() {
         return 0;
@@ -69,6 +71,7 @@ export default class Renderer {
     }
 
     public static render(dlt: number): void {
+        const t1 = System.milliTime();
         Renderer.delta = dlt;
         if (!Game.HASFOCUS) {
             return;
@@ -79,6 +82,12 @@ export default class Renderer {
             display.onRender();
         });
         this.renderer.render(this.mainStage);
+        this.ticksTime.unshift(System.milliTime() - t1);
+        this.ticksTime.length = Math.min(this.ticksTime.length, 50);
+    }
+
+    public static getTickTime(): number {
+        return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
     }
 
     public static init() {

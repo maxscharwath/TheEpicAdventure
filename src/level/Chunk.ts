@@ -13,16 +13,16 @@ import LevelTile from "./LevelTile";
 import Tiles from "./tile/Tiles";
 
 export default class Chunk {
-    protected entities: Entity[] = [];
-    protected isGenerated: boolean = false;
-    protected map: LevelTile[] = [];
-    protected lastTick = 0;
-    protected loaded: boolean = false;
+    private entities: Entity[] = [];
+    private generated: boolean = false;
+    private map: LevelTile[] = [];
+    private lastTick = 0;
+    private loaded: boolean = false;
 
     private generate() {
         this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
         this.save();
-        this.isGenerated = true;
+        this.generated = true;
         this.map.forEach((lt) => lt.init());
     }
 
@@ -73,7 +73,7 @@ export default class Chunk {
                     level.add((Entities.get(data.id) as typeof Entity).create(data));
                 }
                 console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
-                chunk.isGenerated = true;
+                chunk.generated = true;
                 chunk.map = map;
             }).catch((e) => {
             chunk.generate();
@@ -104,11 +104,15 @@ export default class Chunk {
     }
 
     public isActive() {
-        return this.isGenerated;
+        return (Updater.tickCount - this.lastTick) < 500;
+    }
+
+    public isGenerated() {
+        return this.generated;
     }
 
     public onTick(): void {
-        if (!this.isActive()) {
+        if (!this.isGenerated()) {
             return;
         }
         this.lastTick = Updater.tickCount;
@@ -190,7 +194,7 @@ export default class Chunk {
     }
 
     public onRender() {
-        if (!this.isActive()) {
+        if (!this.isGenerated()) {
             return;
         }
         this.map.forEach((lt) => lt.onRender());

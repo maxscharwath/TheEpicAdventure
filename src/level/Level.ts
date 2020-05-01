@@ -15,7 +15,8 @@ export default class Level {
     private entitiesToAdd: Entity[] = [];
     private entitiesToRemove: Entity[] = [];
     private chunksToRemove: string[] = [];
-    private chunks: { [key: string]: Chunk } = {};
+    // private chunks: { [key: string]: Chunk } = {};
+    private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
 
     private trySpawn(): void {
@@ -28,12 +29,12 @@ export default class Level {
     private deleteQueuedChunk() {
         while (this.chunksToRemove.length > 0) {
             const chunkId = this.chunksToRemove[0];
-            const chunk = this.chunks[chunkId];
+            const chunk = this.chunks.get(chunkId);
             if (chunk) {
                 chunk.save();
                 chunk.destroy();
             }
-            delete this.chunks[chunkId];
+            this.chunks.delete(chunkId);
             this.chunksToRemove.splice(0, 1);
         }
     }
@@ -52,8 +53,16 @@ export default class Level {
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
     }
 
+    public flushInactiveChunks() {
+        this.chunks.forEach((chunk) => {
+            if (!chunk.isActive()) {
+                this.deleteChunk(chunk.x, chunk.y);
+            }
+        });
+    }
+
     public flushChunks() {
-        this.chunksToRemove.push(...Object.keys(this.chunks));
+        this.chunksToRemove.push(...this.chunks.keys());
     }
 
     public getChunksRadius(r: number = 1): Chunk[] {
@@ -63,7 +72,7 @@ export default class Level {
                 const chunk = this.getChunk(
                     x + ((Renderer.camera.x + 16 * 8) >> 8),
                     y + ((Renderer.camera.y + 16 * 8) >> 8));
-                if (chunk.isActive()) {
+                if (chunk.isGenerated()) {
                     chunks.push(chunk);
                 }
             }
@@ -85,14 +94,15 @@ export default class Level {
     public getChunk(x: number, y: number, generate = true): Chunk {
         x = ~~x;
         y = ~~y;
-        if (!this.chunks[x + ":" + y]) {
+        const id = x + ":" + y;
+        if (!this.chunks.has(id)) {
             if (!generate) {
                 return undefined;
             }
-            this.chunks[x + ":" + y] = Chunk.fromFile(this, x, y);
+            this.chunks.set(id, Chunk.fromFile(this, x, y));
             // this.chunks[x + ":" + y] = new Chunk(this, x, y, true);
         }
-        return this.chunks[x + ":" + y];
+        return this.chunks.get(id);
     }
 
     public getChunkNeighbour(x: number, y: number): Chunk[] {

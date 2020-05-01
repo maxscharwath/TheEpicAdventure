@@ -1,6 +1,8 @@
 import Game from "./Game";
+import System from "./System";
 
 export default class Updater {
+    private static ticksTime: number[] = [];
     public static readonly normSpeed: number = 60;
     public static gamespeed: number = 1;
     public static paused: boolean = true;
@@ -20,7 +22,8 @@ export default class Updater {
     public static delta: number;
 
     public static onTick(dlt: number): void {
-        Updater.delta = dlt;
+        const t1 = System.milliTime();
+        this.delta = dlt;
         Game.input.onTick();
         if (!Game.HASFOCUS) {
             return;
@@ -29,26 +32,32 @@ export default class Updater {
             display.onTick();
         });
         Game.level.onTick();
-        Updater.setTime(Updater.tickCount + 1);
+        this.setTime(this.tickCount + 1);
+        this.ticksTime.unshift(System.milliTime() - t1);
+        this.ticksTime.length = Math.min(this.ticksTime.length, 50);
+    }
+
+    public static getTickTime(): number {
+        return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
     }
 
     public static setTime(ticks: number): void {
-        if (ticks < Updater.Time.Morning) {
+        if (ticks < this.Time.Morning) {
             ticks = 0;
         }
-        if (ticks < Updater.Time.Day) {
-            Updater.time = 0;
-        } else if (ticks < Updater.Time.Evening) {
-            Updater.time = 1;
-        } else if (ticks < Updater.Time.Night) {
-            Updater.time = 2;
-        } else if (ticks < Updater.dayLength) {
-            Updater.time = 3;
+        if (ticks < this.Time.Day) {
+            this.time = 0;
+        } else if (ticks < this.Time.Evening) {
+            this.time = 1;
+        } else if (ticks < this.Time.Night) {
+            this.time = 2;
+        } else if (ticks < this.dayLength) {
+            this.time = 3;
         } else {
-            Updater.time = 0;
+            this.time = 0;
             ticks = 0;
         }
-        Updater.tickCount = ticks;
+        this.tickCount = ticks;
     }
 
     public static every(tick: number): boolean {
