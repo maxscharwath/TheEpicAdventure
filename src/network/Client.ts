@@ -13,8 +13,8 @@ export default class Client {
     private readonly socket: SocketIOClient.Socket;
 
     constructor(username: string, hostName: string) {
-        Game.ISONLINE = true;
-        Game.ISHOST = false;
+        Game.isOnline = true;
+        Game.isHost = false;
         this.socket = io(hostName, {
             query: {},
         });

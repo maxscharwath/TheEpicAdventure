@@ -1,6 +1,5 @@
-import {Chicken, ItemEntity, Player, Zombie} from "../entity/";
-import ResourceItem from "../item/ResourceItem";
-import Resource from "../item/resources/Resource";
+import Items from "../item/Items";
+import {Chicken, ItemEntity, Player} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Tiles from "../level/tile/Tiles";
@@ -15,18 +14,17 @@ import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
 import Network from "./Network";
 import Settings from "./Settings";
-import System from "./System";
 
 export default class Game {
     public static player: Player;
     public static DEBUG: boolean = true;
     public static HAS_GUI: boolean = true;
     public static readonly NAME: string = "The Epic Adventure";
-    public static readonly VERSION: Version = new Version("0.1-dev1");
-    public static MAX_FPS: number = Settings.get("fps") as number;
-    public static ISONLINE: boolean = false;
-    public static ISHOST: boolean = false;
-    public static HASFOCUS: boolean = false;
+    public static readonly version: Version = new Version("0.1-dev1");
+    public static maxFPS: number = Settings.get("fps") as number;
+    public static isOnline: boolean = false;
+    public static isHost: boolean = false;
+    public static isFocus: boolean = false;
     public static client: Client = null;
     public static server: Server = null;
     public static running: boolean = true;
@@ -40,7 +38,7 @@ export default class Game {
     }
 
     public static isValidClient(): boolean {
-        return this.ISONLINE && this.client != null;
+        return this.isOnline && this.client != null;
     }
 
     public static isConnectedClient(): boolean {
@@ -48,7 +46,7 @@ export default class Game {
     }
 
     public static isValidServer(): boolean {
-        return this.ISONLINE && this.ISHOST && this.server != null;
+        return this.isOnline && this.isHost && this.server != null;
     }
 
     public static hasConnectedClients(): boolean {
@@ -56,8 +54,7 @@ export default class Game {
     }
 
     public static main(): void {
-        console.info(`\n${this.NAME} ${this.VERSION.toString()}\nA game by Maxime Scharwath\n`);
-        Tiles.initTileList();
+        console.info(`\n${this.NAME} ${this.version.toString()}\nA game by Maxime Scharwath\n`);
         Biome.initBiomeList();
         Localization.loadLanguage("en-US.yaml");
         this.levels = [
@@ -67,13 +64,14 @@ export default class Game {
         this.player = new Player();
 
         // max tile 134217720
-        this.level.add(this.player, 0, 0, true);
+        this.level.deleteTempDir();
+        this.level.addEntity(this.player, 0, 0, true);
         for (let i = 0; i < 10; i++) {
-            this.level.add(new Chicken(), 0, 0, true);
+            this.level.addEntity(new Chicken(), 0, 0, true);
         }
         for (let i = 0; i < 100; i++) {
-            this.level.add(
-                new ItemEntity(new ResourceItem(new Resource("apple", System.getResource("items", "apple.png")))),
+            this.level.addEntity(
+                new ItemEntity(Items.APPLE.item),
                 0, 0, true);
         }
 

@@ -13,7 +13,7 @@ export default class LilyPadTile extends Tile {
 
     public init() {
         super.init();
-        this.groundTile = new (Tiles.get("water"))(this.levelTile);
+        this.groundTile = new (Tiles.WATER.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
         this.groundTile.init();
         this.sprite = new PIXI.Sprite(LilyPadTile.tileTextures[this.random.int(LilyPadTile.tileTextures.length)]);

@@ -5,10 +5,10 @@ import Item from "./Item";
 import Resource from "./resources/Resource";
 
 export default class ResourceItem extends Item {
-    private resource: Resource;
+    private readonly resource: Resource;
 
-    constructor(resource: Resource) {
-        super(resource.tag);
+    constructor(tag: string, resource: Resource) {
+        super(tag);
         this.resource = resource;
         this.texture = new PIXI.Texture(this.resource.texture);
     }

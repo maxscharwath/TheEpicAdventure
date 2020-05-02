@@ -6,8 +6,10 @@ import Color from "../utility/Color";
 import Game from "./Game";
 import System from "./System";
 
+PIXI.settings.SORTABLE_CHILDREN = true;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
+
 export default class Renderer {
     private static ticksTime: number[] = [];
 
@@ -73,7 +75,7 @@ export default class Renderer {
     public static render(dlt: number): void {
         const t1 = System.milliTime();
         Renderer.delta = dlt;
-        if (!Game.HASFOCUS) {
+        if (!Game.isFocus) {
             return;
         }
         Game.level.onRender();

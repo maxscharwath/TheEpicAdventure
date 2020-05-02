@@ -29,7 +29,7 @@ export default class WaterTile extends AutoTilingTile {
             this.animSprite.gotoAndPlay(1);
         }
         if (Random.probability(100000)) {
-            this.levelTile.level.add(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
+            this.levelTile.level.addEntity(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
         }
     }
 

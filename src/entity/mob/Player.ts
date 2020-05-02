@@ -1,6 +1,7 @@
 import {AnimatedSprite, Texture} from "pixi.js";
 import Game from "../../core/Game";
 import SpriteSheet from "../../gfx/SpriteSheet";
+import Items from "../../item/Items";
 import Mob from "./Mob";
 
 export default class Player extends Mob {
@@ -18,11 +19,14 @@ export default class Player extends Mob {
         super.steppedOn();
     }
 
-    // GODMOD
     protected move2(xa: number, ya: number): boolean {
-        this.x += xa;
-        this.y += ya;
-        return true;
+        const godMod = false;
+        if (godMod) {
+            this.x += xa;
+            this.y += ya;
+            return true;
+        }
+        return super.move2(xa, ya);
     }
 
     private static spriteSheet = new SpriteSheet("player.json");
@@ -43,6 +47,13 @@ export default class Player extends Mob {
     constructor() {
         super();
         this.inventory.addSlots(19);
+        this.inventory.addItem(Items.WOOD_AXE.item);
+        this.inventory.addItem(Items.WOOD_HOE.item);
+        this.inventory.addItem(Items.WOOD_PICKAXE.item);
+        this.inventory.addItem(Items.WOOD_SHOVEL.item);
+        this.inventory.addItem(Items.WOOD_SWORD.item);
+        this.inventory.addItem(Items.WHEAT.item, 16);
+        this.inventory.addItem(Items.SEED_WHEAT.item, 2);
     }
 
     public destroy(): void {

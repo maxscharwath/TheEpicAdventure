@@ -1,11 +1,15 @@
+import * as fs from "fs";
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
+import System from "../core/System";
+import Updater from "../core/Updater";
 import {Entity, Player} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./LevelGen";
 import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
+import rimraf from "rimraf";
 
 type Type<T> = new (...args: any[]) => T;
 export default class Level {
@@ -15,7 +19,6 @@ export default class Level {
     private entitiesToAdd: Entity[] = [];
     private entitiesToRemove: Entity[] = [];
     private chunksToRemove: string[] = [];
-    // private chunks: { [key: string]: Chunk } = {};
     private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
 
@@ -53,12 +56,21 @@ export default class Level {
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
     }
 
+    public deleteTempDir() {
+        rimraf.sync(System.getAppData("tmp"));
+    }
+
     public flushInactiveChunks() {
+        let i = 0;
         this.chunks.forEach((chunk) => {
             if (!chunk.isActive()) {
-                this.deleteChunk(chunk.x, chunk.y);
+                i++;
+                this.deleteChunk(chunk);
             }
         });
+        if (i > 0) {
+            console.log(`${i} chunks will be deleted. (${this.chunks.size})`);
+        }
     }
 
     public flushChunks() {
@@ -72,7 +84,7 @@ export default class Level {
                 const chunk = this.getChunk(
                     x + ((Renderer.camera.x + 16 * 8) >> 8),
                     y + ((Renderer.camera.y + 16 * 8) >> 8));
-                if (chunk.isGenerated()) {
+                if (chunk.isGenerated() && chunk.isActive()) {
                     chunks.push(chunk);
                 }
             }
@@ -87,8 +99,8 @@ export default class Level {
         }
     }
 
-    public deleteChunk(x: number, y: number) {
-        this.chunksToRemove.push(x + ":" + y);
+    public deleteChunk(chunk: Chunk) {
+        this.chunksToRemove.push(chunk.x + ":" + chunk.y);
     }
 
     public getChunk(x: number, y: number, generate = true): Chunk {
@@ -160,6 +172,9 @@ export default class Level {
 
     public onTick(): void {
         this.deleteQueuedChunk();
+        if (Updater.every(50)) {
+            this.flushInactiveChunks();
+        }
         const chunks = this.getChunksRadius(1);
         chunks.forEach((chunk) => {
             if (!this.loadedChunks.includes(chunk)) {
@@ -169,8 +184,7 @@ export default class Level {
         });
         this.loadedChunks.forEach((c) => {
             if (!chunks.includes(c)) {
-                // c.unload();
-                this.deleteChunk(c.x, c.y);
+                c.unload();
             }
         });
         this.loadedChunks = chunks;
@@ -216,7 +230,7 @@ export default class Level {
         this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    public add(entity: Entity, x: number = null, y: number = null, tileCoords: boolean = false): void {
+    public addEntity(entity: Entity, x: number = null, y: number = null, tileCoords: boolean = false): void {
         if (entity == null) {
             return;
         }

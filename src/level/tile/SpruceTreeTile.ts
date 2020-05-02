@@ -4,7 +4,7 @@ import TreeTile from "./TreeTile";
 
 export default class SpruceTreeTile extends TreeTile {
     protected initTree() {
-        this.setGroundTile(Tiles.get("grass"));
+        this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("spruce.png"));
     }
 
@@ -13,8 +13,8 @@ export default class SpruceTreeTile extends TreeTile {
     public onUpdate() {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
-        if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("snow")))) {
-            this.setGroundTile(Tiles.get("snow"));
+        if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SNOW.tile))) {
+            this.setGroundTile(Tiles.SNOW.tile);
         }
     }
 

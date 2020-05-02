@@ -33,7 +33,7 @@ export default class FarmlandTile extends Tile {
     public onTick(): void {
         super.onTick();
         if (Random.probability(50)) {
-            if (!this.levelTile.findTileRadius(3, Tiles.get("water"))) {
+            if (!this.levelTile.findTileRadius(3, Tiles.WATER.tile)) {
                 if (this.humidity > -10 && Random.probability(5)) {
                     --this.humidity;
                     this.filter.brightness(this.humidity / -40 + 1, false);
@@ -45,7 +45,7 @@ export default class FarmlandTile extends Tile {
                 }
             }
             if (this.humidity <= -10 && Random.probability(25)) {
-                this.levelTile.setTile(Tiles.get("dirt"));
+                this.levelTile.setTile(Tiles.DIRT.tile);
                 this.harvest();
                 return;
             }

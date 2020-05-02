@@ -31,8 +31,8 @@ export default class LavaTile extends AutoTilingTile {
 
     public onUpdate() {
         super.onUpdate();
-        if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.get("water")))) {
-            this.levelTile.setTile(Tiles.get("rock"));
+        if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.WATER.tile))) {
+            this.levelTile.setTile(Tiles.ROCK.tile);
         }
     }
 

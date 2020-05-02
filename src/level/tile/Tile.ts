@@ -53,7 +53,9 @@ export default class Tile {
     }
 
     public setGroundTile(tile: Type<Tile>) {
-        if (this.groundTile instanceof tile) {return; }
+        if (this.groundTile instanceof tile) {
+            return;
+        }
         this.groundContainer.removeChildren();
         this.groundTile = new (tile)(this.levelTile);
         this.levelTile.update();
@@ -107,5 +109,9 @@ export default class Tile {
     public instanceOf(...tileClass: Array<Type<Tile>>) {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
+    }
+
+    public bumpedInto(entity: Entity) {
+
     }
 }

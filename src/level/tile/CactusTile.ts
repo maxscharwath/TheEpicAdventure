@@ -10,7 +10,7 @@ export default class CactusTile extends Tile {
 
     public init() {
         super.init();
-        this.groundTile = new (Tiles.get("sand"))(this.levelTile);
+        this.groundTile = new (Tiles.SAND.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
         this.groundTile.init();
         this.container.addChild(new PIXI.Sprite(CactusTile.tileTexture));
@@ -20,4 +20,6 @@ export default class CactusTile extends Tile {
         return false;
     }
 
+    public bumpedInto(entity: Entity) {
+    }
 }

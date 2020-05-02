@@ -1,4 +1,5 @@
 import Item from "./Item";
+import Items from "./Items";
 import Slot from "./Slot";
 
 export default class Inventory {
@@ -28,6 +29,16 @@ export default class Inventory {
         }
         return true;
 
+    }
+
+    public static create(data: any): Inventory {
+        const inventory = new Inventory(data.nbSlots);
+        for (const slotData of data.slots) {
+            const slot = inventory.slots[slotData.pos];
+            slot.nb = slotData.nb;
+            slot.item = Items.get(slotData.item.tag).item;
+        }
+        return inventory;
     }
 
     public selectedSlot: number;
@@ -159,5 +170,19 @@ export default class Inventory {
             inventory.slots.push(slot.clone());
         }
         return inventory;
+    }
+
+    public toBSON() {
+        const slots: Array<{ pos: number, item: Item, nb: number }> = [];
+        this.slots.forEach((slot, index) => {
+            if (slot instanceof Slot && !slot.isEmpty()) {
+                slots.push({
+                    pos: index,
+                    item: slot.item,
+                    nb: slot.nb,
+                });
+            }
+        });
+        return {nbSlots: this.slots.length, slots};
     }
 }

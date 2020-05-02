@@ -39,3 +39,7 @@ tile.ice: Ice
 entity.player: Player
 entity.zombie: Zombie
 entity.fish: Fish
+
+item.apple: Apple
+item.wheat: Wheat
+item.seed_wheat: Wheat's seed

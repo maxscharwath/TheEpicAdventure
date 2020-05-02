@@ -14,8 +14,8 @@ export default class Server {
     private io: socketio.Server;
 
     constructor() {
-        Game.ISONLINE = true;
-        Game.ISHOST = true;
+        Game.isOnline = true;
+        Game.isHost = true;
         this.port = Settings.get("port");
 
         const app = express();
@@ -39,8 +39,8 @@ export default class Server {
         app.get("/status", (req: any, res: any) => {
             res.json({
                 name: this.name,
-                version: Game.VERSION.toString(),
-                online: Game.ISONLINE,
+                version: Game.version.toString(),
+                online: Game.isOnline,
                 port: Settings.get("port"),
             } as OptionsJson);
         });

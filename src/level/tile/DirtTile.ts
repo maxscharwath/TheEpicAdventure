@@ -19,10 +19,10 @@ export default class DirtTile extends Tile {
         if (this.levelTile.biome.is("grassland") && Random.probability(500)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("grass")))) {
-                this.levelTile.setTile(Tiles.get("grass"));
+                this.levelTile.setTile(Tiles.GRASS.tile);
             }
-            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("sand")))) {
-                this.levelTile.setTile(Tiles.get("sand"));
+            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SAND.tile))) {
+                this.levelTile.setTile(Tiles.SAND.tile);
             }
         }
     }

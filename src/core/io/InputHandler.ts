@@ -94,7 +94,7 @@ export default class InputHandler {
     }
 
     public onTick() {
-        if (!Game.HASFOCUS) {
+        if (!Game.isFocus) {
             this.releaseAll();
         }
         for (const key of this.keyboard.values()) {

@@ -13,7 +13,7 @@ export default class AquaticMob extends Mob {
         if (!this.level) {
             return;
         }
-        const tile = this.level.getRandomTileInEntityRadius([Tiles.get("water")], this, 10);
+        const tile = this.level.getRandomTileInEntityRadius([Tiles.WATER.tile], this, 10);
         if (tile) {
             this.target = {
                 x: tile.getLocalX() << 4,

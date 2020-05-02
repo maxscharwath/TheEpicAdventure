@@ -33,7 +33,7 @@ export default class TreeTile extends Tile {
     }
 
     protected initTree() {
-        this.setGroundTile(Tiles.get("grass"));
+        this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tree.png"));
     }
 

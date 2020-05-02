@@ -13,10 +13,10 @@ export default class Initializer {
     }
 
     public static createAndDisplayFrame(): void {
-        Game.HASFOCUS = true;
-        window.onblur = () => Game.HASFOCUS = false;
-        window.onfocus = () => Game.HASFOCUS = true;
-        document.title = Game.NAME + " v" + Game.VERSION.toString();
+        Game.isFocus = true;
+        window.onblur = () => Game.isFocus = false;
+        window.onfocus = () => Game.isFocus = true;
+        document.title = Game.NAME + " v" + Game.version.toString();
         Renderer.init();
     }
 

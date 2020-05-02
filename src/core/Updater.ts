@@ -25,7 +25,7 @@ export default class Updater {
         const t1 = System.milliTime();
         this.delta = dlt;
         Game.input.onTick();
-        if (!Game.HASFOCUS) {
+        if (!Game.isFocus) {
             return;
         }
         Game.displays.forEach((display) => {

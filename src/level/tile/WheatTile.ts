@@ -2,8 +2,7 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import {ItemEntity, Mob} from "../../entity";
 import Item from "../../item/Item";
-import ResourceItem from "../../item/ResourceItem";
-import Resources from "../../item/resources/Resources";
+import Items from "../../item/Items";
 import FarmlandTile from "./FarmlandTile";
 import Tiles from "./Tiles";
 
@@ -11,10 +10,10 @@ export default class WheatTile extends FarmlandTile {
 
     protected harvest() {
         if (this.age >= 50) {
-            this.level.add(new ItemEntity(new ResourceItem(Resources.wheat)), this.x, this.y, true);
-            this.level.add(new ItemEntity(new ResourceItem(Resources.seedWheat)), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.WHEAT.item), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT.item), this.x, this.y, true);
         } else {
-            this.level.add(new ItemEntity(new ResourceItem(Resources.seedWheat)), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT.item), this.x, this.y, true);
         }
     }
 
@@ -32,7 +31,7 @@ export default class WheatTile extends FarmlandTile {
 
     public onInteract(mob: Mob, item?: Item) {
         this.harvest();
-        this.levelTile.setTile(Tiles.get("farmland"));
+        this.levelTile.setTile(Tiles.FARMLAND.tile);
         return true;
     }
 

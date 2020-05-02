@@ -201,8 +201,12 @@ export default class LevelTile extends PIXI.Container {
         return this._tile.mayPass(entity);
     }
 
+    public bumpedInto(entity: Entity) {
+        return this._tile.bumpedInto(entity);
+    }
+
     public getFriction() {
-        return this._tile.friction;
+        return this._tile?.friction ?? 1;
     }
 
     public instanceOf(...tileClass: Array<Type<Tile>>) {

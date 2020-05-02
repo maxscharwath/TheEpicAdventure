@@ -4,14 +4,20 @@ import Localization from "../core/io/Localization";
 import {Entity, Player} from "../entity/";
 import Mob from "../entity/mob/Mob";
 import LevelTile from "../level/LevelTile";
+import Items from "./Items";
 
 export default class Item {
     protected texture: PIXI.Texture = PIXI.Texture.EMPTY;
-    protected craftedBy?: Mob;
-    public readonly tag: string;
+
+    public static create(data: any): Item {
+        return Items.get(data.tag).item;
+    }
+
+    public craftedBy?: Mob;
+    public tag: string;
     public uid: string = uniqid();
 
-    constructor(tag?: string) {
+    constructor(tag: string) {
         this.tag = tag;
     }
 
@@ -50,5 +56,11 @@ export default class Item {
 
     public getTexture() {
         return this.texture;
+    }
+
+    public toBSON(): any {
+        return {
+            tag: this.tag,
+        };
     }
 }

@@ -75,9 +75,12 @@ export default class Entity extends PIXI.Container implements Tickable {
                     continue;
                 }
 
-                // this.level.getTile(xt, yt).bumpedInto(this.level, xt, yt, this);
                 const tile = this.level.getTile(xt, yt);
-                if (!tile || !tile.mayPass(this)) {
+                if (!tile) {
+                    return false;
+                }
+                tile.bumpedInto(this);
+                if (!tile.mayPass(this)) {
                     blocked = true;
                     return false;
                 }
@@ -106,6 +109,7 @@ export default class Entity extends PIXI.Container implements Tickable {
             y: this.y + this.hitbox.y + this.hitbox.height / 2,
         };
     }
+
 
     public static create(data: any): Entity {
         const EntityClass = Entities.getByTag(data.id);
@@ -218,7 +222,7 @@ export default class Entity extends PIXI.Container implements Tickable {
 
     public getTile(): LevelTile {
         const {x, y} = this.getCentredPos();
-        return this.level.getTile(x >> 4, y >> 4);
+        return this.level?.getTile(x >> 4, y >> 4);
     }
 
     public getRemoved(): boolean {
@@ -240,7 +244,7 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public add() {
-        this.level.entitiesContainer.addChild(this);
+        this.level?.entitiesContainer.addChild(this);
     }
 
     public delete(level?: Level): void {

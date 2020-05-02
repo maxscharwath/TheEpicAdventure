@@ -132,6 +132,12 @@ export default class Mob extends Entity {
     private hurtCooldown: number;
     private attackCooldown: number;
 
+    public static create(data: any): Mob {
+        const e = super.create(data) as Mob;
+        e.inventory = Inventory.create(data.inventory);
+        return e;
+    }
+
     public maxHealth: number = 10;
     public health: number = this.maxHealth;
     public inventory = new Inventory(8);
@@ -200,5 +206,12 @@ export default class Mob extends Entity {
 
     public getDir() {
         return this.dir;
+    }
+
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+            inventory: this.inventory,
+        };
     }
 }

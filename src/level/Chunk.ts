@@ -70,7 +70,7 @@ export default class Chunk {
                     map.push(lt);
                 });
                 for (const data of bson.entities) {
-                    level.add((Entities.get(data.id) as typeof Entity).create(data));
+                    level.addEntity((Entities.get(data.id) as typeof Entity).create(data));
                 }
                 console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
                 chunk.generated = true;
@@ -88,6 +88,7 @@ export default class Chunk {
 
     constructor(level: Level, x: number, y: number, generate: boolean = true) {
         this.level = level;
+        this.lastTick = Updater.tickCount;
         this.x = x;
         this.y = y;
         if (generate) {
