@@ -75,7 +75,7 @@ export default class Chunk {
                 console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
                 chunk.generated = true;
                 chunk.map = map;
-            }).catch((e) => {
+            }).catch(() => {
             chunk.generate();
         });
         return chunk;

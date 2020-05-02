@@ -7,10 +7,8 @@ import Color from "../utility/Color";
 import Display from "./Display";
 
 export default class InfoDisplay extends Display {
-    private readonly textArea: PIXI.Text;
-    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
-    private text(): string {
+    private static text(): string {
         const tile = Game.player.getTile();
         return [
             `v: ${Game.version.toString()}`,
@@ -32,6 +30,9 @@ export default class InfoDisplay extends Display {
         ].join("\n");
     }
 
+    private readonly textArea: PIXI.Text;
+    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
+
     constructor() {
         super(false);
         this.textArea = new PIXI.Text("", {
@@ -50,7 +51,7 @@ export default class InfoDisplay extends Display {
     }
 
     public onTick(): void {
-        const text = this.text();
+        const text = InfoDisplay.text();
         if (this.textArea.text === text) {
             return;
         }

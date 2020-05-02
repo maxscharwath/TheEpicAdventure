@@ -4,9 +4,13 @@ import "./String";
 
 export default class InputHandler {
 
-    private static isMod(keyname: string): boolean {
-        keyname = keyname.toUpperCase();
-        return keyname.equals("SHIFT-LEFT") || keyname.equals("CONTROL-LEFT") || keyname.equals("ALT-LEFT");
+    private static isMod(keyName: string): boolean {
+        keyName = keyName.toUpperCase();
+        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
+    }
+
+    private static keyTyped(e: Event): void {
+        e.preventDefault();
     }
 
     private keymap = new Map();
@@ -68,10 +72,6 @@ export default class InputHandler {
         this.toggle(e.code.spinalCase(), false);
     }
 
-    private keyTyped(e: Event): void {
-        e.preventDefault();
-    }
-
     constructor() {
         this.initKeyMap();
         document.addEventListener("keyup", (e) => this.keyReleased(e));
@@ -116,7 +116,7 @@ export default class InputHandler {
         if (keytext == null || keytext.length === 0) {
             return new Key();
         }
-        let key: Key = new Key();
+        let key: Key;
         keytext = keytext.toUpperCase();
 
         if (getFromMap) {

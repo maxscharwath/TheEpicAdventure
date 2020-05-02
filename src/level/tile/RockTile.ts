@@ -1,8 +1,5 @@
-import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import Entity from "../../entity/Entity";
 import AutoTilingTile from "./AutoTilingTile";
-import Tile from "./Tile";
 
 export default class RockTile extends AutoTilingTile  {
     protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("rock.png"));
@@ -17,7 +14,7 @@ export default class RockTile extends AutoTilingTile  {
         super.onTick();
     }
 
-    public mayPass(e: Entity): boolean {
+    public mayPass(): boolean {
         return false;
     }
 

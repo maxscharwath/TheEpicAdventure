@@ -43,7 +43,7 @@ export default class SnowTile extends AutoTilingTile  {
         }
     }
 
-    public mayPass(e: Entity): boolean {
+    public mayPass(): boolean {
         return true;
     }
 

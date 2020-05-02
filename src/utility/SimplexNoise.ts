@@ -3,10 +3,6 @@ import Random from "./Random";
 export default class SimplexNoise {
     private static F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
     private static G2 = (3.0 - Math.sqrt(3.0)) / 6.0;
-    private static F3 = 1.0 / 3.0;
-    private static G3 = 1.0 / 6.0;
-    private static F4 = (Math.sqrt(5.0) - 1.0) / 4.0;
-    private static G4 = (5.0 - Math.sqrt(5.0)) / 20.0;
 
     private static buildPermutationTable(random: Random) {
         const p = new Uint8Array(256);

@@ -22,7 +22,6 @@ export default class ArrayEntry extends Entry {
     }
 
     public setSelection(idx: number): void {
-        const diff: boolean = idx !== this.selection;
         if (idx >= 0 && idx < this.options.length) {
             this.selection = idx;
         }

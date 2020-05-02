@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import {Entity} from "../../entity";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
@@ -16,10 +15,7 @@ export default class CactusTile extends Tile {
         this.container.addChild(new PIXI.Sprite(CactusTile.tileTexture));
     }
 
-    public mayPass(e: Entity): boolean {
+    public mayPass(): boolean {
         return false;
-    }
-
-    public bumpedInto(entity: Entity) {
     }
 }

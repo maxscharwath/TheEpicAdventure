@@ -17,10 +17,6 @@ export default class Renderer {
         return 0;
     }
 
-    public static set ZOOM(zoom) {
-
-    }
-
     public static get REAL_WIDTH() {
         return this.WIDTH * this.ZOOM;
     }
@@ -43,8 +39,6 @@ export default class Renderer {
 
     private static mainStage = new PIXI.Container();
     private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
-    private static DEBUG = false;
-    private static nbCanvas = 0;
     private static renderer = new PIXI.Renderer({
         width: 960,
         height: 540,
@@ -61,16 +55,6 @@ export default class Renderer {
     public static WIDTH: number = Renderer.DEFAULT_WIDTH;
     public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
     public static camera: Camera = new Camera();
-
-    public static setResolution(zoom: number) {
-        this.ZOOM = zoom;
-    }
-
-    public static setScreenSize(width: number, height: number) {
-        this.ZOOM = ~~(height / this.DEFAULT_HEIGHT);
-        this.WIDTH = ~~(width / this.ZOOM);
-        this.HEIGHT = ~~(height / this.ZOOM);
-    }
 
     public static render(dlt: number): void {
         const t1 = System.milliTime();
