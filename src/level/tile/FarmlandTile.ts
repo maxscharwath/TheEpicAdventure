@@ -25,7 +25,7 @@ export default class FarmlandTile extends Tile {
     public init() {
         super.init();
         this.filter = new PIXI.filters.ColorMatrixFilter();
-        const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("farmland.png")));
+        const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "farmland.png")));
         sprite.filters = [this.filter];
         this.container.addChild(sprite);
     }

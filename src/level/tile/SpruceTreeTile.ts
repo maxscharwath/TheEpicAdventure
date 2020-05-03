@@ -5,7 +5,7 @@ import TreeTile from "./TreeTile";
 export default class SpruceTreeTile extends TreeTile {
     protected initTree() {
         this.setGroundTile(Tiles.GRASS.tile);
-        this.treeTilingInit(System.getResource("spruce.png"));
+        this.treeTilingInit(System.getResource("tile", "spruce.png"));
     }
 
     public static readonly TAG: string = "spruce";

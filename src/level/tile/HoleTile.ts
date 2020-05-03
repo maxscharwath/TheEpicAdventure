@@ -6,7 +6,7 @@ import Tiles from "./Tiles";
 
 export default class HoleTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "water"];
-    protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("hole.png"));
+    protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("tile", "hole.png"));
 
     public static readonly TAG = "hole";
 

@@ -34,7 +34,7 @@ export default class TreeTile extends Tile {
 
     protected initTree() {
         this.setGroundTile(Tiles.GRASS.tile);
-        this.treeTilingInit(System.getResource("tree.png"));
+        this.treeTilingInit(System.getResource("tile", "tree.png"));
     }
 
     private layersTreeSprite: PIXI.Sprite[];

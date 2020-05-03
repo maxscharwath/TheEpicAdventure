@@ -1,5 +1,6 @@
 import {Mob} from ".";
 import Item from "../item/Item";
+import {ItemRegister} from "../item/Items";
 import Entity from "./Entity";
 
 export default class ItemEntity extends Entity {
@@ -7,7 +8,7 @@ export default class ItemEntity extends Entity {
     private time: number = 0;
     public item: Item;
 
-    constructor(item: Item, x?: number, y?: number) {
+    constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
         super(x, y);
         this.x = x;
         this.y = y;
@@ -16,7 +17,7 @@ export default class ItemEntity extends Entity {
         this.a.x = this.random.gaussian() * 0.3;
         this.a.y = this.random.gaussian() * 0.2;
         this.a.z = this.random.float() * 0.7 + 1;
-        this.item = item;
+        this.item = (item instanceof ItemRegister) ? item.item : item;
         this.lifeTime = 60 * 10 + this.random.int(70);
         this.container.addChild(this.item.getSprite(true));
     }

@@ -1,5 +1,5 @@
 import Item from "./Item";
-import Items from "./Items";
+import Items, {ItemRegister} from "./Items";
 import Slot from "./Slot";
 
 export default class Inventory {
@@ -41,7 +41,7 @@ export default class Inventory {
         return inventory;
     }
 
-    public selectedSlot: number;
+    public selectedSlot: number = 0;
 
     public slots: Slot[] = [];
 
@@ -119,7 +119,10 @@ export default class Inventory {
         return false;
     }
 
-    public addItem(item: Item, itemNb = 1): boolean {
+    public addItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
+        if (item instanceof ItemRegister) {
+            item = item.item;
+        }
         if (!(item instanceof Item)) {
             return false;
         }
@@ -184,5 +187,9 @@ export default class Inventory {
             }
         });
         return {nbSlots: this.slots.length, slots};
+    }
+
+    public getSlot(index: number): Slot {
+        return this.slots[index];
     }
 }

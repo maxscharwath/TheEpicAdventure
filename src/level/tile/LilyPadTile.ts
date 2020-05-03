@@ -7,7 +7,7 @@ import Tiles from "./Tiles";
 
 export default class LilyPadTile extends Tile {
 
-    private static tileTextures = LilyPadTile.loadTextures(System.getResource("lilypad.png"), 4);
+    private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
     private sprite: PIXI.Sprite;
     public static readonly TAG = "lilypad";
 

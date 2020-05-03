@@ -42,4 +42,10 @@ entity.fish: Fish
 
 item.apple: Apple
 item.wheat: Wheat
-item.seed_wheat: Wheat's seed
+item.seed_wheat: Wheat seed
+
+item.wood_axe: Wood axe
+item.wood_pickaxe: Wood pickaxe
+item.wood_sword: Wood sword
+item.wood_shovel: Wood shovel
+item.wood_hoe: Wood hoe

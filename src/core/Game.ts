@@ -71,7 +71,7 @@ export default class Game {
         }
         for (let i = 0; i < 100; i++) {
             this.level.addEntity(
-                new ItemEntity(Items.APPLE.item),
+                new ItemEntity(Items.APPLE),
                 0, 0, true);
         }
 

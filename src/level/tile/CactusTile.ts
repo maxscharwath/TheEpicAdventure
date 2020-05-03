@@ -4,7 +4,7 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class CactusTile extends Tile {
-    private static tileTexture = PIXI.Texture.from(System.getResource("cactus.png"));
+    private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
     public static readonly TAG = "dirt";
 
     public init() {

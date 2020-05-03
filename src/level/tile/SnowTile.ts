@@ -5,7 +5,7 @@ import Entity from "../../entity/Entity";
 import AutoTilingTile from "./AutoTilingTile";
 
 export default class SnowTile extends AutoTilingTile  {
-    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("snow.png"));
+    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
 
 
     private step: number = 0;
@@ -24,7 +24,7 @@ export default class SnowTile extends AutoTilingTile  {
     public init() {
         super.init();
         this.initAutoTile();
-        const baseTexture = PIXI.BaseTexture.from(System.getResource("snow_footprint.png"));
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("tile", "snow_footprint.png"));
         this.footprintSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.footprintSprite.visible = false;
         this.container.addChild(this.footprintSprite);

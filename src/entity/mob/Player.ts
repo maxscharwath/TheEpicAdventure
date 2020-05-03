@@ -47,13 +47,13 @@ export default class Player extends Mob {
     constructor() {
         super();
         this.inventory.addSlots(19);
-        this.inventory.addItem(Items.WOOD_AXE.item);
-        this.inventory.addItem(Items.WOOD_HOE.item);
-        this.inventory.addItem(Items.WOOD_PICKAXE.item);
-        this.inventory.addItem(Items.WOOD_SHOVEL.item);
-        this.inventory.addItem(Items.WOOD_SWORD.item);
-        this.inventory.addItem(Items.WHEAT.item, 16);
-        this.inventory.addItem(Items.SEED_WHEAT.item, 2);
+        this.inventory.addItem(Items.WOOD_AXE);
+        this.inventory.addItem(Items.WOOD_HOE);
+        this.inventory.addItem(Items.WOOD_PICKAXE);
+        this.inventory.addItem(Items.WOOD_SHOVEL);
+        this.inventory.addItem(Items.WOOD_SWORD);
+        this.inventory.addItem(Items.WHEAT, 16);
+        this.inventory.addItem(Items.SEED_WHEAT, 2);
     }
 
     public destroy(): void {

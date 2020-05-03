@@ -10,10 +10,10 @@ export default class WheatTile extends FarmlandTile {
 
     protected harvest() {
         if (this.age >= 50) {
-            this.level.addEntity(new ItemEntity(Items.WHEAT.item), this.x, this.y, true);
-            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT.item), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.WHEAT), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT), this.x, this.y, true);
         } else {
-            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT.item), this.x, this.y, true);
+            this.level.addEntity(new ItemEntity(Items.SEED_WHEAT), this.x, this.y, true);
         }
     }
 
@@ -23,7 +23,7 @@ export default class WheatTile extends FarmlandTile {
 
     public init() {
         super.init();
-        const baseTexture = new PIXI.BaseTexture(System.getResource("wheat.png"));
+        const baseTexture = new PIXI.BaseTexture(System.getResource("tile", "wheat.png"));
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.container.addChild(this.sprite);
     }

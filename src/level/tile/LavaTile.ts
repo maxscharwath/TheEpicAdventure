@@ -7,8 +7,8 @@ import Tiles from "./Tiles";
 
 export default class LavaTile extends AutoTilingTile {
     protected static canConnectTo = ["hole", "water"];
-    protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("lava_mask.png"));
-    private static tileTextures = LavaTile.loadTextures(System.getResource("lava.png"), 6);
+    protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
+    private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "lava";
 

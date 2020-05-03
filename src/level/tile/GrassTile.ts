@@ -12,8 +12,8 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class GrassTile extends AutoTilingTile {
-    protected static autoTileTextures = GrassTile.loadMaskTextures(System.getResource("grass_mask.png"));
-    private static tileTextures = GrassTile.loadTextures(System.getResource("grass.png"), 6);
+    protected static autoTileTextures = GrassTile.loadMaskTextures(System.getResource("tile", "grass_mask.png"));
+    private static tileTextures = GrassTile.loadTextures(System.getResource("tile", "grass.png"), 6);
     public static readonly TAG = "grass";
 
     public init() {
@@ -34,7 +34,7 @@ export default class GrassTile extends AutoTilingTile {
                 case ToolType.hoe:
                     if (Random.probability(5)) {
                         this.level.addEntity(
-                            new ItemEntity(Items.SEED_WHEAT.item,
+                            new ItemEntity(Items.SEED_WHEAT,
                                 this.x << 4 + Random.int(10) + 3,
                                 this.y << 4 + Random.int(10) + 3),
                         );
@@ -44,7 +44,7 @@ export default class GrassTile extends AutoTilingTile {
                 case ToolType.shovel:
                     if (Random.probability(5)) {
                         this.level.addEntity(
-                            new ItemEntity(Items.SEED_WHEAT.item,
+                            new ItemEntity(Items.SEED_WHEAT,
                                 this.x << 4 + Random.int(10) + 3,
                                 this.y << 4 + Random.int(10) + 3),
                         );

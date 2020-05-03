@@ -6,7 +6,7 @@ export default class PalmTreeTile extends TreeTile {
 
     protected initTree() {
         this.setGroundTile(Tiles.SAND.tile);
-        this.treeTilingInit(System.getResource("palm.png"));
+        this.treeTilingInit(System.getResource("tile", "palm.png"));
     }
 
     public static readonly TAG: string = "palm";

@@ -1,32 +1,35 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
+import System from "../core/System";
 import {Mob} from "../entity";
 import Item from "../item/Item";
 import Slot from "../item/Slot";
+import Color from "../utility/Color";
 import Display from "./Display";
 
 class InventorySlot extends PIXI.Container {
-    private slot: Slot;
-    private item?: Item;
 
     private itemSprite: PIXI.Sprite;
+    private itemContainer = new PIXI.Container();
+    public index: number = 0;
+    public slot: Slot;
+    public item?: Item;
 
-    constructor(slot: Slot) {
+    constructor(slot: Slot, index: number = 0) {
         super();
+        this.index = index;
         this.slot = slot;
         this.buttonMode = true;
         this.interactive = true;
-        this.on("click", (ev: any) => {
-            if (this.slot.isItem()) {
-                console.log(this.slot.item.getDisplayName());
-            }
-        });
-        const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-        sprite.width = 8;
-        sprite.height = 8;
-        sprite.alpha = 0.5;
-
-        this.addChild(sprite);
+        this.hitArea = new PIXI.Rectangle(4, 4, 10, 10);
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
+        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
+        sprite.width = 16;
+        sprite.height = 16;
+        this.itemContainer.position.set(4, 4);
+        this.itemContainer.width = 8;
+        this.itemContainer.height = 8;
+        this.addChild(sprite, this.itemContainer);
     }
 
     public update() {
@@ -34,10 +37,10 @@ class InventorySlot extends PIXI.Container {
             return;
         }
         this.item = this.slot.item;
-        this.removeChild(this.itemSprite);
+        this.itemContainer.removeChildren();
         if (this.slot.isItem()) {
             this.itemSprite = this.slot.item.getSprite();
-            this.addChild(this.itemSprite);
+            this.itemContainer.addChild(this.itemSprite);
         }
     }
 }
@@ -45,25 +48,55 @@ class InventorySlot extends PIXI.Container {
 export default class HotbarDisplay extends Display {
     private mob: Mob;
     private slots: InventorySlot[] = [];
+    private selectSprite: PIXI.Sprite;
+    private itemText: PIXI.Text;
 
     private init() {
-        const nbRow = 9;
-        for (let i = 0; i < nbRow; i++) {
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
+        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(16, 0, 16, 16)));
+        this.itemText =  new PIXI.Text("", {
+            fontFamily: "Arial",
+            fontSize: 24,
+            dropShadow: true,
+            dropShadowDistance: 1,
+            fill: Color.white.getInt(),
+        });
+        this.itemText.anchor.set(0.5);
+        const bar = new PIXI.Container();
+        const nbRow = 10;
+        for (let i = nbRow - 1; i >= 0; i--) {
             const slot = this.mob.inventory.slots[i];
             const x = (i % nbRow) * 10;
-            const slotSprite = new InventorySlot(slot);
+            const slotSprite = new InventorySlot(slot, i);
+            slotSprite.on("click", (ev: any) => {
+                this.mob.inventory.selectedSlot = slotSprite.index;
+                if (slotSprite.slot.isItem()) {
+                    console.log(slotSprite.item.tag, slotSprite.slot.item.getDisplayName());
+                }
+            });
             slotSprite.position.set(x, 0);
             this.slots.push(slotSprite);
-            this.addChild(slotSprite);
+            bar.addChild(slotSprite);
         }
+        bar.addChild(this.selectSprite);
+        bar.scale.set(4);
+        this.addChild(bar, this.itemText);
+        this.itemText.position.set(this.width / 2, -10);
+    }
+
+    private setCurrentSlot() {
+        const index = this.mob.inventory.selectedSlot;
+        const slot = this.mob.inventory.getSlot(index);
+        if (slot.isItem()) {
+        this.itemText.text = `${slot.item.getDisplayName()} - ${slot.nb}`;
+        }
+        this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 3;
     }
 
     constructor(mob: Mob) {
         super(false);
         this.mob = mob;
         this.init();
-        this.scale.set(4);
-
         this.position.x = (Renderer.getScreen().width - this.width) / 2;
         this.position.y = Renderer.getScreen().height - this.height - 20;
     }
@@ -71,5 +104,10 @@ export default class HotbarDisplay extends Display {
     public onTick(): void {
         super.onTick();
         this.slots.forEach((slot) => slot.update());
+    }
+
+    public onRender() {
+        super.onRender();
+        this.setCurrentSlot();
     }
 }

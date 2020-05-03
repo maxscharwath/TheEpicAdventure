@@ -6,8 +6,8 @@ import AutoTilingTile from "./AutoTilingTile";
 
 export default class WaterTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "hole", "ice"];
-    protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("water_mask.png"));
-    protected static tileTextures = WaterTile.loadTextures(System.getResource("water.png"), 10);
+    protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
+    protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "water";
     public friction: number = 0.01;

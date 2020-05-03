@@ -39,3 +39,13 @@ tile.ice: Glace
 entity.player: Joueur
 entity.zombie: Zombie
 entity.fish: Poisson
+
+item.apple: Pomme
+item.wheat: Blé
+item.seed_wheat: Graine de blé
+
+item.wood_axe: Hache en bois
+item.wood_pickaxe: Pioche en bois
+item.wood_sword: Epée en bois
+item.wood_shovel: Pelle en bois
+item.wood_hoe: Houe en bois

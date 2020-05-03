@@ -4,7 +4,7 @@ import {Entity, Mob} from "../../entity";
 import AutoTilingTile from "./AutoTilingTile";
 
 export default class SandTile extends AutoTilingTile {
-    protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("sand_mask.png"));
+    protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     private step: number = 0;
     private stepDir: boolean = false;
     private footprintSprite: PIXI.Sprite;
@@ -19,11 +19,11 @@ export default class SandTile extends AutoTilingTile {
 
     public init() {
         super.init();
-        const baseTexture = PIXI.BaseTexture.from(System.getResource("sand_footprint.png"));
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("tile", "sand_footprint.png"));
         this.footprintSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.footprintSprite.visible = false;
         this.container.addChild(
-            new PIXI.Sprite(PIXI.Texture.from(System.getResource("sand.png"))), this.footprintSprite,
+            new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "sand.png"))), this.footprintSprite,
         );
         this.initAutoTile();
     }
