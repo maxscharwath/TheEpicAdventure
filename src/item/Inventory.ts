@@ -36,7 +36,7 @@ export default class Inventory {
         for (const slotData of data.slots) {
             const slot = inventory.slots[slotData.pos];
             slot.nb = slotData.nb;
-            slot.item = Items.get(slotData.item.tag).item;
+            slot.item = Item.create(slotData.item);
         }
         return inventory;
     }
@@ -103,7 +103,7 @@ export default class Inventory {
         return false;
     }
 
-    public removeItem(item: Item, itemNb = 1) {
+    public removeItem(item: Item, itemNb = 1): boolean {
         if (!(item instanceof Item)) {
             return false;
         }
@@ -175,6 +175,10 @@ export default class Inventory {
         return inventory;
     }
 
+    public getSlot(index: number): Slot {
+        return this.slots[index];
+    }
+
     public toBSON() {
         const slots: Array<{ pos: number, item: Item, nb: number }> = [];
         this.slots.forEach((slot, index) => {
@@ -187,9 +191,5 @@ export default class Inventory {
             }
         });
         return {nbSlots: this.slots.length, slots};
-    }
-
-    public getSlot(index: number): Slot {
-        return this.slots[index];
     }
 }

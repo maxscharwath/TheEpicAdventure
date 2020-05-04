@@ -23,34 +23,36 @@ export default class Mob extends Entity {
     protected mass = 20;
 
     protected move(xa: number, ya: number): boolean {
-        let entities = this.getChunk().getEntities();
-        const maxEntities = 10;
-        if (entities.length > maxEntities) {
-            const i = Random.int(entities.length - maxEntities);
-            entities = entities.slice(i, i + maxEntities);
-        }
-
-        const a = new Vector();
-        for (const e of entities) {
-            if (e === this) {
-                continue;
+        if (this.onGround()) {
+            let entities = this.getChunk().getEntities();
+            const maxEntities = 10;
+            if (entities.length > maxEntities) {
+                const i = Random.int(entities.length - maxEntities);
+                entities = entities.slice(i, i + maxEntities);
             }
-            const dx = this.x - e.x === 0 ? Random.float() : this.x - e.x;
-            const dy = this.y - e.y === 0 ? Random.float() : this.y - e.y;
-            const R = 4;
 
-            if (dx * dx + dy * dy < 4 * R * R) {
-                e.touchedBy(this);
-                if (e instanceof Mob) {
-                    a.x += dx / 20 / this.mass;
-                    a.y += dy / 20 / this.mass;
-                    a.y += dy / 20 / this.mass;
+            const a = new Vector();
+            for (const e of entities) {
+                if (e === this || !e.onGround()) {
+                    continue;
+                }
+                const dx = this.x - e.x === 0 ? Random.float() : this.x - e.x;
+                const dy = this.y - e.y === 0 ? Random.float() : this.y - e.y;
+                const R = 4;
+
+                if (dx * dx + dy * dy < 4 * R * R) {
+                    e.touchedBy(this);
+                    if (e instanceof Mob) {
+                        a.x += dx / 20 / this.mass;
+                        a.y += dy / 20 / this.mass;
+                        a.y += dy / 20 / this.mass;
+                    }
                 }
             }
+            a.magnitude = 0.2;
+            this.a.x += a.x;
+            this.a.y += a.y;
         }
-        a.magnitude = 0.2;
-        this.a.x += a.x;
-        this.a.y += a.y;
 
         if (this.isSwimming()) {
             xa /= 4;
@@ -148,6 +150,10 @@ export default class Mob extends Entity {
         this.on("click", () => {
             this.die();
         });
+    }
+
+    public getInteractTile() {
+        return this.level.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
     }
 
     public die(): void {

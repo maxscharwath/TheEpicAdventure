@@ -1,8 +1,9 @@
 import * as PIXI from "pixi.js";
 import Localization from "../../core/io/Localization";
-import {Mob} from "../../entity";
+import {ItemEntity, Mob} from "../../entity";
 import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
+import Items, {ItemRegister} from "../../item/Items";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
 
@@ -34,6 +35,16 @@ export default class Tile {
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
     protected groundContainer = new PIXI.Container();
+
+    protected addItemEntity(item: Item|ItemRegister<Item>, nb: number= 1) {
+        for (let i = 0; i < nb; i++) {
+            this.level.addEntity(
+                new ItemEntity(item,
+                    (this.x << 4) + Random.int(10) + 3,
+                    (this.y << 4) + Random.int(10) + 3),
+            );
+        }
+    }
 
     public static SIZE = 16;
     public static readonly TAG: string = "tile";

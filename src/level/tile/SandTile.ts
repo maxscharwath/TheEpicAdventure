@@ -1,7 +1,13 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import {Entity, Mob} from "../../entity";
+import {Entity, ItemEntity, Mob} from "../../entity";
+import Item from "../../item/Item";
+import Items from "../../item/Items";
+import ToolItem from "../../item/ToolItem";
+import ToolType from "../../item/ToolType";
+import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
+import Tiles from "./Tiles";
 
 export default class SandTile extends AutoTilingTile {
     protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
@@ -15,6 +21,18 @@ export default class SandTile extends AutoTilingTile {
             this.step = 100;
             this.stepDir = entity.getDir().isX();
         }
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.shovel:
+                    this.addItemEntity(Items.SAND);
+                    this.levelTile.setTile(Tiles.DIRT.tile);
+                    return true;
+            }
+        }
+        return false;
     }
 
     public init() {

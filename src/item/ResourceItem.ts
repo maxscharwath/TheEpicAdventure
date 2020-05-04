@@ -17,7 +17,11 @@ export default class ResourceItem extends Item {
         return true;
     }
 
-    public useOn(levelTile: LevelTile, mob: Mob) {
-        return mob.inventory.removeItem(this, 1);
+    public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.resource.useOn(levelTile, mob)) {
+            mob.inventory.removeItem(this, 1);
+            return true;
+        }
+        return false;
     }
 }

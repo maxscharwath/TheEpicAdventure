@@ -5,6 +5,7 @@ import Updater from "../core/Updater";
 import Chunk from "../level/Chunk";
 import Level from "../level/Level";
 import LevelTile from "../level/LevelTile";
+import Tiles from "../level/tile/Tiles";
 import Hitbox from "../utility/Hitbox";
 import Maths from "../utility/Maths";
 import Random from "../utility/Random";
@@ -137,8 +138,7 @@ export default class Entity extends PIXI.Container implements Tickable {
         this.y = y;
         {
             this.visible = true;
-            this.addChild(this.container);
-            this.addChild(this.hitbox);
+            this.addChild(this.container, this.hitbox);
             this.init();
         }
     }
@@ -205,7 +205,7 @@ export default class Entity extends PIXI.Container implements Tickable {
             return false;
         }
         const tile = this.getTile();
-        return tile && (tile.is("water") || tile.is("lava"));
+        return tile && (tile.instanceOf(Tiles.LAVA.tile, Tiles.WATER.tile));
     }
 
     public getChunk(): Chunk {
@@ -269,7 +269,7 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public getName() {
-        return "this.constructor.name";
+        return this.constructor.name;
     }
 
     public toString(): string {

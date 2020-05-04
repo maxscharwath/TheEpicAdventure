@@ -45,4 +45,9 @@ export default class Items extends ItemRegister<Item> {
     public static WHEAT = Items.add("wheat", ResourceItem, Resources.wheat);
     public static SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.seedWheat);
     public static APPLE = Items.add("apple", ResourceItem, Resources.apple);
+
+    public static SNOWBALL = Items.add("snowball", ResourceItem, Resources.snowball);
+
+    public static SAND = Items.add("sand", ResourceItem, Resources.sand);
+    public static DIRT = Items.add("dirt", ResourceItem, Resources.dirt);
 }

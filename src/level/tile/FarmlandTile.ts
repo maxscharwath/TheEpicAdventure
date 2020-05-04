@@ -1,10 +1,15 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
+import {Mob} from "../../entity";
+import Item from "../../item/Item";
+import ToolItem from "../../item/ToolItem";
+import ToolType from "../../item/ToolType";
 import Random from "../../utility/Random";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class FarmlandTile extends Tile {
+    protected age: number = 0;
     protected humidity: number = 0;
 
     protected growthRate(initProb: number): boolean {
@@ -21,6 +26,16 @@ export default class FarmlandTile extends Tile {
 
     private filter: PIXI.filters.ColorMatrixFilter;
     public static readonly TAG: string = "farmland";
+
+    public onInteract(mob: Mob, item?: Item) {
+        if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
+            console.log("harvest");
+            this.harvest();
+            this.levelTile.setTile(Tiles.FARMLAND.tile);
+            return true;
+        }
+        return false;
+    }
 
     public init() {
         super.init();

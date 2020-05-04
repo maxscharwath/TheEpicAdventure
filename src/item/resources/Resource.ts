@@ -1,14 +1,13 @@
 import * as PIXI from "pixi.js";
+import System from "../../core/System";
 import Entity from "../../entity/Entity";
 import LevelTile from "../../level/LevelTile";
 
 export default class Resource {
     public texture: PIXI.BaseTexture;
-    public tag: string;
 
-    constructor(tag: string, path: string) {
-        this.tag = tag;
-        this.texture = PIXI.BaseTexture.from(path);
+    constructor(path: string) {
+        this.texture = PIXI.BaseTexture.from(System.getResource("items", path));
         this.texture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     }
 

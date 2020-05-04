@@ -3,8 +3,6 @@ import System from "../../core/System";
 import {Entity, ItemEntity, Mob} from "../../entity";
 import Item from "../../item/Item";
 import Items from "../../item/Items";
-import ResourceItem from "../../item/ResourceItem";
-import Resources from "../../item/resources/Resources";
 import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
 import Random from "../../utility/Random";
@@ -33,21 +31,13 @@ export default class GrassTile extends AutoTilingTile {
             switch (item.type) {
                 case ToolType.hoe:
                     if (Random.probability(5)) {
-                        this.level.addEntity(
-                            new ItemEntity(Items.SEED_WHEAT,
-                                this.x << 4 + Random.int(10) + 3,
-                                this.y << 4 + Random.int(10) + 3),
-                        );
+                        this.addItemEntity(Items.SEED_WHEAT);
                     }
                     this.levelTile.setTile(Tiles.FARMLAND.tile);
                     return true;
                 case ToolType.shovel:
                     if (Random.probability(5)) {
-                        this.level.addEntity(
-                            new ItemEntity(Items.SEED_WHEAT,
-                                this.x << 4 + Random.int(10) + 3,
-                                this.y << 4 + Random.int(10) + 3),
-                        );
+                        this.addItemEntity(Items.SEED_WHEAT);
                     }
                     this.levelTile.setTile(Tiles.DIRT.tile);
                     return true;

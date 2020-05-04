@@ -1,5 +1,10 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
+import {ItemEntity, Mob} from "../../entity";
+import Item from "../../item/Item";
+import Items from "../../item/Items";
+import ToolItem from "../../item/ToolItem";
+import ToolType from "../../item/ToolType";
 import Random from "../../utility/Random";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
@@ -25,6 +30,21 @@ export default class DirtTile extends Tile {
                 this.levelTile.setTile(Tiles.SAND.tile);
             }
         }
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.hoe:
+                    this.levelTile.setTile(Tiles.FARMLAND.tile);
+                    return true;
+                case ToolType.shovel:
+                    this.addItemEntity(Items.DIRT);
+                    this.levelTile.setTile(Tiles.HOLE.tile);
+                    return true;
+            }
+        }
+        return false;
     }
 
 }

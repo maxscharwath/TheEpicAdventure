@@ -34,7 +34,7 @@ export default class Item {
         return false;
     }
 
-    public interactOn(levelTile: LevelTile, entity: Entity): boolean {
+    public useOn(levelTile: LevelTile, entity: Entity): boolean {
         return false;
     }
 

@@ -82,7 +82,7 @@ export default class AquaticMob extends Mob {
                     continue;
                 }
                 const tile = this.level.getTile(xt, yt);
-                if (!tile || (this.isSwimming() || !tile.mayPass(this)) && !tile.is("water")) {
+                if (!tile || (this.isSwimming() || !tile.mayPass(this)) && !tile.instanceOf(Tiles.WATER.tile)) {
                     blocked = true;
                     return false;
                 }

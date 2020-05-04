@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
+import {Entity, Mob} from "../../entity";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
@@ -18,4 +19,11 @@ export default class CactusTile extends Tile {
     public mayPass(): boolean {
         return false;
     }
+
+    public bumpedInto(entity: Entity) {
+        if (entity instanceof Mob) {
+            entity.hurt(6);
+        }
+    }
+
 }

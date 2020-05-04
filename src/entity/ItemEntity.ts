@@ -6,6 +6,12 @@ import Entity from "./Entity";
 export default class ItemEntity extends Entity {
     private readonly lifeTime: number;
     private time: number = 0;
+
+    public static create(data: any): ItemEntity {
+        const e = super.create(data) as ItemEntity;
+        e.item = Item.create(data.item);
+        return e;
+    }
     public item: Item;
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
@@ -41,5 +47,12 @@ export default class ItemEntity extends Entity {
 
     public take(entity: Entity) {
         this.delete();
+    }
+
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+            item: this.item,
+        };
     }
 }

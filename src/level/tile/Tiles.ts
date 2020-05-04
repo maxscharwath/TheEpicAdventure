@@ -19,51 +19,20 @@ import WheatTile from "./WheatTile";
 
 type Type<T> = new (...args: any[]) => T;
 
-interface TileRegister<T> {
-    idx: number;
-    tag: string;
-    tile: Type<T>;
-}
-
-export default class Tiles {
+export class TileRegister<T extends Tile> {
+    protected constructor(idx: number, tag: string, tile: Type<T>) {
+        this.tag = tag;
+        this.tile = tile;
+        this.idx = idx;
+        TileRegister.tiles.add(this.idx, this.tag, this.tile);
+        console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
+    }
 
     private static tiles = new KeyedMap<Type<Tile>>();
 
-    private static registerTile<T>(idx: number, tag: string, tile: Type<T>): TileRegister<T> {
-        const tileRegister = {
-            idx,
-            tag,
-            tile,
-        };
-        this.add(tileRegister);
-        return tileRegister;
+    public static add<T extends Tile>(idx: number, tag: string, tile: Type<T>) {
+        return new TileRegister(idx, tag, tile);
     }
-
-    private static add({idx, tag, tile}: TileRegister<any>): void {
-        tag = tag.toLowerCase();
-        if (this.tiles.add(idx, tag, tile)) {
-            console.log(`adding ${tile.name} => ${tag}#${idx}`);
-        } else {
-            throw new Error(`tag: ${tag}#${idx} already exist.`);
-        }
-    }
-
-    public static DIRT = Tiles.registerTile(0, "dirt", DirtTile);
-    public static GRASS = Tiles.registerTile(1, "grass", GrassTile);
-    public static WATER = Tiles.registerTile(2, "water", WaterTile);
-    public static LAVA = Tiles.registerTile(3, "lava", LavaTile);
-    public static LILYPAD = Tiles.registerTile(4, "lilypad", LilyPadTile);
-    public static SAND = Tiles.registerTile(5, "sand", SandTile);
-    public static ROCK = Tiles.registerTile(6, "rock", RockTile);
-    public static HOLE = Tiles.registerTile(7, "hole", HoleTile);
-    public static FARMLAND = Tiles.registerTile(8, "farmland", FarmlandTile);
-    public static WHEAT = Tiles.registerTile(9, "wheat", WheatTile);
-    public static TREE = Tiles.registerTile(10, "tree", TreeTile);
-    public static PALM = Tiles.registerTile(11, "palm", PalmTreeTile);
-    public static SPRUCE = Tiles.registerTile(12, "spruce", SpruceTreeTile);
-    public static CACTUS = Tiles.registerTile(13, "cactus", CactusTile);
-    public static SNOW = Tiles.registerTile(14, "snow", SnowTile);
-    public static ICE = Tiles.registerTile(15, "ice", IceTile);
 
     public static get(index: string | number): Type<Tile> {
         const tileData = this.tiles.get(index);
@@ -77,5 +46,28 @@ export default class Tiles {
     public static getKeys(tile: Type<Tile>): { idx: number; tag: string } {
         return this.tiles.getKeys(tile);
     }
+
+    public readonly tag: string;
+    public readonly tile: Type<T>;
+    public readonly idx: number;
+}
+
+export default class Tiles extends TileRegister<Tile> {
+    public static DIRT = Tiles.add(0, "dirt", DirtTile);
+    public static GRASS = Tiles.add(1, "grass", GrassTile);
+    public static WATER = Tiles.add(2, "water", WaterTile);
+    public static LAVA = Tiles.add(3, "lava", LavaTile);
+    public static LILYPAD = Tiles.add(4, "lilypad", LilyPadTile);
+    public static SAND = Tiles.add(5, "sand", SandTile);
+    public static ROCK = Tiles.add(6, "rock", RockTile);
+    public static HOLE = Tiles.add(7, "hole", HoleTile);
+    public static FARMLAND = Tiles.add(8, "farmland", FarmlandTile);
+    public static WHEAT = Tiles.add(9, "wheat", WheatTile);
+    public static TREE = Tiles.add(10, "tree", TreeTile);
+    public static PALM = Tiles.add(11, "palm", PalmTreeTile);
+    public static SPRUCE = Tiles.add(12, "spruce", SpruceTreeTile);
+    public static CACTUS = Tiles.add(13, "cactus", CactusTile);
+    public static SNOW = Tiles.add(14, "snow", SnowTile);
+    public static ICE = Tiles.add(15, "ice", IceTile);
 
 }

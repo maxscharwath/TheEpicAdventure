@@ -1,6 +1,8 @@
-import {AnimatedSprite, Texture} from "pixi.js";
+import * as PIXI from "pixi.js";
 import Game from "../../core/Game";
+import System from "../../core/System";
 import SpriteSheet from "../../gfx/SpriteSheet";
+import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Mob from "./Mob";
 
@@ -9,9 +11,12 @@ export default class Player extends Mob {
 
     protected init() {
         super.init();
-        this.sprite = new AnimatedSprite([Texture.EMPTY], true);
+        this.sprite = new PIXI.AnimatedSprite([PIXI.Texture.EMPTY], true);
         this.sprite.anchor.set(0.5);
+        this.targetTile = new PIXI.Sprite(PIXI.Texture.from(System.getResource("select.png")));
+        this.targetTile.alpha = 0.7;
         this.container.addChild(this.sprite);
+        this.addChildAt(this.targetTile, 0);
         this.playAnimation("walk");
     }
 
@@ -30,9 +35,10 @@ export default class Player extends Mob {
     }
 
     private static spriteSheet = new SpriteSheet("player.json");
-    private sprite: AnimatedSprite;
+    private targetTile: PIXI.Sprite;
+    private sprite: PIXI.AnimatedSprite;
 
-    private playAnimation(name: string, loop: boolean = true): AnimatedSprite {
+    private playAnimation(name: string, loop: boolean = true): PIXI.AnimatedSprite {
         const a = Player.spriteSheet.getAnimation(name, this.dir);
         if (this.sprite.textures === a) {
             return;
@@ -96,9 +102,16 @@ export default class Player extends Mob {
         if (Game.input.getKey("JUMP").clicked && this.z === 0) {
             this.a.z = 3;
         }
-
+        const levelTile = this.getInteractTile();
+        this.targetTile.position.set(levelTile?.x - this.x, levelTile?.y - this.y);
         if (Game.input.getKey("ATTACK").down) {
-            this.attack(5);
+            const item = this.inventory.selectedItem();
+            levelTile?.tile.onInteract(this, item);
+            if (item instanceof Item) {
+                item.useOn(levelTile, this);
+            } else {
+                this.attack(5);
+            }
         }
 
         if (this.aSpeed < this.speed) {

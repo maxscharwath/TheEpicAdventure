@@ -4,7 +4,6 @@ import TileRandom from "../utility/TileRandom";
 import Biome from "./biome/Biome";
 import Level from "./Level";
 import Tile from "./tile/Tile";
-import Tiles from "./tile/Tiles";
 
 type Type<T> = new (...args: any[]) => T;
 
@@ -100,11 +99,11 @@ export default class LevelTile extends PIXI.Container {
         this._tile.steppedOn(entity);
     }
 
-    public is(name: string) {
-        return this._tile instanceof Tiles.get(name);
+    public is(tileClass: Type<Tile>) {
+        return this._tile.constructor === tileClass;
     }
 
-    public setTile(tileClass: Type<Tile>) {
+    public setTile(tileClass: typeof Tile) {
         this.isInitiated = false;
         this.skipTick = true;
         this.tileClass = tileClass;

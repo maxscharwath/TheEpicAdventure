@@ -40,6 +40,9 @@ entity.player: Player
 entity.zombie: Zombie
 entity.fish: Fish
 
+item.dirt: Dirt
+item.sand: Sand
+item.snowball: Snowball
 item.apple: Apple
 item.wheat: Wheat
 item.seed_wheat: Wheat seed

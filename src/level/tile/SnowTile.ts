@@ -2,7 +2,12 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
+import Item from "../../item/Item";
+import Items from "../../item/Items";
+import ToolItem from "../../item/ToolItem";
+import ToolType from "../../item/ToolType";
 import AutoTilingTile from "./AutoTilingTile";
+import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile  {
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
@@ -41,6 +46,18 @@ export default class SnowTile extends AutoTilingTile  {
             }
             this.footprintSprite.visible = this.step > 0;
         }
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.shovel:
+                    this.addItemEntity(Items.SNOWBALL, 3);
+                    this.levelTile.setTile(Tiles.DIRT.tile);
+                    return true;
+            }
+        }
+        return false;
     }
 
     public mayPass(): boolean {
