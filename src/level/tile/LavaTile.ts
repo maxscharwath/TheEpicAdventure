@@ -4,10 +4,12 @@ import Entity from "../../entity/Entity";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
+import TileStates from "./TileStates";
 
 export default class LavaTile extends AutoTilingTile {
     protected static canConnectTo = ["hole", "water"];
     protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
+    protected states = TileStates.create({level: 10});
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "lava";
@@ -32,7 +34,7 @@ export default class LavaTile extends AutoTilingTile {
     public onUpdate() {
         super.onUpdate();
         if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.WATER.tile))) {
-            this.levelTile.setTile(Tiles.ROCK.tile);
+            this.levelTile.setTile(Tiles.ROCK);
         }
     }
 

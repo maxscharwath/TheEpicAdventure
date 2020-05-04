@@ -21,10 +21,10 @@ export default class HoleTile extends AutoTilingTile {
         if (Updater.every(5)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.WATER.tile))) {
-                this.levelTile.setTile(Tiles.WATER.tile);
+                this.levelTile.setTile(Tiles.WATER);
             }
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.LAVA.tile))) {
-                this.levelTile.setTile(Tiles.LAVA.tile);
+                this.levelTile.setTile(Tiles.LAVA);
             }
         }
     }

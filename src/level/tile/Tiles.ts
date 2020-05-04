@@ -36,7 +36,7 @@ export class TileRegister<T extends Tile> {
 
     public static get(index: string | number): Type<Tile> {
         const tileData = this.tiles.get(index);
-        return !tileData ? Tile : tileData;
+        return (!tileData ? Tile : tileData) as Type<Tile>;
     }
 
     public static getSome(...tags: string[]): Array<Type<Tile>> {

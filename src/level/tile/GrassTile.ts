@@ -33,13 +33,13 @@ export default class GrassTile extends AutoTilingTile {
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
-                    this.levelTile.setTile(Tiles.FARMLAND.tile);
+                    this.levelTile.setTile(Tiles.FARMLAND);
                     return true;
                 case ToolType.shovel:
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
-                    this.levelTile.setTile(Tiles.DIRT.tile);
+                    this.levelTile.setTile(Tiles.DIRT);
                     return true;
             }
         }

@@ -25,6 +25,7 @@ export default class InfoDisplay extends Display {
             `te: ${tile?.elevation}`,
             `tm: ${tile?.moisture}`,
             `t: ${tile?.tile.getDisplayName()}`,
+            `td: ${JSON.stringify(tile?.tile.getStates())}`,
             `c: ${Renderer.getNbChildren()}`,
             `m: ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`,
         ].join("\n");

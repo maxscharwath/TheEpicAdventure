@@ -53,7 +53,7 @@ export default class SnowTile extends AutoTilingTile  {
             switch (item.type) {
                 case ToolType.shovel:
                     this.addItemEntity(Items.SNOWBALL, 3);
-                    this.levelTile.setTile(Tiles.DIRT.tile);
+                    this.levelTile.setTile(Tiles.DIRT);
                     return true;
             }
         }

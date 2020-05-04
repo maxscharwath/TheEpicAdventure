@@ -3,11 +3,13 @@ import System from "../../core/System";
 import {Entity, Fish} from "../../entity/";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
+import TileStates from "./TileStates";
 
 export default class WaterTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "hole", "ice"];
     protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
+    protected states = TileStates.create({level: 10});
     private animSprite: PIXI.AnimatedSprite;
     public static readonly TAG = "water";
     public friction: number = 0.01;

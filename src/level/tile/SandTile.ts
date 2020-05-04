@@ -28,7 +28,7 @@ export default class SandTile extends AutoTilingTile {
             switch (item.type) {
                 case ToolType.shovel:
                     this.addItemEntity(Items.SAND);
-                    this.levelTile.setTile(Tiles.DIRT.tile);
+                    this.levelTile.setTile(Tiles.DIRT);
                     return true;
             }
         }

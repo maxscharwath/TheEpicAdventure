@@ -24,10 +24,10 @@ export default class DirtTile extends Tile {
         if (this.levelTile.biome.is("grassland") && Random.probability(500)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.get("grass")))) {
-                this.levelTile.setTile(Tiles.GRASS.tile);
+                this.levelTile.setTile(Tiles.GRASS);
             }
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SAND.tile))) {
-                this.levelTile.setTile(Tiles.SAND.tile);
+                this.levelTile.setTile(Tiles.SAND);
             }
         }
     }
@@ -36,11 +36,11 @@ export default class DirtTile extends Tile {
         if (item instanceof ToolItem) {
             switch (item.type) {
                 case ToolType.hoe:
-                    this.levelTile.setTile(Tiles.FARMLAND.tile);
+                    this.levelTile.setTile(Tiles.FARMLAND);
                     return true;
                 case ToolType.shovel:
                     this.addItemEntity(Items.DIRT);
-                    this.levelTile.setTile(Tiles.HOLE.tile);
+                    this.levelTile.setTile(Tiles.HOLE);
                     return true;
             }
         }

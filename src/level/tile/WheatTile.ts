@@ -6,7 +6,7 @@ import FarmlandTile from "./FarmlandTile";
 export default class WheatTile extends FarmlandTile {
 
     protected harvest() {
-        if (this.age >= 50) {
+        if (this.states.age >= 50) {
             this.addItemEntity(Items.WHEAT, 3);
         }
         this.addItemEntity(Items.SEED_WHEAT);
@@ -25,12 +25,12 @@ export default class WheatTile extends FarmlandTile {
     public onTick(): void {
         super.onTick();
         if (this.growthRate(100)) {
-            if (this.age < 50) {
-                this.age++;
+            if (this.states.age < 50) {
+                this.states.age++;
             }
         }
         if (this.sprite.texture.valid) {
-            this.sprite.texture.frame = new PIXI.Rectangle(~~(this.age / 50 * 4) * 16, 0, 16, 16);
+            this.sprite.texture.frame = new PIXI.Rectangle(~~(this.states.age / 50 * 4) * 16, 0, 16, 16);
         }
     }
 

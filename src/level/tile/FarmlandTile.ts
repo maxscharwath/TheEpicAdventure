@@ -7,13 +7,13 @@ import ToolType from "../../item/ToolType";
 import Random from "../../utility/Random";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+import TileStates from "./TileStates";
 
 export default class FarmlandTile extends Tile {
-    protected age: number = 0;
-    protected humidity: number = 0;
+    protected states = TileStates.create({moisture: 0, age: 0});
 
     protected growthRate(initProb: number): boolean {
-        const bonus = 1 + (this.humidity) / 10;
+        const bonus = 1 + (this.states.moisture) / 10;
         if (bonus <= 0) {
             return false;
         }
@@ -31,7 +31,7 @@ export default class FarmlandTile extends Tile {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
             console.log("harvest");
             this.harvest();
-            this.levelTile.setTile(Tiles.FARMLAND.tile);
+            this.levelTile.setTile(Tiles.FARMLAND);
             return true;
         }
         return false;
@@ -49,18 +49,18 @@ export default class FarmlandTile extends Tile {
         super.onTick();
         if (Random.probability(50)) {
             if (!this.levelTile.findTileRadius(3, Tiles.WATER.tile)) {
-                if (this.humidity > -10 && Random.probability(5)) {
-                    --this.humidity;
-                    this.filter.brightness(this.humidity / -40 + 1, false);
+                if (this.states.moisture > -10 && Random.probability(5)) {
+                    --this.states.moisture;
+                    this.filter.brightness(this.states.moisture / -40 + 1, false);
                 }
             } else {
-                if (this.humidity < 10) {
-                    ++this.humidity;
-                    this.filter.brightness(this.humidity / -40 + 1, false);
+                if (this.states.moisture < 10) {
+                    ++this.states.moisture;
+                    this.filter.brightness(this.states.moisture / -40 + 1, false);
                 }
             }
-            if (this.humidity <= -10 && Random.probability(25)) {
-                this.levelTile.setTile(Tiles.DIRT.tile);
+            if (this.states.moisture <= -10 && Random.probability(25)) {
+                this.levelTile.setTile(Tiles.DIRT);
                 this.harvest();
                 return;
             }

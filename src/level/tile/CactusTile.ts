@@ -1,10 +1,13 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import {Entity, Mob} from "../../entity";
+import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+import TileStates from "./TileStates";
 
 export default class CactusTile extends Tile {
+    protected states = TileStates.create({damage: 0});
     private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
     public static readonly TAG = "dirt";
 
@@ -26,4 +29,8 @@ export default class CactusTile extends Tile {
         }
     }
 
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.levelTile.setTile(this.groundTile.getClass());
+        return true;
+    }
 }

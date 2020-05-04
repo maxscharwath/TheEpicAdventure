@@ -5,9 +5,10 @@ import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+import TileStates from "./TileStates";
 
 export default class TreeTile extends Tile {
-
+    protected states = TileStates.create({damage: 0});
     protected treeTilingInit(source: string) {
         const texture = PIXI.BaseTexture.from(source);
         this.layersTreeSprite = [
@@ -87,7 +88,7 @@ export default class TreeTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        this.levelTile.setTile(this.groundTile.constructor);
+        this.levelTile.setTile(this.groundTile.getClass());
         return true;
     }
 }

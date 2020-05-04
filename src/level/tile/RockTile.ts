@@ -1,7 +1,10 @@
 import System from "../../core/System";
+import {Mob} from "../../entity";
+import Item from "../../item/Item";
 import AutoTilingTile from "./AutoTilingTile";
+import Tiles from "./Tiles";
 
-export default class RockTile extends AutoTilingTile  {
+export default class RockTile extends AutoTilingTile {
     protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock.png"));
     public static readonly TAG = "rock";
 
@@ -16,6 +19,11 @@ export default class RockTile extends AutoTilingTile  {
 
     public mayPass(): boolean {
         return false;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.levelTile.setTile(Tiles.DIRT);
+        return true;
     }
 
 }

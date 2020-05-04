@@ -1,9 +1,8 @@
 import * as PIXI from "pixi.js";
-import LevelTile from "../LevelTile";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
-export default class AutoTilingTile extends Tile {
+export default abstract class AutoTilingTile extends Tile {
 
     protected static canConnectTo: string[] = [];
     protected static autoTileTextures: PIXI.Texture[];
@@ -40,7 +39,7 @@ export default class AutoTilingTile extends Tile {
     public autoTiling() {
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
-            return !(t && t.instanceOf(...[this.constructor, ...Tiles.getSome(...this.constructor.canConnectTo)]));
+            return !(t && t.instanceOf(...[this.getClass(), ...Tiles.getSome(...this.constructor.canConnectTo)]));
         };
         const u = test(0, -1);
         const d = test(0, 1);
@@ -56,14 +55,6 @@ export default class AutoTilingTile extends Tile {
         this.sprites[1].texture = this.constructor.autoTileTextures[!u && !r ? !ur ? 4 : 11 : u && r ? 2 : u ? 1 : 5];
         this.sprites[2].texture = this.constructor.autoTileTextures[!d && !l ? !dl ? 4 : 10 : d && l ? 6 : d ? 7 : 3];
         this.sprites[3].texture = this.constructor.autoTileTextures[!d && !r ? !dr ? 4 : 9 : d && r ? 8 : d ? 7 : 5];
-    }
-
-    public onTick(): void {
-        super.onTick();
-    }
-
-    public onRender() {
-        super.onRender();
     }
 
     public onUpdate() {

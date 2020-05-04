@@ -3,13 +3,13 @@ import Localization from "../../core/io/Localization";
 import {ItemEntity, Mob} from "../../entity";
 import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
-import Items, {ItemRegister} from "../../item/Items";
+import {ItemRegister} from "../../item/Items";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
+import TileStates from "./TileStates";
 
 type Type<T> = new (...args: any[]) => T;
-export default class Tile {
-
+export default abstract class Tile {
     protected get level() {
         return this.levelTile.level;
     }
@@ -35,8 +35,9 @@ export default class Tile {
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
     protected groundContainer = new PIXI.Container();
+    protected states = TileStates.create();
 
-    protected addItemEntity(item: Item|ItemRegister<Item>, nb: number= 1) {
+    protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
         for (let i = 0; i < nb; i++) {
             this.level.addEntity(
                 new ItemEntity(item,
@@ -61,6 +62,10 @@ export default class Tile {
         this.levelTile = levelTile;
         this.random = levelTile.random;
         this.container.addChild(this.groundContainer);
+    }
+
+    public getClass() {
+        return Object.getPrototypeOf(this).constructor;
     }
 
     public setGroundTile(tile: Type<Tile>) {
@@ -123,6 +128,9 @@ export default class Tile {
     }
 
     public bumpedInto(entity: Entity) {
+    }
 
+    public getStates() {
+        return this.states.toBSON();
     }
 }

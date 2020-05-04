@@ -57,60 +57,60 @@ export default class LevelGen {
                 const tile = new LevelTile({level, x, y, biome, moisture, temperature, elevation});
                 map.push(tile);
 
-                tile.setTile(Tiles.GRASS.tile);
+                tile.setTile(Tiles.GRASS);
 
                 if (biome.tag.includes("ocean")) {
-                    tile.setTile(Tiles.WATER.tile);
+                    tile.setTile(Tiles.WATER);
                     if (random.probability(50)) {
-                        tile.setTile(Tiles.LILYPAD.tile);
+                        tile.setTile(Tiles.LILYPAD);
                     }
                     if (temperature < 40 && random.probability(temperature / 25)) {
-                        tile.setTile(Tiles.ICE.tile);
+                        tile.setTile(Tiles.ICE);
                     }
                 }
                 if (biome.is("beach")) {
-                    tile.setTile(Tiles.SAND.tile);
+                    tile.setTile(Tiles.SAND);
                     if (random.probability(25)) {
-                        tile.setTile(Tiles.PALM.tile);
+                        tile.setTile(Tiles.PALM);
                     }
                 }
                 if (biome.is("desert")) {
-                    tile.setTile(Tiles.SAND.tile);
+                    tile.setTile(Tiles.SAND);
                     if (random.probability(50)) {
-                        tile.setTile(Tiles.CACTUS.tile);
+                        tile.setTile(Tiles.CACTUS);
                     }
                 }
                 if (biome.is("savanna")) {
-                    tile.setTile(Tiles.DIRT.tile);
+                    tile.setTile(Tiles.DIRT);
                 }
                 if (biome.is("forest")) {
-                    tile.setTile(Tiles.GRASS.tile);
+                    tile.setTile(Tiles.GRASS);
                     if (random.probability(2)) {
-                        tile.setTile(Tiles.TREE.tile);
+                        tile.setTile(Tiles.TREE);
                     } else if (random.probability(2)) {
-                        tile.setTile(Tiles.SPRUCE.tile);
+                        tile.setTile(Tiles.SPRUCE);
                     }
                 }
                 if (biome.is("grassland")) {
                     if (random.probability(5)) {
-                        tile.setTile(Tiles.TREE.tile);
+                        tile.setTile(Tiles.TREE);
                     }
                 }
 
                 if (biome.is("tundra") || biome.is("snow")) {
-                    tile.setTile(Tiles.SNOW.tile);
+                    tile.setTile(Tiles.SNOW);
                     if (random.probability(5)) {
-                        tile.setTile(Tiles.SPRUCE.tile);
+                        tile.setTile(Tiles.SPRUCE);
                     }
                 }
 
                 if (elevation > 210) {
-                    tile.setTile(Tiles.ROCK.tile);
+                    tile.setTile(Tiles.ROCK);
                 }
                 if (biome.is("river")) {
-                    tile.setTile(Tiles.DIRT.tile);
+                    tile.setTile(Tiles.DIRT);
                     if (river > 245) {
-                        tile.setTile(Tiles.WATER.tile);
+                        tile.setTile(Tiles.WATER);
                     }
                 }
             }
