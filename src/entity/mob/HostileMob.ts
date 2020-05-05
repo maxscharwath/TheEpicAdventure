@@ -3,7 +3,7 @@ import {Entity} from "../";
 import Renderer from "../../core/Renderer";
 import Maths from "../../utility/Maths";
 
-export default class HostileMob extends Mob {
+export default abstract class HostileMob extends Mob {
     protected target = {x: 0, y: 0};
 
     protected newTarget() {

@@ -13,7 +13,7 @@ import Vector3D from "../utility/Vector3D";
 import Entities from "./Entities";
 import Tickable from "./Tickable";
 
-export default class Entity extends PIXI.Container implements Tickable {
+export default abstract class Entity extends PIXI.Container implements Tickable {
 
     protected get aSpeed(): number {
         return Math.hypot(this.a.x, this.a.y);
@@ -24,6 +24,18 @@ export default class Entity extends PIXI.Container implements Tickable {
     protected deleted: boolean;
     protected isMoving: boolean;
     protected container = new PIXI.Container();
+
+    protected constructor(x: number = 0, y: number = 0) {
+        super();
+        this.hitbox.set(0, 4, 8, 8);
+        this.x = x;
+        this.y = y;
+        {
+            this.visible = true;
+            this.addChild(this.container, this.hitbox);
+            this.init();
+        }
+    }
 
     protected init() {
     }
@@ -130,18 +142,6 @@ export default class Entity extends PIXI.Container implements Tickable {
     public a: Vector3D = new Vector3D();
     public hitbox: Hitbox = new Hitbox();
     public ticks: number = 0;
-
-    constructor(x: number = 0, y: number = 0) {
-        super();
-        this.hitbox.set(0, 4, 8, 8);
-        this.x = x;
-        this.y = y;
-        {
-            this.visible = true;
-            this.addChild(this.container, this.hitbox);
-            this.init();
-        }
-    }
 
     public isActive() {
         return (Updater.tickCount - this.lastTick) < 50;
@@ -276,8 +276,12 @@ export default class Entity extends PIXI.Container implements Tickable {
         return `${this.getName()}#${this.uid}`;
     }
 
+    public getClass() {
+        return Object.getPrototypeOf(this).constructor;
+    }
+
     public getKeys() {
-        return Entities.getKeys(this.constructor);
+        return Entities.getKeys(this.getClass());
     }
 
     public toBSON() {
@@ -290,5 +294,6 @@ export default class Entity extends PIXI.Container implements Tickable {
     }
 
     public touchedBy(entity: Entity): void {
+
     }
 }

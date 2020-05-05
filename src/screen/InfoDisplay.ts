@@ -9,7 +9,7 @@ import Display from "./Display";
 export default class InfoDisplay extends Display {
 
     private static text(): string {
-        const tile = Game.player.getTile();
+        const tile = Game.player.getInteractTile();
         return [
             `v: ${Game.version.toString()}`,
             `fps: ${Math.round(Initializer.getCurFps())}`,

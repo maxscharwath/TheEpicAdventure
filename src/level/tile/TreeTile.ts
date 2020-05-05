@@ -88,7 +88,10 @@ export default class TreeTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        this.levelTile.setTile(this.groundTile.getClass());
+        this.states.damage += 1;
+        if (this.states.damage >= 15) {
+            this.levelTile.setTile(this.groundTile.getClass());
+        }
         return true;
     }
 }

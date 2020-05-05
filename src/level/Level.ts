@@ -50,6 +50,7 @@ export default class Level {
     public container: PIXI.Container = new PIXI.Container();
     public tilesContainer: PIXI.Container = new PIXI.Container();
     public entitiesContainer: PIXI.Container = new PIXI.Container();
+    public particleContainer: PIXI.Container = new PIXI.ParticleContainer();
 
     constructor() {
         Renderer.setLevel(this);

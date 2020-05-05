@@ -6,7 +6,7 @@ import Vector from "../../utility/Vector";
 import Direction from "../Direction";
 import Mob from "./Mob";
 
-export default class AquaticMob extends Mob {
+export default abstract class AquaticMob extends Mob {
     protected target = {x: 0, y: 0};
 
     protected newTarget() {

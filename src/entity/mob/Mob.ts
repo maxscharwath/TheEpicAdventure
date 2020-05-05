@@ -1,4 +1,5 @@
 import Inventory from "../../item/Inventory";
+import LevelTile from "../../level/LevelTile";
 import Maths from "../../utility/Maths";
 import Random from "../../utility/Random";
 import Vector from "../../utility/Vector";
@@ -6,7 +7,7 @@ import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
 
-export default class Mob extends Entity {
+export default abstract class Mob extends Entity {
 
     protected get speed() {
         return this.speedMax;
@@ -21,6 +22,14 @@ export default class Mob extends Entity {
     protected walkDist: number = 0;
     protected dir: Direction = Direction.DOWN;
     protected mass = 20;
+
+    protected constructor(x?: number, y?: number) {
+        super(x, y);
+        this.interactive = true;
+        this.on("click", () => {
+            this.die();
+        });
+    }
 
     protected move(xa: number, ya: number): boolean {
         if (this.onGround()) {
@@ -144,15 +153,7 @@ export default class Mob extends Entity {
     public health: number = this.maxHealth;
     public inventory = new Inventory(8);
 
-    constructor(x?: number, y?: number) {
-        super(x, y);
-        this.interactive = true;
-        this.on("click", () => {
-            this.die();
-        });
-    }
-
-    public getInteractTile() {
+    public getInteractTile(): LevelTile {
         return this.level.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
     }
 
