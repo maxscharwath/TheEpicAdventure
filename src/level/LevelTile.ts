@@ -17,9 +17,12 @@ interface LevelTileConstructor {
     elevation: number;
     moisture: number;
     tileClass?: Type<Tile>;
+    tileStates?: {};
 }
 
 export default class LevelTile extends PIXI.Container {
+    private tileStates: {};
+
     get tile(): Tile {
         return this._tile;
     }
@@ -44,7 +47,7 @@ export default class LevelTile extends PIXI.Container {
 
     public bg: PIXI.Sprite;
 
-    constructor({level, x, y, biome, temperature, elevation, moisture, tileClass}: LevelTileConstructor) {
+    constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         super();
         this.biome = biome;
         this.temperature = temperature;
@@ -54,6 +57,7 @@ export default class LevelTile extends PIXI.Container {
         this.y = y << 4;
         this.level = level;
         this.tileClass = tileClass;
+        this.tileStates = tileStates;
     }
 
     public init() {
@@ -61,6 +65,7 @@ export default class LevelTile extends PIXI.Container {
             throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
         this._tile = new this.tileClass(this);
+        this._tile.setStates(this.tileStates);
         this.isInitiated = true;
         process.nextTick(() => {
             this.removeChildren();
@@ -104,13 +109,14 @@ export default class LevelTile extends PIXI.Container {
         return this._tile.getClass() === tileClass;
     }
 
-    public setTile(tile: Type<Tile> | TileRegister<Tile>) {
+    public setTile(tile: Type<Tile> | TileRegister<Tile>, states = {}) {
         this.isInitiated = false;
         this.skipTick = true;
         if (tile instanceof TileRegister) {
             tile = tile.tile;
         }
         this.tileClass = tile;
+        this.tileStates = states;
     }
 
     public findTileRadius(radius: number, ...tiles: Array<Type<Tile>>) {

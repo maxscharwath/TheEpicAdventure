@@ -18,11 +18,8 @@ export default class TileStates<T> {
         return this;
     }
 
-    public toBSON(): T {
+    public getStates(): T {
         const keys = Object.keys(this.defaultStates);
-        if (keys.length === 0) {
-            return null;
-        }
         const data = {};
         keys.forEach((key: any) => {
             data[key] = this[key];
@@ -30,7 +27,27 @@ export default class TileStates<T> {
         return data as T;
     }
 
+    public toBSON() {
+        const keys = Object.keys(this.defaultStates);
+        if (keys.length === 0) {
+            return null;
+        }
+        const data = {};
+        keys.forEach((key: any) => {
+            if (this[key] !== this.defaultStates[key]) {
+                data[key] = this[key];
+            }
+        });
+        if (Object.keys(data).length === 0) {
+            return null;
+        }
+        return data;
+    }
+
     public set(data: object) {
+        if (!(data instanceof Object)) {
+            return this;
+        }
         Object.keys(data).forEach((key: any) => {
             if (this.defaultStates.hasOwnProperty(key)) {
                 this[key] = data[key];

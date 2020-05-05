@@ -55,7 +55,7 @@ export default class Chunk {
                     const temperature = bson.temperature.buffer[index];
                     const elevation = bson.elevation.buffer[index];
                     const biome = Biome.get(biomes[index]);
-
+                    const tileStates = bson.tileStates.find((v: any) => v[0] === index)?.[1];
                     const lt = new LevelTile({
                         x,
                         y,
@@ -65,6 +65,7 @@ export default class Chunk {
                         temperature,
                         elevation,
                         biome,
+                        tileStates,
                     });
                     lt.init();
                     map.push(lt);
@@ -218,10 +219,17 @@ export default class Chunk {
             (a, b) => a === b,
             (a) => a,
         );
+
+        const tileStates = this.map.reduce((result, lt, index) => {
+            const data = lt.tile?.getStates().toBSON();
+            return data ? [...result, [index, data]] : result;
+        }, []);
+
         const bson = BSON.serialize({
             x: this.x,
             y: this.y,
             tiles,
+            tileStates,
             biomes,
             elevation: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.elevation)).buffer),
             moisture: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.moisture)).buffer),

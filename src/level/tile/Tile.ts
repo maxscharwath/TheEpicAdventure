@@ -131,6 +131,10 @@ export default abstract class Tile {
     }
 
     public getStates() {
-        return this.states.toBSON();
+        return this.states;
+    }
+
+    public setStates(tileStates: {}) {
+        this.states.set(tileStates);
     }
 }

@@ -51,14 +51,13 @@ export default class FarmlandTile extends Tile {
             if (!this.levelTile.findTileRadius(3, Tiles.WATER.tile)) {
                 if (this.states.moisture > -10 && Random.probability(5)) {
                     --this.states.moisture;
-                    this.filter.brightness(this.states.moisture / -40 + 1, false);
                 }
             } else {
                 if (this.states.moisture < 10) {
                     ++this.states.moisture;
-                    this.filter.brightness(this.states.moisture / -40 + 1, false);
                 }
             }
+            this.filter.brightness(this.states.moisture / -40 + 1, false);
             if (this.states.moisture <= -10 && Random.probability(25)) {
                 this.levelTile.setTile(Tiles.DIRT);
                 this.harvest();
