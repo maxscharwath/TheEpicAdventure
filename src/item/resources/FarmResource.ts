@@ -4,11 +4,10 @@ import Tile from "../../level/tile/Tile";
 import Tiles, {TileRegister} from "../../level/tile/Tiles";
 import Resource from "./Resource";
 
-type Type<T> = new (...args: any[]) => T;
 export default class FarmResource extends Resource {
-    private readonly targetTile: Type<Tile>;
+    private readonly targetTile: typeof Tile;
 
-    constructor(path: string, targetTile: TileRegister<Tile>) {
+    constructor(path: string, targetTile: TileRegister<typeof Tile>) {
         super(path);
         this.targetTile = targetTile.tile;
     }

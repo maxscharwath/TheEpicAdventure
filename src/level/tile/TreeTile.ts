@@ -3,12 +3,12 @@ import System from "../../core/System";
 import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
+import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class TreeTile extends Tile {
-    protected states = TileStates.create({damage: 0});
     protected treeTilingInit(source: string) {
         const texture = PIXI.BaseTexture.from(source);
         this.layersTreeSprite = [
@@ -62,8 +62,10 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[2].visible = (d && dl && l);
         this.layersTreeSprite[3].visible = (d && dr && r);
     }
+    public static DEFAULT_STATES = {damage: 0};
 
     public static readonly TAG: string = "tree";
+    public states = TileStates.create(TreeTile.DEFAULT_STATES);
 
     public init() {
         super.init();
@@ -91,6 +93,8 @@ export default class TreeTile extends Tile {
         this.states.damage += 1;
         if (this.states.damage >= 15) {
             this.levelTile.setTile(this.groundTile.getClass());
+            this.addItemEntity(Items.WOOD);
+            this.addItemEntity(Items.STICK, 2);
         }
         return true;
     }

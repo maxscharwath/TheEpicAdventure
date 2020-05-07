@@ -6,8 +6,6 @@ import Level from "./Level";
 import Tile from "./tile/Tile";
 import {TileRegister} from "./tile/Tiles";
 
-type Type<T> = new (...args: any[]) => T;
-
 interface LevelTileConstructor {
     level: Level;
     x: number;
@@ -16,7 +14,7 @@ interface LevelTileConstructor {
     temperature: number;
     elevation: number;
     moisture: number;
-    tileClass?: Type<Tile>;
+    tileClass?: typeof Tile;
     tileStates?: {};
 }
 
@@ -27,7 +25,7 @@ export default class LevelTile extends PIXI.Container {
         return this._tile;
     }
 
-    private tileClass: Type<Tile>;
+    private tileClass: typeof Tile;
     private needToUpdate: boolean = true;
     private isInitiated = false;
     private _tile: Tile;
@@ -64,8 +62,9 @@ export default class LevelTile extends PIXI.Container {
         if (!(this.tileClass.prototype instanceof Tile)) {
             throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
+        // @ts-ignore
         this._tile = new this.tileClass(this);
-        this._tile.setStates(this.tileStates);
+        this._tile.states.set(this.tileStates);
         this.isInitiated = true;
         process.nextTick(() => {
             this.removeChildren();
@@ -105,11 +104,13 @@ export default class LevelTile extends PIXI.Container {
         this._tile.steppedOn(entity);
     }
 
-    public is(tileClass: Type<Tile>) {
+    public is(tileClass: typeof Tile) {
         return this._tile.getClass() === tileClass;
     }
 
-    public setTile(tile: Type<Tile> | TileRegister<Tile>, states = {}) {
+    public setTile<T extends typeof Tile>(tile: T , states?: typeof tile.DEFAULT_STATES): void;
+    public setTile<T extends typeof Tile>(tile: TileRegister<T> , states?: typeof tile.tile.DEFAULT_STATES): void;
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}): void {
         this.isInitiated = false;
         this.skipTick = true;
         if (tile instanceof TileRegister) {
@@ -119,7 +120,7 @@ export default class LevelTile extends PIXI.Container {
         this.tileStates = states;
     }
 
-    public findTileRadius(radius: number, ...tiles: Array<Type<Tile>>) {
+    public findTileRadius(radius: number, ...tiles: Array<typeof Tile>) {
         for (let x = -radius; x < radius; x++) {
             const height = ~~(Math.sqrt(radius * radius - x * x));
             for (let y = -height; y < height; y++) {
@@ -218,7 +219,7 @@ export default class LevelTile extends PIXI.Container {
         return this._tile?.friction ?? 1;
     }
 
-    public instanceOf(...tileClass: Array<Type<Tile>>) {
+    public instanceOf(...tileClass: Array<typeof Tile>) {
         return this._tile.instanceOf(...tileClass);
     }
 

@@ -10,7 +10,6 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class FarmlandTile extends Tile {
-    protected states = TileStates.create({moisture: 0, age: 0});
 
     protected growthRate(initProb: number): boolean {
         const bonus = 1 + (this.states.moisture) / 10;
@@ -25,7 +24,9 @@ export default class FarmlandTile extends Tile {
     }
 
     private filter: PIXI.filters.ColorMatrixFilter;
+    public static DEFAULT_STATES = {moisture: 0, age: 0};
     public static readonly TAG: string = "farmland";
+    public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
     public onInteract(mob: Mob, item?: Item) {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {

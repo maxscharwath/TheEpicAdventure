@@ -6,10 +6,10 @@ import Resource from "./Resource";
 
 type Type<T> = new (...args: any[]) => T;
 export default class TileResource extends Resource {
-    private readonly sourceTiles: Array<Type<Tile>> = [];
-    private readonly targetTile: Type<Tile>;
+    private readonly sourceTiles: Array<typeof Tile> = [];
+    private readonly targetTile: typeof Tile;
 
-    constructor(path: string, targetTile: TileRegister<Tile>, ...sourceTile: Array<TileRegister<Tile>>) {
+    constructor(path: string, targetTile: TileRegister<typeof Tile>, ...sourceTile: Array<TileRegister<typeof Tile>>) {
         super(path);
         this.targetTile = targetTile.tile;
         this.sourceTiles = sourceTile.map((t) => t.tile);

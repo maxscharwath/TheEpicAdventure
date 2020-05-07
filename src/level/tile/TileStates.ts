@@ -44,7 +44,7 @@ export default class TileStates<T> {
         return data;
     }
 
-    public set(data: object) {
+    public set(data: T = {} as T) {
         if (!(data instanceof Object)) {
             return this;
         }

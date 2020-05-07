@@ -37,9 +37,9 @@ export default abstract class AquaticMob extends Mob {
             }
             const dx = this.x - e.x === 0 ? Random.float() : this.x - e.x;
             const dy = this.y - e.y === 0 ? Random.float() : this.y - e.y;
-            const R = 4;
+            const R = 8;
 
-            if (dx * dx + dy * dy < 4 * R * R) {
+            if (Math.hypot(dx, dy) < R) {
                 e.touchedBy(this);
                 if (e instanceof Mob) {
                     a.x += dx / 20 / this.mass;

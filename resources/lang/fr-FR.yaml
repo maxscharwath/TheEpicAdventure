@@ -40,12 +40,45 @@ entity.player: Joueur
 entity.zombie: Zombie
 entity.fish: Poisson
 
+item.dirt: Terre
+item.sand: Sable
+item.ice: Glace
+item.snowball: Boule de neige
 item.apple: Pomme
 item.wheat: Blé
 item.seed_wheat: Graine de blé
+item.stone: Pierre
+item.wood: Bois
+item.stick: Baton
+item.cactus_flower: Fleur de catus
+item.lilypad: Nénuphar
 
 item.wood_axe: Hache en bois
-item.wood_pickaxe: Pioche en bois
-item.wood_sword: Epée en bois
-item.wood_shovel: Pelle en bois
 item.wood_hoe: Houe en bois
+item.wood_pickaxe: Pioche en bois
+item.wood_shovel: Pelle en bois
+item.wood_sword: Epée en bois
+
+item.stone_axe: Hache en pierre
+item.stone_hoe: Houe en pierre
+item.stone_pickaxe: Pioche en pierre
+item.stone_shovel: Pelle en pierre
+item.stone_sword: Epée en pierre
+
+item.iron_axe: Hache en fer
+item.iron_hoe: Houe en fer
+item.iron_pickaxe: Pioche en fer
+item.iron_shovel: Pelle en fer
+item.iron_sword: Epée en fer
+
+item.gold_axe: Hache en or
+item.gold_hoe: Houe en or
+item.gold_pickaxe: Pioche en or
+item.gold_shovel: Pelle en or
+item.gold_sword: Epée en or
+
+item.diamond_axe: Hache en diamant
+item.diamond_hoe: Houe en diamant
+item.diamond_pickaxe: Pioche en diamant
+item.diamond_shovel: Pelle en diamant
+item.diamond_sword: Epée en diamant

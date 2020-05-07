@@ -139,7 +139,7 @@ export default class Level {
     }
 
     public getRandomTileInEntityRadius(
-        tiles: Array<Type<Tile>>,
+        tiles: Array<typeof Tile>,
         entity: Entity,
         radiusEnd: number,
         radiusStart = 0,

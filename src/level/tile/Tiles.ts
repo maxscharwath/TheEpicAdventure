@@ -17,10 +17,8 @@ import TreeTile from "./TreeTile";
 import WaterTile from "./WaterTile";
 import WheatTile from "./WheatTile";
 
-type Type<T> = new (...args: any[]) => T;
-
-export class TileRegister<T extends Tile> {
-    protected constructor(idx: number, tag: string, tile: Type<T>) {
+export class TileRegister<T extends typeof Tile> {
+    protected constructor(idx: number, tag: string, tile: T) {
         this.tag = tag;
         this.tile = tile;
         this.idx = idx;
@@ -28,31 +26,31 @@ export class TileRegister<T extends Tile> {
         console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
     }
 
-    private static tiles = new KeyedMap<Type<Tile>>();
+    private static tiles = new KeyedMap<typeof Tile>();
 
-    public static add<T extends Tile>(idx: number, tag: string, tile: Type<T>) {
+    public static add<T extends typeof Tile>(idx: number, tag: string, tile: T) {
         return new TileRegister(idx, tag, tile);
     }
 
-    public static get(index: string | number): Type<Tile> {
+    public static get(index: string | number) {
         const tileData = this.tiles.get(index);
-        return (!tileData ? Tile : tileData) as Type<Tile>;
+        return (!tileData ? Tile : tileData);
     }
 
-    public static getSome(...tags: string[]): Array<Type<Tile>> {
+    public static getSome(...tags: string[])  {
         return this.tiles.getSome(...tags);
     }
 
-    public static getKeys(tile: Type<Tile>): { idx: number; tag: string } {
+    public static getKeys(tile: typeof Tile): { idx: number; tag: string } {
         return this.tiles.getKeys(tile);
     }
 
     public readonly tag: string;
-    public readonly tile: Type<T>;
+    public readonly tile: T;
     public readonly idx: number;
 }
 
-export default class Tiles extends TileRegister<Tile> {
+export default class Tiles extends TileRegister<typeof Tile> {
     public static DIRT = Tiles.add(0, "dirt", DirtTile);
     public static GRASS = Tiles.add(1, "grass", GrassTile);
     public static WATER = Tiles.add(2, "water", WaterTile);

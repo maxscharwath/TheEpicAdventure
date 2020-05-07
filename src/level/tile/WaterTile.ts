@@ -9,9 +9,10 @@ export default class WaterTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "hole", "ice"];
     protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
-    protected states = TileStates.create({level: 10});
     private animSprite: PIXI.AnimatedSprite;
+    public static DEFAULT_STATES = {level: 10};
     public static readonly TAG = "water";
+    public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public friction: number = 0.01;
 
     public init() {

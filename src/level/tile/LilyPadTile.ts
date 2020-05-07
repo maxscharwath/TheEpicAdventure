@@ -1,7 +1,10 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import Updater from "../../core/Updater";
+import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
+import Item from "../../item/Item";
+import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
@@ -30,6 +33,12 @@ export default class LilyPadTile extends Tile {
     }
 
     public mayPass(e: Entity): boolean {
+        return true;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.levelTile.setTile(Tiles.WATER);
+        this.addItemEntity(Items.LILYPAD);
         return true;
     }
 }

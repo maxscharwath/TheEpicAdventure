@@ -10,6 +10,7 @@ import TileStates from "./TileStates";
 
 type Type<T> = new (...args: any[]) => T;
 export default abstract class Tile {
+
     protected get level() {
         return this.levelTile.level;
     }
@@ -35,7 +36,6 @@ export default abstract class Tile {
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
     protected groundContainer = new PIXI.Container();
-    protected states = TileStates.create();
 
     protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
         for (let i = 0; i < nb; i++) {
@@ -46,9 +46,11 @@ export default abstract class Tile {
             );
         }
     }
+    public static DEFAULT_STATES = {};
 
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
+    public states = TileStates.create();
     public isInit: boolean = false;
     public container = new PIXI.Container();
 
@@ -122,19 +124,11 @@ export default abstract class Tile {
         return this;
     }
 
-    public instanceOf(...tileClass: Array<Type<Tile>>) {
+    public instanceOf(...tileClass: Array<typeof Tile>) {
         const ground = this.groundTile;
         return tileClass.some((c) => this instanceof c || ground instanceof c);
     }
 
     public bumpedInto(entity: Entity) {
-    }
-
-    public getStates() {
-        return this.states;
-    }
-
-    public setStates(tileStates: {}) {
-        this.states.set(tileStates);
     }
 }

@@ -34,7 +34,7 @@ export default abstract class Mob extends Entity {
     protected move(xa: number, ya: number): boolean {
         if (this.onGround()) {
             let entities = this.getChunk().getEntities();
-            const maxEntities = 10;
+            const maxEntities = 50;
             if (entities.length > maxEntities) {
                 const i = Random.int(entities.length - maxEntities);
                 entities = entities.slice(i, i + maxEntities);
@@ -47,9 +47,9 @@ export default abstract class Mob extends Entity {
                 }
                 const dx = this.x - e.x === 0 ? Random.float() : this.x - e.x;
                 const dy = this.y - e.y === 0 ? Random.float() : this.y - e.y;
-                const R = 4;
+                const R = 8;
 
-                if (dx * dx + dy * dy < 4 * R * R) {
+                if (Math.hypot(dx, dy) < R) {
                     e.touchedBy(this);
                     if (e instanceof Mob) {
                         a.x += dx / 20 / this.mass;

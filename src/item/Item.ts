@@ -13,6 +13,10 @@ export default class Item {
         return Items.get(data.tag).item;
     }
 
+    public static verifyTag(tag: string): boolean {
+        return Localization.verify(`item.${tag}`);
+    }
+
     public craftedBy?: Mob;
     public tag: string;
     public uid: string = uniqid();

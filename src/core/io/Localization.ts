@@ -11,6 +11,10 @@ export default class Localization {
         lang.load();
     }
 
+    public static verify(id: string): boolean {
+        return Language.loaded.has(id);
+    }
+
     public static get(id: string): string {
         if (Language.loaded instanceof Language) {
             return Language.loaded.get(id);
@@ -18,7 +22,7 @@ export default class Localization {
         return id;
     }
 
-    public getCurrent(): Language {
+    public static getCurrent(): Language {
         return Language.loaded;
     }
 }

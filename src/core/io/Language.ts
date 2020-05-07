@@ -47,11 +47,19 @@ export default class Language {
         return this;
     }
 
+    public has(id: string): boolean {
+        return this.data.has(id);
+    }
+
     public get(id: string): string {
         if (this.data.has(id)) {
             return this.data.get(id);
         }
         console.warn(`'${id}' didnt exist on ${this.path}`);
         return id;
+    }
+
+    public getPath(): string {
+        return this.path;
     }
 }

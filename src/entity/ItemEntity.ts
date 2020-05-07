@@ -38,6 +38,7 @@ export default class ItemEntity extends Entity {
     }
 
     public touchedBy(entity: Entity) {
+        if (this.deleted) {return; }
         if (entity instanceof Mob) {
             if (this.onGround()) {
                 entity.touchItem(this);

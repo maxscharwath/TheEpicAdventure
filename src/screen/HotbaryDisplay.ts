@@ -54,7 +54,7 @@ export default class HotbarDisplay extends Display {
     private init() {
         const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(16, 0, 16, 16)));
-        this.itemText =  new PIXI.Text("", {
+        this.itemText = new PIXI.Text("", {
             fontFamily: "Arial",
             fontSize: 24,
             dropShadow: true,
@@ -68,11 +68,8 @@ export default class HotbarDisplay extends Display {
             const slot = this.mob.inventory.slots[i];
             const x = (i % nbRow) * 10;
             const slotSprite = new InventorySlot(slot, i);
-            slotSprite.on("click", (ev: any) => {
+            slotSprite.on("click", () => {
                 this.mob.inventory.selectedSlot = slotSprite.index;
-                if (slotSprite.slot.isItem()) {
-                    console.log(slotSprite.item.tag, slotSprite.slot.item.getDisplayName());
-                }
             });
             slotSprite.position.set(x, 0);
             this.slots.push(slotSprite);
@@ -88,16 +85,18 @@ export default class HotbarDisplay extends Display {
         const index = this.mob.inventory.selectedSlot;
         const slot = this.mob.inventory.getSlot(index);
         if (slot.isItem()) {
-        this.itemText.text = `${slot.item.getDisplayName()} - ${slot.nb}`;
+            this.itemText.text = `${slot.item.getDisplayName()} - ${slot.nb}`;
         }
-        this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 3;
+        if (this.selectSprite.x !== index * 10) {
+            this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 2;
+        }
     }
 
     constructor(mob: Mob) {
         super(false);
         this.mob = mob;
         this.init();
-        this.position.x = (Renderer.getScreen().width - this.width) / 2;
+        this.position.x = (Renderer.getScreen().width - this.width) >> 1;
         this.position.y = Renderer.getScreen().height - this.height - 20;
     }
 

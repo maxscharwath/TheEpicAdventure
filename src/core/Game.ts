@@ -56,7 +56,8 @@ export default class Game {
     public static main(): void {
         console.info(`\n${this.NAME} ${this.version.toString()}\nA game by Maxime Scharwath\n`);
         Biome.initBiomeList();
-        Localization.loadLanguage("en-US.yaml");
+        Localization.loadLanguage("fr-FR.yaml");
+        Items.verifyTag();
         this.levels = [
             new Level(),
         ];

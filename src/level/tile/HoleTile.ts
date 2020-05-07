@@ -3,6 +3,7 @@ import Updater from "../../core/Updater";
 import Entity from "../../entity/Entity";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
+import WaterTile from "./WaterTile";
 
 export default class HoleTile extends AutoTilingTile {
     protected static canConnectTo = ["lava", "water"];
@@ -18,13 +19,20 @@ export default class HoleTile extends AutoTilingTile {
     public onTick(): void {
         super.onTick();
 
-        if (Updater.every(5)) {
+        if (Updater.every(10)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
-            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.WATER.tile))) {
-                this.levelTile.setTile(Tiles.WATER);
+            {
+                const t = n.find((l) =>
+                    !l.skipTick && l.instanceOf(Tiles.WATER.tile) && (l.tile as WaterTile).states.level > 0);
+                if (t) {
+                    this.levelTile.setTile(Tiles.WATER, {level: (t.tile as WaterTile).states.level - 1});
+                }
             }
-            if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.LAVA.tile))) {
-                this.levelTile.setTile(Tiles.LAVA);
+            {
+                const t = n.find((l) => !l.skipTick && l.instanceOf(Tiles.LAVA.tile))?.tile;
+                if (t) {
+                    this.levelTile.setTile(Tiles.LAVA);
+                }
             }
         }
     }

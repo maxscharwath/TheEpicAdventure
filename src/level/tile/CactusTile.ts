@@ -7,9 +7,10 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class CactusTile extends Tile {
-    protected states = TileStates.create({damage: 0});
     private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
+    public static DEFAULT_STATES = {damage: 0};
     public static readonly TAG = "dirt";
+    public states = TileStates.create(CactusTile.DEFAULT_STATES);
 
     public init() {
         super.init();
