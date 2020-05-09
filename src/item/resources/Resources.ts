@@ -14,6 +14,6 @@ export default class Resources {
     public static stone = new Resource("stone.png");
     public static snowball = new Resource("snowball.png");
     public static stick = new Resource("stick.png");
-    public static wood = new Resource("wood.png");
-    public static cactusFlower = new Resource("cactus_flower.png");
+    public static wood = new TileResource("wood.png", Tiles.PLANK, Tiles.HOLE);
+    public static cactusFlower = new TileResource("cactus_flower.png", Tiles.CACTUS, Tiles.SAND);
 }

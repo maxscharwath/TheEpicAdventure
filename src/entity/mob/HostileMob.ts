@@ -6,13 +6,6 @@ import Maths from "../../utility/Maths";
 export default abstract class HostileMob extends Mob {
     protected target = {x: 0, y: 0};
 
-    protected newTarget() {
-        this.target = {
-            x: this.random.int(Renderer.WIDTH * -10, Renderer.WIDTH * 10),
-            y: this.random.int(Renderer.HEIGHT * -10, Renderer.HEIGHT * 10),
-        };
-    }
-
     constructor(x: number = 0, y: number = 0) {
         super(x, y);
         this.newTarget();
@@ -66,5 +59,12 @@ export default abstract class HostileMob extends Mob {
         // if(!(entity instanceof HostileMob)){
         //     this.target = entity;
         // }
+    }
+
+    protected newTarget() {
+        this.target = {
+            x: this.random.int(Renderer.WIDTH * -10, Renderer.WIDTH * 10),
+            y: this.random.int(Renderer.HEIGHT * -10, Renderer.HEIGHT * 10),
+        };
     }
 }

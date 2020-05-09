@@ -22,19 +22,9 @@ export default abstract class AutoTilingTile extends Tile {
         }
         return textures;
     }
-
-    protected initAutoTile() {
-        this.sprites = [new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
-        this.sprites[0].position.set(0, 0);
-        this.sprites[1].position.set(8, 0);
-        this.sprites[2].position.set(0, 8);
-        this.sprites[3].position.set(8, 8);
-        this.container.addChild(...this.sprites);
-        this.autoTiling();
-    }
+    public ["constructor"]: typeof AutoTilingTile;
 
     private sprites: PIXI.Sprite[];
-    public ["constructor"]: typeof AutoTilingTile;
 
     public autoTiling() {
         const test = (x: number, y: number) => {
@@ -59,6 +49,16 @@ export default abstract class AutoTilingTile extends Tile {
 
     public onUpdate() {
         super.onUpdate();
+        this.autoTiling();
+    }
+
+    protected initAutoTile() {
+        this.sprites = [new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
+        this.sprites[0].position.set(0, 0);
+        this.sprites[1].position.set(8, 0);
+        this.sprites[2].position.set(0, 8);
+        this.sprites[3].position.set(8, 8);
+        this.container.addChild(...this.sprites);
         this.autoTiling();
     }
 }

@@ -10,8 +10,8 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class DirtTile extends Tile {
-    private static tileTextures = DirtTile.loadTextures(System.getResource("tile", "dirt.png"), 4);
     public static readonly TAG = "dirt";
+    private static tileTextures = DirtTile.loadTextures(System.getResource("tile", "dirt.png"), 4);
     public init() {
         super.init();
         this.container.addChild(

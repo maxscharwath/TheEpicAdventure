@@ -13,26 +13,6 @@ import LevelTile from "./LevelTile";
 import Tiles from "./tile/Tiles";
 
 export default class Chunk {
-    private entities: Entity[] = [];
-    private generated: boolean = false;
-    private map: LevelTile[] = [];
-    private lastTick = 0;
-    private loaded: boolean = false;
-
-    private generate() {
-        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
-        this.save();
-        this.generated = true;
-        this.map.forEach((lt) => lt.init());
-    }
-
-    private moveEntity(entity: Entity, chunk: Chunk) {
-        if (!chunk.loaded) {
-            entity.remove();
-        }
-        this.removeEntity(entity);
-        chunk.addEntity(entity);
-    }
 
     public static SIZE = 16;
 
@@ -76,8 +56,9 @@ export default class Chunk {
                 console.log(`chunk ${cX} ${cY} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
                 chunk.generated = true;
                 chunk.map = map;
-            }).catch(() => {
-            chunk.generate();
+            }).catch((e) => {
+                console.error(e);
+                chunk.generate();
         });
         return chunk;
     }
@@ -86,6 +67,11 @@ export default class Chunk {
     public readonly y: number;
 
     public readonly level: Level;
+    private entities: Entity[] = [];
+    private generated: boolean = false;
+    private map: LevelTile[] = [];
+    private lastTick = 0;
+    private loaded: boolean = false;
 
     constructor(level: Level, x: number, y: number, generate: boolean = true) {
         this.level = level;
@@ -240,5 +226,20 @@ export default class Chunk {
             fs.mkdirSync(System.getAppData("tmp"));
         }
         gzip(bson).then((buffer) => fsp.writeFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`), buffer, "binary"));
+    }
+
+    private generate() {
+        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
+        this.save();
+        this.generated = true;
+        this.map.forEach((lt) => lt.init());
+    }
+
+    private moveEntity(entity: Entity, chunk: Chunk) {
+        if (!chunk.loaded) {
+            entity.remove();
+        }
+        this.removeEntity(entity);
+        chunk.addEntity(entity);
     }
 }

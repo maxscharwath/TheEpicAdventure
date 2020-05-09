@@ -4,16 +4,9 @@ import Items from "../../item/Items";
 import FarmlandTile from "./FarmlandTile";
 
 export default class WheatTile extends FarmlandTile {
-
-    protected harvest() {
-        if (this.states.age >= 50) {
-            this.addItemEntity(Items.WHEAT, 3);
-        }
-        this.addItemEntity(Items.SEED_WHEAT);
-    }
+    public static readonly TAG: string = "wheat";
 
     private sprite: PIXI.Sprite;
-    public static readonly TAG: string = "wheat";
 
     public init() {
         super.init();
@@ -36,6 +29,13 @@ export default class WheatTile extends FarmlandTile {
 
     public onRender() {
         super.onRender();
+    }
+
+    protected harvest() {
+        if (this.states.age >= 50) {
+            this.addItemEntity(Items.WHEAT, 3);
+        }
+        this.addItemEntity(Items.SEED_WHEAT);
     }
 
 }

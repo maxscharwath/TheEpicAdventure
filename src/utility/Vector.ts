@@ -18,7 +18,10 @@ export default class Vector {
         }
         return this.clone();
     }
-    private readonly constant: boolean = false;
+
+    public get rotation() {
+        return Math.atan2(this.x, this.y);
+    }
 
     public static create(x?: number, y?: number) {
         return new Vector(x, y);
@@ -30,15 +33,12 @@ export default class Vector {
 
     public x: number = 0;
     public y: number = 0;
+    private readonly constant: boolean = false;
 
     constructor(x: number = 0, y: number = 0, constant: boolean = false) {
         this.x = x;
         this.y = y;
         this.constant = constant;
-    }
-
-    public get rotation() {
-        return Math.atan2(this.x, this.y);
     }
 
     public negative(): Vector {

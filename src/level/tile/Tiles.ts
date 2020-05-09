@@ -16,17 +16,9 @@ import Tile from "./Tile";
 import TreeTile from "./TreeTile";
 import WaterTile from "./WaterTile";
 import WheatTile from "./WheatTile";
+import PlankTile from "./PlankTile";
 
 export class TileRegister<T extends typeof Tile> {
-    protected constructor(idx: number, tag: string, tile: T) {
-        this.tag = tag;
-        this.tile = tile;
-        this.idx = idx;
-        TileRegister.tiles.add(this.idx, this.tag, this.tile);
-        console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
-    }
-
-    private static tiles = new KeyedMap<typeof Tile>();
 
     public static add<T extends typeof Tile>(idx: number, tag: string, tile: T) {
         return new TileRegister(idx, tag, tile);
@@ -45,9 +37,18 @@ export class TileRegister<T extends typeof Tile> {
         return this.tiles.getKeys(tile);
     }
 
+    private static tiles = new KeyedMap<typeof Tile>();
+
     public readonly tag: string;
     public readonly tile: T;
     public readonly idx: number;
+    protected constructor(idx: number, tag: string, tile: T) {
+        this.tag = tag;
+        this.tile = tile;
+        this.idx = idx;
+        TileRegister.tiles.add(this.idx, this.tag, this.tile);
+        console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
+    }
 }
 
 export default class Tiles extends TileRegister<typeof Tile> {
@@ -67,5 +68,6 @@ export default class Tiles extends TileRegister<typeof Tile> {
     public static CACTUS = Tiles.add(13, "cactus", CactusTile);
     public static SNOW = Tiles.add(14, "snow", SnowTile);
     public static ICE = Tiles.add(15, "ice", IceTile);
+    public static PLANK = Tiles.add(16, "plank", PlankTile);
 
 }

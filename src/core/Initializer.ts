@@ -1,12 +1,11 @@
 import * as PIXI from "pixi.js";
+import WebFont from "webfontloader";
 import Game from "./Game";
 import Renderer from "./Renderer";
+import System from "./System";
 import Updater from "./Updater";
 
 export default class Initializer {
-
-    private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
-    private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 
     public static getCurFps(): number {
         return this.tickerRender.FPS;
@@ -28,6 +27,9 @@ export default class Initializer {
         this.tickerRender.start();
         this.tickerUpdater.start();
     }
+
+    private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
+    private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 }
 
 

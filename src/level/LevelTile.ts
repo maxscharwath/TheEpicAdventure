@@ -19,31 +19,29 @@ interface LevelTileConstructor {
 }
 
 export default class LevelTile extends PIXI.Container {
-    private tileStates: {};
 
     get tile(): Tile {
         return this._tile;
     }
 
-    private tileClass: typeof Tile;
-    private needToUpdate: boolean = true;
-    private isInitiated = false;
-    private _tile: Tile;
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
     public data: object = {};
     public level: Level;
     public random: TileRandom = new TileRandom(this);
-
     public readonly temperature: number;
     public readonly elevation: number;
     public readonly moisture: number;
-
     public readonly x: number;
     public readonly y: number;
-
     public bg: PIXI.Sprite;
+    private tileStates: {};
+    private tileClass: typeof Tile;
+    private needToUpdate: boolean = true;
+    private isInitiated = false;
+
+    private _tile: Tile;
 
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         super();
@@ -104,19 +102,16 @@ export default class LevelTile extends PIXI.Container {
         this._tile.steppedOn(entity);
     }
 
-    public is(tileClass: typeof Tile) {
-        return this._tile.getClass() === tileClass;
+    public is(...tileClasses: Array<typeof Tile>) {
+        return tileClasses.some((tileClass) => this._tile.getClass() === tileClass);
     }
 
-    public setTile<T extends typeof Tile>(tile: T , states?: typeof tile.DEFAULT_STATES): void;
-    public setTile<T extends typeof Tile>(tile: TileRegister<T> , states?: typeof tile.tile.DEFAULT_STATES): void;
+    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES): void;
+    public setTile<T extends typeof Tile>(tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES): void;
     public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}): void {
         this.isInitiated = false;
         this.skipTick = true;
-        if (tile instanceof TileRegister) {
-            tile = tile.tile;
-        }
-        this.tileClass = tile;
+        this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
         this.tileStates = states;
     }
 

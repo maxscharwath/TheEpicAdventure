@@ -2,7 +2,6 @@ import Game from "./Game";
 import System from "./System";
 
 export default class Updater {
-    private static ticksTime: number[] = [];
     public static readonly normSpeed: number = 60;
     public static gamespeed: number = 1;
     public static paused: boolean = true;
@@ -63,4 +62,5 @@ export default class Updater {
     public static every(tick: number): boolean {
         return (this.tickCount % tick) === 0;
     }
+    private static ticksTime: number[] = [];
 }

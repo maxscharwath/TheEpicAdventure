@@ -22,6 +22,10 @@ export default abstract class Tile {
     protected get y() {
         return this.levelTile.getLocalY();
     }
+    public static DEFAULT_STATES = {};
+
+    public static SIZE = 16;
+    public static readonly TAG: string = "tile";
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
@@ -31,25 +35,6 @@ export default abstract class Tile {
         }
         return textures;
     }
-
-    protected random: Random;
-    protected levelTile: LevelTile;
-    protected groundTile?: Tile;
-    protected groundContainer = new PIXI.Container();
-
-    protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
-        for (let i = 0; i < nb; i++) {
-            this.level.addEntity(
-                new ItemEntity(item,
-                    (this.x << 4) + Random.int(10) + 3,
-                    (this.y << 4) + Random.int(10) + 3),
-            );
-        }
-    }
-    public static DEFAULT_STATES = {};
-
-    public static SIZE = 16;
-    public static readonly TAG: string = "tile";
     public states = TileStates.create();
     public isInit: boolean = false;
     public container = new PIXI.Container();
@@ -59,6 +44,11 @@ export default abstract class Tile {
     public light: number = 1;
     public maySpawn: boolean = false;
     public friction: number = 0.1;
+
+    protected random: Random;
+    protected levelTile: LevelTile;
+    protected groundTile?: Tile;
+    protected groundContainer = new PIXI.Container();
 
     constructor(levelTile: LevelTile) {
         this.levelTile = levelTile;
@@ -130,5 +120,15 @@ export default abstract class Tile {
     }
 
     public bumpedInto(entity: Entity) {
+    }
+
+    protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
+        for (let i = 0; i < nb; i++) {
+            this.level.addEntity(
+                new ItemEntity(item,
+                    (this.x << 4) + Random.int(10) + 3,
+                    (this.y << 4) + Random.int(10) + 3),
+            );
+        }
     }
 }

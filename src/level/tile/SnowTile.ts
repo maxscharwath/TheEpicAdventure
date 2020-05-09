@@ -10,14 +10,14 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile  {
+    public static readonly TAG = "snow";
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
+    public friction: number = 0.25;
 
 
     private step: number = 0;
     private stepDir: boolean = false;
     private footprintSprite: PIXI.Sprite;
-    public static readonly TAG = "snow";
-    public friction: number = 0.25;
 
     public steppedOn(entity: Entity) {
         if (this.step < 50 && entity instanceof Mob) {

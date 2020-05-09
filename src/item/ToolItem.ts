@@ -4,9 +4,6 @@ import Tiers from "./Tiers";
 import ToolType from "./ToolType";
 
 export default class ToolItem extends Item {
-    private readonly level: number;
-    private readonly durabilityMax: number;
-    private durability: number;
 
     public static create(data: any) {
         const item = super.create(data) as ToolItem;
@@ -15,6 +12,9 @@ export default class ToolItem extends Item {
     }
 
     public readonly type: ToolType;
+    private readonly level: number;
+    private readonly durabilityMax: number;
+    private durability: number;
 
     constructor(tag: string, type: ToolType, level = Tiers.WOOD) {
         super(tag);

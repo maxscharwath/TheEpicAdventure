@@ -5,6 +5,7 @@ import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
 import Color from "../utility/Color";
 import Display from "./Display";
+import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 
 export default class InfoDisplay extends Display {
 
@@ -19,7 +20,8 @@ export default class InfoDisplay extends Display {
             `s: ${Game.level.seed}`,
             `x: ${(Game.player.x / 16).toFixed(2)}`,
             `y: ${(Game.player.y / 16).toFixed(2)}`,
-            `y: ${(Game.player.a)}`,
+            `z: ${(Game.player.z).toFixed(2)}`,
+            `a: ${(Game.player.a)}`,
             `b: ${tile?.biome.getDisplayName()}`,
             `tt: ${tile?.temperature}`,
             `te: ${tile?.elevation}`,
@@ -31,16 +33,19 @@ export default class InfoDisplay extends Display {
         ].join("\n");
     }
 
-    private readonly textArea: PIXI.Text;
+    private readonly textArea: PIXI.BitmapText;
     private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
     constructor() {
         super(false);
-        this.textArea = new PIXI.Text("", {
-            fontFamily: "Arial",
-            fontSize: 24,
-            fill: Color.white.getInt(),
+        this.textArea = new PIXI.BitmapText("", {
+            font: {
+                name: "Minecraftia",
+                size: 16,
+            },
+            tint: Color.white.getInt(),
         });
+        this.textArea.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
 
         this.textArea.x = 0;
         this.textArea.y = 0;

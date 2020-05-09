@@ -20,30 +20,7 @@
     "ordered-imports": false,
     "max-classes-per-file": false,
     "unified-signatures": false,
-    "member-ordering": [
-      true,
-      {
-        "order": [
-          "protected-static-field",
-          "protected-static-method",
-          "protected-instance-field",
-          "protected-constructor",
-          "protected-instance-method",
-
-          "private-static-field",
-          "private-static-method",
-          "private-instance-field",
-          "private-constructor",
-          "private-instance-method",
-
-          "public-static-field",
-          "public-static-method",
-          "public-instance-field",
-          "public-constructor",
-          "public-instance-method"
-        ]
-      }
-    ]
+    "curly": [true, "ignore-same-line"]
   },
   "jsRules": {
     "max-line-length": {

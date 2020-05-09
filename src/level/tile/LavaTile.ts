@@ -7,13 +7,13 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class LavaTile extends AutoTilingTile {
+    public static DEFAULT_STATES = {level: 10};
+    public static readonly TAG = "lava";
     protected static canConnectTo = ["hole", "water"];
     protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
-    private animSprite: PIXI.AnimatedSprite;
-    public static DEFAULT_STATES = {level: 10};
-    public static readonly TAG = "lava";
     public states = TileStates.create(LavaTile.DEFAULT_STATES);
+    private animSprite: PIXI.AnimatedSprite;
 
     public init() {
         super.init();

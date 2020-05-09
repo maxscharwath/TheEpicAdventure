@@ -6,14 +6,15 @@ import Item from "../item/Item";
 import Slot from "../item/Slot";
 import Color from "../utility/Color";
 import Display from "./Display";
+import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 
 class InventorySlot extends PIXI.Container {
-
-    private itemSprite: PIXI.Sprite;
-    private itemContainer = new PIXI.Container();
     public index: number = 0;
     public slot: Slot;
     public item?: Item;
+
+    private itemSprite: PIXI.Sprite;
+    private itemContainer = new PIXI.Container();
 
     constructor(slot: Slot, index: number = 0) {
         super();
@@ -49,19 +50,38 @@ export default class HotbarDisplay extends Display {
     private mob: Mob;
     private slots: InventorySlot[] = [];
     private selectSprite: PIXI.Sprite;
-    private itemText: PIXI.Text;
+    private itemText: PIXI.BitmapText;
+
+    constructor(mob: Mob) {
+        super(false);
+        this.mob = mob;
+        this.init();
+        this.position.x = (Renderer.getScreen().width - this.width) >> 1;
+        this.position.y = Renderer.getScreen().height - this.height - 20;
+    }
+
+    public onTick(): void {
+        super.onTick();
+        this.slots.forEach((slot) => slot.update());
+    }
+
+    public onRender() {
+        super.onRender();
+        this.setCurrentSlot();
+    }
 
     private init() {
         const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(16, 0, 16, 16)));
-        this.itemText = new PIXI.Text("", {
-            fontFamily: "Arial",
-            fontSize: 24,
-            dropShadow: true,
-            dropShadowDistance: 1,
-            fill: Color.white.getInt(),
+        this.itemText = new PIXI.BitmapText("", {
+            font: {
+                name: "Minecraftia",
+                size: 16,
+            },
+            tint: Color.white.getInt(),
         });
-        this.itemText.anchor.set(0.5);
+        this.itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
+        this.itemText.anchor = 0.5;
         const bar = new PIXI.Container();
         const nbRow = 10;
         for (let i = nbRow - 1; i >= 0; i--) {
@@ -90,23 +110,5 @@ export default class HotbarDisplay extends Display {
         if (this.selectSprite.x !== index * 10) {
             this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 2;
         }
-    }
-
-    constructor(mob: Mob) {
-        super(false);
-        this.mob = mob;
-        this.init();
-        this.position.x = (Renderer.getScreen().width - this.width) >> 1;
-        this.position.y = Renderer.getScreen().height - this.height - 20;
-    }
-
-    public onTick(): void {
-        super.onTick();
-        this.slots.forEach((slot) => slot.update());
-    }
-
-    public onRender() {
-        super.onRender();
-        this.setCurrentSlot();
     }
 }

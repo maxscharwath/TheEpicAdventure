@@ -11,7 +11,6 @@ PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
 
 export default class Renderer {
-    private static ticksTime: number[] = [];
 
     public static get ZOOM() {
         return 0;
@@ -36,18 +35,6 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
-
-    private static mainStage = new PIXI.Container();
-    private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
-    private static renderer = new PIXI.Renderer({
-        width: 960,
-        height: 540,
-        backgroundColor: Color.black.getInt(),
-        autoDensity: false,
-        antialias: false,
-        clearBeforeRender: false,
-        powerPreference: "high-performance",
-    });
     public static delta: number;
 
     public static readonly DEFAULT_WIDTH: number = 240;
@@ -99,4 +86,17 @@ export default class Renderer {
             container.children.length + container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
         return f(this.mainStage);
     }
+    private static ticksTime: number[] = [];
+
+    private static mainStage = new PIXI.Container();
+    private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
+    private static renderer = new PIXI.Renderer({
+        width: 960,
+        height: 540,
+        backgroundColor: Color.black.getInt(),
+        autoDensity: false,
+        antialias: false,
+        clearBeforeRender: false,
+        powerPreference: "high-performance",
+    });
 }

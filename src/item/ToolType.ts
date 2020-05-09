@@ -2,6 +2,14 @@ import * as PIXI from "pixi.js";
 import System from "../core/System";
 
 export default class ToolType {
+    public static levelName = ["wood", "stone", "iron", "gold", "diamond"];
+    public static hoe = new ToolType("hoe");
+    public static shovel = new ToolType("shovel");
+    public static axe = new ToolType("axe");
+    public static pickaxe = new ToolType("pickaxe");
+    public static sword = new ToolType("sword");
+    public name: string;
+    public textures: PIXI.Texture[] = [];
 
     private constructor(name: string) {
         this.name = name;
@@ -11,12 +19,4 @@ export default class ToolType {
             this.textures.push(texture);
         }
     }
-    public static levelName = ["wood", "stone", "iron", "gold", "diamond"];
-    public static hoe = new ToolType("hoe");
-    public static shovel = new ToolType("shovel");
-    public static axe = new ToolType("axe");
-    public static pickaxe = new ToolType("pickaxe");
-    public static sword = new ToolType("sword");
-    public name: string;
-    public textures: PIXI.Texture[] = [];
 }

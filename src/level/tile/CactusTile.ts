@@ -5,11 +5,12 @@ import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 import TileStates from "./TileStates";
+import Items from "../../item/Items";
 
 export default class CactusTile extends Tile {
-    private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
     public static DEFAULT_STATES = {damage: 0};
     public static readonly TAG = "dirt";
+    private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
     public states = TileStates.create(CactusTile.DEFAULT_STATES);
 
     public init() {
@@ -32,6 +33,7 @@ export default class CactusTile extends Tile {
 
     public onInteract(mob: Mob, item?: Item): boolean {
         this.levelTile.setTile(this.groundTile.getClass());
+        this.addItemEntity(Items.CACTUS_FLOWER);
         return true;
     }
 }

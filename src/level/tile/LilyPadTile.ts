@@ -9,10 +9,10 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class LilyPadTile extends Tile {
+    public static readonly TAG = "lilypad";
 
     private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
     private sprite: PIXI.Sprite;
-    public static readonly TAG = "lilypad";
 
     public init() {
         super.init();

@@ -3,33 +3,6 @@ import Items, {ItemRegister} from "./Items";
 import Slot from "./Slot";
 
 export default class Inventory {
-    private STACK_MAX: number = 64;
-
-    private fusion(a: number, b: number): boolean {
-        if (!(this.slots[a] instanceof Slot) || !(this.slots[b] instanceof Slot)) {
-            return false;
-        }
-        if (this.slots[a].item === null || this.slots[b].item === null) {
-            return false;
-        }
-        if (this.slots[a].item.tag !== this.slots[b].item.tag) {
-            return false;
-        }
-
-        const item = this.slots[a].item;
-        const stack = item.isStackable() ? this.STACK_MAX : 1;
-
-        this.slots[a].nb += this.slots[b].nb;
-        this.slots[b].nb = this.slots[a].nb - stack;
-        if (this.slots[b].nb <= 0) {
-            this.slots[b].clear();
-        }
-        if (this.slots[a].nb > stack) {
-            this.slots[a].nb = stack;
-        }
-        return true;
-
-    }
 
     public static create(data: any): Inventory {
         const inventory = new Inventory(data.nbSlots);
@@ -44,6 +17,7 @@ export default class Inventory {
     public selectedSlot: number = 0;
 
     public slots: Slot[] = [];
+    private STACK_MAX: number = 64;
 
     constructor(nbSlot: number = 8) {
         this.addSlots(nbSlot);
@@ -191,5 +165,31 @@ export default class Inventory {
             }
         });
         return {nbSlots: this.slots.length, slots};
+    }
+
+    private fusion(a: number, b: number): boolean {
+        if (!(this.slots[a] instanceof Slot) || !(this.slots[b] instanceof Slot)) {
+            return false;
+        }
+        if (this.slots[a].item === null || this.slots[b].item === null) {
+            return false;
+        }
+        if (this.slots[a].item.tag !== this.slots[b].item.tag) {
+            return false;
+        }
+
+        const item = this.slots[a].item;
+        const stack = item.isStackable() ? this.STACK_MAX : 1;
+
+        this.slots[a].nb += this.slots[b].nb;
+        this.slots[b].nb = this.slots[a].nb - stack;
+        if (this.slots[b].nb <= 0) {
+            this.slots[b].clear();
+        }
+        if (this.slots[a].nb > stack) {
+            this.slots[a].nb = stack;
+        }
+        return true;
+
     }
 }

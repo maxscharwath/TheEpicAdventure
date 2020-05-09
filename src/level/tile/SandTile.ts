@@ -10,11 +10,11 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SandTile extends AutoTilingTile {
+    public static readonly TAG = "sand";
     protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     private step: number = 0;
     private stepDir: boolean = false;
     private footprintSprite: PIXI.Sprite;
-    public static readonly TAG = "sand";
 
     public steppedOn(entity: Entity) {
         if (this.step < 50 && entity instanceof Mob) {

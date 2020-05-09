@@ -3,8 +3,6 @@ import path from "path";
 
 export default class System {
 
-    private static startTime = new Date().getTime();
-
     public static appData: string = (electron.app || electron.remote.app).getPath("userData");
     public static resources: string = path.dirname(require.main.filename);
 
@@ -38,4 +36,6 @@ export default class System {
     public static currentTimeMillis(): number {
         return (new Date()).getTime();
     }
+
+    private static startTime = new Date().getTime();
 }

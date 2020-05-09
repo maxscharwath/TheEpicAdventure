@@ -8,27 +8,6 @@ class DraggableArea extends PIXI.Container {
     private offset: PIXI.Point;
     private parentContainer: PIXI.Container;
 
-    private onDragStart(event: any) {
-        this.data = event.data;
-        this.offset = this.data.getLocalPosition(this);
-        this.alpha = 0.5;
-        this.dragging = true;
-    }
-
-    private onDragEnd() {
-        this.alpha = 1;
-        this.dragging = false;
-        this.data = null;
-    }
-
-    private onDragMove() {
-        if (this.dragging && this.parent) {
-            const newPosition = this.data.getLocalPosition(this.parentContainer.parent);
-            this.parentContainer.x = newPosition.x - (this.offset.x * this.scale.x);
-            this.parentContainer.y = newPosition.y - (this.offset.y * this.scale.y);
-        }
-    }
-
     constructor(parentContainer: PIXI.Container, x= 0, y= 0) {
         super();
         this.x = x;
@@ -53,6 +32,27 @@ class DraggableArea extends PIXI.Container {
     public enable() {
         this.interactive = true;
         this.visible = false;
+    }
+
+    private onDragStart(event: any) {
+        this.data = event.data;
+        this.offset = this.data.getLocalPosition(this);
+        this.alpha = 0.5;
+        this.dragging = true;
+    }
+
+    private onDragEnd() {
+        this.alpha = 1;
+        this.dragging = false;
+        this.data = null;
+    }
+
+    private onDragMove() {
+        if (this.dragging && this.parent) {
+            const newPosition = this.data.getLocalPosition(this.parentContainer.parent);
+            this.parentContainer.x = newPosition.x - (this.offset.x * this.scale.x);
+            this.parentContainer.y = newPosition.y - (this.offset.y * this.scale.y);
+        }
     }
 }
 

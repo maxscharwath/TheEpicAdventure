@@ -19,11 +19,31 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return Math.hypot(this.a.x, this.a.y);
     }
 
+    public static create({id, x, y}: any): Entity {
+        const EntityClass = Entities.getByTag(id);
+        if (!EntityClass) return;
+        const e = new EntityClass();
+        e.x = x;
+        e.y = y;
+        return e;
+    }
+
+    private static random = new Random();
+    public ["constructor"]: typeof Entity;
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
+    public offset = new PIXI.Point();
+    public a: Vector3D = new Vector3D();
+    public hitbox: Hitbox = new Hitbox();
+    public ticks: number = 0;
     protected random = this.constructor.random;
     protected level: Level;
     protected deleted: boolean;
     protected isMoving: boolean;
     protected container = new PIXI.Container();
+    private lastTick: number = Updater.tickCount;
+    private uid: string = uniqid();
 
     protected constructor(x: number = 0, y: number = 0) {
         super();
@@ -36,112 +56,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             this.init();
         }
     }
-
-    protected init() {
-    }
-
-    protected move(xa: number, ya: number): boolean {
-        xa *= Renderer.delta;
-        ya *= Renderer.delta;
-        let stopped = true;
-        if (this.move2(xa, 0)) {
-            stopped = false;
-        }
-        if (this.move2(0, ya)) {
-            stopped = false;
-        }
-        if (!stopped) {
-            this.isMoving = Math.hypot(xa, ya) > 0;
-            if (this.isMoving) {
-                this.steppedOn();
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    protected steppedOn() {
-        if (this.z > 0) {
-            return;
-        }
-        const xt = this.x >> 4;
-        const yt = this.y >> 4;
-        this.level.getTile(xt, yt)?.steppedOn(this);
-    }
-
-    protected move2(xa: number, ya: number): boolean {
-        const xto0 = ((this.x) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yto0 = ((this.y) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-        const xto1 = ((this.x) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yto1 = ((this.y) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-
-        const xt0 = ((this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yt0 = ((this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-        const xt1 = ((this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
-        const yt1 = ((this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
-
-        let blocked = false;
-        for (let yt = yt0; yt <= yt1; yt++) {
-            for (let xt = xt0; xt <= xt1; xt++) {
-                if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) {
-                    continue;
-                }
-
-                const tile = this.level.getTile(xt, yt);
-                if (!tile) {
-                    return false;
-                }
-                tile.bumpedInto(this);
-                if (!tile.mayPass(this)) {
-                    blocked = true;
-                    return false;
-                }
-            }
-        }
-        if (blocked) {
-            return false;
-        }
-
-        this.x += xa;
-        this.y += ya;
-        return true;
-    }
-
-    protected calculateZIndex() {
-        return this.y + this.hitbox.y + this.hitbox.height / 2;
-    }
-
-    private static random = new Random();
-    private lastTick: number = Updater.tickCount;
-    private uid: string = uniqid();
-
-    private getCentredPos() {
-        return {
-            x: this.x + this.hitbox.x + this.hitbox.width / 2,
-            y: this.y + this.hitbox.y + this.hitbox.height / 2,
-        };
-    }
-
-
-    public static create(data: any): Entity {
-        const EntityClass = Entities.getByTag(data.id);
-        if (!EntityClass) {
-            return;
-        }
-        const e = new EntityClass();
-        e.x = data.x;
-        e.y = data.y;
-        return e;
-    }
-
-    public ["constructor"]: typeof Entity;
-    public x: number = 0;
-    public y: number = 0;
-    public z: number = 0;
-    public a: Vector3D = new Vector3D();
-    public hitbox: Hitbox = new Hitbox();
-    public ticks: number = 0;
 
     public isActive() {
         return (Updater.tickCount - this.lastTick) < 50;
@@ -183,6 +97,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
         this.zIndex = this.calculateZIndex();
         this.container.pivot.y = this.z;
+        this.container.position.copyFrom(this.offset);
     }
 
     public onGround(): boolean {
@@ -198,12 +113,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public isSwimming() {
-        if (this.canFly()) {
-            return false;
-        }
-        if (this.z > 0) {
-            return false;
-        }
+        if (this.canFly() || this.z > 0) return false;
         const tile = this.getTile();
         return tile && (tile.instanceOf(Tiles.LAVA.tile, Tiles.WATER.tile));
     }
@@ -251,9 +161,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.remove();
         if (level === undefined) {
             this.deleted = true;
-            if (this.level instanceof Level) {
-                this.level.remove(this);
-            }
+            if (this.level instanceof Level) this.level.remove(this);
             return;
         }
         if (level === this.level) {
@@ -295,5 +203,99 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     public touchedBy(entity: Entity): void {
 
+    }
+
+    public blocks(entity: Entity) {
+        return false;
+    }
+
+    public collision(e: Entity, xa: number = 0, ya: number = 0): boolean {
+        const aX0 = (this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x;
+        const aY0 = (this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y;
+        const aX1 = (this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x;
+        const aY1 = (this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y;
+
+        const bX0 = e.x - e.hitbox.width * 0.5 + e.hitbox.x;
+        const bY0 = e.y - e.hitbox.height * 0.5 + e.hitbox.y;
+        const bX1 = e.x + e.hitbox.width * 0.5 + e.hitbox.x;
+        const bY1 = e.y + e.hitbox.height * 0.5 + e.hitbox.y;
+
+        return !((bX0 >= aX1)
+            || (bX1 <= aX0)
+            || (bY0 >= aY1)
+            || (bY1 <= aY0));
+    }
+
+    protected init() {
+    }
+
+    protected move(xa: number, ya: number): boolean {
+        xa *= Renderer.delta;
+        ya *= Renderer.delta;
+        let stopped = true;
+        if (this.move2(xa, 0)) stopped = false;
+        if (this.move2(0, ya)) stopped = false;
+        if (!stopped) {
+            this.isMoving = Math.hypot(xa, ya) > 0;
+            if (this.isMoving) {
+                this.steppedOn();
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    protected steppedOn() {
+        if (this.z > 0) return;
+        this.level.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
+    }
+
+    protected move2(xa: number, ya: number): boolean {
+        const xto0 = ((this.x) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yto0 = ((this.y) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+        const xto1 = ((this.x) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yto1 = ((this.y) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+
+        const xt0 = ((this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yt0 = ((this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+        const xt1 = ((this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x) >> 4;
+        const yt1 = ((this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y) >> 4;
+
+        let blocked = false;
+        for (let yt = yt0; yt <= yt1; yt++) {
+            for (let xt = xt0; xt <= xt1; xt++) {
+                if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) continue;
+                const tile = this.level.getTile(xt, yt);
+                if (!tile) return false;
+                tile.bumpedInto(this);
+                if (!tile.mayPass(this)) {
+                    blocked = true;
+                    return false;
+                }
+            }
+        }
+        if (blocked) return false;
+        const entities = this.getChunk().getEntities().filter((e) => e !== this && !e.deleted && e.blocks(this));
+        for (const entity of entities) {
+            if (!this.collision(entity) && this.collision(entity, xa, ya)) {
+                entity.touchedBy(this);
+                return false;
+            }
+        }
+        this.x += xa;
+        this.y += ya;
+        return true;
+    }
+
+    protected calculateZIndex() {
+        return this.y + this.hitbox.y + this.hitbox.height / 2;
+    }
+
+    private getCentredPos() {
+        return {
+            x: this.x + this.hitbox.x + this.hitbox.width / 2,
+            y: this.y + this.hitbox.y + this.hitbox.height / 2,
+        };
     }
 }

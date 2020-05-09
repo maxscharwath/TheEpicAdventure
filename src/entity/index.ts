@@ -8,12 +8,19 @@ import Mob from "./mob/Mob";
 import ItemEntity from "./ItemEntity";
 import Entity from "./Entity";
 import Entities from "./Entities";
+import Chest from "./furniture/Chest";
+import Furniture from "./furniture/Furniture";
+import Bed from "./furniture/Bed";
+import Skeleton from "./mob/Skeleton";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
-Entities.add(2, "fish", Fish);
-Entities.add(3, "itemEntity", ItemEntity);
-Entities.add(4, "chicken", Chicken);
+Entities.add(2, "skeleton", Skeleton);
+Entities.add(3, "fish", Fish);
+Entities.add(4, "itemEntity", ItemEntity);
+Entities.add(5, "chicken", Chicken);
+Entities.add(6, "chest", Chest);
+Entities.add(7, "bed", Bed);
 
 export {
     Entity,
@@ -24,5 +31,9 @@ export {
     HostileMob,
     Player,
     Zombie,
+    Skeleton,
     Chicken,
+    Furniture,
+    Chest,
+    Bed,
 };

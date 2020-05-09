@@ -1,11 +1,11 @@
 export default class Key {
-    private presses: number;
-    private absorbs: number;
-    private stayDown: boolean = false;
 
     public down: boolean = false;
     public clicked: boolean = false;
     public sticky: boolean = false;
+    private presses: number;
+    private absorbs: number;
+    private stayDown: boolean = false;
 
     constructor(stayDown: boolean = false) {
         this.stayDown = stayDown;

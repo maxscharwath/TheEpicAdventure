@@ -35,10 +35,16 @@ tile.rock: Pierre
 tile.hole: Trou
 tile.snow: Neige
 tile.ice: Glace
+tile.plank: Planche
 
 entity.player: Joueur
 entity.zombie: Zombie
+entity.skeleton: Squelette
 entity.fish: Poisson
+entity.chicken: Poulet
+entity.bed: Lit
+entity.chest: Coffre
+entity.itemEntity: itemEntity
 
 item.dirt: Terre
 item.sand: Sable

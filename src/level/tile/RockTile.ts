@@ -6,8 +6,8 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class RockTile extends AutoTilingTile {
-    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock.png"));
     public static readonly TAG = "rock";
+    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock.png"));
 
     public init() {
         super.init();

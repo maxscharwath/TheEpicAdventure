@@ -1,8 +1,8 @@
+import * as PIXI from "pixi.js";
 import Items from "../item/Items";
-import {Chicken, ItemEntity, Player} from "../entity/";
+import {Chicken, Player, Chest, Bed, Zombie, Skeleton} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
-import Tiles from "../level/tile/Tiles";
 import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
@@ -14,13 +14,14 @@ import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
 import Network from "./Network";
 import Settings from "./Settings";
+import System from "./System";
 
 export default class Game {
     public static player: Player;
     public static DEBUG: boolean = true;
     public static HAS_GUI: boolean = true;
     public static readonly NAME: string = "The Epic Adventure";
-    public static readonly version: Version = new Version("0.1-dev1");
+    public static readonly version: Version = new Version("0.1-dev2");
     public static maxFPS: number = Settings.get("fps") as number;
     public static isOnline: boolean = false;
     public static isHost: boolean = false;
@@ -63,26 +64,23 @@ export default class Game {
         ];
         this.input = new InputHandler();
         this.player = new Player();
-
-        // max tile 134217720
         this.level.deleteTempDir();
         this.level.addEntity(this.player, 0, 0, true);
-        for (let i = 0; i < 10; i++) {
+        this.level.addEntity(new Chest(), 5, 2, true);
+        this.level.addEntity(new Bed(), 7, 2, true);
+        for (let i = 0; i < 3; i++) {
             this.level.addEntity(new Chicken(), 0, 0, true);
+            this.level.addEntity(new Zombie(), 0, 0, true);
+            this.level.addEntity(new Skeleton(), 0, 0, true);
         }
-        for (let i = 0; i < 100; i++) {
-            this.level.addEntity(
-                new ItemEntity(Items.APPLE),
-                0, 0, true);
-        }
-
-        (new InfoDisplay()).show();
-
-        (new HotbarDisplay(this.player)).show();
-
-        Initializer.createAndDisplayFrame();
         Initializer.run();
+        Initializer.createAndDisplayFrame();
         Network.startMultiplayerServer();
+
+        PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
+            (new InfoDisplay()).show();
+            (new HotbarDisplay(this.player)).show();
+        });
     }
 
     public static quit(): void {

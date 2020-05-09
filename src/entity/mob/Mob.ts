@@ -13,15 +13,26 @@ export default abstract class Mob extends Entity {
         return this.speedMax;
     }
 
+    public static create(data: any): Mob {
+        const e = super.create(data) as Mob;
+        e.inventory = Inventory.create(data.inventory);
+        return e;
+    }
+
     protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
 
+    public maxHealth: number = 10;
+    public health: number = this.maxHealth;
+    public inventory = new Inventory(8);
     protected speedMax: number = 1;
     protected potionEffect: any[] = [];
     protected walkDist: number = 0;
     protected dir: Direction = Direction.DOWN;
     protected mass = 20;
+    private hurtCooldown: number;
+    private attackCooldown: number;
 
     protected constructor(x?: number, y?: number) {
         super(x, y);
@@ -29,6 +40,68 @@ export default abstract class Mob extends Entity {
         this.on("click", () => {
             this.die();
         });
+    }
+
+    public getInteractTile(): LevelTile {
+        return this.level.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
+    }
+
+    public die(): void {
+        for (const slot of this.inventory.slots) {
+            if (!slot.isItem()) continue;
+            if (Random.int(5) === 0) continue;
+            for (let i = 0; i < slot.nb; i++) {
+                if (Random.int(5) !== 0) continue;
+                const x = this.x + Random.int(0, 16);
+                const y = this.y + Random.int(0, 16);
+                this.level.addEntity(new ItemEntity(slot.item, x, y));
+            }
+        }
+        this.delete();
+    }
+
+    public hurtByEntity(dmg: number, entity: Entity): void {
+        console.log(`Hurted by ${entity.toString()}`);
+        this.hurt(dmg, Mob.getAttackDir(entity, this));
+    }
+
+    public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
+        if (this.hurtCooldown > 0) return;
+        this.hurtCooldown = 60;
+        this.a.z = 2;
+        this.a.x = attackDir.getX() * 2;
+        this.a.y = attackDir.getY() * 2;
+        this.health -= dmg;
+    }
+
+    public onTick(): void {
+        super.onTick();
+        if (this.hurtCooldown > 0) {
+            this.hurtCooldown--;
+        }
+        if (this.attackCooldown > 0) {
+            this.attackCooldown--;
+        }
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    public touchItem(itemEntity: ItemEntity) {
+        if (this.inventory.addItem(itemEntity.item, 1)) {
+            itemEntity.take(this);
+        }
+    }
+
+    public getDir() {
+        return this.dir;
+    }
+
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+            inventory: this.inventory,
+        };
     }
 
     protected move(xa: number, ya: number): boolean {
@@ -42,9 +115,7 @@ export default abstract class Mob extends Entity {
 
             const a = new Vector();
             for (const e of entities) {
-                if (e === this || !e.onGround()) {
-                    continue;
-                }
+                if (e === this || !e.onGround()) continue;
                 const dx = this.x - e.x === 0 ? Random.float() : this.x - e.x;
                 const dy = this.y - e.y === 0 ? Random.float() : this.y - e.y;
                 const R = 8;
@@ -138,87 +209,5 @@ export default abstract class Mob extends Entity {
         }
 
         return entities;
-    }
-
-    private hurtCooldown: number;
-    private attackCooldown: number;
-
-    public static create(data: any): Mob {
-        const e = super.create(data) as Mob;
-        e.inventory = Inventory.create(data.inventory);
-        return e;
-    }
-
-    public maxHealth: number = 10;
-    public health: number = this.maxHealth;
-    public inventory = new Inventory(8);
-
-    public getInteractTile(): LevelTile {
-        return this.level.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
-    }
-
-    public die(): void {
-        for (const slot of this.inventory.slots) {
-            if (slot.isItem()) {
-                if (Random.int(5) === 0) {
-                    continue;
-                }
-                for (let i = 0; i < slot.nb; i++) {
-                    if (Random.int(5) !== 0) {
-                        continue;
-                    }
-                    const x = this.x + Random.int(0, 16);
-                    const y = this.y + Random.int(0, 16);
-                    // this.level.addEntity(new ItemEntity(slot.item, x, y));
-                }
-            }
-        }
-        this.delete();
-    }
-
-    public hurtByEntity(dmg: number, entity: Entity): void {
-        console.log(`Hurted by ${entity.toString()}`);
-        this.hurt(dmg, Mob.getAttackDir(entity, this));
-    }
-
-    public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
-        if (this.hurtCooldown > 0) {
-            return;
-        }
-        this.hurtCooldown = 60;
-        this.a.z = 2;
-        this.a.x = attackDir.getX() * 2;
-        this.a.y = attackDir.getY() * 2;
-        this.health -= dmg;
-    }
-
-    public onTick(): void {
-        super.onTick();
-        if (this.hurtCooldown > 0) {
-            this.hurtCooldown--;
-        }
-        if (this.attackCooldown > 0) {
-            this.attackCooldown--;
-        }
-        if (this.health <= 0) {
-            this.die();
-        }
-    }
-
-    public touchItem(itemEntity: ItemEntity) {
-        if (this.inventory.addItem(itemEntity.item, 1)) {
-            itemEntity.take(this);
-        }
-    }
-
-    public getDir() {
-        return this.dir;
-    }
-
-    public toBSON(): any {
-        return {
-            ...super.toBSON(),
-            inventory: this.inventory,
-        };
     }
 }

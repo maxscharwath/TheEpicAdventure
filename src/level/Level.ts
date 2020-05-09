@@ -14,33 +14,6 @@ import rimraf from "rimraf";
 type Type<T> = new (...args: any[]) => T;
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
-    private random: Random = new Random();
-    private players: Player[] = [];
-    private entitiesToAdd: Entity[] = [];
-    private entitiesToRemove: Entity[] = [];
-    private chunksToRemove: string[] = [];
-    private chunks = new Map<string, Chunk>();
-    private loadedChunks: Chunk[] = [];
-
-    private trySpawn(): void {
-        const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
-        if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
-            return;
-        }
-    }
-
-    private deleteQueuedChunk() {
-        while (this.chunksToRemove.length > 0) {
-            const chunkId = this.chunksToRemove[0];
-            const chunk = this.chunks.get(chunkId);
-            if (chunk) {
-                chunk.save();
-                chunk.destroy();
-            }
-            this.chunks.delete(chunkId);
-            this.chunksToRemove.splice(0, 1);
-        }
-    }
 
     public maxMobCount: number = 300;
     public mobCount: number = 0;
@@ -51,6 +24,13 @@ export default class Level {
     public tilesContainer: PIXI.Container = new PIXI.Container();
     public entitiesContainer: PIXI.Container = new PIXI.Container();
     public particleContainer: PIXI.Container = new PIXI.ParticleContainer();
+    private random: Random = new Random();
+    private players: Player[] = [];
+    private entitiesToAdd: Entity[] = [];
+    private entitiesToRemove: Entity[] = [];
+    private chunksToRemove: string[] = [];
+    private chunks = new Map<string, Chunk>();
+    private loadedChunks: Chunk[] = [];
 
     constructor() {
         Renderer.setLevel(this);
@@ -256,5 +236,25 @@ export default class Level {
 
     public save() {
         return JSON.stringify(this);
+    }
+
+    private trySpawn(): void {
+        const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
+        if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
+            return;
+        }
+    }
+
+    private deleteQueuedChunk() {
+        while (this.chunksToRemove.length > 0) {
+            const chunkId = this.chunksToRemove[0];
+            const chunk = this.chunks.get(chunkId);
+            if (chunk) {
+                chunk.save();
+                chunk.destroy();
+            }
+            this.chunks.delete(chunkId);
+            this.chunksToRemove.splice(0, 1);
+        }
     }
 }

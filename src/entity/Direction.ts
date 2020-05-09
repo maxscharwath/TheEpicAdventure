@@ -1,7 +1,4 @@
 export default class Direction {
-    private readonly x: number;
-    private readonly y: number;
-    private readonly num: number;
     public static NONE: Direction = new Direction(0, 0, -1);
     public static DOWN: Direction = new Direction(0, 1, 0);
     public static UP: Direction = new Direction(0, -1, 1);
@@ -28,6 +25,9 @@ export default class Direction {
             }
         }
     }
+    private readonly x: number;
+    private readonly y: number;
+    private readonly num: number;
 
     constructor(x: number, y: number, num: number = -1) {
         this.x = x;

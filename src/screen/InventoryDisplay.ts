@@ -43,18 +43,6 @@ class InventorySlot extends PIXI.Container {
 export default class InventoryDisplay extends BackgroundDisplay {
     private inventory: Inventory;
     private slots: InventorySlot[] = [];
-    private init() {
-        const nbRow = 9;
-        for (let i = 0; i < this.inventory.slots.length; i++) {
-            const slot = this.inventory.slots[i];
-            const x = (i % nbRow) * 10;
-            const y =  ~~(i / nbRow) * 10;
-            const slotSprite  = new InventorySlot(slot);
-            slotSprite.position.set(x, y);
-            this.slots.push(slotSprite);
-            this.addChild(slotSprite);
-        }
-    }
 
     constructor(inventory: Inventory) {
         super(true);
@@ -68,5 +56,17 @@ export default class InventoryDisplay extends BackgroundDisplay {
     public onTick(): void {
         super.onTick();
         this.slots.forEach((slot) => slot.update());
+    }
+    private init() {
+        const nbRow = 9;
+        for (let i = 0; i < this.inventory.slots.length; i++) {
+            const slot = this.inventory.slots[i];
+            const x = (i % nbRow) * 10;
+            const y =  ~~(i / nbRow) * 10;
+            const slotSprite  = new InventorySlot(slot);
+            slotSprite.position.set(x, y);
+            this.slots.push(slotSprite);
+            this.addChild(slotSprite);
+        }
     }
 }

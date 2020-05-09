@@ -13,16 +13,6 @@ export class ItemRegister<T extends Item> {
         return new this.itemClass(this.tag, ...this.args);
     }
 
-    protected constructor(tag: string, itemClass: Type<T>, ...args: any) {
-        this.tag = tag;
-        this.itemClass = itemClass;
-        this.args = args;
-        ItemRegister.items.set(tag, this);
-        console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
-    }
-
-    private static items = new Map<string, ItemRegister<Item>>();
-
     public static add<T extends Item>(tag: string, itemClass: Type<T>, ...args: any) {
         return new ItemRegister(tag, itemClass, ...args);
     }
@@ -39,9 +29,19 @@ export class ItemRegister<T extends Item> {
         });
     }
 
+    private static items = new Map<string, ItemRegister<Item>>();
+
     public readonly tag: string;
     public readonly itemClass: Type<T>;
     public readonly args: any;
+
+    protected constructor(tag: string, itemClass: Type<T>, ...args: any) {
+        this.tag = tag;
+        this.itemClass = itemClass;
+        this.args = args;
+        ItemRegister.items.set(tag, this);
+        console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
+    }
 }
 
 export default class Items extends ItemRegister<Item> {

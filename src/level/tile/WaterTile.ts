@@ -6,14 +6,14 @@ import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
 
 export default class WaterTile extends AutoTilingTile {
+    public static DEFAULT_STATES = {level: 10};
+    public static readonly TAG = "water";
     protected static canConnectTo = ["lava", "hole", "ice"];
     protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
-    private animSprite: PIXI.AnimatedSprite;
-    public static DEFAULT_STATES = {level: 10};
-    public static readonly TAG = "water";
     public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public friction: number = 0.01;
+    private animSprite: PIXI.AnimatedSprite;
 
     public init() {
         super.init();

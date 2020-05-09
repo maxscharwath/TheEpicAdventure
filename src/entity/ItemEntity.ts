@@ -1,18 +1,21 @@
 import {Mob} from ".";
 import Item from "../item/Item";
 import {ItemRegister} from "../item/Items";
+import Entities from "./Entities";
 import Entity from "./Entity";
+import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 
 export default class ItemEntity extends Entity {
+
+    public static create({id, item, x, y}: any): ItemEntity {
+        const EntityClass = Entities.getByTag(id);
+        return !EntityClass ? null : new EntityClass(Item.create(item), x, y) as ItemEntity;
+    }
+
+    public item: Item;
+    private readonly shadow: PIXI.filters.DropShadowFilter;
     private readonly lifeTime: number;
     private time: number = 0;
-
-    public static create(data: any): ItemEntity {
-        const e = super.create(data) as ItemEntity;
-        e.item = Item.create(data.item);
-        return e;
-    }
-    public item: Item;
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
         super(x, y);
@@ -26,6 +29,8 @@ export default class ItemEntity extends Entity {
         this.item = (item instanceof ItemRegister) ? item.item : item;
         this.lifeTime = 60 * 10 + this.random.int(70);
         this.container.addChild(this.item.getSprite(true));
+        this.shadow = new DropShadowFilter({blur: 0, distance: 10, rotation: 90, quality: 0});
+        this.filters = [this.shadow];
     }
 
     public onTick(): void {
@@ -37,12 +42,18 @@ export default class ItemEntity extends Entity {
         }
     }
 
+    public onRender() {
+        super.onRender();
+        if (this.isSwimming()) {
+            this.offset.y = Math.sin(this.ticks / 10) * 1.5;
+        }
+        this.shadow.distance = this.z * 4;
+    }
+
     public touchedBy(entity: Entity) {
-        if (this.deleted) {return; }
-        if (entity instanceof Mob) {
-            if (this.onGround()) {
-                entity.touchItem(this);
-            }
+        if (this.deleted) return;
+        if (entity instanceof Mob && this.onGround()) {
+            entity.touchItem(this);
         }
     }
 

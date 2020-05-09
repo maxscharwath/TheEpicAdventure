@@ -4,14 +4,14 @@ import ResourceItem from "../item/ResourceItem";
 import Resource from "../item/resources/Resource";
 
 export default class Recipe {
-    private readonly resultItem: Item;
-    private cost: Array<[Item, number]> = [];
-    private canCraft = false;
-    private craftTime = 50;
 
     public static create(data: any) {
 
     }
+    private readonly resultItem: Item;
+    private cost: Array<[Item, number]> = [];
+    private canCraft = false;
+    private craftTime = 50;
 
     constructor(resultItem: Item) {
         this.resultItem = resultItem;

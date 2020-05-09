@@ -7,9 +7,9 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class IceTile extends AutoTilingTile {
+    public static readonly TAG = "ice";
     protected static canConnectTo = ["hole"];
     protected static autoTileTextures = IceTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
-    public static readonly TAG = "ice";
     public friction = 0.01;
 
     public init() {

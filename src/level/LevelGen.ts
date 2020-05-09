@@ -9,16 +9,16 @@ import Tiles from "./tile/Tiles";
 
 export default class LevelGen {
 
-    private static chunkSize = 16;
-    private elevationNoise: SimplexNoise;
-    private moistureNoise: SimplexNoise;
-    private temperatureNoise: SimplexNoise;
-
     public static create(seed?: number | string) {
         return new LevelGen(seed);
     }
 
+    private static chunkSize = 16;
+
     public seed = 0;
+    private elevationNoise: SimplexNoise;
+    private moistureNoise: SimplexNoise;
+    private temperatureNoise: SimplexNoise;
 
     constructor(seed: number | string) {
         this.seed = Seed.create(seed);

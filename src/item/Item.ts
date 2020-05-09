@@ -7,7 +7,6 @@ import LevelTile from "../level/LevelTile";
 import Items from "./Items";
 
 export default class Item {
-    protected texture: PIXI.Texture = PIXI.Texture.EMPTY;
 
     public static create(data: any): Item {
         return Items.get(data.tag).item;
@@ -20,6 +19,7 @@ export default class Item {
     public craftedBy?: Mob;
     public tag: string;
     public uid: string = uniqid();
+    protected texture: PIXI.Texture = PIXI.Texture.EMPTY;
 
     constructor(tag: string) {
         this.tag = tag;

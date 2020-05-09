@@ -16,7 +16,7 @@ export default class TileResource extends Resource {
     }
 
     public useOn(levelTile: LevelTile, entity: Entity): boolean {
-        if (levelTile.instanceOf(...this.sourceTiles)) {
+        if (levelTile.is(...this.sourceTiles)) {
             levelTile.setTile(this.targetTile);
             return true;
         }

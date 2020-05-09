@@ -3,13 +3,6 @@ import YAML from "yaml";
 import System from "../System";
 
 export default class Language {
-
-    private static loadFile(path: string): string {
-        return fs.readFileSync(System.getResource("lang", path), "utf8");
-    }
-
-    private readonly path: string;
-    private data = new Map<string, any>();
     public static all: Language[] = (() => {
         return fs.readdirSync(System.getResource("lang")).map((file) => new Language(file));
     })();
@@ -19,7 +12,14 @@ export default class Language {
         return Language.all.find((lang) => lang.path === name);
     }
 
+    private static loadFile(path: string): string {
+        return fs.readFileSync(System.getResource("lang", path), "utf8");
+    }
+
     public isLoaded: boolean = false;
+
+    private readonly path: string;
+    private data = new Map<string, any>();
 
     constructor(path: string) {
         this.path = path;
