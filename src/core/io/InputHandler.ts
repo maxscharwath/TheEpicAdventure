@@ -161,6 +161,17 @@ export default class InputHandler {
         this.keymap.set("POTIONEFFECTS", "KEY-P");
         this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
         this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
+
+        this.keymap.set("HOTBAR-0", "DIGIT-0");
+        this.keymap.set("HOTBAR-1", "DIGIT-1");
+        this.keymap.set("HOTBAR-2", "DIGIT-2");
+        this.keymap.set("HOTBAR-3", "DIGIT-3");
+        this.keymap.set("HOTBAR-4", "DIGIT-4");
+        this.keymap.set("HOTBAR-5", "DIGIT-5");
+        this.keymap.set("HOTBAR-6", "DIGIT-6");
+        this.keymap.set("HOTBAR-7", "DIGIT-7");
+        this.keymap.set("HOTBAR-8", "DIGIT-8");
+        this.keymap.set("HOTBAR-9", "DIGIT-9");
     }
 
 

@@ -31,6 +31,8 @@ tile.wheat: Wheat
 tile.tree: Tree
 tile.spruce: Spruce Tree
 tile.palm: Palm Tree
+tile.acacia: Acacia Tree
+tile.birch: Birch Tree
 tile.rock: Rock
 tile.hole: Hole
 tile.snow: Snow

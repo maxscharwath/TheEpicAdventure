@@ -31,6 +31,8 @@ tile.wheat: Blé
 tile.tree: Arbre
 tile.spruce: Sapin
 tile.palm: Palmier
+tile.acacia: Acacia
+tile.birch: Bouleau
 tile.rock: Pierre
 tile.hole: Trou
 tile.snow: Neige

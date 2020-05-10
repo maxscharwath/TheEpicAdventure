@@ -14,7 +14,7 @@ export default class Inventory {
         return inventory;
     }
 
-    public selectedSlot: number = 0;
+    public indexedSlot: number = 0;
 
     public slots: Slot[] = [];
     private STACK_MAX: number = 64;
@@ -23,8 +23,12 @@ export default class Inventory {
         this.addSlots(nbSlot);
     }
 
+    public selectedSlot(): Slot {
+        return this.slots[this.indexedSlot];
+    }
+
     public selectedItem(): Item {
-        const slot = this.slots[this.selectedSlot];
+        const slot = this.slots[this.indexedSlot];
         if (!(slot && slot.isItem())) {
             return undefined;
         }
