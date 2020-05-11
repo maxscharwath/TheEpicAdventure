@@ -16,6 +16,8 @@ import Network from "./Network";
 import Settings from "./Settings";
 import System from "./System";
 import SearchServer from "../network/SearchServer";
+import Renderer from "./Renderer";
+import LanDisplay from "../screen/LanDisplay";
 
 export default class Game {
     public static player: Player;
@@ -60,28 +62,22 @@ export default class Game {
         Biome.initBiomeList();
         Localization.loadLanguage("fr-FR.yaml");
         Items.verifyTag();
-        this.levels = [
-            new Level(),
-        ];
+        this.levels = [];
         this.input = new InputHandler();
         this.player = new Player();
+
+        this.levels.push(new Level());
         this.level.deleteTempDir();
         this.level.addEntity(this.player, 0, 0, true);
-        this.level.addEntity(new Chest(), 5, 2, true);
-        this.level.addEntity(new Bed(), 7, 2, true);
-        for (let i = 0; i < 3; i++) {
-            this.level.addEntity(new Chicken(), 0, 0, true);
-            this.level.addEntity(new Zombie(), 0, 0, true);
-            this.level.addEntity(new Skeleton(), 0, 0, true);
-        }
-        Initializer.run();
-        Initializer.createAndDisplayFrame();
-        Network.startMultiplayerServer();
-        SearchServer.start((server) => console.log(server));
+        Renderer.setLevel(this.level);
 
+        Initializer.createAndDisplayFrame();
+        Initializer.run();
+        Network.startMultiplayerServer();
         PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
             (new InfoDisplay()).show();
             (new HotbarDisplay(this.player)).show();
+            (new LanDisplay()).show();
         });
     }
 

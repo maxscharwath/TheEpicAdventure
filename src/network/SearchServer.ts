@@ -2,9 +2,7 @@ import udp from "dgram";
 import IP from "./IP";
 
 interface ServerPacket {
-    name: string;
-    version: string;
-    online: true;
+    uid: string;
     ip: string;
     port: number;
 }
@@ -24,8 +22,7 @@ export default class SearchServer {
         }, 5000);
         client.on("message", (msg, info) => {
             const packet = JSON.parse(msg.toString());
-            if (this.results.find((result) =>
-                result.port === packet.port && result.ip === packet.ip)) {
+            if (this.results.find((result) => result.uid === packet.uid)) {
                 return;
             }
             this.results.push(packet);

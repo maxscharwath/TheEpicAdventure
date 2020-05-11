@@ -12,24 +12,21 @@ export default class InfoDisplay extends Display {
     private static text(): string {
         const tile = Game.player.getInteractTile();
         return [
-            `v: ${Game.version.toString()}`,
-            `fps: ${Math.round(Initializer.getCurFps())}`,
-            `tU: ${Updater.getTickTime().toFixed(2)}ms`,
-            `tR: ${Renderer.getTickTime().toFixed(2)}ms`,
-            `t: ${Updater.tickCount} (${Updater.time})`,
-            `s: ${Game.level.seed}`,
-            `x: ${(Game.player.x / 16).toFixed(2)}`,
-            `y: ${(Game.player.y / 16).toFixed(2)}`,
-            `z: ${(Game.player.z).toFixed(2)}`,
-            `a: ${(Game.player.a)}`,
-            `b: ${tile?.biome.getDisplayName()}`,
-            `tt: ${tile?.temperature}`,
-            `te: ${tile?.elevation}`,
-            `tm: ${tile?.moisture}`,
-            `t: ${tile?.tile.getDisplayName()}`,
-            `td: ${JSON.stringify(tile?.tile.states.getStates())}`,
-            `c: ${Renderer.getNbChildren()}`,
-            `m: ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`,
+            `v : ${Game.version.toString()}`,
+            `fps : ${Math.round(Initializer.getCurFps())}`,
+            `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
+            `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
+            `time : ${Updater.tickCount} (${Updater.time})`,
+            `seed : ${Game.level?.seed}`,
+            `x : ${(Game.player.x / 16).toFixed(2)}`,
+            `y : ${(Game.player.y / 16).toFixed(2)}`,
+            `z : ${(Game.player.z).toFixed(2)}`,
+            `biome : ${tile?.biome.getDisplayName()}`,
+            `tile : ${tile?.tile.getDisplayName()}`,
+            `tile data : ${JSON.stringify(tile?.tile.states.getStates())}`,
+            `containers : ${Renderer.getNbChildren()}`,
+            `chunks loaded : ${Game.level?.getNbChunks()}`,
+            `memory : ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`,
         ].join("\n");
     }
 
@@ -58,9 +55,7 @@ export default class InfoDisplay extends Display {
 
     public onTick(): void {
         const text = InfoDisplay.text();
-        if (this.textArea.text === text) {
-            return;
-        }
+        if (this.textArea.text === text) return;
         this.textArea.text = text;
         this.textBg.x = this.textArea.x;
         this.textBg.y = this.textArea.y;

@@ -32,6 +32,7 @@ class InventorySlot extends PIXI.Container {
         this.itemContainer.width = 8;
         this.itemContainer.height = 8;
         this.addChild(sprite, this.itemContainer);
+        this.itemContainer.filters = [new DropShadowFilter({blur: 0, distance: 2, rotation: 45, quality: 0})];
     }
 
     public update() {
@@ -75,8 +76,11 @@ export default class HotbarDisplay extends Display {
         if (Game.input.getKey("DROP-ONE").clicked) {
             const slot = this.mob.inventory.selectedSlot();
             if (slot.isItem()) {
-                this.mob.getLevel().addEntity(new ItemEntity(slot.item), this.mob.x, this.mob.y);
-                this.mob.inventory.removeItem(slot.item, 1);
+                const level = this.mob.getLevel();
+                if (level) {
+                    level.addEntity(new ItemEntity(slot.item), this.mob.x, this.mob.y);
+                    this.mob.inventory.removeItem(slot.item, 1);
+                }
             }
         }
     }

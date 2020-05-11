@@ -34,16 +34,8 @@ export default abstract class Mob extends Entity {
     private hurtCooldown: number;
     private attackCooldown: number;
 
-    protected constructor(x?: number, y?: number) {
-        super(x, y);
-        this.interactive = true;
-        this.on("click", () => {
-            this.die();
-        });
-    }
-
     public getInteractTile(): LevelTile {
-        return this.level.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
+        return this.level?.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
     }
 
     public die(): void {

@@ -9,5 +9,9 @@ export default class AcaciaTreeTile extends TreeTile {
     protected initTree() {
         this.setGroundTile(Tiles.DIRT.tile);
         this.treeTilingInit(System.getResource("tile", "acacia.png"));
+        if (this.random.boolean()) {
+            this.container.scale.x = -1;
+            this.container.pivot.x = -this.container.width;
+        }
     }
 }

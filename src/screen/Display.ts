@@ -15,6 +15,7 @@ class DraggableArea extends PIXI.Container {
         this.parentContainer = parentContainer;
         this.buttonMode = true;
         this.interactive = true;
+        this.interactiveChildren = true;
         this
             .on("mousedown", this.onDragStart)
             .on("mouseup", this.onDragEnd)

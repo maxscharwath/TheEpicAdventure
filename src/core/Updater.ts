@@ -30,7 +30,7 @@ export default class Updater {
         Game.displays.forEach((display) => {
             display.onTick();
         });
-        Game.level.onTick();
+        Game.level?.onTick();
         this.setTime(this.tickCount + 1);
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);

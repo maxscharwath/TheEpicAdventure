@@ -7,8 +7,10 @@ import Settings from "../core/Settings";
 import Random from "../utility/Random";
 import ServerUDP from "./ServerUDP";
 import IP from "./IP";
+import uniqid from "uniqid";
 
 export default class Server {
+    private uid: string = uniqid();
     private port: number;
     private name: string = "MY SUPER SERVER";
     private readonly server: http.Server;
@@ -50,9 +52,7 @@ export default class Server {
 
     public getPacketUDP() {
         return Buffer.from(JSON.stringify({
-            name: this.name,
-            version: Game.version.toString(),
-            online: Game.isOnline,
+            uid: this.uid,
             ip: IP.address(),
             port: this.port,
         }));

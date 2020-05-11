@@ -6,7 +6,6 @@ import Color from "../utility/Color";
 import Game from "./Game";
 import System from "./System";
 
-PIXI.settings.SORTABLE_CHILDREN = true;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
 
@@ -35,8 +34,8 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
-    public static delta: number;
 
+    public static delta: number;
     public static readonly DEFAULT_WIDTH: number = 240;
     public static readonly DEFAULT_HEIGHT: number = 160;
     public static WIDTH: number = Renderer.DEFAULT_WIDTH;
@@ -49,7 +48,7 @@ export default class Renderer {
         if (!Game.isFocus) {
             return;
         }
-        Game.level.onRender();
+        Game.level?.onRender();
         Renderer.camera.update();
         Game.displays.forEach((display) => {
             display.onRender();
@@ -65,7 +64,8 @@ export default class Renderer {
 
     public static init() {
         document.body.appendChild(this.renderer.view);
-        this.mainStage.addChild(...this.stages);
+        this.mainStage.addChild(this.stages.level);
+        this.mainStage.addChild(this.stages.gui);
     }
 
     public static getScreen() {
@@ -73,12 +73,12 @@ export default class Renderer {
     }
 
     public static setLevel(level: Level) {
-        this.stages[0].removeChildren();
-        this.stages[0].addChild(level.container);
+        this.stages.level.removeChildren();
+        this.stages.level.addChild(level.container);
     }
 
     public static addDisplay(display: Display) {
-        this.stages[1].addChild(display);
+        this.stages.gui.addChild(display);
     }
 
     public static getNbChildren() {
@@ -87,9 +87,11 @@ export default class Renderer {
         return f(this.mainStage);
     }
     private static ticksTime: number[] = [];
-
     private static mainStage = new PIXI.Container();
-    private static stages: PIXI.Container[] = new Array(3).fill(new PIXI.Container());
+    private static stages = {
+        level: new PIXI.Container(),
+        gui: new PIXI.Container(),
+    };
     private static renderer = new PIXI.Renderer({
         width: 960,
         height: 540,

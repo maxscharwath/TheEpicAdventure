@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
@@ -11,7 +10,6 @@ import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
 import rimraf from "rimraf";
 
-type Type<T> = new (...args: any[]) => T;
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
 
@@ -23,7 +21,6 @@ export default class Level {
     public container: PIXI.Container = new PIXI.Container();
     public tilesContainer: PIXI.Container = new PIXI.Container();
     public entitiesContainer: PIXI.Container = new PIXI.Container();
-    public particleContainer: PIXI.Container = new PIXI.ParticleContainer();
     private random: Random = new Random();
     private players: Player[] = [];
     private entitiesToAdd: Entity[] = [];
@@ -33,8 +30,11 @@ export default class Level {
     private loadedChunks: Chunk[] = [];
 
     constructor() {
-        Renderer.setLevel(this);
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
+    }
+
+    public getNbChunks(): number {
+        return this.chunks.size;
     }
 
     public deleteTempDir() {
@@ -42,16 +42,14 @@ export default class Level {
     }
 
     public flushInactiveChunks() {
-        let i = 0;
+        const chunks: Chunk[] = [];
         this.chunks.forEach((chunk) => {
             if (!chunk.isActive()) {
-                i++;
+                chunks.push(chunk);
                 this.deleteChunk(chunk);
             }
         });
-        if (i > 0) {
-            console.log(`${i} chunks will be deleted. (${this.chunks.size})`);
-        }
+        return chunks;
     }
 
     public flushChunks() {
@@ -89,11 +87,12 @@ export default class Level {
         y = ~~y;
         const id = x + ":" + y;
         if (!this.chunks.has(id)) {
-            if (!generate) {
-                return undefined;
-            }
-            this.chunks.set(id, Chunk.fromFile(this, x, y));
-            // this.chunks[x + ":" + y] = new Chunk(this, x, y, true);
+            if (!generate) return undefined;
+            const chunk = Chunk.empty(this, x, y);
+            Chunk.fileExist(this, x, y)
+                .then(() => chunk.fromFile())
+                .catch (() => chunk.generate());
+            this.chunks.set(id, chunk);
         }
         return this.chunks.get(id);
     }
