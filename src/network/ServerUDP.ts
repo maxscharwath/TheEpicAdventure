@@ -3,11 +3,13 @@ import Server from "./Server";
 
 export default class ServerUDP {
     private server: udp.Socket;
+    private PORT = 20000;
 
     constructor(server: Server) {
-        this.server = udp.createSocket("udp4");
+        this.server = udp.createSocket({type: "udp4", reuseAddr: true });
         this.server.on("message", (msg, info) => {
-            this.server.send(server.getPacketUDP(), info.port, "localhost", (error) => {
+            const data = server.getPacketUDP();
+            this.server.send(data, info.port, info.address, (error) => {
                 if (!error) {
                     console.log("Data sent !!!");
                 }
@@ -23,7 +25,7 @@ export default class ServerUDP {
     }
 
     public startConnection() {
-        this.server.bind(2222);
+        this.server.bind(this.PORT);
     }
 
     public endConnection(): void {

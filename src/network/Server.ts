@@ -1,12 +1,12 @@
 import {OptionsJson} from "body-parser";
 import express from "express";
 import http from "http";
-import ip from "ip";
 import socketio from "socket.io";
 import Game from "../core/Game";
 import Settings from "../core/Settings";
 import Random from "../utility/Random";
 import ServerUDP from "./ServerUDP";
+import IP from "./IP";
 
 export default class Server {
     private port: number;
@@ -31,7 +31,8 @@ export default class Server {
             }
         });
         this.server.once("listening", () => {
-            console.log(`Server started on ${ip.address()}:${this.port}`);
+            console.log(IP.broadcast());
+            console.log(`Server started on ${IP.address()}:${this.port}`);
         });
 
         this.io = socketio(this.server, {});
@@ -41,7 +42,7 @@ export default class Server {
                 name: this.name,
                 version: Game.version.toString(),
                 online: Game.isOnline,
-                ip: ip.address(),
+                ip: IP.address(),
                 port: this.port,
             } as OptionsJson);
         });
@@ -52,7 +53,7 @@ export default class Server {
             name: this.name,
             version: Game.version.toString(),
             online: Game.isOnline,
-            ip: ip.address(),
+            ip: IP.address(),
             port: this.port,
         }));
     }
