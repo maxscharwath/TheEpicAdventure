@@ -6,12 +6,14 @@ import socketio from "socket.io";
 import Game from "../core/Game";
 import Settings from "../core/Settings";
 import Random from "../utility/Random";
+import ServerUDP from "./ServerUDP";
 
 export default class Server {
     private port: number;
     private name: string = "MY SUPER SERVER";
     private readonly server: http.Server;
     private io: socketio.Server;
+    private udp = new ServerUDP(this);
 
     constructor() {
         Game.isOnline = true;
@@ -19,8 +21,7 @@ export default class Server {
         this.port = Settings.get("port");
 
         const app = express();
-        this.server = new http.
-        Server(app);
+        this.server = new http.Server(app);
         this.server.once("error", (err: { code: string; }) => {
             if (err.code === "EADDRINUSE") {
                 console.log("Port " + this.port + " is already used");
@@ -33,7 +34,6 @@ export default class Server {
             console.log(`Server started on ${ip.address()}:${this.port}`);
         });
 
-        this.server.listen(this.port);
         this.io = socketio(this.server, {});
 
         app.get("/status", (req: any, res: any) => {
@@ -41,12 +41,24 @@ export default class Server {
                 name: this.name,
                 version: Game.version.toString(),
                 online: Game.isOnline,
-                port: Settings.get("port"),
+                ip: ip.address(),
+                port: this.port,
             } as OptionsJson);
         });
     }
 
+    public getPacketUDP() {
+        return Buffer.from(JSON.stringify({
+            name: this.name,
+            version: Game.version.toString(),
+            online: Game.isOnline,
+            ip: ip.address(),
+            port: this.port,
+        }));
+    }
+
     public startConnection() {
+        this.udp.startConnection();
         this.server.listen(this.port);
     }
 

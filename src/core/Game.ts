@@ -15,6 +15,7 @@ import Localization from "./io/Localization";
 import Network from "./Network";
 import Settings from "./Settings";
 import System from "./System";
+import SearchServer from "../network/SearchServer";
 
 export default class Game {
     public static player: Player;
@@ -76,6 +77,7 @@ export default class Game {
         Initializer.run();
         Initializer.createAndDisplayFrame();
         Network.startMultiplayerServer();
+        SearchServer.search().then((server) => console.log(server));
 
         PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
             (new InfoDisplay()).show();
