@@ -77,7 +77,7 @@ export default class Game {
         Initializer.run();
         Initializer.createAndDisplayFrame();
         Network.startMultiplayerServer();
-        SearchServer.search().then((server) => console.log(server));
+        SearchServer.start((server) => console.log(server));
 
         PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
             (new InfoDisplay()).show();

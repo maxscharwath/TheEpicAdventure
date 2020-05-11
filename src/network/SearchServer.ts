@@ -1,33 +1,53 @@
 import udp from "dgram";
 import IP from "./IP";
 
+interface ServerPacket {
+    name: string;
+    version: string;
+    online: true;
+    ip: string;
+    port: number;
+}
+
 export default class SearchServer {
-    public static search() {
-        const client = udp.createSocket({type: "udp4", reuseAddr: true });
-        const data = Buffer.from("HELLO");
-        let nbTry = 0;
-        return new Promise((resolve, reject) => {
-            const timer = setInterval(() => {
-                if (nbTry++ > 10) {
-                    clearInterval(timer);
-                    reject("Timeout");
-                }
-                client.send(data, 0, data.length, this.PORT, IP.broadcast(), (error) => {
-                    if (error) {
-                        clearInterval(timer);
-                        reject(error);
-                        client.close();
-                    } else {
-                        console.log("Data sent !!!");
-                    }
-                });
-            }, 1000);
-            client.on("message", (msg, info) => {
-                clearInterval(timer);
-                resolve(JSON.parse(msg.toString()));
+
+    public static start(callback?: (server: ServerPacket) => void) {
+        if (this.searching) return this;
+        this.results = [];
+        this.searching = true;
+        const client = udp.createSocket({type: "udp4", reuseAddr: true});
+        const data = new Buffer(0);
+        this.timer = setInterval(() => {
+            client.send(data, 0, data.length, this.PORT, IP.broadcast(), (error) => {
+                if (error) console.error(error);
             });
+        }, 5000);
+        client.on("message", (msg, info) => {
+            const packet = JSON.parse(msg.toString());
+            if (this.results.find((result) =>
+                result.port === packet.port && result.ip === packet.ip)) {
+                return;
+            }
+            this.results.push(packet);
+            if (callback instanceof Function) {
+                callback(packet);
+            }
         });
+        return this;
     }
+
+    public static stop() {
+        this.searching = false;
+        clearInterval(this.timer);
+    }
+
+    public static getResults() {
+        return this.results;
+    }
+
+    private static results: ServerPacket[] = [];
+    private static timer?: NodeJS.Timeout;
+    private static searching: boolean = false;
     private static PORT = 20000;
 }
 

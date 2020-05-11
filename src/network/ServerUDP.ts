@@ -10,9 +10,7 @@ export default class ServerUDP {
         this.server.on("message", (msg, info) => {
             const data = server.getPacketUDP();
             this.server.send(data, info.port, info.address, (error) => {
-                if (!error) {
-                    console.log("Data sent !!!");
-                }
+                if (error) console.error(error);
             });
         });
         this.server.on("listening", () => {
