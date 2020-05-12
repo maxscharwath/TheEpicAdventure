@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import Vector from "../../utility/Vector";
 import AquaticMob from "./AquaticMob";
+import {Hook} from "../index";
 
 export default class Fish extends AquaticMob {
     protected speedMax: number = 1;
@@ -41,6 +42,15 @@ export default class Fish extends AquaticMob {
 
         this.container.rotation = -this.vector.rotation - Math.PI / 2;
         this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+    }
+
+    protected newTarget() {
+        if (!this.level) return;
+        if (this.random.probability(50)) {
+            this.level.findEntity(Hook).then((hook) => this.target = hook);
+        } else {
+            super.newTarget();
+        }
     }
 
     protected init() {

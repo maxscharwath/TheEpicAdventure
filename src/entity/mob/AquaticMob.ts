@@ -9,8 +9,8 @@ import Mob from "./Mob";
 export default abstract class AquaticMob extends Mob {
     protected target = {x: 0, y: 0};
 
-    protected constructor(x: number = 0, y: number = 0) {
-        super(x, y);
+    protected constructor() {
+        super();
         this.newTarget();
     }
 
@@ -65,9 +65,7 @@ export default abstract class AquaticMob extends Mob {
     }
 
     protected newTarget() {
-        if (!this.level) {
-            return;
-        }
+        if (!this.level) return;
         const tile = this.level.getRandomTileInEntityRadius([Tiles.WATER.tile], this, 10);
         if (tile) {
             this.target = {

@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
+import {remote} from "electron";
 import Items from "../item/Items";
-import {Chicken, Player, Chest, Bed, Zombie, Skeleton} from "../entity/";
+import {Player, Hook} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Client from "../network/Client";
@@ -15,7 +16,6 @@ import Localization from "./io/Localization";
 import Network from "./Network";
 import Settings from "./Settings";
 import System from "./System";
-import SearchServer from "../network/SearchServer";
 import Renderer from "./Renderer";
 import LanDisplay from "../screen/LanDisplay";
 
@@ -69,8 +69,11 @@ export default class Game {
         this.levels.push(new Level());
         this.level.deleteTempDir();
         this.level.addEntity(this.player, 0, 0, true);
+        this.level.addEntity(new Hook(), 1, 1, true);
         Renderer.setLevel(this.level);
-
+        setTimeout(() => {
+            this.level.findEntities((entity) => entity.visible ).then((entities) => console.log(entities));
+        }, 20000);
         Initializer.createAndDisplayFrame();
         Initializer.run();
         Network.startMultiplayerServer();
@@ -79,9 +82,17 @@ export default class Game {
             (new HotbarDisplay(this.player)).show();
             (new LanDisplay()).show();
         });
+
+/*        window.addEventListener("beforeunload", (e) => {
+            e.preventDefault();
+            this.quit().finally(() => {
+                remote.getCurrentWindow().destroy();
+            });
+            e.returnValue = true;
+        });*/
     }
 
-    public static quit(): void {
+    public static quit() {
         if (this.isValidServer()) {
             this.server.endConnection();
         }
@@ -89,5 +100,6 @@ export default class Game {
             this.client.endConnection();
         }
         this.running = false;
+        return Promise.all(this.levels.map(((level) => level.save())));
     }
 }

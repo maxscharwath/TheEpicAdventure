@@ -19,6 +19,7 @@ import WheatTile from "./WheatTile";
 import PlankTile from "./PlankTile";
 import BirchTreeTile from "./BirchTreeTile";
 import AcaciaTreeTile from "./AcaciaTreeTile";
+import PotatoTile from "./PotatoTile";
 
 export class TileRegister<T extends typeof Tile> {
 
@@ -64,14 +65,15 @@ export default class Tiles extends TileRegister<typeof Tile> {
     public static HOLE = Tiles.add(7, "hole", HoleTile);
     public static FARMLAND = Tiles.add(8, "farmland", FarmlandTile);
     public static WHEAT = Tiles.add(9, "wheat", WheatTile);
-    public static TREE = Tiles.add(10, "tree", TreeTile);
-    public static BIRCH = Tiles.add(11, "birch", BirchTreeTile);
-    public static PALM = Tiles.add(12, "palm", PalmTreeTile);
-    public static SPRUCE = Tiles.add(13, "spruce", SpruceTreeTile);
-    public static ACACIA = Tiles.add(14, "acacia", AcaciaTreeTile);
-    public static CACTUS = Tiles.add(15, "cactus", CactusTile);
-    public static SNOW = Tiles.add(16, "snow", SnowTile);
-    public static ICE = Tiles.add(17, "ice", IceTile);
-    public static PLANK = Tiles.add(18, "plank", PlankTile);
+    public static POTATO = Tiles.add(10, "potato", PotatoTile);
+    public static TREE = Tiles.add(11, "tree", TreeTile);
+    public static BIRCH = Tiles.add(12, "birch", BirchTreeTile);
+    public static PALM = Tiles.add(13, "palm", PalmTreeTile);
+    public static SPRUCE = Tiles.add(14, "spruce", SpruceTreeTile);
+    public static ACACIA = Tiles.add(15, "acacia", AcaciaTreeTile);
+    public static CACTUS = Tiles.add(16, "cactus", CactusTile);
+    public static SNOW = Tiles.add(17, "snow", SnowTile);
+    public static ICE = Tiles.add(18, "ice", IceTile);
+    public static PLANK = Tiles.add(19, "plank", PlankTile);
 
 }

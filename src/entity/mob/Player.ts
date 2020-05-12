@@ -23,6 +23,7 @@ export default class Player extends Mob {
         this.inventory.addItem(Items.WOOD_SWORD);
         this.inventory.addItem(Items.WHEAT, 16);
         this.inventory.addItem(Items.SEED_WHEAT, 2);
+        this.inventory.addItem(Items.POTATO, 30);
     }
 
     public destroy(): void {

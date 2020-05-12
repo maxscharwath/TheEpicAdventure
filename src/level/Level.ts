@@ -91,7 +91,7 @@ export default class Level {
             const chunk = Chunk.empty(this, x, y);
             Chunk.fileExist(this, x, y)
                 .then(() => chunk.fromFile())
-                .catch (() => chunk.generate());
+                .catch(() => chunk.generate());
             this.chunks.set(id, chunk);
         }
         return this.chunks.get(id);
@@ -234,7 +234,34 @@ export default class Level {
     }
 
     public save() {
-        return JSON.stringify(this);
+        return Promise.all(Array.from(this.chunks).map((chunk) => chunk[1].save()));
+    }
+
+    public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
+        const chunksId = Array.from(this.chunks.keys());
+        const result: Array<Promise<Entity[]>> = [];
+        return new Promise((resolve) => {
+            const action = () => {
+                const chunk = this.chunks.get(chunksId.shift());
+                if (chunk) result.push(chunk.findEntities(predicate));
+                if (chunksId.length > 0) return process.nextTick(action);
+                Promise.all(result).then((value) => {
+                    resolve(value.flat());
+                });
+            };
+            process.nextTick(action);
+        });
+    }
+
+    public findEntity<T extends typeof Entity>(entityClass: T): Promise<Entity> {
+        const chunksId = Array.from(this.chunks.keys());
+        return new Promise((resolve) => {
+            const action = () => {
+                this.chunks.get(chunksId.shift())?.findEntity(entityClass).then((entity) => resolve(entity));
+                if (chunksId.length > 0) process.nextTick(action);
+            };
+            process.nextTick(action);
+        });
     }
 
     private trySpawn(): void {

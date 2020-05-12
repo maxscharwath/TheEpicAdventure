@@ -6,8 +6,8 @@ import Maths from "../../utility/Maths";
 export default abstract class HostileMob extends Mob {
     protected target = {x: 0, y: 0};
 
-    constructor(x: number = 0, y: number = 0) {
-        super(x, y);
+    constructor() {
+        super();
         this.newTarget();
     }
 

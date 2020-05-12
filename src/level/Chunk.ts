@@ -75,7 +75,7 @@ export default class Chunk {
             lt.onTick();
         }
         for (const entity of this.entities) {
-            if (!(entity instanceof Entity) || entity.getRemoved()) continue;
+            if (!(entity instanceof Entity) || entity.getRemoved() || !entity.getLevel()) continue;
             entity.onTick();
             if (!entity.getRemoved()) this.checkEntity(entity);
         }
@@ -142,9 +142,7 @@ export default class Chunk {
         }
         this.map.forEach((lt) => lt.onRender());
         for (const entity of this.entities) {
-            if (!(entity instanceof Entity) || entity.getRemoved()) {
-                continue;
-            }
+            if (!(entity instanceof Entity) || entity.getRemoved() || !entity.getLevel()) continue;
             entity.onRender();
         }
     }
@@ -231,6 +229,32 @@ export default class Chunk {
         this.map.forEach((lt) => lt.init());
         this.generated = true;
         return this;
+    }
+
+    public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
+        const entities = this.entities.concat();
+        const result: Entity[] = [];
+        return new Promise((resolve) => {
+            const action = () => {
+                const entity = entities.shift();
+                if (entity instanceof Entity && predicate(entity)) result.push(entity);
+                if (entities.length > 0) return process.nextTick(action);
+                resolve(result);
+            };
+            process.nextTick(action);
+        });
+    }
+
+    public findEntity<T extends typeof Entity>(entityClass: T): Promise<Entity> {
+        const entities = this.entities.concat();
+        return new Promise((resolve) => {
+            const action = () => {
+                const entity = entities.shift();
+                if (entity instanceof entityClass) return resolve(entity);
+                if (entities.length > 0) process.nextTick(action);
+            };
+            process.nextTick(action);
+        });
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {

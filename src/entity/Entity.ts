@@ -45,11 +45,9 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     private lastTick: number = Updater.tickCount;
     private uid: string = uniqid();
 
-    protected constructor(x: number = 0, y: number = 0) {
+    protected constructor() {
         super();
         this.hitbox.set(0, 4, 8, 8);
-        this.x = x;
-        this.y = y;
         {
             this.visible = true;
             this.addChild(this.container, this.hitbox);

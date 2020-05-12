@@ -28,6 +28,7 @@ tile.lilypad: Nénuphar
 tile.lava: Lave
 tile.farmland: Terre labourée
 tile.wheat: Blé
+tile.potato: Patate
 tile.tree: Arbre
 tile.spruce: Sapin
 tile.palm: Palmier
@@ -54,6 +55,7 @@ item.ice: Glace
 item.snowball: Boule de neige
 item.apple: Pomme
 item.wheat: Blé
+item.potato: Patate
 item.seed_wheat: Graine de blé
 item.stone: Pierre
 item.wood: Bois

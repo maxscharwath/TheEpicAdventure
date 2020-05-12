@@ -4,6 +4,7 @@ import {ItemRegister} from "../item/Items";
 import Entities from "./Entities";
 import Entity from "./Entity";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
+import Game from "../core/Game";
 
 export default class ItemEntity extends Entity {
 
@@ -18,7 +19,7 @@ export default class ItemEntity extends Entity {
     private time: number = 0;
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
-        super(x, y);
+        super();
         this.x = x;
         this.y = y;
         this.z = 2;
@@ -36,6 +37,11 @@ export default class ItemEntity extends Entity {
     public onTick(): void {
         super.onTick();
         this.time++;
+        if (this.time >= this.lifeTime / 100 * 75 && this.z === 0) {
+            this.a.x = this.random.gaussian() * 0.3;
+            this.a.y = this.random.gaussian() * 0.2;
+            this.a.z = this.random.float() * 0.7 + 1;
+        }
         if (this.time >= this.lifeTime) {
             this.delete();
             return;

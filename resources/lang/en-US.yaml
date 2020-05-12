@@ -28,6 +28,7 @@ tile.lilypad: Lilypad
 tile.lava: Lava
 tile.farmland: Farmland
 tile.wheat: Wheat
+tile.potato: Potato
 tile.tree: Tree
 tile.spruce: Spruce Tree
 tile.palm: Palm Tree
@@ -54,6 +55,7 @@ item.ice: Glace
 item.snowball: Snowball
 item.apple: Apple
 item.wheat: Wheat
+item.potato: Potato
 item.seed_wheat: Wheat seed
 item.stone: Stone
 item.wood: Wood
