@@ -253,11 +253,12 @@ export default class Level {
         });
     }
 
-    public findEntity<T extends typeof Entity>(entityClass: T): Promise<Entity> {
+    public findEntity<T extends Entity>(
+        entityClass: new (args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
         const chunksId = Array.from(this.chunks.keys());
         return new Promise((resolve) => {
             const action = () => {
-                this.chunks.get(chunksId.shift())?.findEntity(entityClass).then((entity) => resolve(entity));
+                this.chunks.get(chunksId.shift())?.findEntity(entityClass).then((entity) => resolve(entity as T));
                 if (chunksId.length > 0) process.nextTick(action);
             };
             process.nextTick(action);

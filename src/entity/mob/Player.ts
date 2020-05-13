@@ -5,6 +5,7 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Mob from "./Mob";
+import FishingRodItem from "../../item/FishingRodItem";
 
 export default class Player extends Mob {
 
@@ -12,6 +13,7 @@ export default class Player extends Mob {
     protected speedMax: number = 1;
     private targetTile: PIXI.Sprite;
     private sprite: PIXI.AnimatedSprite;
+    private fishing: boolean = true;
 
     constructor() {
         super();
@@ -21,6 +23,7 @@ export default class Player extends Mob {
         this.inventory.addItem(Items.WOOD_PICKAXE);
         this.inventory.addItem(Items.WOOD_SHOVEL);
         this.inventory.addItem(Items.WOOD_SWORD);
+        this.inventory.addItem(Items.FISHING_ROD);
         this.inventory.addItem(Items.WHEAT, 16);
         this.inventory.addItem(Items.SEED_WHEAT, 2);
         this.inventory.addItem(Items.POTATO, 30);
@@ -79,6 +82,8 @@ export default class Player extends Mob {
         super.onRender();
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
             this.playAnimation("walk");
+        } else if (this.inventory.selectedItem() instanceof FishingRodItem) {
+            this.playAnimation("fishing");
         } else {
             this.playAnimation("idle");
         }
@@ -101,8 +106,8 @@ export default class Player extends Mob {
         super.steppedOn();
     }
 
-    private playAnimation(name: string, loop: boolean = true): PIXI.AnimatedSprite {
-        const a = Player.spriteSheet.getAnimation(name, this.dir);
+    private playAnimation(name: string, type: "normal" | "hold" = "normal", loop: boolean = true): PIXI.AnimatedSprite {
+        const a = Player.spriteSheet.getAnimation(name, this.dir, type);
         if (this.sprite.textures === a) {
             return;
         }

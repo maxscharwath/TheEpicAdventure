@@ -5,6 +5,7 @@ import Resources from "./resources/Resources";
 import Tiers from "./Tiers";
 import ToolItem from "./ToolItem";
 import ToolType from "./ToolType";
+import FishingRodItem from "./FishingRodItem";
 
 type Type<T> = new (...args: any[]) => T;
 
@@ -91,4 +92,7 @@ export default class Items extends ItemRegister<Item> {
     public static LILYPAD = Items.add("lilypad", ResourceItem, Resources.lilypad);
     public static ICE = Items.add("ice", ResourceItem, Resources.ice);
     public static CACTUS_FLOWER = Items.add("cactus_flower", ResourceItem, Resources.cactusFlower);
+    public static FISH = Items.add("fish", ResourceItem, Resources.fish);
+
+    public static FISHING_ROD = Items.add("fishing_rod", FishingRodItem);
 }

@@ -105,7 +105,6 @@ export default class LevelTile extends PIXI.Container {
     public is(...tileClasses: Array<typeof Tile>) {
         return tileClasses.some((tileClass) => this._tile.getClass() === tileClass);
     }
-
     public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES): void;
     public setTile<T extends typeof Tile>(tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES): void;
     public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}): void {

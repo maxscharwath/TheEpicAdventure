@@ -11,6 +11,7 @@ import Level from "./Level";
 import LevelTile from "./LevelTile";
 import Tiles from "./tile/Tiles";
 
+type Type<T> = new (...args: any[]) => T;
 export default class Chunk {
     public static SIZE = 16;
 
@@ -245,12 +246,16 @@ export default class Chunk {
         });
     }
 
-    public findEntity<T extends typeof Entity>(entityClass: T): Promise<Entity> {
+    public findEntity<T extends Entity>(
+        entityClass: new (args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
         const entities = this.entities.concat();
         return new Promise((resolve) => {
             const action = () => {
                 const entity = entities.shift();
-                if (entity instanceof entityClass) return resolve(entity);
+                if (entity instanceof entityClass) {
+                    if (predicate instanceof Function && !predicate(entity)) return;
+                    return resolve(entity as T);
+                }
                 if (entities.length > 0) process.nextTick(action);
             };
             process.nextTick(action);

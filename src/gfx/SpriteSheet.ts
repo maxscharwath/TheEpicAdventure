@@ -3,32 +3,44 @@ import {BaseTexture, Rectangle, Texture} from "pixi.js";
 import System from "../core/System";
 import Direction from "../entity/Direction";
 
+interface SpriteSheetData {
+    url: string;
+    animations: Array<{
+        name: string;
+        width: number;
+        height: number;
+        type: { [key: string]: number; };
+        frames: number[][]
+    }>;
+}
+
 export default class SpriteSheet {
     private animations: Map<string, Texture[][]> = new Map<string, Texture[][]>();
 
     constructor(url: string) {
-        const data = JSON.parse(fs.readFileSync(System.getResource("entity", url), "utf8"));
+        const data: SpriteSheetData = JSON.parse(fs.readFileSync(System.getResource("entity", url), "utf8"));
         const baseTexture = BaseTexture.from(System.getResource(data.url));
-        for (const i in data.animations) {
-            if (!data.animations.hasOwnProperty(i)) {
-                continue;
+        data.animations.forEach((animation) => {
+            for (const type in animation.type) {
+                if (!animation.type.hasOwnProperty(type))continue;
+                const y = animation.type[type];
+                this.animations.set(`${animation.name}-${type}`, animation.frames.map((a: number[]) => {
+                    return a.map((v: number) => {
+                        return new Texture(
+                            baseTexture,
+                            new Rectangle(v * animation.width, y, animation.width, animation.height),
+                        );
+                    });
+                }));
             }
-            const value = data.animations[i];
-            this.animations.set(i, value.map((a: number[]) => {
-                return a.map((v: number) => {
-                    return new Texture(
-                        baseTexture,
-                        new Rectangle(v * data.width, 0, data.width, data.height),
-                    );
-                });
-            }));
-        }
+        });
     }
 
-    public getAnimation(name: string, dir?: Direction): Texture[] {
-        if (!this.animations.has(name)) {
-            throw new Error(`no animation "${name}" found`);
+    public getAnimation(name: string, dir?: Direction, type: string = "normal"): Texture[] {
+        const id = `${name}-${type}`;
+        if (!this.animations.has(id)) {
+            throw new Error(`no animation "${id}" found`);
         }
-        return this.animations.get(name)[dir ? dir.valueOf() : 0];
+        return this.animations.get(id)[dir ? dir.valueOf() : 0];
     }
 }

@@ -12,6 +12,7 @@ export default class Fish extends AquaticMob {
     private vector: Vector = new Vector();
 
     private points: PIXI.Point[];
+    private hooked?: Hook;
 
     constructor() {
         super();
@@ -27,8 +28,13 @@ export default class Fish extends AquaticMob {
 
     public onTick(): void {
         super.onTick();
-        if (--this.lifeDuration <= 0) {
+        if (!this.hooked && --this.lifeDuration <= 0) {
             this.delete();
+        }
+
+        if (this.target instanceof Hook && Math.hypot(this.x - this.target.x, this.y - this.target.y) < 5) {
+            this.hooked = this.target as Hook;
+            this.hooked.hookFish(this);
         }
     }
 
@@ -45,9 +51,9 @@ export default class Fish extends AquaticMob {
     }
 
     protected newTarget() {
-        if (!this.level) return;
+        if (!this.level || this.hooked) return;
         if (this.random.probability(50)) {
-            this.level.findEntity(Hook).then((hook) => this.target = hook);
+            this.level.findEntity(Hook, (hook) => !hook.isHooked()).then((hook) => this.target = hook);
         } else {
             super.newTarget();
         }

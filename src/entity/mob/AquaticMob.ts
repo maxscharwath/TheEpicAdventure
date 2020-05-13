@@ -16,7 +16,8 @@ export default abstract class AquaticMob extends Mob {
 
     public onTick(): void {
         super.onTick();
-        if (!(this.target instanceof Entity) && this.random.int(100) === 0) {
+        if (this.target instanceof Entity && this.target.getRemoved() ||
+            !(this.target instanceof Entity) && this.random.probability(100)) {
             this.newTarget();
         }
     }
@@ -28,18 +29,11 @@ export default abstract class AquaticMob extends Mob {
         let xa = 0;
         let ya = 0;
 
-
-        if (this.x > this.target.x) {
-            xa = -1;
-        }
-        if (this.x < this.target.x) {
-            xa = 1;
-        }
-        if (this.y > this.target.y) {
-            ya = -1;
-        }
-        if (this.y < this.target.y) {
-            ya = 1;
+        if (this.target) {
+            if (this.x > this.target.x) xa = -1;
+            if (this.x < this.target.x) xa = 1;
+            if (this.y > this.target.y) ya = -1;
+            if (this.y < this.target.y) ya = 1;
         }
 
         const absX = Maths.abs(this.x - this.target.x);
