@@ -13,7 +13,6 @@ export default class Player extends Mob {
     protected speedMax: number = 1;
     private targetTile: PIXI.Sprite;
     private sprite: PIXI.AnimatedSprite;
-    private fishing: boolean = true;
 
     constructor() {
         super();
@@ -45,22 +44,12 @@ export default class Player extends Mob {
 
         let ax = 0;
         let ay = 0;
-        if (Game.input.getKey("MOVE-RIGHT").down) {
-            ax += 3;
-        }
-        if (Game.input.getKey("MOVE-LEFT").down) {
-            ax += -3;
-        }
-        if (Game.input.getKey("MOVE-DOWN").down) {
-            ay += 3;
-        }
-        if (Game.input.getKey("MOVE-UP").down) {
-            ay += -3;
-        }
+        if (Game.input.getKey("MOVE-RIGHT").down) ax += 3;
+        if (Game.input.getKey("MOVE-LEFT").down) ax += -3;
+        if (Game.input.getKey("MOVE-DOWN").down)  ay += 3;
+        if (Game.input.getKey("MOVE-UP").down) ay += -3;
+        if (Game.input.getKey("JUMP").clicked && this.z === 0) this.a.z = 3;
 
-        if (Game.input.getKey("JUMP").clicked && this.z === 0) {
-            this.a.z = 3;
-        }
         const levelTile = this.getInteractTile();
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();

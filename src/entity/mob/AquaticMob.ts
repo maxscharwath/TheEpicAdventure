@@ -16,8 +16,8 @@ export default abstract class AquaticMob extends Mob {
 
     public onTick(): void {
         super.onTick();
-        if (this.target instanceof Entity && this.target.getRemoved() ||
-            !(this.target instanceof Entity) && this.random.probability(100)) {
+        if ((this.target instanceof Entity && this.target.getRemoved()) ||
+            (!(this.target instanceof Entity) && this.random.probability(100))) {
             this.newTarget();
         }
     }

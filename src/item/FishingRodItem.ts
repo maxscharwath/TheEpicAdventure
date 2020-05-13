@@ -1,10 +1,8 @@
 import Item from "./Item";
 import LevelTile from "../level/LevelTile";
-import {Entity, Hook, Mob, ItemEntity} from "../entity";
-import Tiles from "../level/tile/Tiles";
+import {Hook, Mob} from "../entity";
 import * as PIXI from "pixi.js";
 import System from "../core/System";
-import Items from "./Items";
 
 export default class FishingRodItem extends Item {
 
@@ -31,11 +29,13 @@ export default class FishingRodItem extends Item {
         return false;
     }
 
-    public useOn(levelTile: LevelTile, entity: Entity): boolean {
-        if (!levelTile.instanceOf(Tiles.WATER.tile)) return false;
-        if (this.hook) return this.hook.pull(this);
-        this.hook = new Hook(entity);
-        entity.getLevel().addEntity(this.hook, levelTile.x + 8, levelTile.y + 8);
+    public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.hook) return this.hook.pull();
+        this.hook = new Hook(mob, this);
+        this.hook.a.x = mob.getDir().getX();
+        this.hook.a.y = mob.getDir().getY();
+        this.hook.a.z = 2;
+        mob.getLevel().addEntity(this.hook, mob.x + mob.getDir().getX() * 10, mob.y + mob.getDir().getY() * 10);
         return true;
     }
 

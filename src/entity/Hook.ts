@@ -5,14 +5,17 @@ import Fish from "./mob/Fish";
 import {Mob, ItemEntity} from "./index";
 import Items from "../item/Items";
 import FishingRodItem from "../item/FishingRodItem";
+import Level from "../level/Level";
 
 export default class Hook extends Entity {
     private readonly owner: Entity;
     private hooked: Fish;
+    private fishingRodItem: FishingRodItem;
 
-    constructor(owner: Entity) {
+    constructor(owner?: Entity, fishingRod?: FishingRodItem) {
         super();
         this.owner = owner;
+        this.fishingRodItem = fishingRod;
     }
 
     public init() {
@@ -25,22 +28,25 @@ export default class Hook extends Entity {
 
     public onTick() {
         super.onTick();
-        if (!this.owner) this.delete();
+        if (!(this.owner instanceof Mob) || !(this.owner.inventory.selectedItem() instanceof FishingRodItem)) {
+            return this.delete();
+        }
+        if (this.getDistance(this.owner) > 64) return this.delete();
     }
 
     public onRender() {
         super.onRender();
         if (this.isSwimming()) {
-            this.container.pivot.y = Math.sin(this.ticks / 4) * 0.5;
+            this.container.pivot.y = this.isHooked() ? Math.sin(this.ticks * 2) : Math.sin(this.ticks / 4) * 0.5;
         }
     }
 
     public isHooked() {
-        return Boolean(this.hooked);
+        return this.hooked instanceof Fish;
     }
 
     public getFish() {
-        if (!(this.hooked instanceof Fish)) return;
+        if (!this.isHooked()) return;
         return this.hooked;
     }
 
@@ -48,9 +54,17 @@ export default class Hook extends Entity {
         this.hooked = fish;
     }
 
-    public pull(fishingRod: FishingRodItem): boolean {
+    public unHookFish() {
+        this.hooked = undefined;
+    }
+
+    public delete(level?: Level) {
+        super.delete(level);
+        this.fishingRodItem?.clearHook();
+    }
+
+    public pull(): boolean {
         const fish = this.getFish();
-        fishingRod.clearHook();
         this.delete();
         if (fish) {
             fish.delete();
@@ -61,5 +75,19 @@ export default class Hook extends Entity {
             return true;
         }
         return false;
+    }
+
+    public canSwim(): boolean {
+        return true;
+    }
+
+    protected friction() {
+        if (this.z <= 0) {
+            this.a.x -= this.a.x * 0.1;
+            this.a.y -= this.a.y * 0.1;
+        } else {
+            this.a.x -= this.a.x * 0.01;
+            this.a.y -= this.a.y * 0.01;
+        }
     }
 }

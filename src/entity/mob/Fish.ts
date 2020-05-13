@@ -32,9 +32,19 @@ export default class Fish extends AquaticMob {
             this.delete();
         }
 
-        if (this.target instanceof Hook && Math.hypot(this.x - this.target.x, this.y - this.target.y) < 5) {
+        if (this.target instanceof Hook && this.target.isHooked() && this.target.getFish() !== this) {
+            this.newTarget();
+        }
+
+        if (this.target instanceof Hook && !this.target.isHooked() && this.getDistance(this.target) < 8) {
             this.hooked = this.target as Hook;
             this.hooked.hookFish(this);
+        }
+
+        if (this.hooked && this.random.probability(20)) {
+            this.hooked.unHookFish();
+            this.hooked = undefined;
+            this.newTarget();
         }
     }
 
@@ -52,8 +62,12 @@ export default class Fish extends AquaticMob {
 
     protected newTarget() {
         if (!this.level || this.hooked) return;
-        if (this.random.probability(50)) {
-            this.level.findEntity(Hook, (hook) => !hook.isHooked()).then((hook) => this.target = hook);
+        if (this.random.probability(10)) {
+            this.level.findEntity(Hook, (hook) =>
+                hook.isSwimming() && !hook.getRemoved() && !hook.isHooked())
+                .then((hook) => {
+                    this.target = hook;
+                });
         } else {
             super.newTarget();
         }

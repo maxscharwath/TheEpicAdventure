@@ -64,6 +64,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.ticks++;
     }
 
+    public getDistance(entity: Entity) {
+        return Math.hypot(this.x - entity.x, this.y - entity.y);
+    }
+
     public onRender() {
         this.z += this.a.z;
         if (this.z < 0) {
@@ -73,14 +77,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             this.z = 0;
             this.a.z *= -0.5;
         }
-        if (this.z <= 0) {
-            const friction = this.getTile()?.getFriction() ?? 1;
-            this.a.x -= this.a.x * friction;
-            this.a.y -= this.a.y * friction;
-        } else {
-            this.a.x -= this.a.x * 0.01;
-            this.a.y -= this.a.y * 0.01;
-        }
+        this.friction();
         if (Maths.abs(this.a.x) < 0.05) {
             this.a.x = 0;
         }
@@ -288,6 +285,17 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     protected calculateZIndex() {
         return this.y + this.hitbox.y + this.hitbox.height / 2;
+    }
+
+    protected friction() {
+        if (this.z <= 0) {
+            const friction = this.getTile()?.getFriction() ?? 1;
+            this.a.x -= this.a.x * friction;
+            this.a.y -= this.a.y * friction;
+        } else {
+            this.a.x -= this.a.x * 0.01;
+            this.a.y -= this.a.y * 0.01;
+        }
     }
 
     private getCentredPos() {

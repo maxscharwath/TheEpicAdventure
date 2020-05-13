@@ -38,7 +38,7 @@ export default class Item {
         return false;
     }
 
-    public useOn(levelTile: LevelTile, entity: Entity): boolean {
+    public useOn(levelTile: LevelTile, mob: Mob): boolean {
         return false;
     }
 
