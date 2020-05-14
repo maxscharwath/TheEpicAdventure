@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
-import {remote} from "electron";
 import Items from "../item/Items";
-import {Player, Hook} from "../entity/";
+import {Player} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Client from "../network/Client";
@@ -29,8 +28,8 @@ export default class Game {
     public static isOnline: boolean = false;
     public static isHost: boolean = false;
     public static isFocus: boolean = false;
-    public static client: Client = null;
-    public static server: Server = null;
+    public static client?: Client;
+    public static server?: Server;
     public static running: boolean = true;
     public static levels: Level[] = [];
     public static currentLevel: number = 0;
@@ -46,15 +45,15 @@ export default class Game {
     }
 
     public static isConnectedClient(): boolean {
-        return this.isValidClient() && this.client.isConnected();
+        return Boolean(this.isValidClient() && this.client?.isConnected());
     }
 
     public static isValidServer(): boolean {
-        return this.isOnline && this.isHost && this.server != null;
+        return Boolean(this.isOnline && this.isHost && this.server);
     }
 
     public static hasConnectedClients(): boolean {
-        return this.isValidServer() && this.server.hasClients();
+        return Boolean(this.isValidServer() && this.server?.hasClients());
     }
 
     public static main(): void {
@@ -69,10 +68,9 @@ export default class Game {
         this.levels.push(new Level());
         this.level.deleteTempDir();
         this.level.addEntity(this.player, 0, 0, true);
-        this.level.addEntity(new Hook(), 1, 1, true);
         Renderer.setLevel(this.level);
         setTimeout(() => {
-            this.level.findEntities((entity) => entity.visible ).then((entities) => console.log(entities));
+            this.level.findEntities((entity) => entity.visible).then((entities) => console.log(entities));
         }, 20000);
         Initializer.createAndDisplayFrame();
         Initializer.run();
@@ -83,21 +81,21 @@ export default class Game {
             (new LanDisplay()).show();
         });
 
-/*        window.addEventListener("beforeunload", (e) => {
-            e.preventDefault();
-            this.quit().finally(() => {
-                remote.getCurrentWindow().destroy();
-            });
-            e.returnValue = true;
-        });*/
+        /*        window.addEventListener("beforeunload", (e) => {
+                    e.preventDefault();
+                    this.quit().finally(() => {
+                        remote.getCurrentWindow().destroy();
+                    });
+                    e.returnValue = true;
+                });*/
     }
 
     public static quit() {
         if (this.isValidServer()) {
-            this.server.endConnection();
+            this.server?.endConnection();
         }
         if (this.isConnectedClient()) {
-            this.client.endConnection();
+            this.client?.endConnection();
         }
         this.running = false;
         return Promise.all(this.levels.map(((level) => level.save())));

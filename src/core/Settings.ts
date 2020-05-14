@@ -19,7 +19,7 @@ class Settings {
     }
 
     public get(option: string): any {
-        return this.getEntry(option).getValue();
+        return this.getEntry(option)?.getValue();
     }
 
     public getIdx(option: string): number {
@@ -30,7 +30,7 @@ class Settings {
         return 0;
     }
 
-    public getEntry(option: string): Entry {
+    public getEntry(option: string): Entry | undefined {
         return this.options.get(option.toLowerCase());
     }
 }

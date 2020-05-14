@@ -29,7 +29,7 @@ export default class Random {
     private static $ = Random.create();
 
     public seed: number;
-    private nextGaussian: number;
+    private nextGaussian: number = 0;
     private haveNextGaussian: boolean = false;
 
     constructor(seed = System.currentTimeMillis()) {

@@ -22,7 +22,7 @@ export default class SpriteSheet {
         const baseTexture = BaseTexture.from(System.getResource(data.url));
         data.animations.forEach((animation) => {
             for (const type in animation.type) {
-                if (!animation.type.hasOwnProperty(type))continue;
+                if (!animation.type.hasOwnProperty(type)) continue;
                 const y = animation.type[type];
                 this.animations.set(`${animation.name}-${type}`, animation.frames.map((a: number[]) => {
                     return a.map((v: number) => {
@@ -38,9 +38,10 @@ export default class SpriteSheet {
 
     public getAnimation(name: string, dir?: Direction, type: string = "normal"): Texture[] {
         const id = `${name}-${type}`;
-        if (!this.animations.has(id)) {
+        const animation = this.animations.get(id);
+        if (!animation) {
             throw new Error(`no animation "${id}" found`);
         }
-        return this.animations.get(id)[dir ? dir.valueOf() : 0];
+        return animation[dir ? dir.valueOf() : 0];
     }
 }

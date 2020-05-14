@@ -28,9 +28,9 @@ export default class Version {
     }
 
     private readonly valid: boolean = true;
-    private readonly major: number;
-    private readonly minor: number;
-    private readonly dev: number;
+    private readonly major: number = 0;
+    private readonly minor: number = 0;
+    private readonly dev: number = 0;
 
     constructor(version: string = app.getVersion()) {
         const nums: string[] = version.split(".");

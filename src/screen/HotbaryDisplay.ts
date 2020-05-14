@@ -14,7 +14,7 @@ class InventorySlot extends PIXI.Container {
     public slot: Slot;
     public item?: Item;
 
-    private itemSprite: PIXI.Sprite;
+    private itemSprite?: PIXI.Sprite;
     private itemContainer = new PIXI.Container();
 
     constructor(slot: Slot, index: number = 0) {
@@ -39,7 +39,7 @@ class InventorySlot extends PIXI.Container {
         if (this.item === this.slot.item) return;
         this.item = this.slot.item;
         this.itemContainer.removeChildren();
-        if (this.slot.isItem()) {
+        if (this.slot.item) {
             this.itemSprite = this.slot.item.getSprite();
             this.itemContainer.addChild(this.itemSprite);
         }
@@ -49,8 +49,8 @@ class InventorySlot extends PIXI.Container {
 export default class HotbarDisplay extends Display {
     private mob: Mob;
     private slots: InventorySlot[] = [];
-    private selectSprite: PIXI.Sprite;
-    private itemText: PIXI.BitmapText;
+    private selectSprite?: PIXI.Sprite;
+    private itemText?: PIXI.BitmapText;
 
     constructor(mob: Mob) {
         super(false);
@@ -77,7 +77,7 @@ export default class HotbarDisplay extends Display {
             const slot = this.mob.inventory.selectedSlot();
             if (slot.isItem()) {
                 const level = this.mob.getLevel();
-                if (level) {
+                if (level && slot.item) {
                     level.addEntity(new ItemEntity(slot.item), this.mob.x, this.mob.y);
                     this.mob.inventory.removeItem(slot.item, 1);
                 }
@@ -124,10 +124,10 @@ export default class HotbarDisplay extends Display {
     private setCurrentSlot() {
         const index = this.mob.inventory.indexedSlot;
         const slot = this.mob.inventory.getSlot(index);
-        if (slot.isItem()) {
-            this.itemText.text = `${slot.item.getDisplayName()} - ${slot.nb}`;
+        if (this.itemText && slot.isItem()) {
+            this.itemText.text = `${slot.item?.getDisplayName()} - ${slot.nb}`;
         }
-        if (this.selectSprite.x !== index * 10) {
+        if (this.selectSprite && this.selectSprite.x !== index * 10) {
             this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 2;
         }
     }

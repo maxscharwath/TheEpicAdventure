@@ -11,7 +11,7 @@ export default class Fish extends AquaticMob {
 
     private vector: Vector = new Vector();
 
-    private points: PIXI.Point[];
+    private points?: PIXI.Point[];
     private hooked?: Hook;
 
     constructor() {
@@ -57,14 +57,15 @@ export default class Fish extends AquaticMob {
         }
 
         this.container.rotation = -this.vector.rotation - Math.PI / 2;
-        this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+        if (this.points) {
+            this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+        }
     }
 
     protected newTarget() {
         if (!this.level || this.hooked) return;
         if (this.random.probability(10)) {
-            this.level.findEntity(Hook, (hook) =>
-                hook.isSwimming() && !hook.getRemoved() && !hook.isHooked())
+            this.level.findEntity(Hook, (hook) => Boolean(hook.isSwimming() && !hook.getRemoved() && !hook.isHooked()))
                 .then((hook) => {
                     this.target = hook;
                 });

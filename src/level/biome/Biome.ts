@@ -19,7 +19,7 @@ export default class Biome {
         return biome;
     }
 
-    public static getKeys(biome: Biome): { idx: number; tag: string } {
+    public static getKeys(biome: Biome): { tag: string | undefined; idx: number | undefined } {
         return this.biomes.getKeys(biome);
     }
 
@@ -92,7 +92,7 @@ export default class Biome {
 
     public readonly name: string;
     public readonly color: Color;
-    public tag: string;
+    public tag: string = "";
 
     constructor(name: string, color: Color) {
         this.name = name;

@@ -20,7 +20,7 @@ interface LevelTileConstructor {
 
 export default class LevelTile extends PIXI.Container {
 
-    get tile(): Tile {
+    get tile(): Tile | undefined {
         return this._tile;
     }
 
@@ -35,13 +35,13 @@ export default class LevelTile extends PIXI.Container {
     public readonly moisture: number;
     public readonly x: number;
     public readonly y: number;
-    public bg: PIXI.Sprite;
-    private tileStates: {};
-    private tileClass: typeof Tile;
+    public bg?: PIXI.Sprite;
+    private tileStates?: {};
+    private tileClass?: typeof Tile;
     private needToUpdate: boolean = true;
     private isInitiated = false;
 
-    private _tile: Tile;
+    private _tile?: Tile;
 
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         super();
@@ -57,12 +57,12 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public init() {
-        if (!(this.tileClass.prototype instanceof Tile)) {
+        if (this.tileClass && !(this.tileClass.prototype instanceof Tile)) {
             throw new Error("Cannot initialize LevelTile: Wrong Tile");
         }
         // @ts-ignore
         this._tile = new this.tileClass(this);
-        this._tile.states.set(this.tileStates);
+        this._tile?.states.set(this.tileStates);
         this.isInitiated = true;
         process.nextTick(() => {
             this.removeChildren();
@@ -71,9 +71,11 @@ export default class LevelTile extends PIXI.Container {
             this.bg.height = LevelTile.SIZE;
             this.bg.tint = this.biome.color.getInt();
             this.addChild(this.bg);
-            this._tile.init();
+            if (this._tile) {
+                this._tile.init();
+                this.addChild(this._tile.container);
+            }
             this.update();
-            this.addChild(this._tile.container);
         });
     }
 
@@ -99,12 +101,13 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public steppedOn(entity: Entity) {
-        this._tile.steppedOn(entity);
+        this._tile?.steppedOn(entity);
     }
 
     public is(...tileClasses: Array<typeof Tile>) {
-        return tileClasses.some((tileClass) => this._tile.getClass() === tileClass);
+        return tileClasses.some((tileClass) => this._tile?.getClass() === tileClass);
     }
+
     public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES): void;
     public setTile<T extends typeof Tile>(tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES): void;
     public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}): void {
@@ -139,14 +142,14 @@ export default class LevelTile extends PIXI.Container {
             this.skipTick = false;
             return;
         }
-        if (this._tile.isInit) {
-            this._tile.onTick();
+        if (this._tile?.isInit) {
+            this._tile?.onTick();
         }
     }
 
     public onUpdate() {
-        if (this._tile.isInit) {
-            this._tile.onUpdate();
+        if (this._tile?.isInit) {
+            this._tile?.onUpdate();
         }
     }
 
@@ -158,12 +161,12 @@ export default class LevelTile extends PIXI.Container {
             this.needToUpdate = false;
             this.onUpdate();
         }
-        if (this._tile.isInit) {
-            this._tile.onRender();
+        if (this._tile?.isInit) {
+            this._tile?.onRender();
         }
     }
 
-    public getRelativeTile(x: number, y: number, generate = true): LevelTile {
+    public getRelativeTile(x: number, y: number, generate = true): LevelTile | undefined {
         return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
@@ -202,11 +205,11 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public mayPass(entity: Entity) {
-        return this._tile.mayPass(entity);
+        return this._tile?.mayPass(entity);
     }
 
     public bumpedInto(entity: Entity) {
-        return this._tile.bumpedInto(entity);
+        return this._tile?.bumpedInto(entity);
     }
 
     public getFriction() {
@@ -214,7 +217,7 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public instanceOf(...tileClass: Array<typeof Tile>) {
-        return this._tile.instanceOf(...tileClass);
+        return this._tile?.instanceOf(...tileClass);
     }
 
     public update() {

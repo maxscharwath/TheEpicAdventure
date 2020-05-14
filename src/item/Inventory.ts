@@ -1,5 +1,5 @@
 import Item from "./Item";
-import Items, {ItemRegister} from "./Items";
+import {ItemRegister} from "./Items";
 import Slot from "./Slot";
 
 export default class Inventory {
@@ -15,7 +15,6 @@ export default class Inventory {
     }
 
     public indexedSlot: number = 0;
-
     public slots: Slot[] = [];
     private STACK_MAX: number = 64;
 
@@ -27,11 +26,9 @@ export default class Inventory {
         return this.slots[this.indexedSlot];
     }
 
-    public selectedItem(): Item {
+    public selectedItem(): Item | undefined {
         const slot = this.slots[this.indexedSlot];
-        if (!(slot && slot.isItem())) {
-            return undefined;
-        }
+        if (!(slot && slot.isItem())) return undefined;
         return slot.item;
     }
 
@@ -101,9 +98,7 @@ export default class Inventory {
         if (item instanceof ItemRegister) {
             item = item.item;
         }
-        if (!(item instanceof Item)) {
-            return false;
-        }
+        if (!(item instanceof Item)) return false;
         const stack = item.isStackable() ? this.STACK_MAX : 1;
 
         for (const slot of this.slots) {
@@ -112,9 +107,7 @@ export default class Inventory {
                     continue;
                 }
             }
-            if (itemNb === 0) {
-                return true;
-            }
+            if (itemNb === 0) return true;
 
             const nb = slot.nb + itemNb;
 
@@ -131,6 +124,8 @@ export default class Inventory {
             console.log("NO PLACE FOR " + item.getDisplayName() + " EXCESS OF " + itemNb);
             return false;
         }
+        // need to verify
+        return true;
     }
 
     public count(item: Item) {
@@ -158,7 +153,7 @@ export default class Inventory {
     }
 
     public toBSON() {
-        const slots: Array<{ pos: number, item: Item, nb: number }> = [];
+        const slots: Array<{ pos: number, item?: Item, nb: number }> = [];
         this.slots.forEach((slot, index) => {
             if (slot instanceof Slot && !slot.isEmpty()) {
                 slots.push({
@@ -178,12 +173,12 @@ export default class Inventory {
         if (this.slots[a].item === null || this.slots[b].item === null) {
             return false;
         }
-        if (this.slots[a].item.tag !== this.slots[b].item.tag) {
+        if (this.slots[a].item?.tag !== this.slots[b].item?.tag) {
             return false;
         }
 
         const item = this.slots[a].item;
-        const stack = item.isStackable() ? this.STACK_MAX : 1;
+        const stack = item?.isStackable() ? this.STACK_MAX : 1;
 
         this.slots[a].nb += this.slots[b].nb;
         this.slots[b].nb = this.slots[a].nb - stack;

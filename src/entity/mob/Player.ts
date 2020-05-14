@@ -11,8 +11,8 @@ export default class Player extends Mob {
 
     private static spriteSheet = new SpriteSheet("player.json");
     protected speedMax: number = 1;
-    private targetTile: PIXI.Sprite;
-    private sprite: PIXI.AnimatedSprite;
+    private targetTile?: PIXI.Sprite;
+    private sprite?: PIXI.AnimatedSprite;
 
     constructor() {
         super();
@@ -46,15 +46,15 @@ export default class Player extends Mob {
         let ay = 0;
         if (Game.input.getKey("MOVE-RIGHT").down) ax += 3;
         if (Game.input.getKey("MOVE-LEFT").down) ax += -3;
-        if (Game.input.getKey("MOVE-DOWN").down)  ay += 3;
+        if (Game.input.getKey("MOVE-DOWN").down) ay += 3;
         if (Game.input.getKey("MOVE-UP").down) ay += -3;
         if (Game.input.getKey("JUMP").clicked && this.z === 0) this.a.z = 3;
 
         const levelTile = this.getInteractTile();
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();
-            levelTile?.tile.onInteract(this, item);
-            if (item instanceof Item) {
+            if (levelTile && item instanceof Item) {
+                levelTile.tile?.onInteract(this, item);
                 item.useOn(levelTile, this);
             } else {
                 this.attack(5);
@@ -77,7 +77,9 @@ export default class Player extends Mob {
             this.playAnimation("idle");
         }
         const levelTile = this.getInteractTile();
-        this.targetTile.position.set(levelTile?.x - this.x, levelTile?.y - this.y);
+        if (levelTile && this.targetTile) {
+            this.targetTile.position.set(levelTile.x - this.x, levelTile.y - this.y);
+        }
     }
 
     protected init() {
@@ -95,11 +97,10 @@ export default class Player extends Mob {
         super.steppedOn();
     }
 
-    private playAnimation(name: string, type: "normal" | "hold" = "normal", loop: boolean = true): PIXI.AnimatedSprite {
+    private playAnimation(
+        name: string, type: "normal" | "hold" = "normal", loop: boolean = true): PIXI.AnimatedSprite | undefined {
         const a = Player.spriteSheet.getAnimation(name, this.dir, type);
-        if (this.sprite.textures === a) {
-            return;
-        }
+        if (!this.sprite || this.sprite.textures === a) return;
         this.sprite.textures = a;
         this.sprite.animationSpeed = 0.1;
         this.sprite.play();

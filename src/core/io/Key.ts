@@ -3,8 +3,8 @@ export default class Key {
     public down: boolean = false;
     public clicked: boolean = false;
     public sticky: boolean = false;
-    private presses: number;
-    private absorbs: number;
+    private presses: number = 0;
+    private absorbs: number = 0;
     private stayDown: boolean = false;
 
     constructor(stayDown: boolean = false) {

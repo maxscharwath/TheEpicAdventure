@@ -70,7 +70,7 @@ export default abstract class AquaticMob extends Mob {
     }
 
     protected move(xa: number, ya: number): boolean {
-        let entities = this.getChunk().getEntities();
+        let entities = this.getChunk()?.getEntities() ?? [];
         const maxEntities = 10;
         if (entities.length > maxEntities) {
             const i = Random.int(entities.length - maxEntities);
@@ -126,7 +126,7 @@ export default abstract class AquaticMob extends Mob {
                 if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) {
                     continue;
                 }
-                const tile = this.level.getTile(xt, yt);
+                const tile = this.level?.getTile(xt, yt);
                 if (!tile || (this.isSwimming() || !tile.mayPass(this)) && !tile.instanceOf(Tiles.WATER.tile)) {
                     blocked = true;
                     return false;

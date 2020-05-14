@@ -12,7 +12,7 @@ export default class LilyPadTile extends Tile {
     public static readonly TAG = "lilypad";
 
     private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
-    private sprite: PIXI.Sprite;
+    private sprite?: PIXI.Sprite;
 
     public init() {
         super.init();
@@ -29,7 +29,7 @@ export default class LilyPadTile extends Tile {
 
     public onRender() {
         super.onRender();
-        this.sprite.pivot.set(0, Math.sin(Updater.tickCount / 2) / 4);
+        this.sprite?.pivot.set(0, Math.sin(Updater.tickCount / 2) / 4);
     }
 
     public mayPass(e: Entity): boolean {

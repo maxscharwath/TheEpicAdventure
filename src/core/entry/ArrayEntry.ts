@@ -2,7 +2,7 @@ import Entry from "./Entry";
 
 export default class ArrayEntry extends Entry {
     private readonly options: any[];
-    private selection: number;
+    private selection: number = 0;
 
     constructor(label: string, ...options: any[]) {
         super(label);

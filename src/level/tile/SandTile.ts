@@ -14,7 +14,7 @@ export default class SandTile extends AutoTilingTile {
     protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     private step: number = 0;
     private stepDir: boolean = false;
-    private footprintSprite: PIXI.Sprite;
+    private footprintSprite?: PIXI.Sprite;
 
     public steppedOn(entity: Entity) {
         if (this.step < 50 && entity instanceof Mob) {
@@ -51,10 +51,12 @@ export default class SandTile extends AutoTilingTile {
         if (this.step > 0) {
             this.step--;
         }
-        if (this.footprintSprite.texture.valid) {
-            this.footprintSprite.texture.frame = new PIXI.Rectangle(this.stepDir ? 16 : 0, 0, 16, 16);
+        if (this.footprintSprite) {
+            if (this.footprintSprite.texture.valid) {
+                this.footprintSprite.texture.frame = new PIXI.Rectangle(this.stepDir ? 16 : 0, 0, 16, 16);
+            }
+            this.footprintSprite.visible = this.step > 0;
         }
-        this.footprintSprite.visible = this.step > 0;
     }
 
 }

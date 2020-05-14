@@ -31,10 +31,10 @@ export default abstract class Mob extends Entity {
     protected walkDist: number = 0;
     protected dir: Direction = Direction.DOWN;
     protected mass = 20;
-    private hurtCooldown: number;
-    private attackCooldown: number;
+    private hurtCooldown: number = 0;
+    private attackCooldown: number = 0;
 
-    public getInteractTile(): LevelTile {
+    public getInteractTile(): LevelTile | undefined {
         return this.level?.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
     }
 
@@ -46,7 +46,7 @@ export default abstract class Mob extends Entity {
                 if (Random.int(5) !== 0) continue;
                 const x = this.x + Random.int(0, 16);
                 const y = this.y + Random.int(0, 16);
-                this.level.addEntity(new ItemEntity(slot.item, x, y));
+                this.level?.addEntity(new ItemEntity(slot.item, x, y));
             }
         }
         this.delete();
@@ -98,7 +98,7 @@ export default abstract class Mob extends Entity {
 
     protected move(xa: number, ya: number): boolean {
         if (this.onGround()) {
-            let entities = this.getChunk().getEntities();
+            let entities = this.getChunk()?.getEntities() ?? [];
             const maxEntities = 50;
             if (entities.length > maxEntities) {
                 const i = Random.int(entities.length - maxEntities);

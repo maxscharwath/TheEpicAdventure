@@ -24,7 +24,7 @@ export default abstract class AutoTilingTile extends Tile {
     }
     public ["constructor"]: typeof AutoTilingTile;
 
-    private sprites: PIXI.Sprite[];
+    private sprites: PIXI.Sprite[] = [];
 
     public autoTiling() {
         const test = (x: number, y: number) => {

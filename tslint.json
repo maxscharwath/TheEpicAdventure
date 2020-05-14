@@ -21,12 +21,5 @@
     "max-classes-per-file": false,
     "unified-signatures": false,
     "curly": [true, "ignore-same-line"]
-  },
-  "jsRules": {
-    "max-line-length": {
-      "options": [
-        120
-      ]
-    }
   }
 }

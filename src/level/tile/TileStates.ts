@@ -1,5 +1,5 @@
 type ExtendedProperties<T> = { [P in keyof T]: T[P] };
-export default class TileStates<T> {
+export default class TileStates<T extends {}> {
 
     public static create<T>(def: T = {} as T): TileStates<T> & ExtendedProperties<T> {
         return new TileStates(def) as TileStates<T> & ExtendedProperties<T>;
@@ -45,9 +45,6 @@ export default class TileStates<T> {
     }
 
     public set(data: T = {} as T) {
-        if (!(data instanceof Object)) {
-            return this;
-        }
         Object.keys(data).forEach((key: any) => {
             if (this.defaultStates.hasOwnProperty(key)) {
                 this[key] = data[key];

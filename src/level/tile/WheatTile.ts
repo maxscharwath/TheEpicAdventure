@@ -6,7 +6,7 @@ import FarmlandTile from "./FarmlandTile";
 export default class WheatTile extends FarmlandTile {
     public static readonly TAG: string = "wheat";
 
-    private sprite: PIXI.Sprite;
+    private sprite?: PIXI.Sprite;
 
     public init() {
         super.init();
@@ -22,7 +22,7 @@ export default class WheatTile extends FarmlandTile {
                 this.states.age++;
             }
         }
-        if (this.sprite.texture.valid) {
+        if (this.sprite?.texture.valid) {
             this.sprite.texture.frame = new PIXI.Rectangle(~~(this.states.age / 50 * 4) * 16, 0, 16, 16);
         }
     }

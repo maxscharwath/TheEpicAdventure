@@ -13,7 +13,7 @@ export default class LavaTile extends AutoTilingTile {
     protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     public states = TileStates.create(LavaTile.DEFAULT_STATES);
-    private animSprite: PIXI.AnimatedSprite;
+    private animSprite?: PIXI.AnimatedSprite;
 
     public init() {
         super.init();
@@ -27,7 +27,7 @@ export default class LavaTile extends AutoTilingTile {
 
     public onTick(): void {
         super.onTick();
-        if (!this.animSprite.playing && Random.probability(1000)) {
+        if (this.animSprite && !this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
     }

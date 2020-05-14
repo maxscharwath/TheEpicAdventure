@@ -17,7 +17,7 @@ export default class SnowTile extends AutoTilingTile  {
 
     private step: number = 0;
     private stepDir: boolean = false;
-    private footprintSprite: PIXI.Sprite;
+    private footprintSprite?: PIXI.Sprite;
 
     public steppedOn(entity: Entity) {
         if (this.step < 50 && entity instanceof Mob) {

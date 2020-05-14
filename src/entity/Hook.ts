@@ -9,10 +9,10 @@ import Level from "../level/Level";
 
 export default class Hook extends Entity {
     private readonly owner: Entity;
-    private hooked: Fish;
+    private hooked?: Fish;
     private fishingRodItem: FishingRodItem;
 
-    constructor(owner?: Entity, fishingRod?: FishingRodItem) {
+    constructor(owner: Entity, fishingRod: FishingRodItem) {
         super();
         this.owner = owner;
         this.fishingRodItem = fishingRod;
@@ -69,7 +69,7 @@ export default class Hook extends Entity {
         if (fish) {
             fish.delete();
             if (this.owner instanceof Mob && !this.owner.inventory.addItem(Items.FISH)) {
-                this.owner.getLevel().addEntity(new ItemEntity(Items.FISH), this.owner.x, this.owner.y);
+                this.owner.getLevel()?.addEntity(new ItemEntity(Items.FISH), this.owner.x, this.owner.y);
             }
             console.log("You catch a fish!");
             return true;

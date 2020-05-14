@@ -63,7 +63,7 @@ export default class Level {
                 const chunk = this.getChunk(
                     x + ((Renderer.camera.x + 16 * 8) >> 8),
                     y + ((Renderer.camera.y + 16 * 8) >> 8));
-                if (chunk.isGenerated() && chunk.isActive()) {
+                if (chunk && chunk.isGenerated() && chunk.isActive()) {
                     chunks.push(chunk);
                 }
             }
@@ -82,7 +82,7 @@ export default class Level {
         this.chunksToRemove.push(chunk.x + ":" + chunk.y);
     }
 
-    public getChunk(x: number, y: number, generate = true): Chunk {
+    public getChunk(x: number, y: number, generate = true): Chunk | undefined {
         x = ~~x;
         y = ~~y;
         const id = x + ":" + y;
@@ -103,17 +103,16 @@ export default class Level {
         const chunks = [];
         for (let i = x - 1; i < x + 1; i++) {
             for (let j = y - 1; j < y + 1; j++) {
-                chunks.push(this.getChunk(i, j));
+                const chunk = this.getChunk(i, j);
+                if (chunk) chunks.push(chunk);
             }
         }
         return chunks;
     }
 
-    public getTile(x: number, y: number, generate = true): LevelTile {
+    public getTile(x: number, y: number, generate = true): LevelTile | undefined {
         const chunk = this.getChunk(x >> 4, y >> 4, generate);
-        if (!chunk) {
-            return undefined;
-        }
+        if (!chunk) return undefined;
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
@@ -174,7 +173,7 @@ export default class Level {
 
         while (this.entitiesToAdd.length > 0) {
             const entity: Entity = this.entitiesToAdd[0];
-            entity.getChunk().addEntity(entity);
+            entity.getChunk()?.addEntity(entity);
             if (entity instanceof Player && !this.players.includes(entity)) {
                 this.players.push(entity as Player);
             }
@@ -183,7 +182,7 @@ export default class Level {
 
         while (this.entitiesToRemove.length > 0) {
             const entity: Entity = this.entitiesToRemove[0];
-            entity.getChunk().removeEntity(entity);
+            entity.getChunk()?.removeEntity(entity);
             entity.delete(this);
             if (entity instanceof Player) {
                 this.players.splice(this.players.indexOf(entity), 1);
@@ -210,11 +209,9 @@ export default class Level {
         this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    public addEntity(entity: Entity, x: number = null, y: number = null, tileCoords: boolean = false): void {
-        if (entity == null) {
-            return;
-        }
-        if (x == null || y == null) {
+    public addEntity(entity?: Entity, x?: number, y?: number, tileCoords: boolean = false): void {
+        if (!entity) return;
+        if (x === undefined || y === undefined) {
             x = entity.x;
             y = entity.y;
         }
@@ -224,9 +221,7 @@ export default class Level {
         }
         entity.setLevel(this, x, y);
         this.entitiesToRemove.splice(this.entitiesToRemove.indexOf(entity), 1);
-        if (!this.entitiesToAdd.includes(entity)) {
-            this.entitiesToAdd.push(entity);
-        }
+        if (!this.entitiesToAdd.includes(entity)) this.entitiesToAdd.push(entity);
     }
 
     public toString(): string {
@@ -242,7 +237,7 @@ export default class Level {
         const result: Array<Promise<Entity[]>> = [];
         return new Promise((resolve) => {
             const action = () => {
-                const chunk = this.chunks.get(chunksId.shift());
+                const chunk = this.chunks.get(chunksId.shift() ?? "");
                 if (chunk) result.push(chunk.findEntities(predicate));
                 if (chunksId.length > 0) return process.nextTick(action);
                 Promise.all(result).then((value) => {
@@ -254,11 +249,12 @@ export default class Level {
     }
 
     public findEntity<T extends Entity>(
-        entityClass: new (args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
+        entityClass: new (...args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
         const chunksId = Array.from(this.chunks.keys());
         return new Promise((resolve) => {
             const action = () => {
-                this.chunks.get(chunksId.shift())?.findEntity(entityClass).then((entity) => resolve(entity as T));
+                this.chunks.get(chunksId.shift() ?? "")?.findEntity(entityClass, predicate)
+                    .then((entity) => resolve(entity as T));
                 if (chunksId.length > 0) process.nextTick(action);
             };
             process.nextTick(action);

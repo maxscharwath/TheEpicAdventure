@@ -9,18 +9,17 @@ import Tiles from "./tile/Tiles";
 
 export default class LevelGen {
 
-    public static create(seed?: number | string) {
+    public static create(seed: number | string = 0) {
         return new LevelGen(seed);
     }
 
     private static chunkSize = 16;
-
     public seed = 0;
     private elevationNoise: SimplexNoise;
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
 
-    constructor(seed: number | string) {
+    constructor(seed: number | string = 0) {
         this.seed = Seed.create(seed);
         this.elevationNoise = new SimplexNoise(this.seed);
         this.moistureNoise = new SimplexNoise((this.seed + 1) * 16);
@@ -48,11 +47,13 @@ export default class LevelGen {
                 const temperature = ~~(this.temperatureNoise.get(x, y,
                     {zoom, frequency: 75, octaves: 3, amplitude: 2, persistence: 0.5, evolution: 2}) * 255);
 
-                const river = ~~(( 2 * (0.5 - Math.abs(0.5 - this.elevationNoise.get(x, y,
+                const river = ~~((2 * (0.5 - Math.abs(0.5 - this.elevationNoise.get(x, y,
                     {zoom: 2, frequency: 150, octaves: 4, evolution: 2.5, persistence: 1, amplitude: 1})))) * 255);
 
                 let biome = Biome.from(elevation, moisture, temperature);
-                if (!biome.tag.includes("ocean") && river > 240) { biome = Biome.get("river"); }
+                if (!biome.tag.includes("ocean") && river > 240) {
+                    biome = Biome.get("river");
+                }
 
                 const tile = new LevelTile({level, x, y, biome, moisture, temperature, elevation});
                 map.push(tile);

@@ -16,8 +16,8 @@ export default class BackgroundDisplay extends Display {
     set width(value: number) {
         this._width = value;
     }
-    private _width: number;
-    private _height: number;
+    private _width: number = 0;
+    private _height: number = 0;
 
     constructor(draggable: boolean) {
         super(draggable);

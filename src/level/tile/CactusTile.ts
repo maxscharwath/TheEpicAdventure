@@ -32,7 +32,7 @@ export default class CactusTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        this.levelTile.setTile(this.groundTile.getClass());
+        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
         this.addItemEntity(Items.CACTUS_FLOWER);
         return true;
     }

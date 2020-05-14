@@ -28,7 +28,7 @@ export default class Server {
             if (err.code === "EADDRINUSE") {
                 console.log("Port " + this.port + " is already used");
                 this.port = Random.int(8999, 9999);
-                Settings.getEntry("port").setValue(this.port);
+                Settings.getEntry("port")?.setValue(this.port);
                 this.server.listen(this.port);
             }
         });

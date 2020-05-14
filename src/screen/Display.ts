@@ -3,9 +3,9 @@ import Game from "../core/Game";
 import Renderer from "../core/Renderer";
 
 class DraggableArea extends PIXI.Container {
-    private dragging: boolean;
+    private dragging: boolean = false;
     private data: any;
-    private offset: PIXI.Point;
+    private offset = new PIXI.Point();
     private parentContainer: PIXI.Container;
 
     constructor(parentContainer: PIXI.Container, x= 0, y= 0) {

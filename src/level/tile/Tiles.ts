@@ -36,7 +36,7 @@ export class TileRegister<T extends typeof Tile> {
         return this.tiles.getSome(...tags);
     }
 
-    public static getKeys(tile: typeof Tile): { idx: number; tag: string } {
+    public static getKeys(tile: typeof Tile): { tag: string | undefined; idx: number | undefined } {
         return this.tiles.getKeys(tile);
     }
 

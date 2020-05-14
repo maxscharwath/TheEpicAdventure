@@ -8,16 +8,14 @@ export default class Language {
     })();
     public static loaded?: Language = Language.all[0];
 
-    public static find(name: string): Language {
+    public static find(name: string): Language | undefined {
         return Language.all.find((lang) => lang.path === name);
     }
 
     private static loadFile(path: string): string {
         return fs.readFileSync(System.getResource("lang", path), "utf8");
     }
-
     public isLoaded: boolean = false;
-
     private readonly path: string;
     private data = new Map<string, any>();
 

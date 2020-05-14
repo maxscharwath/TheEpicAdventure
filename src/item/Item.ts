@@ -8,8 +8,8 @@ import Items from "./Items";
 
 export default class Item {
 
-    public static create(data: any): Item {
-        return Items.get(data.tag).item;
+    public static create(data: any): Item | undefined {
+        return Items.get(data.tag)?.item;
     }
 
     public static verifyTag(tag: string): boolean {

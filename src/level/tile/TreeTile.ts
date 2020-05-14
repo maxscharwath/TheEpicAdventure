@@ -14,7 +14,7 @@ export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
     public states = TileStates.create(TreeTile.DEFAULT_STATES);
 
-    private layersTreeSprite: PIXI.Sprite[];
+    private layersTreeSprite: PIXI.Sprite[] = [];
 
     public init() {
         super.init();
@@ -41,12 +41,13 @@ export default class TreeTile extends Tile {
     public onInteract(mob: Mob, item?: Item): boolean {
         this.states.damage += 1;
         if (this.states.damage >= 15) {
-            this.levelTile.setTile(this.groundTile.getClass());
+            if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
             this.addItemEntity(Items.WOOD);
             this.addItemEntity(Items.STICK, 2);
         }
         return true;
     }
+
     protected treeTilingInit(source: string) {
         const texture = PIXI.BaseTexture.from(source);
         this.layersTreeSprite = [
@@ -81,7 +82,7 @@ export default class TreeTile extends Tile {
     private treeTiling() {
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
-            return (t && t.tile?.constructor === this.constructor);
+            return Boolean(t && (t.tile?.constructor === this.constructor));
         };
         const u = test(0, -1);
         const d = test(0, 1);
@@ -92,7 +93,6 @@ export default class TreeTile extends Tile {
         const ur = test(1, -1);
         const dl = test(-1, 1);
         const dr = test(1, 1);
-
         this.layersTreeSprite[0].visible = (u && ul && l);
         this.layersTreeSprite[1].visible = (u && ur && r);
         this.layersTreeSprite[2].visible = (d && dl && l);

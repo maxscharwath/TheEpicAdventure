@@ -3,7 +3,7 @@ import Item from "./Item";
 export default class Slot {
 
     public nb: number = 0;
-    public item: Item = null;
+    public item?: Item;
 
     constructor(item?: Item, nb: number = 0) {
         this.nb = nb;
@@ -11,7 +11,7 @@ export default class Slot {
     }
 
     public clear() {
-        this.item = null;
+        this.item = undefined;
         this.nb = 0;
     }
 

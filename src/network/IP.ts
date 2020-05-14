@@ -42,9 +42,9 @@ export default class IP {
                 for (i = 0; i < sections.length && sections[i] !== ""; i++) {
 
                 }
-                const argv = [i, 1];
+                const argv: [number, number, ...string[]] = [i, 1];
                 for (i = 9 - sections.length; i > 0; i--) {
-                    argv.push(0);
+                    argv.push("0");
                 }
                 sections.splice.apply(sections, argv);
             }
@@ -128,7 +128,7 @@ export default class IP {
 
         const result = new Buffer(Math.max(addrBuffer.length, maskBuffer.length));
 
-        let i = 0;
+        let i: number;
         // Same protocol - do bitwise and
         if (addrBuffer.length === maskBuffer.length) {
             for (i = 0; i < addrBuffer.length; i++) {
@@ -320,7 +320,7 @@ export default class IP {
             /^::$/.test(addr);
     }
 
-    public static loopback(family: string) {
+    public static loopback(family?: string) {
         family = IP._normalizeFamily(family);
         if (family !== "ipv4" && family !== "ipv6") {
             throw new Error("family must be ipv4 or ipv6");
@@ -333,26 +333,24 @@ export default class IP {
         family = IP._normalizeFamily(family);
 
         if (name && name !== "private" && name !== "public") {
-            const res = interfaces[name].filter((details) => {
+            const inter = interfaces[name];
+            if (!inter) return undefined;
+            const res = inter.filter((details) => {
                 const itemFamily = details.family.toLowerCase();
                 return itemFamily === family;
             });
-            if (res.length === 0) {
-                return undefined;
-            }
+            if (res.length === 0) return undefined;
             return res[0];
         }
 
         const all = Object.keys(interfaces).map((nic) => {
-            const addresses = interfaces[nic].filter((details) => {
+            const inter = interfaces[nic];
+            if (!inter) return undefined;
+            const addresses = inter.filter((details) => {
                 if (details.family.toLowerCase() !== family || IP.isLoopback(details.address)) {
                     return false;
-                } else if (!name) {
-                    return true;
-                }
-
-                return name === "public" ? IP.isPrivate(details.address) :
-                    IP.isPublic(details.address);
+                } else if (!name) return true;
+                return name === "public" ? IP.isPrivate(details.address) : IP.isPublic(details.address);
             });
 
             return addresses.length ? addresses[0] : undefined;
@@ -367,8 +365,9 @@ export default class IP {
     }
 
     public static broadcast(name?: string, family?: string) {
-        const ip = IP.ip(name, family);
-        return IP.cidrSubnet(ip.cidr).broadcastAddress;
+        const cidr = IP.ip(name, family)?.cidr;
+        if (!cidr) return undefined;
+        return IP.cidrSubnet(cidr).broadcastAddress;
     }
 
     public static toLong(ip: string) {
@@ -390,7 +389,7 @@ export default class IP {
     private static ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
     private static ipv6Regex = /^(::)?(((\d{1,3}\.){3}(\d{1,3}))?([0-9a-f]){0,4}:{0,2}){1,8}(::)?$/i;
 
-    private static _normalizeFamily(family: string) {
+    private static _normalizeFamily(family?: string) {
         return family ? family.toLowerCase() : "ipv4";
     }
 }

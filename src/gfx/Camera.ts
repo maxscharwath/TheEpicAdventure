@@ -24,11 +24,11 @@ export default class Camera {
         this._zoom = value;
     }
 
-    private container: PIXI.Container;
+    private container?: PIXI.Container;
 
     private _zoom: number = 4;
 
-    private follow: { x: number; y: number; } = null;
+    private follow?: { x: number; y: number; };
     private fx: number = 0;
     private fy: number = 0;
     private cx: number = 0;
@@ -40,15 +40,11 @@ export default class Camera {
     public setPos(x: number, y: number) {
         this.fx = x;
         this.fy = y;
-        this.follow = null;
+        this.follow = undefined;
     }
 
     public setFollow(obj: Entity) {
-        if (obj instanceof Object) {
-            this.follow = obj;
-            return true;
-        }
-        return false;
+        this.follow = obj;
     }
 
     public update(): void {

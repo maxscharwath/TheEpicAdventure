@@ -4,7 +4,7 @@ import path from "path";
 export default class System {
 
     public static appData: string = (electron.app || electron.remote.app).getPath("userData");
-    public static resources: string = path.dirname(require.main.filename);
+    public static resources: string = path.dirname(require.main?.filename as string);
 
     public static milliTime(): number {
         const hr = process.hrtime();

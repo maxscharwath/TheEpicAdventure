@@ -5,7 +5,7 @@ import HostileMob from "./HostileMob";
 export default class Chicken extends HostileMob {
     private static spriteSheet = new SpriteSheet("chicken.json");
     protected speedMax: number = 1;
-    private sprite: AnimatedSprite;
+    private sprite?: AnimatedSprite;
 
     public canSwim(): boolean {
         return false;
@@ -32,11 +32,9 @@ export default class Chicken extends HostileMob {
         this.playAnimation("walk");
     }
 
-    private playAnimation(name: string, loop: boolean = true): AnimatedSprite {
+    private playAnimation(name: string, loop: boolean = true): AnimatedSprite | undefined {
         const a = Chicken.spriteSheet.getAnimation(name, this.dir);
-        if (this.sprite.textures === a) {
-            return;
-        }
+        if (!this.sprite || this.sprite.textures === a) return;
         this.sprite.textures = a;
         this.sprite.animationSpeed = 0.1;
         this.sprite.play();

@@ -19,7 +19,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return Math.hypot(this.a.x, this.a.y);
     }
 
-    public static create({id, x, y}: any): Entity {
+    public static create({id, x, y}: any): Entity | undefined {
         const EntityClass = Entities.getByTag(id);
         if (!EntityClass) return;
         const e = new EntityClass();
@@ -38,9 +38,9 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     public hitbox: Hitbox = new Hitbox();
     public ticks: number = 0;
     protected random = this.constructor.random;
-    protected level: Level;
-    protected deleted: boolean;
-    protected isMoving: boolean;
+    protected level?: Level;
+    protected deleted: boolean = false;
+    protected isMoving: boolean = false;
     protected container = new PIXI.Container();
     private lastTick: number = Updater.tickCount;
     private uid: string = uniqid();
@@ -84,7 +84,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         if (Maths.abs(this.a.y) < 0.05) {
             this.a.y = 0;
         }
-        this.a.z -= this.level.gravity;
+        this.a.z -= this.level?.gravity ?? 0.5;
 
         if (!(this.a.x === 0 && this.a.y === 0)) {
             this.move(this.a.x, this.a.y);
@@ -113,19 +113,19 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return tile && (tile.instanceOf(Tiles.LAVA.tile, Tiles.WATER.tile));
     }
 
-    public getChunk(): Chunk {
-        return this.level.getChunk(this.x >> 8, this.y >> 8);
+    public getChunk(): Chunk | undefined {
+        return this.level?.getChunk(this.x >> 8, this.y >> 8);
     }
 
     public getChunkNeighbour(): Chunk[] {
-        return this.level.getChunkNeighbour(this.x >> 8, this.y >> 8);
+        return this.level?.getChunkNeighbour(this.x >> 8, this.y >> 8) ?? [];
     }
 
-    public getLevel(): Level {
+    public getLevel(): Level | undefined {
         return this.level;
     }
 
-    public getTile(): LevelTile {
+    public getTile(): LevelTile | undefined {
         const {x, y} = this.getCentredPos();
         return this.level?.getTile(x >> 4, y >> 4);
     }
@@ -161,7 +161,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         }
         if (level === this.level) {
             this.deleted = true;
-            this.level = null;
+            this.level = undefined;
         }
     }
 
@@ -243,7 +243,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     protected steppedOn() {
         if (this.z > 0) return;
-        this.level.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
+        this.level?.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
     }
 
     protected move2(xa: number, ya: number): boolean {
@@ -261,7 +261,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         for (let yt = yt0; yt <= yt1; yt++) {
             for (let xt = xt0; xt <= xt1; xt++) {
                 if (xt >= xto0 && xt <= xto1 && yt >= yto0 && yt <= yto1) continue;
-                const tile = this.level.getTile(xt, yt);
+                const tile = this.level?.getTile(xt, yt);
                 if (!tile) return false;
                 tile.bumpedInto(this);
                 if (!tile.mayPass(this)) {
@@ -271,7 +271,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             }
         }
         if (blocked) return false;
-        const entities = this.getChunk().getEntities().filter((e) => e !== this && !e.deleted && e.blocks(this));
+        const entities = this.getChunk()?.getEntities().filter((e) => e !== this && !e.deleted && e.blocks(this)) ?? [];
         for (const entity of entities) {
             if (!this.collision(entity) && this.collision(entity, xa, ya)) {
                 entity.touchedBy(this);

@@ -56,7 +56,7 @@ export default class Chunk {
         return this.entities.filter((e) => e.isActive());
     }
 
-    public getTile(x: number, y: number): LevelTile {
+    public getTile(x: number, y: number): LevelTile | undefined {
         if (!this.isGenerated()) return;
         return this.map[x + y * Chunk.SIZE];
     }
@@ -86,7 +86,10 @@ export default class Chunk {
         const xc = entity.x >> 8;
         const yc = entity.y >> 8;
         if (xc !== this.x || yc !== this.y) {
-            this.moveEntity(entity, this.level.getChunk(xc, yc));
+            const chunk = this.level.getChunk(xc, yc);
+            if (chunk) {
+                this.moveEntity(entity, chunk);
+            }
         }
     }
 
@@ -247,14 +250,13 @@ export default class Chunk {
     }
 
     public findEntity<T extends Entity>(
-        entityClass: new (args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
+        entityClass: new (...args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
         const entities = this.entities.concat();
         return new Promise((resolve) => {
             const action = () => {
                 const entity = entities.shift();
                 if (entity instanceof entityClass) {
-                    if (predicate instanceof Function && !predicate(entity)) return;
-                    return resolve(entity as T);
+                    return predicate instanceof Function && !predicate(entity) ? undefined : resolve(entity as T);
                 }
                 if (entities.length > 0) process.nextTick(action);
             };

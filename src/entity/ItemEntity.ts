@@ -4,13 +4,12 @@ import {ItemRegister} from "../item/Items";
 import Entities from "./Entities";
 import Entity from "./Entity";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
-import Game from "../core/Game";
 
 export default class ItemEntity extends Entity {
 
-    public static create({id, item, x, y}: any): ItemEntity {
+    public static create({id, item, x, y}: any): ItemEntity | undefined {
         const EntityClass = Entities.getByTag(id);
-        return !EntityClass ? null : new EntityClass(Item.create(item), x, y) as ItemEntity;
+        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as ItemEntity;
     }
 
     public item: Item;
@@ -20,8 +19,8 @@ export default class ItemEntity extends Entity {
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
         super();
-        this.x = x;
-        this.y = y;
+        if (x) this.x = x;
+        if (y) this.y = y;
         this.z = 2;
         this.hitbox.set(0, 0, 8, 8);
         this.a.x = this.random.gaussian() * 0.3;

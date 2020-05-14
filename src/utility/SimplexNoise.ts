@@ -17,8 +17,8 @@ export default class SimplexNoise {
         }
         return p;
     }
-    private random: Random;
-    private p: Uint8Array;
+    private random?: Random;
+    private p?: Uint8Array;
     private grad3 = new Float32Array([
         1, 1, 0,
         -1, 1, 0,

@@ -5,24 +5,22 @@ export default class Localization {
     public static languages: Language[] = Language.all;
 
     public static loadLanguage(lang: Language | string) {
-        if (!(lang instanceof Language)) {
-            lang = Language.find(lang);
+        if (lang instanceof Language) {
+            lang.load();
+        } else {
+            Language.find(lang)?.load();
         }
-        lang.load();
     }
 
     public static verify(id: string): boolean {
-        return Language.loaded.has(id);
+        return Language.loaded?.has(id) ?? false;
     }
 
     public static get(id: string): string {
-        if (Language.loaded instanceof Language) {
-            return Language.loaded.get(id);
-        }
-        return id;
+        return Language.loaded?.get(id) ?? id;
     }
 
-    public static getCurrent(): Language {
+    public static getCurrent(): Language | undefined {
         return Language.loaded;
     }
 }

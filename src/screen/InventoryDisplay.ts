@@ -8,7 +8,7 @@ class InventorySlot extends PIXI.Container {
     private slot: Slot;
     private item?: Item;
 
-    private itemSprite: PIXI.Sprite;
+    private itemSprite?: PIXI.Sprite;
 
     constructor(slot: Slot) {
         super();
@@ -17,7 +17,7 @@ class InventorySlot extends PIXI.Container {
         this.interactive = true;
         this.on("click", (ev: any) => {
             if (this.slot.isItem()) {
-                console.log(this.slot.item.getDisplayName());
+                console.log(this.slot.item?.getDisplayName());
             }
         });
         const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -29,13 +29,14 @@ class InventorySlot extends PIXI.Container {
     }
 
     public update() {
-        if (this.item === this.slot.item) {return; }
+        if (this.item === this.slot.item) return;
         console.log("update");
         this.item = this.slot.item;
-        this.removeChild(this.itemSprite);
+        if (this.itemSprite) this.removeChild(this.itemSprite);
+        this.itemSprite = undefined;
         if (this.slot.isItem()) {
-            this.itemSprite = this.slot.item.getSprite();
-            this.addChild(this.itemSprite);
+            this.itemSprite = this.slot.item?.getSprite();
+            if (this.itemSprite) this.addChild(this.itemSprite);
         }
     }
 }
@@ -53,17 +54,19 @@ export default class InventoryDisplay extends BackgroundDisplay {
         this.width = b.width + b.x;
         this.height = b.height + b.y;
     }
+
     public onTick(): void {
         super.onTick();
         this.slots.forEach((slot) => slot.update());
     }
+
     private init() {
         const nbRow = 9;
         for (let i = 0; i < this.inventory.slots.length; i++) {
             const slot = this.inventory.slots[i];
             const x = (i % nbRow) * 10;
-            const y =  ~~(i / nbRow) * 10;
-            const slotSprite  = new InventorySlot(slot);
+            const y = ~~(i / nbRow) * 10;
+            const slotSprite = new InventorySlot(slot);
             slotSprite.position.set(x, y);
             this.slots.push(slotSprite);
             this.addChild(slotSprite);

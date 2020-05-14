@@ -35,7 +35,7 @@ export default class SearchServer {
 
     public static stop() {
         this.searching = false;
-        clearInterval(this.timer);
+        if (this.timer) clearInterval(this.timer);
     }
 
     public static getResults() {

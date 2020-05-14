@@ -10,6 +10,7 @@ import FishingRodItem from "./FishingRodItem";
 type Type<T> = new (...args: any[]) => T;
 
 export class ItemRegister<T extends Item> {
+
     public get item(): T {
         return new this.itemClass(this.tag, ...this.args);
     }
@@ -18,20 +19,18 @@ export class ItemRegister<T extends Item> {
         return new ItemRegister(tag, itemClass, ...args);
     }
 
-    public static get(tag: string): ItemRegister<Item> {
+    public static get(tag: string): ItemRegister<Item> | undefined {
         return this.items.get(tag);
     }
 
     public static verifyTag() {
         this.items.forEach((item) => {
             if (!Item.verifyTag(item.tag)) {
-                console.warn(`'${item.tag}' didnt exist on ${Localization.getCurrent().getPath()}`);
+                console.warn(`'${item.tag}' didnt exist on ${Localization.getCurrent()?.getPath()}`);
             }
         });
     }
-
     private static items = new Map<string, ItemRegister<Item>>();
-
     public readonly tag: string;
     public readonly itemClass: Type<T>;
     public readonly args: any;

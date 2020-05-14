@@ -13,7 +13,7 @@ export default class WaterTile extends AutoTilingTile {
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
     public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public friction: number = 0.01;
-    private animSprite: PIXI.AnimatedSprite;
+    private animSprite?: PIXI.AnimatedSprite;
 
     public init() {
         super.init();
@@ -28,7 +28,7 @@ export default class WaterTile extends AutoTilingTile {
 
     public onTick(): void {
         super.onTick();
-        if (!this.animSprite.playing && Random.probability(1000)) {
+        if (this.animSprite && !this.animSprite.playing && Random.probability(1000)) {
             this.animSprite.gotoAndPlay(1);
         }
         if (Random.probability(100000)) {

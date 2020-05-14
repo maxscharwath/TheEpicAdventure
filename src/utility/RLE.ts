@@ -1,5 +1,5 @@
 export default class RLE {
-    public static encode<T>(iterable: T[], equality: (a: T, b: T) => boolean, mapped: (a: T) => number) {
+    public static encode<T>(iterable: T[], equality: (a: T, b: T) => boolean, mapped: (a: T) => number): Buffer {
         const data = [];
         for (let index = 0, howMany = 0; index < iterable.length; index++) {
             const aV = iterable[index + 1];

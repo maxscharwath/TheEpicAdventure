@@ -14,7 +14,7 @@ export default class FarmlandTile extends Tile {
     public static readonly TAG: string = "farmland";
     public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
-    private filter: PIXI.filters.ColorMatrixFilter;
+    private filter =  new PIXI.filters.ColorMatrixFilter();
 
     public onInteract(mob: Mob, item?: Item) {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
@@ -28,7 +28,6 @@ export default class FarmlandTile extends Tile {
 
     public init() {
         super.init();
-        this.filter = new PIXI.filters.ColorMatrixFilter();
         const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "farmland.png")));
         sprite.filters = [this.filter];
         this.container.addChild(sprite);
