@@ -5,9 +5,14 @@ import Display from "../screen/Display";
 import Color from "../utility/Color";
 import Game from "./Game";
 import System from "./System";
+import {Readable} from "stream";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
+
+interface CanvasElement extends HTMLCanvasElement {
+    captureStream(frameRate?: number): MediaStream;
+}
 
 export default class Renderer {
 
@@ -85,6 +90,22 @@ export default class Renderer {
         const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
             container.children.length + container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
         return f(this.mainStage);
+    }
+
+    public static createStream() {
+        const reader = new Readable({read: () => {}});
+        const stream = (this.renderer.view as CanvasElement).captureStream();
+        // @ts-ignore
+        const recorder = new MediaRecorder(stream, {
+            mimeType: "video/webm; codecs=vp9",
+        });
+        recorder.start(75);
+        recorder.ondataavailable = (event: any) => {
+            event.data.arrayBuffer().then((buffer: ArrayBuffer) => {
+                reader.push(Buffer.from(buffer));
+            });
+        };
+        return reader;
     }
     private static ticksTime: number[] = [];
     private static mainStage = new PIXI.Container();

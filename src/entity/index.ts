@@ -13,6 +13,7 @@ import Furniture from "./furniture/Furniture";
 import Bed from "./furniture/Bed";
 import Skeleton from "./mob/Skeleton";
 import Hook from "./Hook";
+import DustParticle from "./particle/DustParticle";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
@@ -23,6 +24,7 @@ Entities.add(5, "chicken", Chicken);
 Entities.add(6, "chest", Chest);
 Entities.add(7, "bed", Bed);
 Entities.add(8, "hook", Hook);
+Entities.add(9, "dustParticle", DustParticle);
 
 export {
     Entity,
@@ -39,4 +41,5 @@ export {
     Chest,
     Bed,
     Hook,
+    DustParticle,
 };

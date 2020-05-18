@@ -13,6 +13,7 @@ export default class Fish extends AquaticMob {
 
     private points?: PIXI.Point[];
     private hooked?: Hook;
+    private hookedAt: number = 0;
 
     constructor() {
         super();
@@ -39,9 +40,10 @@ export default class Fish extends AquaticMob {
         if (this.target instanceof Hook && !this.target.isHooked() && this.getDistance(this.target) < 8) {
             this.hooked = this.target as Hook;
             this.hooked.hookFish(this);
+            this.hookedAt = this.ticks;
         }
 
-        if (this.hooked && this.random.probability(20)) {
+        if (this.hooked && (this.ticks - this.hookedAt > 20) && this.random.probability(40)) {
             this.hooked.unHookFish();
             this.hooked = undefined;
             this.newTarget();
@@ -64,7 +66,7 @@ export default class Fish extends AquaticMob {
 
     protected newTarget() {
         if (!this.level || this.hooked) return;
-        if (this.random.probability(10)) {
+        if (this.random.probability(8)) {
             this.level.findEntity(Hook, (hook) => Boolean(hook.isSwimming() && !hook.getRemoved() && !hook.isHooked()))
                 .then((hook) => {
                     this.target = hook;

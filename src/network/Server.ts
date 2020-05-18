@@ -8,6 +8,7 @@ import Random from "../utility/Random";
 import ServerUDP from "./ServerUDP";
 import IP from "./IP";
 import uniqid from "uniqid";
+import Renderer from "../core/Renderer";
 
 export default class Server {
     private uid: string = uniqid();
@@ -47,6 +48,11 @@ export default class Server {
                 ip: IP.address(),
                 port: this.port,
             } as OptionsJson);
+        });
+
+        app.get("/stream", (req: any, res: any) => {
+            res.type("video/webm");
+            Renderer.createStream().pipe(res, {end: false});
         });
     }
 

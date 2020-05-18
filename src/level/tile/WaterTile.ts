@@ -4,6 +4,7 @@ import {Entity, Fish} from "../../entity/";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
+import Tiles from "./Tiles";
 
 export default class WaterTile extends AutoTilingTile {
     public static DEFAULT_STATES = {level: 10};
@@ -24,6 +25,20 @@ export default class WaterTile extends AutoTilingTile {
             this.animSprite,
         );
         this.initAutoTile();
+    }
+
+    public onUpdate() {
+        super.onUpdate();
+        let levelMax = 0;
+        let nbNeighbour = 0;
+        this.levelTile.getDirectNeighbourTiles(false).forEach((t) => {
+            if (t.tile instanceof WaterTile) {
+                nbNeighbour++;
+                levelMax = Math.max(levelMax, t.tile.states.level);
+            }
+        });
+        if (nbNeighbour < 4) levelMax--;
+        this.states.level = levelMax;
     }
 
     public onTick(): void {

@@ -1,5 +1,5 @@
 import fs from "fs";
-import {BaseTexture, Rectangle, Texture} from "pixi.js";
+import * as PIXI from "pixi.js";
 import System from "../core/System";
 import Direction from "../entity/Direction";
 
@@ -15,20 +15,30 @@ interface SpriteSheetData {
 }
 
 export default class SpriteSheet {
-    private animations: Map<string, Texture[][]> = new Map<string, Texture[][]>();
+
+    public static loadTextures(path: string, nb: number, size = 16): PIXI.Texture[] {
+        const bt = PIXI.BaseTexture.from(path);
+        const textures = [];
+        for (let x = 0; x < nb; x++) {
+            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * size, 0, size, size)));
+        }
+        return textures;
+    }
+
+    private animations: Map<string, PIXI.Texture[][]> = new Map<string, PIXI.Texture[][]>();
 
     constructor(url: string) {
         const data: SpriteSheetData = JSON.parse(fs.readFileSync(System.getResource("entity", url), "utf8"));
-        const baseTexture = BaseTexture.from(System.getResource(data.url));
+        const baseTexture = PIXI.BaseTexture.from(System.getResource(data.url));
         data.animations.forEach((animation) => {
             for (const type in animation.type) {
                 if (!animation.type.hasOwnProperty(type)) continue;
                 const y = animation.type[type];
                 this.animations.set(`${animation.name}-${type}`, animation.frames.map((a: number[]) => {
                     return a.map((v: number) => {
-                        return new Texture(
+                        return new PIXI.Texture(
                             baseTexture,
-                            new Rectangle(v * animation.width, y, animation.width, animation.height),
+                            new PIXI.Rectangle(v * animation.width, y, animation.width, animation.height),
                         );
                     });
                 }));
@@ -36,7 +46,7 @@ export default class SpriteSheet {
         });
     }
 
-    public getAnimation(name: string, dir?: Direction, type: string = "normal"): Texture[] {
+    public getAnimation(name: string, dir?: Direction, type: string = "normal"): PIXI.Texture[] {
         const id = `${name}-${type}`;
         const animation = this.animations.get(id);
         if (!animation) {

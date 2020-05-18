@@ -6,6 +6,7 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Mob from "./Mob";
 import FishingRodItem from "../../item/FishingRodItem";
+import {DustParticle} from "../index";
 
 export default class Player extends Mob {
 
@@ -41,6 +42,8 @@ export default class Player extends Mob {
 
     public onTick(): void {
         super.onTick();
+
+        this.level.addEntity(new DustParticle(this.x, this.y));
 
         let ax = 0;
         let ay = 0;

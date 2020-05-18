@@ -67,11 +67,17 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[2].visible = false;
         this.layersTreeSprite[3].visible = false;
 
+        const sprite = new PIXI.Sprite(new PIXI.Texture(texture));
+
         this.container.addChild(this.layersTreeSprite[0]);
         this.container.addChild(this.layersTreeSprite[1]);
-        this.container.addChild(new PIXI.Sprite(new PIXI.Texture(texture)));
+        this.container.addChild(sprite);
         this.container.addChild(this.layersTreeSprite[2]);
         this.container.addChild(this.layersTreeSprite[3]);
+        if (this.random.boolean()) {
+            sprite.scale.x = -1;
+            sprite.pivot.x = 16;
+        }
     }
 
     protected initTree() {

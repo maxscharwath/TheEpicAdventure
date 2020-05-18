@@ -45,10 +45,10 @@ export default class Biome {
             return Biome.get("deep_ocean");
         }
         if (e < 25) {
-            if (t > 229) {
+            if (t > 230) {
                 return Biome.get("warm_ocean");
             }
-            if (t < 76) {
+            if (t < 75) {
                 return Biome.get("cold_ocean");
             }
             return Biome.get("ocean");
@@ -56,32 +56,32 @@ export default class Biome {
         if (e < 45 && t > 100) {
             return Biome.get("beach");
         }
-        if (t > 178) {
-            if (m < 178) {
+        if (t > 200) {
+            if (m < 180) {
                 return Biome.get("desert");
             }
-            if (m > 204) {
+            if (m > 200) {
                 return Biome.get("jungle");
             }
         }
-        if (t > 153) {
-            if (m < 127) {
+        if (t > 150) {
+            if (m < 180) {
                 return Biome.get("savanna");
             }
         }
-        if (t < 51) {
+        if (t < 45) {
             return Biome.get("snow");
         }
-        if (t < 76) {
+        if (t < 70) {
             return Biome.get("tundra");
         }
-        if (t < 127) {
-            if (m > 153) {
+        if (t < 125) {
+            if (m > 155) {
                 return Biome.get("taiga");
             }
         }
-        if (t < 153) {
-            if (m > 102 && m < 153) {
+        if (t < 155) {
+            if (m > 100 && m < 155) {
                 return Biome.get("forest");
             }
         }
