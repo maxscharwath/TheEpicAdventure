@@ -5,8 +5,6 @@ import * as PIXI from "pixi.js";
 import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default class DustParticle extends Particle {
-    private readonly startFrame: number;
-    private readonly maxFrame: number;
     private readonly sprite: PIXI.AnimatedSprite;
 
     constructor(x: number, y: number, startFrame = 0) {
@@ -20,12 +18,12 @@ export default class DustParticle extends Particle {
         this.sprite = new PIXI.AnimatedSprite(
             SpriteSheet.loadTextures(System.getResource("particle", "dust.png"), 6, 8),
         );
+        this.sprite.alpha = 0.8;
         this.sprite.anchor.set(0.5);
         this.sprite.animationSpeed = 0.1;
         this.sprite.loop = false;
-        this.sprite.play();
-
-        this.container.addChild(this.sprite);
+        this.sprite.gotoAndPlay(startFrame);
+        this.addChild(this.sprite);
     }
 
     public onTick() {

@@ -1,6 +1,21 @@
-import Entity from "../Entity";
+import * as PIXI from "pixi.js";
+import Tickable from "../Tickable";
+import Random from "../../utility/Random";
+import Vector3D from "../../utility/Vector3D";
+import Level from "../../level/Level";
+import Chunk from "../../level/Chunk";
 
-export default class Particle extends Entity {
+export default class Particle extends PIXI.Container implements Tickable {
+
+    private static random = new Random();
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
+    public a: Vector3D = new Vector3D();
+    public ticks: number = 0;
+    protected random = Particle.random;
+    protected level?: Level;
+    protected deleted: boolean = false;
     protected lifeDuration = 5;
     protected gravity: number = 0;
     protected life: number = 0;
@@ -11,11 +26,17 @@ export default class Particle extends Entity {
         this.y = y;
     }
 
+    public remove() {
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
+    }
+
     public onTick() {
         if (this.life < this.lifeDuration) {
             ++this.life;
         } else {
-            this.remove();
+            this.delete();
         }
     }
 
@@ -25,5 +46,38 @@ export default class Particle extends Entity {
         this.z += this.a.z;
         this.zIndex = this.y + this.z;
         this.pivot.y = this.z;
+    }
+
+    public getRemoved(): boolean {
+        return this.deleted;
+    }
+
+    public setLevel(level: Level): void {
+        this.level = level;
+    }
+
+    public getChunk(): Chunk | undefined {
+        return this.level?.getChunk(this.x >> 8, this.y >> 8);
+    }
+
+    public getLevel(): Level | undefined {
+        return this.level;
+    }
+
+    public add() {
+        this.level?.entitiesContainer.addChild(this);
+    }
+
+    public delete(level?: Level): void {
+        this.remove();
+        if (level === undefined) {
+            this.deleted = true;
+            if (this.level instanceof Level) this.level.remove(this);
+            return;
+        }
+        if (level === this.level) {
+            this.deleted = true;
+            this.level = undefined;
+        }
     }
 }

@@ -46,7 +46,7 @@ export default abstract class Mob extends Entity {
                 if (Random.int(5) !== 0) continue;
                 const x = this.x + Random.int(0, 16);
                 const y = this.y + Random.int(0, 16);
-                this.level?.addEntity(new ItemEntity(slot.item, x, y));
+                this.level?.add(new ItemEntity(slot.item, x, y));
             }
         }
         this.delete();

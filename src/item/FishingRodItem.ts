@@ -35,7 +35,7 @@ export default class FishingRodItem extends Item {
         this.hook.a.x = mob.getDir().getX();
         this.hook.a.y = mob.getDir().getY();
         this.hook.a.z = 2;
-        mob.getLevel()?.addEntity(this.hook, mob.x + mob.getDir().getX() * 10, mob.y + mob.getDir().getY() * 10);
+        mob.getLevel()?.add(this.hook, mob.x + mob.getDir().getX() * 10, mob.y + mob.getDir().getY() * 10);
         return true;
     }
 

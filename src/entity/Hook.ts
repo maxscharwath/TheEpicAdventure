@@ -69,7 +69,7 @@ export default class Hook extends Entity {
         if (fish) {
             fish.delete();
             if (this.owner instanceof Mob && !this.owner.inventory.addItem(Items.FISH)) {
-                this.owner.getLevel()?.addEntity(new ItemEntity(Items.FISH), this.owner.x, this.owner.y);
+                this.owner.getLevel()?.add(new ItemEntity(Items.FISH), this.owner.x, this.owner.y);
             }
             console.log("You catch a fish!");
             return true;

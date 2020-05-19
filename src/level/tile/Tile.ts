@@ -124,7 +124,7 @@ export default abstract class Tile {
 
     protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
         for (let i = 0; i < nb; i++) {
-            this.level.addEntity(
+            this.level.add(
                 new ItemEntity(item,
                     (this.x << 4) + Random.int(10) + 3,
                     (this.y << 4) + Random.int(10) + 3),

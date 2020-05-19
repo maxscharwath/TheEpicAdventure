@@ -9,6 +9,8 @@ import LevelGen from "./LevelGen";
 import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
 import rimraf from "rimraf";
+import Particle from "../entity/particle/Particle";
+import Tickable from "../entity/Tickable";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -23,8 +25,8 @@ export default class Level {
     public entitiesContainer: PIXI.Container = new PIXI.Container();
     private random: Random = new Random();
     private players: Player[] = [];
-    private entitiesToAdd: Entity[] = [];
-    private entitiesToRemove: Entity[] = [];
+    private tickablesToAdd: Tickable[] = [];
+    private tickablesToRemove: Tickable[] = [];
     private chunksToRemove: string[] = [];
     private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
@@ -71,10 +73,10 @@ export default class Level {
         return chunks;
     }
 
-    public remove(e: Entity): void {
-        this.entitiesToAdd.splice(this.entitiesToAdd.indexOf(e), 1);
-        if (!this.entitiesToRemove.includes(e)) {
-            this.entitiesToRemove.push(e);
+    public remove(t: Tickable): void {
+        this.tickablesToAdd.splice(this.tickablesToAdd.indexOf(t), 1);
+        if (!this.tickablesToRemove.includes(t)) {
+            this.tickablesToRemove.push(t);
         }
     }
 
@@ -171,26 +173,24 @@ export default class Level {
         // return;
         const count = 0;
 
-        while (this.entitiesToAdd.length > 0) {
-            const entity: Entity = this.entitiesToAdd[0];
-            entity.getChunk()?.addEntity(entity);
-            if (entity instanceof Player && !this.players.includes(entity)) {
-                this.players.push(entity as Player);
+        while (this.tickablesToAdd.length > 0) {
+            const tickable: Tickable = this.tickablesToAdd[0];
+            tickable.getChunk()?.add(tickable);
+            if (tickable instanceof Player && !this.players.includes(tickable)) {
+                this.players.push(tickable as Player);
             }
-            this.entitiesToAdd.splice(this.entitiesToAdd.indexOf(entity), 1);
+            this.tickablesToAdd.splice(this.tickablesToAdd.indexOf(tickable), 1);
         }
 
-        while (this.entitiesToRemove.length > 0) {
-            const entity: Entity = this.entitiesToRemove[0];
-            entity.getChunk()?.removeEntity(entity);
-            entity.delete(this);
-            if (entity instanceof Player) {
-                this.players.splice(this.players.indexOf(entity), 1);
+        while (this.tickablesToRemove.length > 0) {
+            const tickable: Tickable = this.tickablesToRemove[0];
+            tickable.getChunk()?.remove(tickable);
+            tickable.delete(this);
+            if (tickable instanceof Player) {
+                this.players.splice(this.players.indexOf(tickable), 1);
             }
-
-            this.entitiesToRemove.splice(this.entitiesToRemove.indexOf(entity), 1);
+            this.tickablesToRemove.splice(this.tickablesToRemove.indexOf(tickable), 1);
         }
-
         this.mobCount = count;
 
         if (count < this.maxMobCount) {
@@ -199,9 +199,7 @@ export default class Level {
     }
 
     public onRender() {
-        if (!this.players[0]) {
-            return;
-        }
+        if (!this.players[0]) return;
         Renderer.camera.setContainer(this.container);
         Renderer.camera.setFollow(this.players[0]);
 
@@ -209,19 +207,19 @@ export default class Level {
         this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    public addEntity(entity?: Entity, x?: number, y?: number, tileCoords: boolean = false): void {
-        if (!entity) return;
+    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): void {
+        if (!tickable) return;
         if (x === undefined || y === undefined) {
-            x = entity.x;
-            y = entity.y;
+            x = tickable.x;
+            y = tickable.y;
         }
         if (tileCoords) {
             x = x * 16 + 8;
             y = y * 16 + 8;
         }
-        entity.setLevel(this, x, y);
-        this.entitiesToRemove.splice(this.entitiesToRemove.indexOf(entity), 1);
-        if (!this.entitiesToAdd.includes(entity)) this.entitiesToAdd.push(entity);
+        tickable.setLevel(this, x, y);
+        this.tickablesToRemove.splice(this.tickablesToRemove.indexOf(tickable), 1);
+        if (!this.tickablesToAdd.includes(tickable)) this.tickablesToAdd.push(tickable);
     }
 
     public toString(): string {

@@ -10,6 +10,8 @@ import Biome from "./biome/Biome";
 import Level from "./Level";
 import LevelTile from "./LevelTile";
 import Tiles from "./tile/Tiles";
+import Particle from "../entity/particle/Particle";
+import Tickable from "../entity/Tickable";
 
 type Type<T> = new (...args: any[]) => T;
 export default class Chunk {
@@ -36,6 +38,7 @@ export default class Chunk {
     public readonly x: number;
     public readonly y: number;
     public readonly level: Level;
+    private particles: Particle[] = [];
     private entities: Entity[] = [];
     private generated: boolean = false;
     private map: LevelTile[] = [];
@@ -80,6 +83,10 @@ export default class Chunk {
             entity.onTick();
             if (!entity.getRemoved()) this.checkEntity(entity);
         }
+        for (const particle of this.particles) {
+            if (!(particle instanceof Particle) || particle.getRemoved() || !particle.getLevel()) continue;
+            particle.onTick();
+        }
     }
 
     public checkEntity(entity: Entity) {
@@ -93,18 +100,25 @@ export default class Chunk {
         }
     }
 
-    public addEntity(entity: Entity) {
-        if (!this.entities.includes(entity)) {
-            this.entities.push(entity);
-            if (this.loaded) {
-                entity.add();
+    public add(tickable: Tickable) {
+        if (tickable instanceof Entity) {
+            if (!this.entities.includes(tickable)) {
+                this.entities.push(tickable);
+                if (this.loaded) tickable.add();
+            }
+        }
+        if (tickable instanceof Particle) {
+            if (!this.particles.includes(tickable)) {
+                this.particles.push(tickable);
+                if (this.loaded) tickable.add();
             }
         }
     }
 
-    public removeEntity(entity: Entity) {
-        this.entities.splice(this.entities.indexOf(entity), 1);
-        entity.remove();
+    public remove(tickable: Tickable) {
+        if (tickable instanceof Entity) this.entities.splice(this.entities.indexOf(tickable), 1);
+        if (tickable instanceof Particle) this.particles.splice(this.particles.indexOf(tickable), 1);
+        tickable.remove();
     }
 
     public destroy() {
@@ -113,9 +127,9 @@ export default class Chunk {
             tile.remove();
             tile.destroy({children: true});
         });
-        this.entities.forEach((entity) => {
-            entity.remove();
-            entity.destroy({children: true});
+        [].concat(this.entities, this.particles).forEach((tickable: Tickable) => {
+            tickable.remove();
+            tickable.destroy({children: true});
         });
     }
 
@@ -127,6 +141,11 @@ export default class Chunk {
         this.entities.forEach((entity) => {
             entity.remove();
         });
+        this.particles.forEach((particle) => {
+            particle.remove();
+            particle.destroy({children: true});
+        });
+        this.particles = [];
     }
 
     public load() {
@@ -148,6 +167,10 @@ export default class Chunk {
         for (const entity of this.entities) {
             if (!(entity instanceof Entity) || entity.getRemoved() || !entity.getLevel()) continue;
             entity.onRender();
+        }
+        for (const particle of this.particles) {
+            if (!(particle instanceof Particle) || particle.getRemoved() || !particle.getLevel()) continue;
+            particle.onRender();
         }
     }
 
@@ -218,7 +241,7 @@ export default class Chunk {
             map.push(lt);
         });
         for (const data of bson.entities) {
-            this.level.addEntity((Entities.get(data.id) as unknown as typeof Entity).create(data));
+            this.level.add((Entities.get(data.id) as unknown as typeof Entity).create(data));
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
         this.map = map;
@@ -268,7 +291,7 @@ export default class Chunk {
         if (!chunk.loaded) {
             entity.remove();
         }
-        this.removeEntity(entity);
-        chunk.addEntity(entity);
+        this.remove(entity);
+        chunk.add(entity);
     }
 }

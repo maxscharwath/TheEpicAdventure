@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Items from "../item/Items";
-import {Player} from "../entity/";
+import {Player, Camp} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Client from "../network/Client";
@@ -67,7 +67,8 @@ export default class Game {
 
         this.levels.push(new Level());
         this.level.deleteTempDir();
-        this.level.addEntity(this.player, 0, 0, true);
+        this.level.add(this.player, 0, 0, true);
+        this.level.add(new Camp(), 3, 3, true);
         Renderer.setLevel(this.level);
         setTimeout(() => {
             this.level.findEntities((entity) => entity.visible).then((entities) => console.log(entities));

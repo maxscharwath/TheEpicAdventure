@@ -78,7 +78,7 @@ export default class HotbarDisplay extends Display {
             if (slot.isItem()) {
                 const level = this.mob.getLevel();
                 if (level && slot.item) {
-                    level.addEntity(new ItemEntity(slot.item), this.mob.x, this.mob.y);
+                    level.add(new ItemEntity(slot.item), this.mob.x, this.mob.y);
                     this.mob.inventory.removeItem(slot.item, 1);
                 }
             }
