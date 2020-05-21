@@ -9,7 +9,7 @@ export default class ItemEntity extends Entity {
 
     public static create({id, item, x, y}: any): ItemEntity | undefined {
         const EntityClass = Entities.getByTag(id);
-        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as ItemEntity;
+        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
     }
 
     public item: Item;
@@ -31,6 +31,7 @@ export default class ItemEntity extends Entity {
         this.container.addChild(this.item.getSprite(true));
         this.shadow = new DropShadowFilter({blur: 0, distance: 10, rotation: 90, quality: 0});
         this.filters = [this.shadow];
+        this.container.addChild(this.fireSprite);
     }
 
     public onTick(): void {

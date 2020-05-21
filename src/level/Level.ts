@@ -74,7 +74,7 @@ export default class Level {
     }
 
     public remove(t: Tickable): void {
-        this.tickablesToAdd.splice(this.tickablesToAdd.indexOf(t), 1);
+        this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== t);
         if (!this.tickablesToRemove.includes(t)) {
             this.tickablesToRemove.push(t);
         }
@@ -179,7 +179,7 @@ export default class Level {
             if (tickable instanceof Player && !this.players.includes(tickable)) {
                 this.players.push(tickable as Player);
             }
-            this.tickablesToAdd.splice(this.tickablesToAdd.indexOf(tickable), 1);
+            this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== tickable);
         }
 
         while (this.tickablesToRemove.length > 0) {
@@ -187,9 +187,9 @@ export default class Level {
             tickable.getChunk()?.remove(tickable);
             tickable.delete(this);
             if (tickable instanceof Player) {
-                this.players.splice(this.players.indexOf(tickable), 1);
+                this.players = this.players.filter((item) => item !== tickable);
             }
-            this.tickablesToRemove.splice(this.tickablesToRemove.indexOf(tickable), 1);
+            this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
         }
         this.mobCount = count;
 
@@ -207,8 +207,8 @@ export default class Level {
         this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): void {
-        if (!tickable) return;
+    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {
+        if (!tickable) return false;
         if (x === undefined || y === undefined) {
             x = tickable.x;
             y = tickable.y;
@@ -218,8 +218,12 @@ export default class Level {
             y = y * 16 + 8;
         }
         tickable.setLevel(this, x, y);
-        this.tickablesToRemove.splice(this.tickablesToRemove.indexOf(tickable), 1);
-        if (!this.tickablesToAdd.includes(tickable)) this.tickablesToAdd.push(tickable);
+        this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
+        if (!this.tickablesToAdd.includes(tickable)) {
+            this.tickablesToAdd.push(tickable);
+            return true;
+        }
+        return false;
     }
 
     public toString(): string {

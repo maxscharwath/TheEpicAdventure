@@ -8,7 +8,7 @@ export default class Camp extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private active = true;
-    private fireSprite: PIXI.AnimatedSprite;
+    private campFire: PIXI.AnimatedSprite;
 
     constructor() {
         super();
@@ -17,20 +17,20 @@ export default class Camp extends Furniture {
 
     public onRender() {
         super.onRender();
-        this.fireSprite.visible = this.active;
+        this.campFire.visible = this.active;
         if (this.active) {
-            this.level.add(new DustParticle(this.x, this.y));
+            this.level.add(new DustParticle(this.x, this.y - 4));
         }
     }
 
     protected init() {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Camp.baseTexture));
         sprite.anchor.set(0.5);
-        this.fireSprite = new PIXI.AnimatedSprite(Camp.frames);
-        this.fireSprite.play();
-        this.fireSprite.animationSpeed = 0.5;
-        this.fireSprite.y = -6;
-        this.fireSprite.anchor.set(0.5);
-        this.container.addChild(sprite, this.fireSprite);
+        this.campFire = new PIXI.AnimatedSprite(Camp.frames);
+        this.campFire.play();
+        this.campFire.animationSpeed = 0.5;
+        this.campFire.y = -6;
+        this.campFire.anchor.set(0.5);
+        this.container.addChild(sprite, this.campFire);
     }
 }

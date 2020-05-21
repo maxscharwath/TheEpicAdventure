@@ -70,7 +70,7 @@ export default class Game {
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         this.level.add(new MusicPlayer(), 3, 3, true);
-        // this.level.add(new Camp(), 2, 5, true);
+        this.level.add(new Camp(), 2, 5, true);
         Renderer.setLevel(this.level);
         setTimeout(() => {
             this.level.findEntities((entity) => entity.visible).then((entities) => console.log(entities));
@@ -78,7 +78,7 @@ export default class Game {
         Initializer.createAndDisplayFrame();
         Initializer.run();
         Network.startMultiplayerServer();
-        (new TransitionDisplay(false)).show();
+        // (new TransitionDisplay(false)).show();
         PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
             (new InfoDisplay()).show();
             (new HotbarDisplay(this.player)).show();

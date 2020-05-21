@@ -40,5 +40,6 @@ export default class DustParticle extends Particle {
         }
         this.a.z -= this.gravity;
         this.sprite.rotation += 0.05;
+        this.sprite.alpha = 1 - this.lifePercent() * this.lifePercent() * this.lifePercent();
     }
 }

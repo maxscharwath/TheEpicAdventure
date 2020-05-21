@@ -12,9 +12,10 @@ import Random from "../utility/Random";
 import Vector3D from "../utility/Vector3D";
 import Entities from "./Entities";
 import Tickable from "./Tickable";
+import SpriteSheet from "../gfx/SpriteSheet";
+import System from "../core/System";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
-
     protected get aSpeed(): number {
         return Math.hypot(this.a.x, this.a.y);
     }
@@ -27,6 +28,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         e.y = y;
         return e;
     }
+    protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
 
     private static random = new Random();
     public ["constructor"]: typeof Entity;
@@ -37,22 +39,30 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     public a: Vector3D = new Vector3D();
     public hitbox: Hitbox = new Hitbox();
     public ticks: number = 0;
+    protected fireSprite: PIXI.AnimatedSprite;
     protected random = this.constructor.random;
     protected level?: Level;
     protected deleted: boolean = false;
     protected isMoving: boolean = false;
     protected container = new PIXI.Container();
+    protected isOnFire = false;
     private lastTick: number = Updater.tickCount;
     private uid: string = uniqid();
 
     protected constructor() {
         super();
+        this.container.sortDirty = true;
+        this.fireSprite = new PIXI.AnimatedSprite(Entity.fireFrames);
+        this.fireSprite.anchor.set(0.5);
+        this.fireSprite.animationSpeed = 0.5;
+        this.fireSprite.visible = false;
+
+        this.fireSprite.play();
+
         this.hitbox.set(0, 4, 8, 8);
-        {
-            this.visible = true;
-            this.addChild(this.container, this.hitbox);
-            this.init();
-        }
+        this.addChild(this.container, this.hitbox);
+        this.init();
+        this.container.addChild(this.fireSprite);
     }
 
     public isActive() {
@@ -62,6 +72,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     public onTick(): void {
         this.lastTick = Updater.tickCount;
         this.ticks++;
+        if (this.isOnFire && this.canBurn() ) {
+            this.fireSprite.visible = true;
+            this.onFire();
+        }
     }
 
     public getDistance(entity: Entity) {
@@ -104,6 +118,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public canFly() {
+        return false;
+    }
+
+    public canBurn() {
         return false;
     }
 
@@ -219,6 +237,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             || (bX1 <= aX0)
             || (bY0 >= aY1)
             || (bY1 <= aY0));
+    }
+
+    protected onFire() {
+
     }
 
     protected init() {
