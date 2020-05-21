@@ -6,6 +6,10 @@ export default class Random {
         return Random.$.int(num1, num2);
     }
 
+    public static number(num1: number, num2?: number): number {
+        return Random.$.number(num1, num2);
+    }
+
     public static float(): number {
         return Random.$.float();
     }

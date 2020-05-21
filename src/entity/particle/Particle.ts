@@ -80,4 +80,8 @@ export default class Particle extends PIXI.Container implements Tickable {
             this.level = undefined;
         }
     }
+
+    protected lifePercent() {
+        return this.life / this.lifeDuration;
+    }
 }

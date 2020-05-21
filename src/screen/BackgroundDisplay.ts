@@ -19,8 +19,8 @@ export default class BackgroundDisplay extends Display {
     private _width: number = 0;
     private _height: number = 0;
 
-    constructor(draggable: boolean) {
-        super(draggable);
+    constructor() {
+        super();
         const container = new PIXI.Container();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("gui_window.png"));
         this.addChild(container);

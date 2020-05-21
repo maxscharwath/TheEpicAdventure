@@ -3,11 +3,9 @@ import SearchServer from "../network/SearchServer";
 import * as PIXI from "pixi.js";
 import Color from "../utility/Color";
 import {shell} from "electron";
+import DraggableDisplay from "./DraggableDisplay";
 
-export default class LanDisplay extends Display {
-    constructor() {
-        super(true);
-    }
+export default class LanDisplay extends DraggableDisplay {
 
     public show() {
         super.show();

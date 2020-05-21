@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Items from "../item/Items";
-import {Player, Camp} from "../entity/";
+import {Player, Camp, MusicPlayer} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Client from "../network/Client";
@@ -17,6 +17,7 @@ import Settings from "./Settings";
 import System from "./System";
 import Renderer from "./Renderer";
 import LanDisplay from "../screen/LanDisplay";
+import TransitionDisplay from "../screen/TransitionDisplay";
 
 export default class Game {
     public static player: Player;
@@ -68,7 +69,8 @@ export default class Game {
         this.levels.push(new Level());
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
-        this.level.add(new Camp(), 3, 3, true);
+        this.level.add(new MusicPlayer(), 3, 3, true);
+        // this.level.add(new Camp(), 2, 5, true);
         Renderer.setLevel(this.level);
         setTimeout(() => {
             this.level.findEntities((entity) => entity.visible).then((entities) => console.log(entities));
@@ -76,6 +78,7 @@ export default class Game {
         Initializer.createAndDisplayFrame();
         Initializer.run();
         Network.startMultiplayerServer();
+        (new TransitionDisplay(false)).show();
         PIXI.Loader.shared.add("Minecraftia", System.getResource("font", "font.xml")).load(() => {
             (new InfoDisplay()).show();
             (new HotbarDisplay(this.player)).show();

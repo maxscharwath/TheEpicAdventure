@@ -14,6 +14,7 @@ import Bed from "./furniture/Bed";
 import Skeleton from "./mob/Skeleton";
 import Hook from "./Hook";
 import Camp from "./furniture/Camp";
+import MusicPlayer from "./furniture/MusicPlayer";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
@@ -42,4 +43,5 @@ export {
     Bed,
     Hook,
     Camp,
+    MusicPlayer,
 };

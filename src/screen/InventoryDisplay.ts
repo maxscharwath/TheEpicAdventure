@@ -46,7 +46,7 @@ export default class InventoryDisplay extends BackgroundDisplay {
     private slots: InventorySlot[] = [];
 
     constructor(inventory: Inventory) {
-        super(true);
+        super();
         this.inventory = inventory;
         this.init();
         this.scale.set(4);

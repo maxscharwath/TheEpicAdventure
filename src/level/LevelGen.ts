@@ -112,6 +112,13 @@ export default class LevelGen {
                     }
                 }
 
+                if (biome.is("taiga")) {
+                    tile.setTile(Tiles.DARK_GRASS);
+                    if (random.probability(5)) {
+                        tile.setTile(Tiles.SPRUCE);
+                    }
+                }
+
                 if (elevation > 210) {
                     tile.setTile(Tiles.ROCK);
                 }

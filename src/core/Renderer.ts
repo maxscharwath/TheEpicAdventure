@@ -6,6 +6,7 @@ import Color from "../utility/Color";
 import Game from "./Game";
 import System from "./System";
 import {Readable} from "stream";
+import {Howler} from "howler";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
@@ -93,12 +94,14 @@ export default class Renderer {
     }
 
     public static createStream() {
+        const audioStream = Howler.ctx.createMediaStreamDestination();
+        // Howler.masterGain.disconnect();
+        Howler.masterGain.connect(audioStream);
         const reader = new Readable({read: () => {}});
         const stream = (this.renderer.view as CanvasElement).captureStream();
+        stream.addTrack(audioStream.stream.getAudioTracks()[0]);
         // @ts-ignore
-        const recorder = new MediaRecorder(stream, {
-            mimeType: "video/webm; codecs=vp9",
-        });
+        const recorder = new MediaRecorder(stream);
         recorder.start(75);
         recorder.ondataavailable = (event: any) => {
             event.data.arrayBuffer().then((buffer: ArrayBuffer) => {

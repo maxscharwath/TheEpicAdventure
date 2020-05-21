@@ -34,7 +34,7 @@ export default class InfoDisplay extends Display {
     private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
     constructor() {
-        super(false);
+        super();
         this.textArea = new PIXI.BitmapText("", {
             font: {
                 name: "Minecraftia",

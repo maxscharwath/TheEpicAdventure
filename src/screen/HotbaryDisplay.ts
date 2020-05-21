@@ -53,7 +53,7 @@ export default class HotbarDisplay extends Display {
     private itemText?: PIXI.BitmapText;
 
     constructor(mob: Mob) {
-        super(false);
+        super();
         this.mob = mob;
         this.init();
         this.position.x = (Renderer.getScreen().width - this.width) >> 1;

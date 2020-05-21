@@ -12,6 +12,9 @@ export default class SpruceTreeTile extends TreeTile {
         if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SNOW.tile))) {
             this.setGroundTile(Tiles.SNOW.tile);
         }
+        if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.DARK_GRASS.tile))) {
+            this.setGroundTile(Tiles.DARK_GRASS.tile);
+        }
     }
 
     public onTick(): void {
