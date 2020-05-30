@@ -15,6 +15,7 @@ import Skeleton from "./mob/Skeleton";
 import Hook from "./Hook";
 import Camp from "./furniture/Camp";
 import MusicPlayer from "./furniture/MusicPlayer";
+import Bear from "./mob/Bear";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
@@ -22,10 +23,11 @@ Entities.add(2, "skeleton", Skeleton);
 Entities.add(3, "fish", Fish);
 Entities.add(4, "itemEntity", ItemEntity);
 Entities.add(5, "chicken", Chicken);
-Entities.add(6, "chest", Chest);
-Entities.add(7, "bed", Bed);
-Entities.add(8, "camp", Camp);
-Entities.add(9, "hook", Hook);
+Entities.add(6, "bear", Bear);
+Entities.add(7, "chest", Chest);
+Entities.add(8, "bed", Bed);
+Entities.add(9, "camp", Camp);
+Entities.add(10, "hook", Hook);
 
 export {
     Entity,
@@ -38,6 +40,7 @@ export {
     Zombie,
     Skeleton,
     Chicken,
+    Bear,
     Furniture,
     Chest,
     Bed,

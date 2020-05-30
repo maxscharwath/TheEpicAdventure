@@ -5,6 +5,7 @@ import Biome from "./biome/Biome";
 import Level from "./Level";
 import Tile from "./tile/Tile";
 import {TileRegister} from "./tile/Tiles";
+import {EventEmitter} from "events";
 
 interface LevelTileConstructor {
     level: Level;
@@ -18,7 +19,7 @@ interface LevelTileConstructor {
     tileStates?: {};
 }
 
-export default class LevelTile extends PIXI.Container {
+export default class LevelTile extends PIXI.Container  {
 
     get tile(): Tile | undefined {
         return this._tile;
@@ -27,7 +28,6 @@ export default class LevelTile extends PIXI.Container {
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
-    public data: object = {};
     public level: Level;
     public random: TileRandom = new TileRandom(this);
     public readonly temperature: number;
@@ -36,6 +36,8 @@ export default class LevelTile extends PIXI.Container {
     public readonly x: number;
     public readonly y: number;
     public bg?: PIXI.Sprite;
+    private initByEntity?: Entity;
+    private events = new EventEmitter();
     private tileStates?: {};
     private tileClass?: typeof Tile;
     private needToUpdate: boolean = true;
@@ -57,9 +59,7 @@ export default class LevelTile extends PIXI.Container {
     }
 
     public init() {
-        if (this.tileClass && !(this.tileClass.prototype instanceof Tile)) {
-            throw new Error("Cannot initialize LevelTile: Wrong Tile");
-        }
+        const oldTile = this._tile;
         // @ts-ignore
         this._tile = new this.tileClass(this);
         this._tile?.states.set(this.tileStates);
@@ -73,6 +73,10 @@ export default class LevelTile extends PIXI.Container {
             this.addChild(this.bg);
             if (this._tile) {
                 this._tile.init();
+                if (this.initByEntity || oldTile) {
+                    this._tile.onSetTile(oldTile, this.initByEntity);
+                    this.initByEntity = undefined;
+                }
                 this.addChild(this._tile.container);
             }
             this.update();
@@ -108,13 +112,15 @@ export default class LevelTile extends PIXI.Container {
         return tileClasses.some((tileClass) => this._tile?.getClass() === tileClass);
     }
 
-    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES): void;
-    public setTile<T extends typeof Tile>(tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES): void;
-    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}): void {
+    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(
+        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}, entity?: Entity): void {
         this.isInitiated = false;
         this.skipTick = true;
         this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
         this.tileStates = states;
+        this.initByEntity = entity;
     }
 
     public findTileRadius(radius: number, ...tiles: Array<typeof Tile>) {
@@ -122,9 +128,7 @@ export default class LevelTile extends PIXI.Container {
             const height = ~~(Math.sqrt(radius * radius - x * x));
             for (let y = -height; y < height; y++) {
                 const lt = this.getRelativeTile(x, y, false);
-                if (lt && lt.instanceOf(...tiles)) {
-                    return true;
-                }
+                if (lt && lt.instanceOf(...tiles)) return true;
             }
         }
         return false;

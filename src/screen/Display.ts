@@ -3,6 +3,7 @@ import Game from "../core/Game";
 import Renderer from "../core/Renderer";
 
 export default class Display extends PIXI.Container {
+    public hasCommand = false;
 
     constructor() {
         super();
@@ -25,6 +26,10 @@ export default class Display extends PIXI.Container {
     }
 
     public onTick(): void {
+
+    }
+
+    public onCommand(): void {
 
     }
 }

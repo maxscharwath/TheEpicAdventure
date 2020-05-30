@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Items from "../item/Items";
-import {Player, Camp, MusicPlayer} from "../entity/";
+import {Player, Camp, MusicPlayer, Bear} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
 import Client from "../network/Client";
@@ -18,8 +18,16 @@ import System from "./System";
 import Renderer from "./Renderer";
 import LanDisplay from "../screen/LanDisplay";
 import TransitionDisplay from "../screen/TransitionDisplay";
+import MouseHandler from "./io/MouseHandler";
+import CraftingDisplay from "../screen/CraftingDisplay";
+import Crafting from "../crafting/Crafting";
+import MapDisplay from "../screen/MapDisplay";
 
 export default class Game {
+
+    public static get level(): Level {
+        return this.levels[this.currentLevel];
+    }
     public static player: Player;
     public static DEBUG: boolean = true;
     public static HAS_GUI: boolean = true;
@@ -36,10 +44,7 @@ export default class Game {
     public static currentLevel: number = 0;
     public static input: InputHandler;
     public static displays: Display[] = [];
-
-    public static get level(): Level {
-        return this.levels[this.currentLevel];
-    }
+    public static mouse: MouseHandler;
 
     public static isValidClient(): boolean {
         return this.isOnline && this.client != null;
@@ -64,13 +69,15 @@ export default class Game {
         Items.verifyTag();
         this.levels = [];
         this.input = new InputHandler();
+        this.mouse = new MouseHandler();
         this.player = new Player();
 
         this.levels.push(new Level());
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
-        this.level.add(new MusicPlayer(), 3, 3, true);
+        // this.level.add(new MusicPlayer(), 3, 3, true);
         this.level.add(new Camp(), 2, 5, true);
+        this.level.add(new Bear(), 0, 2, true);
         Renderer.setLevel(this.level);
         setTimeout(() => {
             this.level.findEntities((entity) => entity.visible).then((entities) => console.log(entities));
@@ -83,6 +90,7 @@ export default class Game {
             (new InfoDisplay()).show();
             (new HotbarDisplay(this.player)).show();
             (new LanDisplay()).show();
+            (new MapDisplay()).show();
         });
 
         /*        window.addEventListener("beforeunload", (e) => {

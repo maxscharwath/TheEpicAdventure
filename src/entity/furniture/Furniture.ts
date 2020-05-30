@@ -1,6 +1,7 @@
 import Entity from "../Entity";
 import {Player, Mob} from "../index";
 import Direction from "../Direction";
+import * as PIXI from "pixi.js";
 
 export default abstract class Furniture extends Entity {
     private pushDir: Direction = Direction.NONE;

@@ -18,7 +18,7 @@ export default class Inventory {
     public slots: Slot[] = [];
     private STACK_MAX: number = 64;
 
-    constructor(nbSlot: number = 8) {
+    constructor(nbSlot: number = 9) {
         this.addSlots(nbSlot);
     }
 
@@ -66,7 +66,7 @@ export default class Inventory {
         return false;
     }
 
-    public hasItem(item: Item, count: number) {
+    public hasItem(item: Item|ItemRegister<Item>, count: number) {
         for (const slot of this.slots) {
             if (slot.item instanceof Item) {
                 if (slot.item.tag === item.tag) {

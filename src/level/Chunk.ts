@@ -251,7 +251,7 @@ export default class Chunk {
     }
 
     public generate() {
-        this.map = this.level.levelGen.genChunk(this.level, this.x, this.y);
+        this.map = this.level.levelGen.genChunk(this.x, this.y, this.level);
         this.save();
         this.map.forEach((lt) => lt.init());
         this.generated = true;

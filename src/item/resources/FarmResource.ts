@@ -14,7 +14,7 @@ export default class FarmResource extends Resource {
 
     public useOn(levelTile: LevelTile, entity: Entity): boolean {
         if (levelTile.is(Tiles.FARMLAND.tile)) {
-            levelTile.setTile(this.targetTile);
+            levelTile.setTile(this.targetTile, {}, entity);
             return true;
         }
         return false;

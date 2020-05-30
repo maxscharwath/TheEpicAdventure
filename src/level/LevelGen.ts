@@ -26,7 +26,7 @@ export default class LevelGen {
         this.temperatureNoise = new SimplexNoise((this.seed + 2) * 32);
     }
 
-    public genChunk(level: Level, cX: number, cY: number, callback?: () => void): LevelTile[] {
+    public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): LevelTile[] {
         const random = new ChunkRandom(this.seed, cX, cY);
         const t1 = System.nanoTime();
         const map = [];

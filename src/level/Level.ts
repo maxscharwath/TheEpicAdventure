@@ -9,7 +9,6 @@ import LevelGen from "./LevelGen";
 import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
 import rimraf from "rimraf";
-import Particle from "../entity/particle/Particle";
 import Tickable from "../entity/Tickable";
 
 export default class Level {
@@ -33,6 +32,9 @@ export default class Level {
 
     constructor() {
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
+    }
+    public getChunks() {
+        return Array.from(this.chunks.values());
     }
 
     public getNbChunks(): number {

@@ -1,20 +1,15 @@
 import {Mob} from "../entity";
 import Item from "../item/Item";
-import ResourceItem from "../item/ResourceItem";
-import Resource from "../item/resources/Resource";
+import {ItemRegister} from "../item/Items";
 
 export default class Recipe {
-
-    public static create(data: any) {
-
-    }
-    private readonly resultItem: Item;
-    private cost: Array<[Item, number]> = [];
-    private canCraft = false;
+    public canCraft = false;
+    public readonly result: ItemRegister<Item>;
+    public cost: Array<[ItemRegister<Item>, number]> = [];
     private craftTime = 50;
 
-    constructor(resultItem: Item) {
-        this.resultItem = resultItem;
+    constructor(result: ItemRegister<Item>) {
+        this.result = result;
     }
 
     public setCraftTime(t: number) {
@@ -22,13 +17,8 @@ export default class Recipe {
         return this;
     }
 
-    public addCost(resource: Resource | Item, count: number) {
-        if (resource instanceof Resource) {
-            this.cost.push([new ResourceItem("", resource), count]);
-        }
-        if (resource instanceof Item) {
-            this.cost.push([resource, count]);
-        }
+    public addCost(itemRegister: ItemRegister<Item>, count: number) {
+        this.cost.push([itemRegister, count]);
         return this;
     }
 
@@ -47,7 +37,7 @@ export default class Recipe {
     }
 
     public craft(mob: Mob) {
-        const item = this.resultItem;
+        const item = this.result.item;
         item.craftedBy = mob;
         return mob.inventory.addItem(item);
     }
@@ -60,12 +50,5 @@ export default class Recipe {
                 mob.inventory.removeItem(item, count);
             }
         }
-    }
-
-    public toBSON() {
-        return {
-            resultItem: this.resultItem,
-            craftTime: this.craftTime,
-        };
     }
 }

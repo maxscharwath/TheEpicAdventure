@@ -40,7 +40,7 @@ export default class MusicPlayer extends Furniture {
         this.container.addChild(sprite, this.disk);
         const sound = new Howl({
             src: [System.getResource("music", "disk7.mp3")],
-            autoplay: true,
+            autoplay: false,
             loop: false,
             volume: 0.5,
             rate: 1,

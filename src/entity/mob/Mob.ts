@@ -25,7 +25,7 @@ export default abstract class Mob extends Entity {
 
     public maxHealth: number = 10;
     public health: number = this.maxHealth;
-    public inventory = new Inventory(8);
+    public inventory = new Inventory(9);
     protected speedMax: number = 1;
     protected potionEffect: any[] = [];
     protected walkDist: number = 0;
@@ -85,7 +85,7 @@ export default abstract class Mob extends Entity {
         }
     }
 
-    public getDir() {
+    public getDir(): Direction {
         return this.dir;
     }
 

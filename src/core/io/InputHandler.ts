@@ -149,7 +149,7 @@ export default class InputHandler {
         this.keymap.set("EXIT", "ESCAPE");
 
         this.keymap.set("ATTACK", "KEY-C|ENTER");
-        this.keymap.set("MENU", "KEY-X|KEY-E");
+        this.keymap.set("INVENTORY", "KEY-E");
         this.keymap.set("CRAFT", "KEY-Z|SHIFT-LEFT&KEY-E");
         this.keymap.set("PICKUP", "KEY-V|KEY-P");
         this.keymap.set("DROP-ONE", "KEY-Q");
@@ -159,10 +159,10 @@ export default class InputHandler {
 
         this.keymap.set("EXIT", "ESCAPE");
         this.keymap.set("POTIONEFFECTS", "KEY-P");
+        this.keymap.set("MAP", "KEY-M");
         this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
         this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
 
-        this.keymap.set("HOTBAR-0", "DIGIT-0");
         this.keymap.set("HOTBAR-1", "DIGIT-1");
         this.keymap.set("HOTBAR-2", "DIGIT-2");
         this.keymap.set("HOTBAR-3", "DIGIT-3");

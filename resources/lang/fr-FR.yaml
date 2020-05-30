@@ -39,6 +39,7 @@ tile.hole: Trou
 tile.snow: Neige
 tile.ice: Glace
 tile.plank: Planche
+tile.rail: Rail
 
 entity.player: Joueur
 entity.zombie: Zombie
@@ -62,6 +63,7 @@ item.wood: Bois
 item.stick: Baton
 item.cactus_flower: Fleur de catus
 item.lilypad: Nénuphar
+item.rail: Rail
 
 item.wood_axe: Hache en bois
 item.wood_hoe: Houe en bois

@@ -8,6 +8,9 @@ import Color from "../utility/Color";
 import Display from "./Display";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 import Game from "../core/Game";
+import CraftingDisplay from "./CraftingDisplay";
+import Crafting from "../crafting/Crafting";
+import MapDisplay from "./MapDisplay";
 
 class InventorySlot extends PIXI.Container {
     public index: number = 0;
@@ -24,14 +27,10 @@ class InventorySlot extends PIXI.Container {
         this.buttonMode = true;
         this.interactive = true;
         this.hitArea = new PIXI.Rectangle(4, 4, 10, 10);
-        const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
-        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
-        sprite.width = 16;
-        sprite.height = 16;
         this.itemContainer.position.set(4, 4);
         this.itemContainer.width = 8;
         this.itemContainer.height = 8;
-        this.addChild(sprite, this.itemContainer);
+        this.addChild(this.itemContainer);
         this.itemContainer.filters = [new DropShadowFilter({blur: 0, distance: 2, rotation: 45, quality: 0})];
     }
 
@@ -47,10 +46,13 @@ class InventorySlot extends PIXI.Container {
 }
 
 export default class HotbarDisplay extends Display {
+    public hasCommand = true;
     private mob: Mob;
     private slots: InventorySlot[] = [];
     private selectSprite?: PIXI.Sprite;
     private itemText?: PIXI.BitmapText;
+    private textDelay: number = 0;
+    private nbSlot: number = 9;
 
     constructor(mob: Mob) {
         super();
@@ -63,6 +65,12 @@ export default class HotbarDisplay extends Display {
     public onTick(): void {
         super.onTick();
         this.slots.forEach((slot) => slot.update());
+    }
+
+    public onCommand() {
+        super.onCommand();
+        if (Game.input.getKey("INVENTORY").clicked) (new CraftingDisplay(Crafting.handRecipes, Game.player)).show();
+        if (Game.input.getKey("MAP").clicked) (new MapDisplay()).show();
         if (Game.input.getKey("HOTBAR-1").clicked) this.mob.inventory.indexedSlot = 0;
         if (Game.input.getKey("HOTBAR-2").clicked) this.mob.inventory.indexedSlot = 1;
         if (Game.input.getKey("HOTBAR-3").clicked) this.mob.inventory.indexedSlot = 2;
@@ -72,7 +80,6 @@ export default class HotbarDisplay extends Display {
         if (Game.input.getKey("HOTBAR-7").clicked) this.mob.inventory.indexedSlot = 6;
         if (Game.input.getKey("HOTBAR-8").clicked) this.mob.inventory.indexedSlot = 7;
         if (Game.input.getKey("HOTBAR-9").clicked) this.mob.inventory.indexedSlot = 8;
-        if (Game.input.getKey("HOTBAR-0").clicked) this.mob.inventory.indexedSlot = 9;
         if (Game.input.getKey("DROP-ONE").clicked) {
             const slot = this.mob.inventory.selectedSlot();
             if (slot.isItem()) {
@@ -84,6 +91,12 @@ export default class HotbarDisplay extends Display {
                 }
             }
         }
+        if (Game.mouse.deltaY > 0) {
+            this.mob.inventory.indexedSlot = (this.mob.inventory.indexedSlot + 1 + this.nbSlot) % this.nbSlot;
+        }
+        if (Game.mouse.deltaY < 0) {
+            this.mob.inventory.indexedSlot = (this.mob.inventory.indexedSlot - 1 + this.nbSlot) % this.nbSlot;
+        }
     }
 
     public onRender() {
@@ -92,8 +105,9 @@ export default class HotbarDisplay extends Display {
     }
 
     private init() {
-        const baseTexture = PIXI.BaseTexture.from(System.getResource("gui", "gui_hotbar.png"));
-        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(16, 0, 16, 16)));
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "hotbar.png"));
+        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 96, 16)));
+        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(96, 0, 16, 16)));
         this.itemText = new PIXI.BitmapText("", {
             font: {
                 name: "Minecraftia",
@@ -104,10 +118,10 @@ export default class HotbarDisplay extends Display {
         this.itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
         this.itemText.anchor = 0.5;
         const bar = new PIXI.Container();
-        const nbRow = 10;
-        for (let i = nbRow - 1; i >= 0; i--) {
+        bar.addChild(sprite);
+        for (let i = this.nbSlot - 1; i >= 0; i--) {
             const slot = this.mob.inventory.slots[i];
-            const x = (i % nbRow) * 10;
+            const x = (i % this.nbSlot) * 10;
             const slotSprite = new InventorySlot(slot, i);
             slotSprite.on("click", () => {
                 this.mob.inventory.indexedSlot = slotSprite.index;
@@ -125,8 +139,13 @@ export default class HotbarDisplay extends Display {
     private setCurrentSlot() {
         const index = this.mob.inventory.indexedSlot;
         const slot = this.mob.inventory.getSlot(index);
-        if (this.itemText && slot.isItem()) {
-            this.itemText.text = `${slot.item?.getDisplayName()} - ${slot.nb}`;
+        let text = "";
+        if (this.textDelay > 0) this.textDelay--;
+        this.itemText.visible = (this.textDelay > 0);
+        if (this.itemText && slot.isItem()) text = `${slot.item?.getDisplayName()} - ${slot.nb}`;
+        if (text !== this.itemText.text) {
+            this.textDelay = 100;
+            this.itemText.text = text;
         }
         if (this.selectSprite && this.selectSprite.x !== index * 10) {
             this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 2;

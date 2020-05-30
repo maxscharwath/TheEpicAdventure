@@ -23,10 +23,10 @@ export default class InfoDisplay extends Display {
             `z : ${(Game.player.z).toFixed(2)}`,
             `biome : ${tile?.biome.getDisplayName()}`,
             `tile : ${tile?.tile?.getDisplayName()}`,
-            `tile data : ${JSON.stringify(tile?.tile?.states.getStates())}`,
+            `tile data : ${JSON.stringify(tile?.tile?.states.getStates(), null, 4)}`,
             `containers : ${Renderer.getNbChildren()}`,
             `chunks loaded : ${Game.level?.getNbChunks()}`,
-            `memory : ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`,
+            `memory : ${process.memoryUsage().heapTotal >> 20} MB`,
         ].join("\n");
     }
 

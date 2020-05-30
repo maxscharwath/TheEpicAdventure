@@ -1,0 +1,146 @@
+import * as PIXI from "pixi.js";
+import Display from "./Display";
+import {Mob} from "../entity";
+import Recipe from "../crafting/Recipe";
+import System from "../core/System";
+import Game from "../core/Game";
+import {DropShadowFilter} from "@pixi/filter-drop-shadow";
+import Renderer from "../core/Renderer";
+
+export default class InventoryDisplay extends Display {
+    public hasCommand = true;
+    private readonly mob: Mob;
+    private readonly recipes: Recipe[];
+    private selected: number = 0;
+    private selectSprite: PIXI.Sprite;
+    private costContainer = new PIXI.Container();
+    private recipesContainer = new PIXI.Container();
+    private hasText: PIXI.BitmapText;
+    constructor(recipes: Recipe[], mob: Mob) {
+        super();
+        this.mob = mob;
+        this.recipes = Array.from(recipes);
+        this.recipes.forEach((recipe) => {
+            recipe.checkCanCraft(mob);
+        });
+        this.recipes.sort((r1, r2) => {
+            if (r1.canCraft && !r2.canCraft) return -1;
+            if (!r1.canCraft && r2.canCraft) return 1;
+            return 0;
+        });
+        this.init();
+    }
+
+    public onCommand(): void {
+        super.onCommand();
+        if (Game.input.getKey("CURSOR-DOWN").clicked || Game.mouse.deltaY > 0) {
+            this.setSelect((this.selected + 1 + this.recipes.length) % this.recipes.length);
+        }
+        if (Game.input.getKey("CURSOR-UP").clicked || Game.mouse.deltaY < 0) {
+            this.setSelect((this.selected - 1 + this.recipes.length) % this.recipes.length);
+        }
+        if (Game.input.getKey("EXIT").clicked) this.hide();
+
+        if (Game.input.getKey("ENTER").clicked) {
+            const r = this.recipes[this.selected];
+            if (r.canCraft && r.craft(this.mob)) {
+                console.log("CRAFT");
+                r.deductCost(this.mob);
+            }
+        }
+    }
+
+    public onRender() {
+        super.onRender();
+    }
+
+    private setSelect(val: number, force: boolean= false) {
+        if (!force && val === this.selected) return;
+        this.selected = val;
+        this.initRecipe();
+        this.initCost(this.recipes[this.selected]);
+    }
+
+    private initCost(recipe: Recipe) {
+        this.costContainer.removeChildren();
+        recipe.cost.forEach(([itemRegister, number], index) => {
+            const item = itemRegister.item;
+            const itemSprite = item.getSprite();
+            itemSprite.x = 0;
+            itemSprite.y = index * 10;
+            const has = this.mob.inventory.count(item);
+            const itemText  = new PIXI.BitmapText(`${number}/${has}`, {
+                font: {
+                    name: "Minecraftia",
+                    size: 6,
+                },
+                tint: has >= number ? 0xffffff : 0xa67948,
+            });
+            itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
+            itemText.anchor = new PIXI.Point(0, 0.5);
+            itemText.x = 10;
+            itemText.y = index * 10 + 5;
+            this.costContainer.addChild(itemSprite, itemText);
+        });
+    }
+
+    private initRecipe() {
+        const maxRow = 10;
+        this.recipesContainer.removeChildren();
+        for (let i = 0; i < maxRow; i++) {
+            let n = i;
+            if (this.selected - (maxRow - 1) > 0) n += this.selected - (maxRow - 1);
+            if (n === this.selected) this.selectSprite.position.y = i * 10 + 3;
+            const recipe = this.recipes[n];
+            const item = recipe.result.item;
+            const itemSprite = item.getSprite();
+            itemSprite.x = 0;
+            itemSprite.y = i * 10;
+            const itemText  = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
+                font: {
+                    name: "Minecraftia",
+                    size: 4,
+                },
+                tint: recipe.canCraft ? 0xffffff : 0xa67948,
+            });
+            itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
+            itemText.anchor = new PIXI.Point(0, 0.5);
+            itemText.position.set(10, i * 10 + 5);
+            this.recipesContainer.addChild(itemSprite, itemText);
+        }
+        this.hasText.text = `${this.mob.inventory.count(this.recipes[this.selected].result.item)}`;
+    }
+
+    private init() {
+        const container = new PIXI.Container();
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "crafting.png"));
+        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 112)));
+        const background = new PIXI.Sprite(PIXI.Texture.WHITE);
+        background.width = Renderer.getScreen().width;
+        background.height = Renderer.getScreen().height;
+        background.tint = 0x000000;
+        background.alpha = 0.75;
+        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
+        this.costContainer.position.set(135, 29);
+        this.recipesContainer.position.set(7, 7);
+        this.hasText  = new PIXI.BitmapText("123456", {
+            font: {
+                name: "Minecraftia",
+                size: 6,
+            },
+            tint: 0xffffff,
+        });
+        this.hasText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
+        this.hasText.anchor = new PIXI.Point(0, 0.5);
+        this.hasText.position.set(150, 12);
+        container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
+        container.scale.set(4);
+        container.position.set(
+            (Renderer.getScreen().width - container.width) / 2,
+            (Renderer.getScreen().height - container.height) / 2,
+        );
+        this.addChild(background, container);
+        this.initRecipe();
+        this.setSelect(0, true);
+    }
+}

@@ -13,9 +13,13 @@ export default class Resources {
     public static ice = new TileResource("ice.png", Tiles.ICE, Tiles.WATER);
     public static lilypad = new TileResource("lilypad.png", Tiles.LILYPAD, Tiles.WATER);
     public static stone = new Resource("stone.png");
+    public static iron = new Resource("iron.png");
+    public static gold = new Resource("gold.png");
+    public static diamond = new Resource("diamond.png");
     public static snowball = new Resource("snowball.png");
     public static stick = new Resource("stick.png");
     public static fish = new Resource("fish_salmon_raw.png");
     public static wood = new TileResource("wood.png", Tiles.PLANK, Tiles.HOLE);
     public static cactusFlower = new TileResource("cactus_flower.png", Tiles.CACTUS, Tiles.SAND);
+    public static rail = new TileResource("rail.png", Tiles.RAIL, Tiles.GRASS, Tiles.DIRT, Tiles.SAND);
 }

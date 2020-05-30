@@ -23,10 +23,12 @@ export default class Updater {
     public static onTick(dlt: number): void {
         const t1 = System.milliTime();
         this.delta = dlt;
-        Game.input.onTick();
         if (!Game.isFocus) return;
         Game.displays.forEach((display) => display.onTick());
+        Game.displays.filter((d) => d.hasCommand).reverse()[0]?.onCommand();
         Game.level?.onTick();
+        Game.input.onTick();
+        Game.mouse.onTick();
         this.setTime(this.tickCount + 1);
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);

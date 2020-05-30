@@ -6,6 +6,8 @@ import Tiers from "./Tiers";
 import ToolItem from "./ToolItem";
 import ToolType from "./ToolType";
 import FishingRodItem from "./FishingRodItem";
+import FurnitureItem from "./FurnitureItem";
+import {Chest, Camp, Bed, MusicPlayer} from "../entity";
 
 type Type<T> = new (...args: any[]) => T;
 
@@ -41,6 +43,9 @@ export class ItemRegister<T extends Item> {
         this.args = args;
         ItemRegister.items.set(tag, this);
         console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
+    }
+    public instanceOf(item: Item) {
+        return item.tag === this.tag;
     }
 }
 
@@ -85,6 +90,10 @@ export default class Items extends ItemRegister<Item> {
     public static SAND = Items.add("sand", ResourceItem, Resources.sand);
     public static DIRT = Items.add("dirt", ResourceItem, Resources.dirt);
     public static STONE = Items.add("stone", ResourceItem, Resources.stone);
+    public static IRON = Items.add("iron", ResourceItem, Resources.iron);
+    public static GOLD = Items.add("gold", ResourceItem, Resources.gold);
+    public static DIAMOND = Items.add("diamond", ResourceItem, Resources.diamond);
+    public static RAIL = Items.add("rail", ResourceItem, Resources.rail);
 
     public static STICK = Items.add("stick", ResourceItem, Resources.stick);
     public static WOOD = Items.add("wood", ResourceItem, Resources.wood);
@@ -94,4 +103,9 @@ export default class Items extends ItemRegister<Item> {
     public static FISH = Items.add("fish", ResourceItem, Resources.fish);
 
     public static FISHING_ROD = Items.add("fishing_rod", FishingRodItem);
+
+    public static CHEST = Items.add("chest", FurnitureItem, Chest);
+    public static CAMP = Items.add("camp", FurnitureItem, Camp);
+    public static BED = Items.add("bed", FurnitureItem, Bed);
+    public static MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
 }

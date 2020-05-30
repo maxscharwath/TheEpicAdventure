@@ -7,6 +7,7 @@ import {ItemRegister} from "../../item/Items";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
 import TileStates from "./TileStates";
+import Tiles from "./Tiles";
 
 type Type<T> = new (...args: any[]) => T;
 export default abstract class Tile {
@@ -22,8 +23,8 @@ export default abstract class Tile {
     protected get y() {
         return this.levelTile.getLocalY();
     }
-    public static DEFAULT_STATES = {};
 
+    public static DEFAULT_STATES = {};
     public static SIZE = 16;
     public static readonly TAG: string = "tile";
 
@@ -38,13 +39,10 @@ export default abstract class Tile {
     public states = TileStates.create();
     public isInit: boolean = false;
     public container = new PIXI.Container();
-
     public ["constructor"]: typeof Tile;
-
     public light: number = 1;
     public maySpawn: boolean = false;
     public friction: number = 0.1;
-
     protected random: Random;
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
@@ -60,15 +58,14 @@ export default abstract class Tile {
         return Object.getPrototypeOf(this).constructor;
     }
 
-    public setGroundTile(tile: Type<Tile>) {
-        if (this.groundTile instanceof tile) {
-            return;
-        }
+    public setGroundTile(tile: typeof Tile | Tile): Tile {
+        // @ts-ignore
+        this.groundTile = tile instanceof Tile ? tile : new (tile)(this.levelTile);
         this.groundContainer.removeChildren();
-        this.groundTile = new (tile)(this.levelTile);
         this.levelTile.update();
         this.groundTile.init();
         this.groundContainer.addChild(this.groundTile.container);
+        return this.groundTile;
     }
 
     public init() {
@@ -104,6 +101,9 @@ export default abstract class Tile {
         }
     }
 
+    public onSetTile(oldTile: Tile, entity?: Entity) {
+    }
+
     public getDisplayName(): string {
         return Localization.get(`tile.${this.constructor.TAG}`);
     }
@@ -120,6 +120,10 @@ export default abstract class Tile {
     }
 
     public bumpedInto(entity: Entity) {
+    }
+
+    public getKeys() {
+        return Tiles.getKeys(this.getClass());
     }
 
     protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
