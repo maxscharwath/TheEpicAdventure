@@ -7,7 +7,7 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 export default class Camp extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-    private active = true;
+    private active = false;
     private campFire: PIXI.AnimatedSprite;
 
     constructor() {
@@ -31,6 +31,7 @@ export default class Camp extends Furniture {
         this.campFire.animationSpeed = 0.5;
         this.campFire.y = -6;
         this.campFire.anchor.set(0.5);
+        this.campFire.visible = this.active;
         this.container.addChild(sprite, this.campFire);
     }
 }

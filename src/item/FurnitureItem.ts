@@ -3,6 +3,7 @@ import {Furniture} from "../entity";
 import LevelTile from "../level/LevelTile";
 import Mob from "../entity/mob/Mob";
 import * as PIXI from "pixi.js";
+import System from "../core/System";
 
 export default class FurnitureItem extends Item {
 
@@ -16,10 +17,15 @@ export default class FurnitureItem extends Item {
         // @ts-ignore
         if (!(furniture instanceof Furniture)) this.furniture = new furniture();
         else this.furniture = furniture;
+        this.texture = PIXI.Texture.from(System.getResource("items", `${tag}.png`));
     }
 
     public isStackable() {
         return false;
+    }
+
+    public getFurnitureSprite() {
+        return this.furniture.getSprite();
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {

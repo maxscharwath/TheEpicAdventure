@@ -6,19 +6,24 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Mob from "./Mob";
 import FishingRodItem from "../../item/FishingRodItem";
-import DustParticle from "../particle/DustParticle";
-import Updater from "../../core/Updater";
+import FurnitureItem from "../../item/FurnitureItem";
 
 export default class Player extends Mob {
 
     private static spriteSheet = new SpriteSheet("player.json");
     protected speedMax: number = 1;
     private targetTile?: PIXI.Sprite;
+    private holdItemContainer: PIXI.Container;
     private sprite?: PIXI.AnimatedSprite;
+    private holdItem: FurnitureItem;
 
     constructor() {
         super();
         this.inventory.addSlots(18);
+        this.inventory.addItem(Items.MUSIC_PLAYER);
+        this.inventory.addItem(Items.CAMP);
+        this.inventory.addItem(Items.BED);
+        this.inventory.addItem(Items.CHEST);
         this.inventory.addItem(Items.WOOD_AXE);
         this.inventory.addItem(Items.WOOD_HOE);
         this.inventory.addItem(Items.WOOD_PICKAXE);
@@ -63,17 +68,30 @@ export default class Player extends Mob {
             this.a.x += ax / 5;
             this.a.y += ay / 5;
         }
+        const selectedItem = this.inventory.selectedItem();
+        if (selectedItem instanceof FurnitureItem) {
+            if (this.holdItem !== selectedItem) {
+                this.holdItemContainer.removeChildren();
+                this.holdItem = selectedItem as FurnitureItem;
+                this.holdItemContainer.addChild(selectedItem.getFurnitureSprite());
+            }
+        } else {
+            this.holdItem = undefined;
+            this.holdItemContainer.removeChildren();
+        }
     }
 
     public onRender() {
         super.onRender();
+        const holdItem = this.inventory.selectedItem() instanceof FurnitureItem;
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
-            this.playAnimation("walk");
+            this.playAnimation("walk", holdItem ? "hold" : "normal");
         } else if (this.inventory.selectedItem() instanceof FishingRodItem) {
             this.playAnimation("fishing");
         } else {
-            this.playAnimation("idle");
+            this.playAnimation("idle", holdItem ? "hold" : "normal");
         }
+
         const levelTile = this.getInteractTile();
         if (levelTile && this.targetTile) {
             this.targetTile.position.set(levelTile.x - this.x, levelTile.y - this.y);
@@ -86,7 +104,9 @@ export default class Player extends Mob {
         this.sprite.anchor.set(0.5);
         this.targetTile = new PIXI.Sprite(PIXI.Texture.from(System.getResource("select.png")));
         this.targetTile.alpha = 0.7;
-        this.container.addChild(this.sprite);
+        this.holdItemContainer = new PIXI.Container();
+        this.holdItemContainer.position.y = -14;
+        this.container.addChild(this.sprite, this.holdItemContainer);
         this.addChildAt(this.targetTile, 0);
         this.playAnimation("walk");
     }

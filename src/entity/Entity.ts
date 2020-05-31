@@ -167,6 +167,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public add() {
+        if (this.parent)this.parent.removeChild(this);
         this.level?.entitiesContainer.addChild(this);
     }
 
