@@ -18,6 +18,8 @@ export default class ResourceItem extends Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.getCooldown() <= 5) return false;
+        super.useOn(levelTile, mob);
         if (this.resource.useOn(levelTile, mob)) {
             mob.inventory.removeItem(this, 1);
             return true;

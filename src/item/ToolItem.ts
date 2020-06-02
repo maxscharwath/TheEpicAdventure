@@ -2,6 +2,8 @@ import Random from "../utility/Random";
 import Item from "./Item";
 import Tiers from "./Tiers";
 import ToolType from "./ToolType";
+import LevelTile from "../level/LevelTile";
+import Mob from "../entity/mob/Mob";
 
 export default class ToolItem extends Item {
 
@@ -52,6 +54,12 @@ export default class ToolItem extends Item {
             return (this.level + 1) * 3 + Random.int(this.level * this.level);
         }
         return 1;
+    }
+
+    public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.getCooldown() <= 5) return false;
+        super.useOn(levelTile, mob);
+        return true;
     }
 
     public toBSON(): any {

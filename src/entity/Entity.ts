@@ -46,7 +46,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     protected isMoving: boolean = false;
     protected container = new PIXI.Container();
     protected isOnFire = false;
-    private lastTick: number = Updater.tickCount;
+    private lastTick: number = Updater.ticks;
     private uid: string = uniqid();
 
     protected constructor() {
@@ -66,11 +66,11 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public isActive() {
-        return (Updater.tickCount - this.lastTick) < 50;
+        return (Updater.ticks - this.lastTick) < 50;
     }
 
     public onTick(): void {
-        this.lastTick = Updater.tickCount;
+        this.lastTick = Updater.ticks;
         this.ticks++;
         if (this.isOnFire && this.canBurn() ) {
             this.fireSprite.visible = true;

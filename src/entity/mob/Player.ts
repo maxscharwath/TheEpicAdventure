@@ -47,6 +47,7 @@ export default class Player extends Mob {
         super.onTick();
         let ax = 0;
         let ay = 0;
+
         if (Game.input.getKey("MOVE-RIGHT").down) ax += 3;
         if (Game.input.getKey("MOVE-LEFT").down) ax += -3;
         if (Game.input.getKey("MOVE-DOWN").down) ay += 3;
@@ -57,8 +58,9 @@ export default class Player extends Mob {
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();
             if (levelTile && item instanceof Item) {
-                levelTile.tile?.onInteract(this, item);
-                item.useOn(levelTile, this);
+                if (item.useOn(levelTile, this)) {
+                    levelTile.tile?.onInteract(this, item);
+                }
             } else {
                 this.attack(5);
             }

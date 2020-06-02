@@ -7,7 +7,7 @@ import Game from "../core/Game";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 import Renderer from "../core/Renderer";
 
-export default class InventoryDisplay extends Display {
+export default class CraftingDisplay extends Display {
     public hasCommand = true;
     private readonly mob: Mob;
     private readonly recipes: Recipe[];
@@ -20,9 +20,7 @@ export default class InventoryDisplay extends Display {
         super();
         this.mob = mob;
         this.recipes = Array.from(recipes);
-        this.recipes.forEach((recipe) => {
-            recipe.checkCanCraft(mob);
-        });
+        this.recipes.forEach((recipe) => recipe.checkCanCraft(mob));
         this.recipes.sort((r1, r2) => {
             if (r1.canCraft && !r2.canCraft) return -1;
             if (!r1.canCraft && r2.canCraft) return 1;
@@ -46,6 +44,7 @@ export default class InventoryDisplay extends Display {
             if (r.canCraft && r.craft(this.mob)) {
                 console.log("CRAFT");
                 r.deductCost(this.mob);
+                this.refresh();
             }
         }
     }
@@ -57,8 +56,7 @@ export default class InventoryDisplay extends Display {
     private setSelect(val: number, force: boolean= false) {
         if (!force && val === this.selected) return;
         this.selected = val;
-        this.initRecipe();
-        this.initCost(this.recipes[this.selected]);
+        this.refresh();
     }
 
     private initCost(recipe: Recipe) {
@@ -71,12 +69,11 @@ export default class InventoryDisplay extends Display {
             const has = this.mob.inventory.count(item);
             const itemText  = new PIXI.BitmapText(`${number}/${has}`, {
                 font: {
-                    name: "Minecraftia",
+                    name: "Epic",
                     size: 6,
                 },
-                tint: has >= number ? 0xffffff : 0xa67948,
+                tint: has >= number ? 0xffffff : 0xb4b4b4,
             });
-            itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
             itemText.anchor = new PIXI.Point(0, 0.5);
             itemText.x = 10;
             itemText.y = index * 10 + 5;
@@ -98,12 +95,11 @@ export default class InventoryDisplay extends Display {
             itemSprite.y = i * 10;
             const itemText  = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
                 font: {
-                    name: "Minecraftia",
+                    name: "Epic",
                     size: 4,
                 },
                 tint: recipe.canCraft ? 0xffffff : 0xa67948,
             });
-            itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
             itemText.anchor = new PIXI.Point(0, 0.5);
             itemText.position.set(10, i * 10 + 5);
             this.recipesContainer.addChild(itemSprite, itemText);
@@ -125,12 +121,11 @@ export default class InventoryDisplay extends Display {
         this.recipesContainer.position.set(7, 7);
         this.hasText  = new PIXI.BitmapText("123456", {
             font: {
-                name: "Minecraftia",
+                name: "Epic",
                 size: 6,
             },
             tint: 0xffffff,
         });
-        this.hasText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
         this.hasText.anchor = new PIXI.Point(0, 0.5);
         this.hasText.position.set(150, 12);
         container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
@@ -142,5 +137,11 @@ export default class InventoryDisplay extends Display {
         this.addChild(background, container);
         this.initRecipe();
         this.setSelect(0, true);
+    }
+
+    private refresh() {
+        this.recipes.forEach((recipe) => recipe.checkCanCraft(this.mob));
+        this.initRecipe();
+        this.initCost(this.recipes[this.selected]);
     }
 }

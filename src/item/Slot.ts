@@ -21,7 +21,8 @@ export default class Slot {
 
     // @BUG
     public removeItem(nb: number): number {
-        const n = this.nb -= nb;
+        this.nb -= nb;
+        const n = this.nb;
         if (this.nb <= 0) {
             this.clear();
         }

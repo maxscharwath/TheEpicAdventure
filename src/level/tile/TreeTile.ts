@@ -6,14 +6,13 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
-import TileStates from "./TileStates";
+import HurtParticle from "../../entity/particle/HurtParticle";
+import ToolItem from "../../item/ToolItem";
+import ToolType from "../../item/ToolType";
 
 export default class TreeTile extends Tile {
-    public static DEFAULT_STATES = {damage: 0};
-
     public static readonly TAG: string = "tree";
-    public states = TileStates.create(TreeTile.DEFAULT_STATES);
-
+    protected damage = 0;
     private layersTreeSprite: PIXI.Sprite[] = [];
 
     public init() {
@@ -39,13 +38,23 @@ export default class TreeTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        this.states.damage += 1;
-        if (this.states.damage >= 15) {
-            if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
-            this.addItemEntity(Items.WOOD);
-            this.addItemEntity(Items.STICK, 2);
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.axe:
+                    const hurt = item.getAttackDamageBonus();
+                    this.damage += hurt;
+                    this.levelTile.level.add(
+                        new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                    );
+                    if (this.damage >= 15) {
+                        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+                        this.addItemEntity(Items.WOOD);
+                        this.addItemEntity(Items.STICK, 2);
+                    }
+                    return true;
+            }
         }
-        return true;
+        return false;
     }
 
     protected treeTilingInit(source: string) {

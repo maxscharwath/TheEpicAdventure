@@ -29,6 +29,7 @@ export default class TransitionDisplay extends Display {
         this.drawHole(this.percent);
         this.percent += this.speed;
         if (!this.transitionOut && this.percent >= 1 || this.transitionOut && this.percent <= 0) {
+            console.log("hide");
             this.hide();
         }
     }

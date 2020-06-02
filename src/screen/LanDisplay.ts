@@ -11,7 +11,7 @@ export default class LanDisplay extends DraggableDisplay {
         super.show();
         SearchServer.start((server) => {
             const text = new PIXI.BitmapText(`${server.ip}:${server.port}`, {
-                font: {name: "Minecraftia", size: 16},
+                font: {name: "Epic", size: 16},
                 tint: Color.white.getInt(),
             });
             text.interactive = true;

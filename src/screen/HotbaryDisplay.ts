@@ -106,22 +106,22 @@ export default class HotbarDisplay extends Display {
 
     private init() {
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "hotbar.png"));
-        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 96, 16)));
-        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(96, 0, 16, 16)));
+        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 112, 16)));
+        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(112, 0, 16, 16)));
         this.itemText = new PIXI.BitmapText("", {
             font: {
-                name: "Minecraftia",
+                name: "Epic",
                 size: 16,
             },
             tint: Color.white.getInt(),
         });
-        this.itemText.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
         this.itemText.anchor = 0.5;
         const bar = new PIXI.Container();
+        bar.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
         bar.addChild(sprite);
         for (let i = this.nbSlot - 1; i >= 0; i--) {
             const slot = this.mob.inventory.slots[i];
-            const x = (i % this.nbSlot) * 10;
+            const x = (i % this.nbSlot) * 12;
             const slotSprite = new InventorySlot(slot, i);
             slotSprite.on("click", () => {
                 this.mob.inventory.indexedSlot = slotSprite.index;
@@ -133,7 +133,7 @@ export default class HotbarDisplay extends Display {
         bar.addChild(this.selectSprite);
         bar.scale.set(4);
         this.addChild(bar, this.itemText);
-        this.itemText.position.set(this.width / 2, -10);
+        this.itemText.position.set(this.width / 2, -12);
     }
 
     private setCurrentSlot() {
@@ -147,8 +147,8 @@ export default class HotbarDisplay extends Display {
             this.textDelay = 100;
             this.itemText.text = text;
         }
-        if (this.selectSprite && this.selectSprite.x !== index * 10) {
-            this.selectSprite.x -= (this.selectSprite.x - (index * 10)) / 2;
+        if (this.selectSprite && this.selectSprite.x !== index * 12) {
+            this.selectSprite.x -= (this.selectSprite.x - (index * 12)) / 2;
         }
     }
 }

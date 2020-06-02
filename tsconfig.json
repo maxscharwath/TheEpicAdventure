@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
   },
   "exclude": [
     "node_modules"

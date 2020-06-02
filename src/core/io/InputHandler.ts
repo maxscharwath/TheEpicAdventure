@@ -158,7 +158,7 @@ export default class InputHandler {
         this.keymap.set("PAUSE", "ESCAPE");
 
         this.keymap.set("EXIT", "ESCAPE");
-        this.keymap.set("POTIONEFFECTS", "KEY-P");
+        this.keymap.set("POTION", "KEY-P");
         this.keymap.set("MAP", "KEY-M");
         this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
         this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");

@@ -47,7 +47,7 @@ export default class Chunk {
 
     constructor(level: Level, x: number, y: number, generate: boolean = true) {
         this.level = level;
-        this.lastTick = Updater.tickCount;
+        this.lastTick = Updater.ticks;
         this.x = x;
         this.y = y;
         if (generate) {
@@ -65,7 +65,7 @@ export default class Chunk {
     }
 
     public isActive() {
-        return (Updater.tickCount - this.lastTick) < Chunk.CHUNK_TIMEOUT;
+        return (Updater.ticks - this.lastTick) < Chunk.CHUNK_TIMEOUT;
     }
 
     public isGenerated() {
@@ -74,7 +74,7 @@ export default class Chunk {
 
     public onTick(): void {
         if (!this.isGenerated()) return;
-        this.lastTick = Updater.tickCount;
+        this.lastTick = Updater.ticks;
         for (const lt of this.map) {
             lt.onTick();
         }
@@ -245,7 +245,7 @@ export default class Chunk {
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
         this.map = map;
-        this.lastTick = Updater.tickCount;
+        this.lastTick = Updater.ticks;
         this.generated = true;
         return this;
     }

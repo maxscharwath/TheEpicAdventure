@@ -6,7 +6,7 @@ export default class Updater {
     public static gamespeed: number = 1;
     public static paused: boolean = true;
 
-    public static tickCount: number = 0;
+    public static ticks: number = 0;
     public static time: number = 0;
     public static readonly dayLength: number = 3600;
     public static readonly sleepEndTime: number = Updater.dayLength / 8;
@@ -30,6 +30,7 @@ export default class Updater {
         Game.input.onTick();
         Game.mouse.onTick();
         this.setTime(this.tickCount + 1);
+        this.ticks++;
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);
     }
@@ -54,5 +55,6 @@ export default class Updater {
     public static every(tick: number): boolean {
         return (this.tickCount % tick) === 0;
     }
+    private static tickCount: number = 0;
     private static ticksTime: number[] = [];
 }

@@ -59,8 +59,14 @@ export default abstract class Tile {
     }
 
     public setGroundTile(tile: typeof Tile | Tile): Tile {
-        // @ts-ignore
-        this.groundTile = tile instanceof Tile ? tile : new (tile)(this.levelTile);
+        if (tile instanceof Tile) {
+            if (this.groundTile?.instanceOf(tile.getClass()))return;
+            this.groundTile = tile;
+        } else {
+            if (this.groundTile?.instanceOf(tile))return;
+            // @ts-ignore
+            this.groundTile = new tile(this.levelTile);
+        }
         this.groundContainer.removeChildren();
         this.levelTile.update();
         this.groundTile.init();

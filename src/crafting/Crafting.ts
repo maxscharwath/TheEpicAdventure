@@ -36,7 +36,7 @@ export default class Crafting {
         new Recipe(Items.FISHING_ROD).addCost(Items.STICK, 3),
         new Recipe(Items.CHEST).addCost(Items.WOOD, 8),
         new Recipe(Items.BED).addCost(Items.WOOD, 8),
-        new Recipe(Items.CAMP).addCost(Items.WOOD, 8),
+        new Recipe(Items.CAMP).addCost(Items.WOOD, 4).addCost(Items.STICK, 8),
         new Recipe(Items.MUSIC_PLAYER).addCost(Items.WOOD, 8),
     ];
 }

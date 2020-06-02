@@ -16,7 +16,7 @@ export default class InfoDisplay extends Display {
             `fps : ${Math.round(Initializer.getCurFps())}`,
             `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
             `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
-            `time : ${Updater.tickCount} (${Updater.time})`,
+            `time : ${Updater.ticks} (${Updater.time})`,
             `seed : ${Game.level?.seed}`,
             `x : ${(Game.player.x / 16).toFixed(2)}`,
             `y : ${(Game.player.y / 16).toFixed(2)}`,
@@ -37,12 +37,11 @@ export default class InfoDisplay extends Display {
         super();
         this.textArea = new PIXI.BitmapText("", {
             font: {
-                name: "Minecraftia",
+                name: "Epic",
                 size: 16,
             },
             tint: Color.white.getInt(),
         });
-        this.textArea.filters = [new DropShadowFilter({blur: 0, distance: 1, rotation: 90, quality: 0})];
 
         this.textArea.x = 0;
         this.textArea.y = 0;

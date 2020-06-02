@@ -6,6 +6,7 @@ import Vector from "../../utility/Vector";
 import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
+import HurtParticle from "../particle/HurtParticle";
 
 export default abstract class Mob extends Entity {
 
@@ -64,6 +65,7 @@ export default abstract class Mob extends Entity {
         this.a.x = attackDir.getX() * 2;
         this.a.y = attackDir.getY() * 2;
         this.health -= dmg;
+        this.level.add(new HurtParticle(this.x, this.y, -dmg, 0xc80000));
     }
 
     public onTick(): void {

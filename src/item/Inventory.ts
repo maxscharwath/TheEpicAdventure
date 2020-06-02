@@ -66,7 +66,7 @@ export default class Inventory {
         return false;
     }
 
-    public hasItem(item: Item|ItemRegister<Item>, count: number) {
+    public hasItem(item: Item | ItemRegister<Item>, count: number) {
         for (const slot of this.slots) {
             if (slot.item instanceof Item) {
                 if (slot.item.tag === item.tag) {
@@ -78,17 +78,16 @@ export default class Inventory {
         return false;
     }
 
-    public removeItem(item: Item, itemNb = 1): boolean {
-        if (!(item instanceof Item)) {
-            return false;
-        }
+    public removeItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
+        if (!item) return false;
         for (const slot of this.slots) {
             if (slot.item == null) {
                 continue;
             }
             if (slot.item.tag === item.tag) {
-                slot.removeItem(itemNb);
-                return true;
+                const n = slot.removeItem(itemNb);
+                if (n >= 0) return true;
+                itemNb += n;
             }
         }
         return false;

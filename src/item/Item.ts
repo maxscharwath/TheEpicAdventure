@@ -5,6 +5,7 @@ import {Entity, Player} from "../entity/";
 import Mob from "../entity/mob/Mob";
 import LevelTile from "../level/LevelTile";
 import Items from "./Items";
+import Updater from "../core/Updater";
 
 export default class Item {
 
@@ -20,11 +21,11 @@ export default class Item {
     public tag: string;
     public uid: string = uniqid();
     protected texture: PIXI.Texture = PIXI.Texture.EMPTY;
+    private cooldownTime = 0;
 
     constructor(tag: string) {
         this.tag = tag;
     }
-
 
     public getSprite(centred: boolean = false) {
         const sprite = new PIXI.Sprite(this.texture);
@@ -39,6 +40,7 @@ export default class Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        this.cooldownTime = Updater.ticks;
         return false;
     }
 
@@ -66,5 +68,9 @@ export default class Item {
         return {
             tag: this.tag,
         };
+    }
+
+    protected getCooldown() {
+        return Updater.ticks - this.cooldownTime;
     }
 }

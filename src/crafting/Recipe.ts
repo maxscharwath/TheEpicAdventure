@@ -46,9 +46,7 @@ export default class Recipe {
         for (const cost of this.cost) {
             const item = cost[0];
             const count = cost[1];
-            if (item instanceof Item) {
-                mob.inventory.removeItem(item, count);
-            }
+            mob.inventory.removeItem(item, count);
         }
     }
 }

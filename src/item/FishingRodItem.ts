@@ -11,8 +11,8 @@ export default class FishingRodItem extends Item {
         item.durability = data.durability;
         return item;
     }
-    private hook?: Hook;
 
+    private hook?: Hook;
     private readonly durabilityMax: number = 50;
     private durability: number = this.durabilityMax;
 
@@ -30,6 +30,8 @@ export default class FishingRodItem extends Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.getCooldown() <= 5) return false;
+        super.useOn(levelTile, mob);
         if (this.hook) return this.hook.pull();
         this.hook = new Hook(mob, this);
         this.hook.a.x = mob.getDir().getX();

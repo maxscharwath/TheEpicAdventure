@@ -29,6 +29,8 @@ export default class FurnitureItem extends Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.getCooldown() <= 5) return false;
+        super.useOn(levelTile, mob);
         if (levelTile.tile?.mayPass(this.furniture)) {
             if (levelTile.level.add(this.furniture, levelTile.x + 8, levelTile.y + 8)) {
                 mob.inventory.removeItem(this, 1);
