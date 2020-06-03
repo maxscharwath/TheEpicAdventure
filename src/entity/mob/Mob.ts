@@ -7,6 +7,7 @@ import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
 import HurtParticle from "../particle/HurtParticle";
+import Item from "../../item/Item";
 
 export default abstract class Mob extends Entity {
 
@@ -66,6 +67,17 @@ export default abstract class Mob extends Entity {
         this.a.y = attackDir.getY() * 2;
         this.health -= dmg;
         this.level.add(new HurtParticle(this.x, this.y, -dmg, 0xc80000));
+    }
+
+    public dropItem(item: Item) {
+        const itemEntity = new ItemEntity(item, this.x, this.y);
+        if (this.level.add(itemEntity)) {
+            this.inventory.removeItem(item, 1);
+            const force = this.random.number(0.5, 1.5);
+            const range = this.random.number(-0.25, 0.25);
+            itemEntity.a.x = this.dir.getX() * force + range;
+            itemEntity.a.y = this.dir.getY() * force + range;
+        }
     }
 
     public onTick(): void {

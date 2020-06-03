@@ -4,6 +4,7 @@ import {ItemRegister} from "../item/Items";
 import Entities from "./Entities";
 import Entity from "./Entity";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
+import Updater from "../core/Updater";
 
 export default class ItemEntity extends Entity {
 
@@ -13,6 +14,8 @@ export default class ItemEntity extends Entity {
     }
 
     public item: Item;
+    private radiusMobs: Mob[] = [];
+    private lastCheck = 0;
     private readonly shadow: PIXI.filters.DropShadowFilter;
     private readonly lifeTime: number;
     private time: number = 0;
@@ -46,6 +49,21 @@ export default class ItemEntity extends Entity {
             this.delete();
             return;
         }
+        this.updateRadiusMob();
+        if (this.time >= this.lifeTime / 100 * 10) {
+            this.radiusMobs.forEach((mob) => {
+                try {
+                    const dx = mob.x - this.x;
+                    const dy = mob.y - this.y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 1) return;
+                    this.a.x += (dx / dist ** 2) * 2;
+                    this.a.y += (dy / dist ** 2) * 2;
+                } catch (e) {
+                    console.log(mob);
+                }
+            });
+        }
     }
 
     public onRender() {
@@ -72,5 +90,13 @@ export default class ItemEntity extends Entity {
             ...super.toBSON(),
             item: this.item,
         };
+    }
+
+    private updateRadiusMob() {
+        if (Updater.ticks - this.lastCheck < 100) return;
+        this.lastCheck = Updater.ticks;
+        this.level.findEntitiesInRadius(
+            (entity) => entity instanceof Mob, this.x >> 4, this.y >> 4, 10)
+            .then((entities) => this.radiusMobs = entities as Mob[]);
     }
 }

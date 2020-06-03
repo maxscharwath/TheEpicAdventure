@@ -33,6 +33,7 @@ export default class Level {
     constructor() {
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
     }
+
     public getChunks() {
         return Array.from(this.chunks.values());
     }
@@ -234,6 +235,29 @@ export default class Level {
 
     public save() {
         return Promise.all(Array.from(this.chunks).map((chunk) => chunk[1].save()));
+    }
+
+    public findEntitiesInRadius(
+        predicate: (value: Entity) => boolean, x: number, y: number, radius: number): Promise<Entity[]> {
+        const result: Array<Promise<Entity[]>> = [];
+        const chunks: Chunk[] = [];
+        for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {
+            for (let cy = (y - radius) >> 4; cy <= (y + radius) >> 4; cy++) {
+                const chunk = this.getChunk(cx, cy, false);
+                if (chunk) chunks.push(chunk);
+            }
+        }
+        return new Promise((resolve) => {
+            const action = () => {
+                const chunk = chunks.shift();
+                if (chunk) result.push(chunk.findEntities(predicate));
+                if (chunks.length > 0) return process.nextTick(action);
+                Promise.all(result).then((value) => {
+                    resolve(value.flat());
+                });
+            };
+            process.nextTick(action);
+        });
     }
 
     public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {

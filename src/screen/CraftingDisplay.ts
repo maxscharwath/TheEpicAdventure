@@ -4,7 +4,6 @@ import {Mob} from "../entity";
 import Recipe from "../crafting/Recipe";
 import System from "../core/System";
 import Game from "../core/Game";
-import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 import Renderer from "../core/Renderer";
 
 export default class CraftingDisplay extends Display {
@@ -119,7 +118,7 @@ export default class CraftingDisplay extends Display {
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
         this.costContainer.position.set(135, 29);
         this.recipesContainer.position.set(7, 7);
-        this.hasText  = new PIXI.BitmapText("123456", {
+        this.hasText  = new PIXI.BitmapText("", {
             font: {
                 name: "Epic",
                 size: 6,
