@@ -59,6 +59,7 @@ export default class CraftingDisplay extends Display {
     }
 
     private initCost(recipe: Recipe) {
+        if (this.recipes.length === 0) return;
         this.costContainer.removeChildren();
         recipe.cost.forEach(([itemRegister, number], index) => {
             const item = itemRegister.item;
@@ -81,7 +82,8 @@ export default class CraftingDisplay extends Display {
     }
 
     private initRecipe() {
-        const maxRow = 10;
+        if (this.recipes.length === 0) return;
+        const maxRow = Math.min(10, this.recipes.length);
         this.recipesContainer.removeChildren();
         for (let i = 0; i < maxRow; i++) {
             let n = i;

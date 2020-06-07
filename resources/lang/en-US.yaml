@@ -62,6 +62,13 @@ item.wood: Wood
 item.stick: Stick
 item.cactus_flower: Cactus Flower
 item.lilypad: Lilypad
+item.rail: Rail
+item.bread: Bread
+item.flask: Flask
+
+item.iron: Iron
+item.gold: Gold
+item.diamond: Diamond
 
 item.wood_axe: Wooden axe
 item.wood_hoe: Wooden hoe
@@ -100,3 +107,12 @@ item.camp: Camp
 item.chest: Chest
 item.music_player: Music Player
 item.bed: Bed
+item.oven: Oven
+item.furnace: Furnace
+item.alembic: Alembic
+
+item.potion_speed: Potion of Swiftness
+item.potion_heal: Potion of Healing
+item.potion_hunger: Potion of Hunger
+item.potion_power: Potion of Stength
+item.potion_slow: Potion of Slowness

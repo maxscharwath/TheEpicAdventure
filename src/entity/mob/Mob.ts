@@ -8,6 +8,7 @@ import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
 import HurtParticle from "../particle/HurtParticle";
 import Item from "../../item/Item";
+import PotionType from "../../item/PotionType";
 
 export default abstract class Mob extends Entity {
 
@@ -108,6 +109,10 @@ export default abstract class Mob extends Entity {
             ...super.toBSON(),
             inventory: this.inventory,
         };
+    }
+
+    public addPotionEffect(potion: PotionType) {
+        return false;
     }
 
     protected move(xa: number, ya: number): boolean {

@@ -7,7 +7,9 @@ import ToolItem from "./ToolItem";
 import ToolType from "./ToolType";
 import FishingRodItem from "./FishingRodItem";
 import FurnitureItem from "./FurnitureItem";
-import {Chest, Camp, Bed, MusicPlayer} from "../entity";
+import {Chest, Camp, Bed, MusicPlayer, Oven, Furnace, Alembic} from "../entity";
+import PotionItem from "./PotionItem";
+import PotionType from "./PotionType";
 
 type Type<T> = new (...args: any[]) => T;
 
@@ -47,6 +49,10 @@ export class ItemRegister<T extends Item> {
     public instanceOf(item: Item) {
         return item.tag === this.tag;
     }
+
+    public static get ALL() {
+        return Array.from(this.items.values());
+    }
 }
 
 export default class Items extends ItemRegister<Item> {
@@ -82,6 +88,7 @@ export default class Items extends ItemRegister<Item> {
 
     public static WHEAT = Items.add("wheat", ResourceItem, Resources.wheat);
     public static SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.seedWheat);
+    public static BREAD = Items.add("bread", ResourceItem, Resources.bread);
     public static POTATO = Items.add("potato", ResourceItem, Resources.potato);
     public static APPLE = Items.add("apple", ResourceItem, Resources.apple);
 
@@ -107,5 +114,15 @@ export default class Items extends ItemRegister<Item> {
     public static CHEST = Items.add("chest", FurnitureItem, Chest);
     public static CAMP = Items.add("camp", FurnitureItem, Camp);
     public static BED = Items.add("bed", FurnitureItem, Bed);
+    public static OVEN = Items.add("oven", FurnitureItem, Oven);
+    public static FURNACE = Items.add("furnace", FurnitureItem, Furnace);
+    public static ALEMBIC = Items.add("alembic", FurnitureItem, Alembic);
     public static MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
+
+    public static FLASK = Items.add("flask", ResourceItem, Resources.flask);
+    public static POTION_SPEED = Items.add("potion_speed", PotionItem, PotionType.speed);
+    public static POTION_HEAL = Items.add("potion_heal", PotionItem, PotionType.heal);
+    public static POTION_HUNGER = Items.add("potion_hunger", PotionItem, PotionType.hunger);
+    public static POTION_POWER = Items.add("potion_power", PotionItem, PotionType.power);
+    public static POTION_SLOW = Items.add("potion_slow", PotionItem, PotionType.slow);
 }

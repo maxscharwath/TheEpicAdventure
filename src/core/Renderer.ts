@@ -81,6 +81,7 @@ export default class Renderer {
     public static setLevel(level: Level) {
         this.stages.level.removeChildren();
         this.stages.level.addChild(level.container);
+        if (level.weather) this.stages.level.addChild(level.weather);
     }
 
     public static addDisplay(display: Display) {
@@ -97,7 +98,10 @@ export default class Renderer {
         const audioStream = Howler.ctx.createMediaStreamDestination();
         // Howler.masterGain.disconnect();
         Howler.masterGain.connect(audioStream);
-        const reader = new Readable({read: () => {}});
+        const reader = new Readable({
+            read: () => {
+            },
+        });
         const stream = (this.renderer.view as CanvasElement).captureStream();
         stream.addTrack(audioStream.stream.getAudioTracks()[0]);
         // @ts-ignore

@@ -5,6 +5,7 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import InventoryDisplay from "../../screen/InventoryDisplay";
 import Rectangle = PIXI.Rectangle;
+import ContainerDisplay from "../../screen/ContainerDisplay";
 
 export default class Chest extends Furniture {
 
@@ -17,7 +18,7 @@ export default class Chest extends Furniture {
     public inventory = new Inventory(16);
 
     public onUse(mob: Mob): boolean {
-        (new InventoryDisplay(this.inventory)).show();
+        (new ContainerDisplay(mob, this.inventory)).show();
         return false;
     }
 

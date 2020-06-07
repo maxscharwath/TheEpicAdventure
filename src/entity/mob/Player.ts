@@ -7,6 +7,7 @@ import Items from "../../item/Items";
 import Mob from "./Mob";
 import FishingRodItem from "../../item/FishingRodItem";
 import FurnitureItem from "../../item/FurnitureItem";
+import {Furniture} from "../index";
 
 export default class Player extends Mob {
 
@@ -63,6 +64,18 @@ export default class Player extends Mob {
                 }
             } else {
                 this.attack(5);
+                this.level.findEntitiesInRadius(
+                    () => true,
+                    (this.x >> 4) + this.dir.getX(),
+                    (this.y >> 4) + this.dir.getY(),
+                    1,
+                ).then((entities) => {
+                    entities.forEach((e) => {
+                        if (e instanceof Furniture) {
+                            e.onUse(this);
+                        }
+                    });
+                });
             }
         }
 

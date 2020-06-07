@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import Items from "../item/Items";
+import Crafting from "../crafting/Crafting";
 import {Player, Camp, Zombie} from "../entity/";
 import Biome from "../level/biome/Biome";
 import Level from "../level/Level";
@@ -18,8 +19,7 @@ import System from "./System";
 import Renderer from "./Renderer";
 import LanDisplay from "../screen/LanDisplay";
 import MouseHandler from "./io/MouseHandler";
-import ContainerDisplay from "../screen/ContainerDisplay";
-import Inventory from "../item/Inventory";
+import DialogueDisplay, {Dialogue} from "../screen/DialogueDisplay";
 
 export default class Game {
 
@@ -63,6 +63,7 @@ export default class Game {
 
     public static main(): void {
         console.info(`\n${this.NAME} ${this.version.toString()}\nA game by Maxime Scharwath\n`);
+        Crafting.initRecipes();
         Biome.initBiomeList();
         Localization.loadLanguage("en-US.yaml");
         Items.verifyTag();
@@ -90,7 +91,14 @@ export default class Game {
             (new InfoDisplay()).show();
             (new HotbarDisplay(this.player)).show();
             (new LanDisplay()).show();
-            (new ContainerDisplay(this.player, new Inventory(30))).show();
+            const dialogueDisplay = new DialogueDisplay();
+            dialogueDisplay.startDialogue(
+                Dialogue.create("Maxime")
+                    .addSentence(`Hello mon petit...hjhs s ghdgjas duashg djuashdjuashdjas hdasj dhuasd jhasd`)
+                    .addSentence("Je suis ton père.")
+                    .addSentence("Non je déconne... lol"),
+            );
+            // dialogueDisplay.show();
         });
 
         /*        window.addEventListener("beforeunload", (e) => {

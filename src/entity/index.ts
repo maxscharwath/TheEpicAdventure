@@ -8,14 +8,18 @@ import Mob from "./mob/Mob";
 import ItemEntity from "./ItemEntity";
 import Entity from "./Entity";
 import Entities from "./Entities";
-import Chest from "./furniture/Chest";
 import Furniture from "./furniture/Furniture";
+import Craftable from "./furniture/Craftable";
+import Chest from "./furniture/Chest";
 import Bed from "./furniture/Bed";
 import Skeleton from "./mob/Skeleton";
 import Hook from "./Hook";
 import Camp from "./furniture/Camp";
 import MusicPlayer from "./furniture/MusicPlayer";
 import Bear from "./mob/Bear";
+import Furnace from "./furniture/Furnace";
+import Oven from "./furniture/Oven";
+import Alembic from "./furniture/Alembic";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
@@ -24,10 +28,13 @@ Entities.add(3, "fish", Fish);
 Entities.add(4, "itemEntity", ItemEntity);
 Entities.add(5, "chicken", Chicken);
 Entities.add(6, "bear", Bear);
-Entities.add(7, "chest", Chest);
-Entities.add(8, "bed", Bed);
-Entities.add(9, "camp", Camp);
-Entities.add(10, "hook", Hook);
+Entities.add(7, "hook", Hook);
+Entities.add(8, "chest", Chest);
+Entities.add(9, "bed", Bed);
+Entities.add(10, "camp", Camp);
+Entities.add(11, "furnace", Furnace);
+Entities.add(12, "oven", Oven);
+Entities.add(13, "alembic", Alembic);
 
 export {
     Entity,
@@ -42,9 +49,13 @@ export {
     Chicken,
     Bear,
     Furniture,
+    Craftable,
     Chest,
     Bed,
     Hook,
     Camp,
+    Furnace,
+    Oven,
+    Alembic,
     MusicPlayer,
 };

@@ -3,11 +3,12 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import DustParticle from "../particle/DustParticle";
 import SpriteSheet from "../../gfx/SpriteSheet";
+import {Mob} from "../index";
 
 export default class Camp extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-    private active = false;
+    private active: boolean = false;
     private campFire: PIXI.AnimatedSprite;
 
     constructor() {
@@ -21,6 +22,11 @@ export default class Camp extends Furniture {
         if (this.active) {
             this.level.add(new DustParticle(this.x, this.y - 4));
         }
+    }
+
+    public onUse(mob: Mob): boolean {
+        this.active = !this.active;
+        return true;
     }
 
     protected init() {

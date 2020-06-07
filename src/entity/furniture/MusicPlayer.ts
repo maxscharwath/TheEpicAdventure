@@ -4,11 +4,13 @@ import System from "../../core/System";
 import {Howl} from "howler";
 import NoteParticle from "../particle/NoteParticle";
 import Updater from "../../core/Updater";
+import {Mob} from "../index";
 
 export default class MusicPlayer extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "musicPlayer.png"));
     private disk: PIXI.Sprite;
     private playing = false;
+    private sound: Howl;
 
     constructor() {
         super();
@@ -31,6 +33,14 @@ export default class MusicPlayer extends Furniture {
         }
     }
 
+    public onUse(mob: Mob): boolean {
+        if (!this.playing) {
+            this.play();
+            return true;
+        }
+        return false;
+    }
+
     protected init() {
         const sprite = new PIXI.Sprite(new PIXI.Texture(MusicPlayer.baseTexture));
         this.disk = PIXI.Sprite.from(System.getResource("furniture", "disk.png"));
@@ -38,9 +48,12 @@ export default class MusicPlayer extends Furniture {
         this.disk.anchor.set(0.5);
         this.disk.position.set(-2, -1);
         this.container.addChild(sprite, this.disk);
-        const sound = new Howl({
+    }
+
+    private play() {
+        this.sound = new Howl({
             src: [System.getResource("music", "disk7.mp3")],
-            autoplay: false,
+            autoplay: true,
             loop: false,
             volume: 0.5,
             rate: 1,

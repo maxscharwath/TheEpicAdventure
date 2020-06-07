@@ -139,6 +139,7 @@ export default class InputHandler {
         this.keymap.set("MOVE-RIGHT", "KEY-D|ARROW-RIGHT");
 
         this.keymap.set("JUMP", "SPACE");
+        this.keymap.set("NEXT", "SPACE");
 
         this.keymap.set("CURSOR-UP", "ARROW-UP");
         this.keymap.set("CURSOR-DOWN", "ARROW-DOWN");

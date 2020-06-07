@@ -69,7 +69,7 @@ export default class HotbarDisplay extends Display {
 
     public onCommand() {
         super.onCommand();
-        if (Game.input.getKey("INVENTORY").clicked) (new CraftingDisplay(Crafting.handRecipes, Game.player)).show();
+        if (Game.input.getKey("INVENTORY").clicked) (new CraftingDisplay(Crafting.allRecipes, Game.player)).show();
         if (Game.input.getKey("MAP").clicked) (new MapDisplay()).show();
         if (Game.input.getKey("HOTBAR-1").clicked) this.mob.inventory.indexedSlot = 0;
         if (Game.input.getKey("HOTBAR-2").clicked) this.mob.inventory.indexedSlot = 1;

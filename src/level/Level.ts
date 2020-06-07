@@ -10,6 +10,7 @@ import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
 import rimraf from "rimraf";
 import Tickable from "../entity/Tickable";
+import Weather from "../gfx/weather/Weather";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -22,6 +23,7 @@ export default class Level {
     public container: PIXI.Container = new PIXI.Container();
     public tilesContainer: PIXI.Container = new PIXI.Container();
     public entitiesContainer: PIXI.Container = new PIXI.Container();
+    public weather?: Weather;
     private random: Random = new Random();
     private players: Player[] = [];
     private tickablesToAdd: Tickable[] = [];
@@ -204,6 +206,7 @@ export default class Level {
     public onRender() {
         if (!this.players[0]) return;
         Renderer.camera.setContainer(this.container);
+        if (this.weather) this.weather.onRender();
         Renderer.camera.setFollow(this.players[0]);
 
         this.loadedChunks.forEach((chunk) => chunk.onRender());
@@ -250,7 +253,13 @@ export default class Level {
         return new Promise((resolve) => {
             const action = () => {
                 const chunk = chunks.shift();
-                if (chunk) result.push(chunk.findEntities(predicate));
+                if (chunk) {
+                    result.push(
+                        chunk.findEntities(
+                            (e) => predicate(e) && Math.hypot((e.x >> 4) - x, (e.y >> 4) - y) < radius,
+                        ),
+                    );
+                }
                 if (chunks.length > 0) return process.nextTick(action);
                 Promise.all(result).then((value) => {
                     resolve(value.flat());
