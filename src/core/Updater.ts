@@ -24,8 +24,7 @@ export default class Updater {
         const t1 = System.milliTime();
         this.delta = dlt;
         if (!Game.isFocus) return;
-        Game.displays.forEach((display) => display.onTick());
-        Game.displays.filter((d) => d.hasCommand).reverse()[0]?.onCommand();
+        Game.GUI.onTick();
         Game.level?.onTick();
         Game.input.onTick();
         Game.mouse.onTick();

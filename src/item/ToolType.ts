@@ -8,8 +8,8 @@ export default class ToolType {
     public static readonly  axe = new ToolType("axe");
     public static readonly  pickaxe = new ToolType("pickaxe");
     public static readonly  sword = new ToolType("sword");
-    public name: string;
-    public textures: PIXI.Texture[] = [];
+    public readonly name: string;
+    public readonly textures: PIXI.Texture[] = [];
 
     private constructor(name: string) {
         this.name = name;

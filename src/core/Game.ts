@@ -7,7 +7,6 @@ import Level from "../level/Level";
 import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
-import Display from "../screen/Display";
 import HotbarDisplay from "../screen/HotbaryDisplay";
 import InfoDisplay from "../screen/InfoDisplay";
 import Initializer from "./Initializer";
@@ -20,6 +19,7 @@ import Renderer from "./Renderer";
 import LanDisplay from "../screen/LanDisplay";
 import MouseHandler from "./io/MouseHandler";
 import DialogueDisplay, {Dialogue} from "../screen/DialogueDisplay";
+import GUI from "./GUI";
 
 export default class Game {
 
@@ -38,8 +38,8 @@ export default class Game {
     public static levels: Level[] = [];
     public static currentLevel: number = 0;
     public static input: InputHandler;
-    public static displays: Display[] = [];
     public static mouse: MouseHandler;
+    public static GUI: GUI;
 
     public static get level(): Level {
         return this.levels[this.currentLevel];
@@ -65,11 +65,12 @@ export default class Game {
         console.info(`\n${this.NAME} ${this.version.toString()}\nA game by Maxime Scharwath\n`);
         Crafting.initRecipes();
         Biome.initBiomeList();
-        Localization.loadLanguage("en-US.yaml");
+        Localization.loadLanguage("fr-FR.yaml");
         Items.verifyTag();
         this.levels = [];
         this.input = new InputHandler();
         this.mouse = new MouseHandler();
+        this.GUI = new GUI();
         this.player = new Player();
 
         this.levels.push(new Level());
@@ -88,17 +89,7 @@ export default class Game {
         Initializer.run();
         Network.startMultiplayerServer();
         PIXI.Loader.shared.add("Epic", System.getResource("font", "Epic.xml")).load(() => {
-            (new InfoDisplay()).show();
-            (new HotbarDisplay(this.player)).show();
-            (new LanDisplay()).show();
-            const dialogueDisplay = new DialogueDisplay();
-            dialogueDisplay.startDialogue(
-                Dialogue.create("Maxime")
-                    .addSentence(`Hello mon petit...hjhs s ghdgjas duashg djuashdjuashdjas hdasj dhuasd jhasd`)
-                    .addSentence("Je suis ton père.")
-                    .addSentence("Non je déconne... lol"),
-            );
-            // dialogueDisplay.show();
+            this.GUI.init();
         });
 
         /*        window.addEventListener("beforeunload", (e) => {

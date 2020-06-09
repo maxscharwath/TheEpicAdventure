@@ -51,6 +51,11 @@ export default class Crafting {
             new Recipe(Items.BREAD).addCost(Items.WHEAT, 3),
         ];
 
+        this.furnaceRecipes = [
+            new Recipe(Items.GLASS).addCost(Items.SAND, 1),
+            new Recipe(Items.COAL).addCost(Items.WOOD, 1),
+        ];
+
         this.alembicRecipes = [
             new Recipe(Items.POTION_HEAL).addCost(Items.FLASK, 1),
             new Recipe(Items.POTION_HUNGER).addCost(Items.FLASK, 1),

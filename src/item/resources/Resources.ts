@@ -18,6 +18,8 @@ export default class Resources {
     public static gold = new Resource("gold.png");
     public static diamond = new Resource("diamond.png");
     public static snowball = new Resource("snowball.png");
+    public static glass = new Resource("glass.png");
+    public static coal = new Resource("coal.png");
     public static stick = new Resource("stick.png");
     public static fish = new Resource("fish_salmon_raw.png");
     public static flask = new Resource("potion.png");

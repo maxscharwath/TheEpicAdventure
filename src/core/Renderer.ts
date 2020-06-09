@@ -56,9 +56,7 @@ export default class Renderer {
         }
         Game.level?.onRender();
         Renderer.camera.update();
-        Game.displays.forEach((display) => {
-            display.onRender();
-        });
+        Game.GUI.onRender();
         this.renderer.render(this.mainStage);
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);
@@ -95,15 +93,15 @@ export default class Renderer {
     }
 
     public static createStream() {
-        const audioStream = Howler.ctx.createMediaStreamDestination();
+        // const audioStream = Howler.ctx.createMediaStreamDestination();
         // Howler.masterGain.disconnect();
-        Howler.masterGain.connect(audioStream);
+        // Howler.masterGain.connect(audioStream);
         const reader = new Readable({
             read: () => {
             },
         });
         const stream = (this.renderer.view as CanvasElement).captureStream();
-        stream.addTrack(audioStream.stream.getAudioTracks()[0]);
+        // stream.addTrack(audioStream.stream.getAudioTracks()[0]);
         // @ts-ignore
         const recorder = new MediaRecorder(stream);
         recorder.start(75);

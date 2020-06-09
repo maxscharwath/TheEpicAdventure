@@ -177,7 +177,6 @@ export default class ContainerDisplay extends Display {
         container.addChild(sprite, ...[...this.container].reverse());
         this.container.forEach((c) => c.refresh());
         container.scale.set(4);
-        console.log(Renderer.getScreen().width, container.width);
         container.position.set(
             (Renderer.getScreen().width - container.width) / 2,
             (Renderer.getScreen().height - container.height) / 2,

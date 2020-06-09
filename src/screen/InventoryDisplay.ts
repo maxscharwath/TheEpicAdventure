@@ -2,7 +2,9 @@ import * as PIXI from "pixi.js";
 import Inventory from "../item/Inventory";
 import Item from "../item/Item";
 import Slot from "../item/Slot";
-import BackgroundDisplay from "./BackgroundDisplay";
+import Renderer from "../core/Renderer";
+import Display from "./Display";
+import Game from "../core/Game";
 
 class InventorySlot extends PIXI.Container {
     private slot: Slot;
@@ -41,7 +43,8 @@ class InventorySlot extends PIXI.Container {
     }
 }
 
-export default class InventoryDisplay extends BackgroundDisplay {
+export default class InventoryDisplay extends Display {
+    public hasCommand = true;
     private inventory: Inventory;
     private slots: InventorySlot[] = [];
 
@@ -49,10 +52,11 @@ export default class InventoryDisplay extends BackgroundDisplay {
         super();
         this.inventory = inventory;
         this.init();
-        this.scale.set(4);
-        const b = this.getBounds();
-        this.width = b.width + b.x;
-        this.height = b.height + b.y;
+    }
+
+    public onCommand(): void {
+        super.onCommand();
+        if (Game.input.getKey("EXIT").clicked) this.hide();
     }
 
     public onTick(): void {
@@ -61,6 +65,13 @@ export default class InventoryDisplay extends BackgroundDisplay {
     }
 
     private init() {
+        const container = new PIXI.Container();
+        const background = new PIXI.Sprite(PIXI.Texture.WHITE);
+        background.width = Renderer.getScreen().width;
+        background.height = Renderer.getScreen().height;
+        background.tint = 0x000000;
+        background.alpha = 0.75;
+
         const nbRow = 9;
         for (let i = 0; i < this.inventory.slots.length; i++) {
             const slot = this.inventory.slots[i];
@@ -69,7 +80,14 @@ export default class InventoryDisplay extends BackgroundDisplay {
             const slotSprite = new InventorySlot(slot);
             slotSprite.position.set(x, y);
             this.slots.push(slotSprite);
-            this.addChild(slotSprite);
+            container.addChild(slotSprite);
         }
+
+        container.scale.set(4);
+        container.position.set(
+            (Renderer.getScreen().width - container.width) / 2,
+            (Renderer.getScreen().height - container.height) / 2,
+        );
+        this.addChild(background, container);
     }
 }

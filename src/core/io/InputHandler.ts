@@ -161,7 +161,7 @@ export default class InputHandler {
         this.keymap.set("EXIT", "ESCAPE");
         this.keymap.set("POTION", "KEY-P");
         this.keymap.set("MAP", "KEY-M");
-        this.keymap.set("INFO", "SHIFT-LEFT&KEY-I");
+        this.keymap.set("INFO", "F-3");
         this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
 
         this.keymap.set("HOTBAR-1", "DIGIT-1");

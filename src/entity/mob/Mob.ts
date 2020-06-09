@@ -9,6 +9,7 @@ import ItemEntity from "../ItemEntity";
 import HurtParticle from "../particle/HurtParticle";
 import Item from "../../item/Item";
 import PotionType from "../../item/PotionType";
+import PotionEffect from "../PotionEffect";
 
 export default abstract class Mob extends Entity {
 
@@ -26,11 +27,11 @@ export default abstract class Mob extends Entity {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
 
-    public maxHealth: number = 10;
+    public maxHealth: number = 20;
     public health: number = this.maxHealth;
     public inventory = new Inventory(9);
     protected speedMax: number = 1;
-    protected potionEffect: any[] = [];
+    protected potionEffect: PotionEffect[] = [];
     protected walkDist: number = 0;
     protected dir: Direction = Direction.DOWN;
     protected mass = 20;
@@ -83,6 +84,14 @@ export default abstract class Mob extends Entity {
 
     public onTick(): void {
         super.onTick();
+
+        for (const effect of this.potionEffect) {
+            effect.duration--;
+            if (effect.duration <= 0) {
+                this.removePotionEffect(effect);
+            }
+        }
+
         if (this.hurtCooldown > 0) {
             this.hurtCooldown--;
         }
@@ -111,7 +120,27 @@ export default abstract class Mob extends Entity {
         };
     }
 
-    public addPotionEffect(potion: PotionType) {
+    public checkPotionEffect(type: PotionType) {
+        for (const effect of this.potionEffect) {
+            if (effect.type === type) {
+                return effect;
+            }
+        }
+        return false;
+    }
+
+    public removePotionEffect(effect: PotionEffect): void;
+    public removePotionEffect(type: PotionType): void;
+    public removePotionEffect(value: PotionEffect|PotionType): void {
+        const type = value instanceof PotionEffect ? value.type : value;
+        this.potionEffect = this.potionEffect.filter((effect) => effect.type !== type);
+    }
+
+    public addPotionEffect(type: PotionType) {
+        if (!this.checkPotionEffect(type)) {
+            this.potionEffect.push(new PotionEffect(type));
+            return true;
+        }
         return false;
     }
 

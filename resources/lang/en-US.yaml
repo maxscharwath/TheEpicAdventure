@@ -39,6 +39,7 @@ tile.hole: Hole
 tile.snow: Snow
 tile.ice: Ice
 tile.plank: Plank
+tile.rail: Rail
 
 entity.player: Player
 entity.zombie: Zombie
@@ -51,7 +52,7 @@ entity.itemEntity: itemEntity
 
 item.dirt: Dirt
 item.sand: Sand
-item.ice: Glace
+item.ice: Ice
 item.snowball: Snowball
 item.apple: Apple
 item.wheat: Wheat
@@ -64,6 +65,8 @@ item.cactus_flower: Cactus Flower
 item.lilypad: Lilypad
 item.rail: Rail
 item.bread: Bread
+item.glass: Glass
+item.coal: Coal
 item.flask: Flask
 
 item.iron: Iron

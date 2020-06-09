@@ -15,6 +15,10 @@ type Type<T> = new (...args: any[]) => T;
 
 export class ItemRegister<T extends Item> {
 
+    public static get ALL() {
+        return Array.from(this.items.values());
+    }
+
     public get item(): T {
         return new this.itemClass(this.tag, ...this.args);
     }
@@ -34,6 +38,7 @@ export class ItemRegister<T extends Item> {
             }
         });
     }
+
     private static items = new Map<string, ItemRegister<Item>>();
     public readonly tag: string;
     public readonly itemClass: Type<T>;
@@ -46,83 +51,82 @@ export class ItemRegister<T extends Item> {
         ItemRegister.items.set(tag, this);
         console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
     }
+
     public instanceOf(item: Item) {
         return item.tag === this.tag;
-    }
-
-    public static get ALL() {
-        return Array.from(this.items.values());
     }
 }
 
 export default class Items extends ItemRegister<Item> {
-    public static WOOD_AXE = Items.add("wood_axe", ToolItem, ToolType.axe, Tiers.WOOD);
-    public static WOOD_HOE = Items.add("wood_hoe", ToolItem, ToolType.hoe, Tiers.WOOD);
-    public static WOOD_PICKAXE = Items.add("wood_pickaxe", ToolItem, ToolType.pickaxe, Tiers.WOOD);
-    public static WOOD_SHOVEL = Items.add("wood_shovel", ToolItem, ToolType.shovel, Tiers.WOOD);
-    public static WOOD_SWORD = Items.add("wood_sword", ToolItem, ToolType.sword, Tiers.WOOD);
+    public static readonly WOOD_AXE = Items.add("wood_axe", ToolItem, ToolType.axe, Tiers.WOOD);
+    public static readonly WOOD_HOE = Items.add("wood_hoe", ToolItem, ToolType.hoe, Tiers.WOOD);
+    public static readonly WOOD_PICKAXE = Items.add("wood_pickaxe", ToolItem, ToolType.pickaxe, Tiers.WOOD);
+    public static readonly WOOD_SHOVEL = Items.add("wood_shovel", ToolItem, ToolType.shovel, Tiers.WOOD);
+    public static readonly WOOD_SWORD = Items.add("wood_sword", ToolItem, ToolType.sword, Tiers.WOOD);
 
-    public static STONE_AXE = Items.add("stone_axe", ToolItem, ToolType.axe, Tiers.STONE);
-    public static STONE_HOE = Items.add("stone_hoe", ToolItem, ToolType.hoe, Tiers.STONE);
-    public static STONE_PICKAXE = Items.add("stone_pickaxe", ToolItem, ToolType.pickaxe, Tiers.STONE);
-    public static STONE_SHOVEL = Items.add("stone_shovel", ToolItem, ToolType.shovel, Tiers.STONE);
-    public static STONE_SWORD = Items.add("stone_sword", ToolItem, ToolType.sword, Tiers.STONE);
+    public static readonly STONE_AXE = Items.add("stone_axe", ToolItem, ToolType.axe, Tiers.STONE);
+    public static readonly STONE_HOE = Items.add("stone_hoe", ToolItem, ToolType.hoe, Tiers.STONE);
+    public static readonly STONE_PICKAXE = Items.add("stone_pickaxe", ToolItem, ToolType.pickaxe, Tiers.STONE);
+    public static readonly STONE_SHOVEL = Items.add("stone_shovel", ToolItem, ToolType.shovel, Tiers.STONE);
+    public static readonly STONE_SWORD = Items.add("stone_sword", ToolItem, ToolType.sword, Tiers.STONE);
 
-    public static IRON_AXE = Items.add("iron_axe", ToolItem, ToolType.axe, Tiers.IRON);
-    public static IRON_HOE = Items.add("iron_hoe", ToolItem, ToolType.hoe, Tiers.IRON);
-    public static IRON_PICKAXE = Items.add("iron_pickaxe", ToolItem, ToolType.pickaxe, Tiers.IRON);
-    public static IRON_SHOVEL = Items.add("iron_shovel", ToolItem, ToolType.shovel, Tiers.IRON);
-    public static IRON_SWORD = Items.add("iron_sword", ToolItem, ToolType.sword, Tiers.IRON);
+    public static readonly IRON_AXE = Items.add("iron_axe", ToolItem, ToolType.axe, Tiers.IRON);
+    public static readonly IRON_HOE = Items.add("iron_hoe", ToolItem, ToolType.hoe, Tiers.IRON);
+    public static readonly IRON_PICKAXE = Items.add("iron_pickaxe", ToolItem, ToolType.pickaxe, Tiers.IRON);
+    public static readonly IRON_SHOVEL = Items.add("iron_shovel", ToolItem, ToolType.shovel, Tiers.IRON);
+    public static readonly IRON_SWORD = Items.add("iron_sword", ToolItem, ToolType.sword, Tiers.IRON);
 
-    public static GOLD_AXE = Items.add("gold_axe", ToolItem, ToolType.axe, Tiers.GOLD);
-    public static GOLD_HOE = Items.add("gold_hoe", ToolItem, ToolType.hoe, Tiers.GOLD);
-    public static GOLD_PICKAXE = Items.add("gold_pickaxe", ToolItem, ToolType.pickaxe, Tiers.GOLD);
-    public static GOLD_SHOVEL = Items.add("gold_shovel", ToolItem, ToolType.shovel, Tiers.GOLD);
-    public static GOLD_SWORD = Items.add("gold_sword", ToolItem, ToolType.sword, Tiers.GOLD);
+    public static readonly GOLD_AXE = Items.add("gold_axe", ToolItem, ToolType.axe, Tiers.GOLD);
+    public static readonly GOLD_HOE = Items.add("gold_hoe", ToolItem, ToolType.hoe, Tiers.GOLD);
+    public static readonly GOLD_PICKAXE = Items.add("gold_pickaxe", ToolItem, ToolType.pickaxe, Tiers.GOLD);
+    public static readonly GOLD_SHOVEL = Items.add("gold_shovel", ToolItem, ToolType.shovel, Tiers.GOLD);
+    public static readonly GOLD_SWORD = Items.add("gold_sword", ToolItem, ToolType.sword, Tiers.GOLD);
 
-    public static DIAMOND_AXE = Items.add("diamond_axe", ToolItem, ToolType.axe, Tiers.DIAMOND);
-    public static DIAMOND_HOE = Items.add("diamond_hoe", ToolItem, ToolType.hoe, Tiers.DIAMOND);
-    public static DIAMOND_PICKAXE = Items.add("diamond_pickaxe", ToolItem, ToolType.pickaxe, Tiers.DIAMOND);
-    public static DIAMOND_SHOVEL = Items.add("diamond_shovel", ToolItem, ToolType.shovel, Tiers.DIAMOND);
-    public static DIAMOND_SWORD = Items.add("diamond_sword", ToolItem, ToolType.sword, Tiers.DIAMOND);
+    public static readonly DIAMOND_AXE = Items.add("diamond_axe", ToolItem, ToolType.axe, Tiers.DIAMOND);
+    public static readonly DIAMOND_HOE = Items.add("diamond_hoe", ToolItem, ToolType.hoe, Tiers.DIAMOND);
+    public static readonly DIAMOND_PICKAXE = Items.add("diamond_pickaxe", ToolItem, ToolType.pickaxe, Tiers.DIAMOND);
+    public static readonly DIAMOND_SHOVEL = Items.add("diamond_shovel", ToolItem, ToolType.shovel, Tiers.DIAMOND);
+    public static readonly DIAMOND_SWORD = Items.add("diamond_sword", ToolItem, ToolType.sword, Tiers.DIAMOND);
 
-    public static WHEAT = Items.add("wheat", ResourceItem, Resources.wheat);
-    public static SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.seedWheat);
-    public static BREAD = Items.add("bread", ResourceItem, Resources.bread);
-    public static POTATO = Items.add("potato", ResourceItem, Resources.potato);
-    public static APPLE = Items.add("apple", ResourceItem, Resources.apple);
+    public static readonly WHEAT = Items.add("wheat", ResourceItem, Resources.wheat);
+    public static readonly SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.seedWheat);
+    public static readonly BREAD = Items.add("bread", ResourceItem, Resources.bread);
+    public static readonly POTATO = Items.add("potato", ResourceItem, Resources.potato);
+    public static readonly APPLE = Items.add("apple", ResourceItem, Resources.apple);
 
-    public static SNOWBALL = Items.add("snowball", ResourceItem, Resources.snowball);
+    public static readonly SNOWBALL = Items.add("snowball", ResourceItem, Resources.snowball);
 
-    public static SAND = Items.add("sand", ResourceItem, Resources.sand);
-    public static DIRT = Items.add("dirt", ResourceItem, Resources.dirt);
-    public static STONE = Items.add("stone", ResourceItem, Resources.stone);
-    public static IRON = Items.add("iron", ResourceItem, Resources.iron);
-    public static GOLD = Items.add("gold", ResourceItem, Resources.gold);
-    public static DIAMOND = Items.add("diamond", ResourceItem, Resources.diamond);
-    public static RAIL = Items.add("rail", ResourceItem, Resources.rail);
+    public static readonly SAND = Items.add("sand", ResourceItem, Resources.sand);
+    public static readonly GLASS = Items.add("glass", ResourceItem, Resources.glass);
+    public static readonly DIRT = Items.add("dirt", ResourceItem, Resources.dirt);
+    public static readonly STONE = Items.add("stone", ResourceItem, Resources.stone);
+    public static readonly IRON = Items.add("iron", ResourceItem, Resources.iron);
+    public static readonly GOLD = Items.add("gold", ResourceItem, Resources.gold);
+    public static readonly DIAMOND = Items.add("diamond", ResourceItem, Resources.diamond);
+    public static readonly RAIL = Items.add("rail", ResourceItem, Resources.rail);
 
-    public static STICK = Items.add("stick", ResourceItem, Resources.stick);
-    public static WOOD = Items.add("wood", ResourceItem, Resources.wood);
-    public static LILYPAD = Items.add("lilypad", ResourceItem, Resources.lilypad);
-    public static ICE = Items.add("ice", ResourceItem, Resources.ice);
-    public static CACTUS_FLOWER = Items.add("cactus_flower", ResourceItem, Resources.cactusFlower);
-    public static FISH = Items.add("fish", ResourceItem, Resources.fish);
+    public static readonly STICK = Items.add("stick", ResourceItem, Resources.stick);
+    public static readonly WOOD = Items.add("wood", ResourceItem, Resources.wood);
+    public static readonly COAL = Items.add("coal", ResourceItem, Resources.coal);
+    public static readonly LILYPAD = Items.add("lilypad", ResourceItem, Resources.lilypad);
+    public static readonly ICE = Items.add("ice", ResourceItem, Resources.ice);
+    public static readonly CACTUS_FLOWER = Items.add("cactus_flower", ResourceItem, Resources.cactusFlower);
+    public static readonly FISH = Items.add("fish", ResourceItem, Resources.fish);
 
-    public static FISHING_ROD = Items.add("fishing_rod", FishingRodItem);
+    public static readonly FISHING_ROD = Items.add("fishing_rod", FishingRodItem);
 
-    public static CHEST = Items.add("chest", FurnitureItem, Chest);
-    public static CAMP = Items.add("camp", FurnitureItem, Camp);
-    public static BED = Items.add("bed", FurnitureItem, Bed);
-    public static OVEN = Items.add("oven", FurnitureItem, Oven);
-    public static FURNACE = Items.add("furnace", FurnitureItem, Furnace);
-    public static ALEMBIC = Items.add("alembic", FurnitureItem, Alembic);
-    public static MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
+    public static readonly CHEST = Items.add("chest", FurnitureItem, Chest);
+    public static readonly CAMP = Items.add("camp", FurnitureItem, Camp);
+    public static readonly BED = Items.add("bed", FurnitureItem, Bed);
+    public static readonly OVEN = Items.add("oven", FurnitureItem, Oven);
+    public static readonly FURNACE = Items.add("furnace", FurnitureItem, Furnace);
+    public static readonly ALEMBIC = Items.add("alembic", FurnitureItem, Alembic);
+    public static readonly MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
 
-    public static FLASK = Items.add("flask", ResourceItem, Resources.flask);
-    public static POTION_SPEED = Items.add("potion_speed", PotionItem, PotionType.speed);
-    public static POTION_HEAL = Items.add("potion_heal", PotionItem, PotionType.heal);
-    public static POTION_HUNGER = Items.add("potion_hunger", PotionItem, PotionType.hunger);
-    public static POTION_POWER = Items.add("potion_power", PotionItem, PotionType.power);
-    public static POTION_SLOW = Items.add("potion_slow", PotionItem, PotionType.slow);
+    public static readonly FLASK = Items.add("flask", ResourceItem, Resources.flask);
+    public static readonly POTION_SPEED = Items.add("potion_speed", PotionItem, PotionType.SPEED);
+    public static readonly POTION_HEAL = Items.add("potion_heal", PotionItem, PotionType.HEAL);
+    public static readonly POTION_HUNGER = Items.add("potion_hunger", PotionItem, PotionType.HUNGER);
+    public static readonly POTION_POWER = Items.add("potion_power", PotionItem, PotionType.POWER);
+    public static readonly POTION_SLOW = Items.add("potion_slow", PotionItem, PotionType.SLOW);
 }

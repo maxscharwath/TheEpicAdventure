@@ -27,7 +27,7 @@ export default class CactusTile extends Tile {
 
     public bumpedInto(entity: Entity) {
         if (entity instanceof Mob) {
-            entity.hurt(6);
+            entity.hurt(1);
         }
     }
 

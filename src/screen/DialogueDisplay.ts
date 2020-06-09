@@ -123,6 +123,7 @@ export default class DialogueDisplay extends Display {
     }
 
     public startDialogue(dialogue: Dialogue) {
+        if (!this.active)this.show();
         this.dialogue = dialogue;
         this.sentences.push(...this.dialogue.sentences);
         this.nameArea.text = dialogue.name;

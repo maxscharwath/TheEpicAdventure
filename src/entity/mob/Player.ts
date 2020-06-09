@@ -44,8 +44,7 @@ export default class Player extends Mob {
     public die(): void {
     }
 
-    public onTick(): void {
-        super.onTick();
+    public onCommand() {
         let ax = 0;
         let ay = 0;
 
@@ -82,6 +81,13 @@ export default class Player extends Mob {
         if (this.aSpeed < this.speed) {
             this.a.x += ax / 5;
             this.a.y += ay / 5;
+        }
+    }
+
+    public onTick(): void {
+        super.onTick();
+        if (!Game.GUI.hasDisplayOpen()) {
+            this.onCommand();
         }
         const selectedItem = this.inventory.selectedItem();
         if (selectedItem instanceof FurnitureItem) {
