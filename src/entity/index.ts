@@ -20,6 +20,8 @@ import Bear from "./mob/Bear";
 import Furnace from "./furniture/Furnace";
 import Oven from "./furniture/Oven";
 import Alembic from "./furniture/Alembic";
+import Anvil from "./furniture/Anvil";
+import Workbench from "./furniture/Workbench";
 
 Entities.add(0, "player", Player);
 Entities.add(1, "zombie", Zombie);
@@ -35,6 +37,8 @@ Entities.add(10, "camp", Camp);
 Entities.add(11, "furnace", Furnace);
 Entities.add(12, "oven", Oven);
 Entities.add(13, "alembic", Alembic);
+Entities.add(14, "anvil", Anvil);
+Entities.add(15, "workbench", Workbench);
 
 export {
     Entity,
@@ -57,5 +61,7 @@ export {
     Furnace,
     Oven,
     Alembic,
+    Anvil,
+    Workbench,
     MusicPlayer,
 };

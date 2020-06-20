@@ -6,6 +6,7 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
+import DamageParticle from "../../entity/particle/DamageParticle";
 import HurtParticle from "../../entity/particle/HurtParticle";
 
 export default class RockTile extends AutoTilingTile {
@@ -33,8 +34,9 @@ export default class RockTile extends AutoTilingTile {
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
                     this.levelTile.level.add(
-                        new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                        new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
                     );
+                    this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
                     if (this.damage >= 15) {
                         this.levelTile.setTile(Tiles.DIRT);
                         this.addItemEntity(Items.STONE, 2);

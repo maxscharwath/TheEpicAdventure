@@ -5,6 +5,7 @@ import {Howl} from "howler";
 import NoteParticle from "../particle/NoteParticle";
 import Updater from "../../core/Updater";
 import {Mob} from "../index";
+import Item from "../../item/Item";
 
 export default class MusicPlayer extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "musicPlayer.png"));
@@ -33,7 +34,7 @@ export default class MusicPlayer extends Furniture {
         }
     }
 
-    public onUse(mob: Mob): boolean {
+    public onUse(mob: Mob, item?: Item): boolean {
         if (!this.playing) {
             this.play();
             return true;

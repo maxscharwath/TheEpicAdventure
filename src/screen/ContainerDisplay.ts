@@ -152,6 +152,10 @@ export default class ContainerDisplay extends Display {
         });
     }
 
+    public isBlocking() {
+        return true;
+    }
+
     private moveItem(A: Container, B: Container) {
         if (A.selected) A.swap(B);
         else B.swap(A);

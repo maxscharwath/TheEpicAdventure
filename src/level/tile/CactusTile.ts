@@ -6,6 +6,7 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 import Items from "../../item/Items";
+import HurtParticle from "../../entity/particle/HurtParticle";
 
 export default class CactusTile extends Tile {
     public static DEFAULT_STATES = {damage: 0};
@@ -33,6 +34,7 @@ export default class CactusTile extends Tile {
 
     public onInteract(mob: Mob, item?: Item): boolean {
         if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+        this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
         this.addItemEntity(Items.CACTUS_FLOWER);
         return true;
     }

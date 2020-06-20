@@ -6,10 +6,11 @@ import Vector from "../../utility/Vector";
 import Direction from "../Direction";
 import Entity from "../Entity";
 import ItemEntity from "../ItemEntity";
-import HurtParticle from "../particle/HurtParticle";
+import DamageParticle from "../particle/DamageParticle";
 import Item from "../../item/Item";
 import PotionType from "../../item/PotionType";
 import PotionEffect from "../PotionEffect";
+import HurtParticle from "../particle/HurtParticle";
 
 export default abstract class Mob extends Entity {
 
@@ -63,12 +64,13 @@ export default abstract class Mob extends Entity {
 
     public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
         if (this.hurtCooldown > 0) return;
-        this.hurtCooldown = 60;
+        this.hurtCooldown = 5;
         this.a.z = 2;
         this.a.x = attackDir.getX() * 2;
         this.a.y = attackDir.getY() * 2;
         this.health -= dmg;
-        this.level.add(new HurtParticle(this.x, this.y, -dmg, 0xc80000));
+        this.level.add(new DamageParticle(this.x, this.y, -dmg, 0xc80000));
+        this.level.add(new HurtParticle(this.x, this.y));
     }
 
     public dropItem(item: Item) {
@@ -131,7 +133,7 @@ export default abstract class Mob extends Entity {
 
     public removePotionEffect(effect: PotionEffect): void;
     public removePotionEffect(type: PotionType): void;
-    public removePotionEffect(value: PotionEffect|PotionType): void {
+    public removePotionEffect(value: PotionEffect | PotionType): void {
         const type = value instanceof PotionEffect ? value.type : value;
         this.potionEffect = this.potionEffect.filter((effect) => effect.type !== type);
     }
@@ -191,63 +193,32 @@ export default abstract class Mob extends Entity {
     }
 
     protected attack(dmg: number) {
-        if (this.attackCooldown > 0) {
-            return;
-        }
+        if (this.attackCooldown > 0) return;
         this.attackCooldown = 30;
-        for (const e of this.getEntitiesVisible(32)) {
-            if (!(e instanceof Mob)) {
-                continue;
-            }
-            console.log("ATTACK", e.toString());
-            e.hurtByEntity(dmg, this);
-        }
+        this.getEntitiesVisible(2).then((entities) => {
+            entities.forEach((entity) => {
+                if (entity instanceof Mob) {
+                    console.log("ATTACK", entity.toString());
+                    entity.hurtByEntity(dmg, this);
+                }
+            });
+        });
     }
 
-    protected getEntitiesRadius(r = 32, ...classEntities: any[]): Entity[] {
-        const entities = [];
-        for (const chunk of this.getChunkNeighbour()) {
-            for (const e of chunk.getEntities()) {
-                if (e === this) {
-                    continue;
-                }
-                let next = false;
-                for (const classEntity of classEntities) {
-                    if (!(e instanceof classEntity)) {
-                        next = true;
-                    }
-                }
-                if (next) {
-                    continue;
-                }
-                if (Math.hypot(this.x - e.x, this.y - e.y) < r) {
-                    entities.push(e);
-                }
-            }
-        }
-
-        return entities;
+    protected getEntitiesRadius(radius = 2, predicate: (value: Entity) => boolean = () => true): Promise<Entity[]> {
+        return this.level.findEntitiesInRadius(predicate, this.x >> 4, this.y >> 4, radius);
     }
 
-    protected getEntitiesVisible(r = 32, fov = 90): Entity[] {
-        const entities = [];
-        for (const e of this.getEntitiesRadius(r)) {
-            if (e === this) {
-                continue;
-            }
-            if (Math.hypot(this.x - e.x, this.y - e.y) < r) {
-                const a = (Math.atan2(this.y - e.y, this.x - e.x) * 180 / Math.PI + 180) % 360;
-                if (
-                    (this.dir === Direction.DOWN && a >= 90 - fov / 2 && a <= 90 + fov / 2) ||
-                    (this.dir === Direction.UP && a >= 270 - fov / 2 && a <= 270 + fov / 2) ||
-                    (this.dir === Direction.LEFT && a >= 180 - fov / 2 && a <= 180 + fov / 2) ||
-                    (this.dir === Direction.RIGHT && a >= 360 - fov / 2 || a <= fov / 2)
-                ) {
-                    entities.push(e);
-                }
-            }
-        }
-
-        return entities;
+    protected getEntitiesVisible(radius: number = 2, fov = 90): Promise<Entity[]> {
+        return this.getEntitiesRadius(radius, (entity) => {
+            if (entity === this) return false;
+            const a = (Math.atan2(this.y - entity.y, this.x - entity.x) * 180 / Math.PI + 180) % 360;
+            return (
+                (this.dir === Direction.DOWN && a >= 90 - fov / 2 && a <= 90 + fov / 2) ||
+                (this.dir === Direction.UP && a >= 270 - fov / 2 && a <= 270 + fov / 2) ||
+                (this.dir === Direction.LEFT && a >= 180 - fov / 2 && a <= 180 + fov / 2) ||
+                (this.dir === Direction.RIGHT && a >= 360 - fov / 2 || a <= fov / 2)
+            );
+        });
     }
 }

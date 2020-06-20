@@ -68,6 +68,7 @@ item.bread: Bread
 item.glass: Glass
 item.coal: Coal
 item.flask: Flask
+item.flint: Flint
 
 item.iron: Iron
 item.gold: Gold
@@ -113,6 +114,8 @@ item.bed: Bed
 item.oven: Oven
 item.furnace: Furnace
 item.alembic: Alembic
+item.anvil: Anvil
+item.workbench: Workbench
 
 item.potion_speed: Potion of Swiftness
 item.potion_heal: Potion of Healing

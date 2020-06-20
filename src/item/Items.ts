@@ -7,7 +7,7 @@ import ToolItem from "./ToolItem";
 import ToolType from "./ToolType";
 import FishingRodItem from "./FishingRodItem";
 import FurnitureItem from "./FurnitureItem";
-import {Chest, Camp, Bed, MusicPlayer, Oven, Furnace, Alembic} from "../entity";
+import {Chest, Camp, Bed, MusicPlayer, Oven, Furnace, Alembic, Anvil, Workbench} from "../entity";
 import PotionItem from "./PotionItem";
 import PotionType from "./PotionType";
 
@@ -53,6 +53,7 @@ export class ItemRegister<T extends Item> {
     }
 
     public instanceOf(item: Item) {
+        if (!(item instanceof Item))return false;
         return item.tag === this.tag;
     }
 }
@@ -104,6 +105,7 @@ export default class Items extends ItemRegister<Item> {
     public static readonly GOLD = Items.add("gold", ResourceItem, Resources.gold);
     public static readonly DIAMOND = Items.add("diamond", ResourceItem, Resources.diamond);
     public static readonly RAIL = Items.add("rail", ResourceItem, Resources.rail);
+    public static readonly FLINT = Items.add("flint", ResourceItem, Resources.flint);
 
     public static readonly STICK = Items.add("stick", ResourceItem, Resources.stick);
     public static readonly WOOD = Items.add("wood", ResourceItem, Resources.wood);
@@ -121,6 +123,8 @@ export default class Items extends ItemRegister<Item> {
     public static readonly OVEN = Items.add("oven", FurnitureItem, Oven);
     public static readonly FURNACE = Items.add("furnace", FurnitureItem, Furnace);
     public static readonly ALEMBIC = Items.add("alembic", FurnitureItem, Alembic);
+    public static readonly ANVIL = Items.add("anvil", FurnitureItem, Anvil);
+    public static readonly WORKBENCH = Items.add("workbench", FurnitureItem, Workbench);
     public static readonly MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
 
     public static readonly FLASK = Items.add("flask", ResourceItem, Resources.flask);

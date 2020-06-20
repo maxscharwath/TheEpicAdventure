@@ -2,10 +2,6 @@ import Game from "./Game";
 import System from "./System";
 
 export default class Updater {
-    public static readonly normSpeed: number = 60;
-    public static gamespeed: number = 1;
-    public static paused: boolean = true;
-
     public static ticks: number = 0;
     public static time: number = 0;
     public static readonly dayLength: number = 3600;

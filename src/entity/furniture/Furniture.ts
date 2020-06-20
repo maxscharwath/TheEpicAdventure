@@ -1,6 +1,7 @@
 import Entity from "../Entity";
 import {Player, Mob} from "../index";
 import Direction from "../Direction";
+import Item from "../../item/Item";
 
 export default abstract class Furniture extends Entity {
     private pushDir: Direction = Direction.NONE;
@@ -26,7 +27,7 @@ export default abstract class Furniture extends Entity {
         if (this.pushTime > 0) this.pushTime--;
     }
 
-    public onUse(mob: Mob) {
+    public onUse(mob: Mob, item?: Item) {
         return false;
     }
 

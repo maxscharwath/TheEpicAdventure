@@ -4,6 +4,8 @@ import System from "../../core/System";
 import DustParticle from "../particle/DustParticle";
 import SpriteSheet from "../../gfx/SpriteSheet";
 import {Mob} from "../index";
+import Item from "../../item/Item";
+import Items from "../../item/Items";
 
 export default class Camp extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
@@ -24,8 +26,10 @@ export default class Camp extends Furniture {
         }
     }
 
-    public onUse(mob: Mob): boolean {
-        this.active = !this.active;
+    public onUse(mob: Mob, item?: Item): boolean {
+        if (Items.FLINT.instanceOf(item)) {
+            this.active = true;
+        }
         return true;
     }
 

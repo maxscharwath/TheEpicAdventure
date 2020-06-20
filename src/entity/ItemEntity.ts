@@ -92,6 +92,10 @@ export default class ItemEntity extends Entity {
         };
     }
 
+    public canSwim(): boolean {
+        return true;
+    }
+
     private updateRadiusMob() {
         if (Updater.ticks - this.lastCheck < 100) return;
         this.lastCheck = Updater.ticks;

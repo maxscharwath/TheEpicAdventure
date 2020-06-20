@@ -12,6 +12,7 @@ export default class InputHandler {
     private static keyTyped(e: Event): void {
         e.preventDefault();
     }
+    public preventDefault: boolean = true;
 
     private keymap = new Map();
     private keyboard = new Map();
@@ -162,6 +163,7 @@ export default class InputHandler {
         this.keymap.set("POTION", "KEY-P");
         this.keymap.set("MAP", "KEY-M");
         this.keymap.set("INFO", "F-3");
+        this.keymap.set("CHAT", "KEY-T");
         this.keymap.set("QUIT", "CONTROL-LEFT&KEY-Q");
 
         this.keymap.set("HOTBAR-1", "DIGIT-1");
@@ -191,12 +193,12 @@ export default class InputHandler {
     }
 
     private keyPressed(e: KeyboardEvent): void {
-        e.preventDefault();
+        if (this.preventDefault) e.preventDefault();
         this.toggle(e.code.spinalCase(), true);
     }
 
     private keyReleased(e: KeyboardEvent): void {
-        e.preventDefault();
+        if (this.preventDefault) e.preventDefault();
         this.toggle(e.code.spinalCase(), false);
     }
 }

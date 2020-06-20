@@ -6,9 +6,10 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
-import HurtParticle from "../../entity/particle/HurtParticle";
+import DamageParticle from "../../entity/particle/DamageParticle";
 import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
+import HurtParticle from "../../entity/particle/HurtParticle";
 
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
@@ -44,8 +45,9 @@ export default class TreeTile extends Tile {
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
                     this.levelTile.level.add(
-                        new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                        new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
                     );
+                    this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
                     if (this.damage >= 15) {
                         if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
                         this.addItemEntity(Items.WOOD);

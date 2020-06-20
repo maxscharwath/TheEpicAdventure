@@ -52,6 +52,10 @@ export default class CraftingDisplay extends Display {
         super.onRender();
     }
 
+    public isBlocking() {
+        return true;
+    }
+
     private setSelect(val: number, force: boolean= false) {
         if (!force && val === this.selected) return;
         this.selected = val;

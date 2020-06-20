@@ -68,6 +68,7 @@ item.bread: Pain
 item.glass: Verre
 item.coal: Charbon
 item.flask: Fiole
+item.flint: Silex
 
 item.iron: Fer
 item.gold: Or
@@ -113,6 +114,8 @@ item.bed: Lit
 item.oven: Four
 item.furnace: Fourneau
 item.alembic: Alembic
+item.anvil: Enclume
+item.workbench: Établi
 
 item.potion_speed: Potion de rapidité
 item.potion_heal: Potion de soins

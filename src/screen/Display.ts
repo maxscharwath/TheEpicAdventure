@@ -41,4 +41,8 @@ export default class Display extends PIXI.Container {
     public onCommand(): void {
 
     }
+
+    public isBlocking() {
+        return false;
+    }
 }

@@ -64,6 +64,10 @@ export default class InventoryDisplay extends Display {
         this.slots.forEach((slot) => slot.update());
     }
 
+    public isBlocking() {
+        return true;
+    }
+
     private init() {
         const container = new PIXI.Container();
         const background = new PIXI.Sprite(PIXI.Texture.WHITE);

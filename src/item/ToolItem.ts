@@ -57,9 +57,16 @@ export default class ToolItem extends Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
-        if (this.getCooldown() <= 5) return false;
-        super.useOn(levelTile, mob);
-        return true;
+        if (this.durability <= 0) {
+            this.destroy(mob);
+            return;
+        }
+        if (this.getCooldownTime() <= this.getCooldown()) return false;
+        if (super.useOn(levelTile, mob)) {
+            this.durability--;
+            return  true;
+        }
+        return false;
     }
 
     public toBSON(): any {
@@ -67,5 +74,9 @@ export default class ToolItem extends Item {
             ...super.toBSON(),
             durability: this.durability,
         };
+    }
+
+    public getCooldown(): number {
+        return ((ToolType.nbLevel - this.level) + 1) * 3;
     }
 }

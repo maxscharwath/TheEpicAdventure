@@ -6,6 +6,8 @@ import System from "../../core/System";
 import InventoryDisplay from "../../screen/InventoryDisplay";
 import Rectangle = PIXI.Rectangle;
 import ContainerDisplay from "../../screen/ContainerDisplay";
+import Game from "../../core/Game";
+import Item from "../../item/Item";
 
 export default class Chest extends Furniture {
 
@@ -17,8 +19,8 @@ export default class Chest extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "chest.png"));
     public inventory = new Inventory(16);
 
-    public onUse(mob: Mob): boolean {
-        (new ContainerDisplay(mob, this.inventory)).show();
+    public onUse(mob: Mob, item?: Item): boolean {
+        Game.GUI.setDisplay(new ContainerDisplay(mob, this.inventory));
         return false;
     }
 

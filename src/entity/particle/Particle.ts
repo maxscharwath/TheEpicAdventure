@@ -44,8 +44,8 @@ export default class Particle extends PIXI.Container implements Tickable {
         this.x += this.a.x;
         this.y += this.a.y;
         this.z += this.a.z;
-        this.zIndex = this.y + this.z;
         this.pivot.y = this.z;
+        this.zIndex = this.getZIndex();
     }
 
     public getRemoved(): boolean {
@@ -79,6 +79,10 @@ export default class Particle extends PIXI.Container implements Tickable {
             this.deleted = true;
             this.level = undefined;
         }
+    }
+
+    protected getZIndex(): number {
+        return this.y + this.z;
     }
 
     protected lifePercent() {

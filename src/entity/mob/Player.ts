@@ -21,10 +21,6 @@ export default class Player extends Mob {
     constructor() {
         super();
         this.inventory.addSlots(18);
-        this.inventory.addItem(Items.MUSIC_PLAYER);
-        this.inventory.addItem(Items.CAMP);
-        this.inventory.addItem(Items.BED);
-        this.inventory.addItem(Items.CHEST);
         this.inventory.addItem(Items.WOOD_AXE);
         this.inventory.addItem(Items.WOOD_HOE);
         this.inventory.addItem(Items.WOOD_PICKAXE);
@@ -57,25 +53,23 @@ export default class Player extends Mob {
         const levelTile = this.getInteractTile();
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();
-            if (levelTile && item instanceof Item) {
-                if (item.useOn(levelTile, this)) {
-                    levelTile.tile?.onInteract(this, item);
+            this.level.findEntitiesInRadius(
+                () => true,
+                (this.x >> 4) + this.dir.getX(),
+                (this.y >> 4) + this.dir.getY(),
+                1,
+            ).then((entities) => {
+                if (entities.length <= 0 && levelTile && item instanceof Item) {
+                    item.useOn(levelTile, this);
                 }
-            } else {
                 this.attack(5);
-                this.level.findEntitiesInRadius(
-                    () => true,
-                    (this.x >> 4) + this.dir.getX(),
-                    (this.y >> 4) + this.dir.getY(),
-                    1,
-                ).then((entities) => {
-                    entities.forEach((e) => {
-                        if (e instanceof Furniture) {
-                            e.onUse(this);
-                        }
-                    });
+                entities.forEach((e) => {
+                    if (e instanceof Furniture) {
+                        e.onUse(this, item);
+                    }
                 });
-            }
+            });
+
         }
 
         if (this.aSpeed < this.speed) {
@@ -86,7 +80,7 @@ export default class Player extends Mob {
 
     public onTick(): void {
         super.onTick();
-        if (!Game.GUI.hasDisplayOpen()) {
+        if (!Game.GUI.isBlocking()) {
             this.onCommand();
         }
         const selectedItem = this.inventory.selectedItem();

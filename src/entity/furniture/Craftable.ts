@@ -1,6 +1,9 @@
 import Recipe from "../../crafting/Recipe";
 import {Mob, Furniture} from "../index";
 import CraftingDisplay from "../../screen/CraftingDisplay";
+import Item from "../../item/Item";
+import Game from "../../core/Game";
+import ContainerDisplay from "../../screen/ContainerDisplay";
 
 export default class Craftable extends Furniture {
     private craftTime: number = 0;
@@ -30,8 +33,8 @@ export default class Craftable extends Furniture {
         }
     }
 
-    public onUse(mob: Mob): boolean {
-        (new CraftingDisplay(this.recipes , mob)).show();
+    public onUse(mob: Mob, item?: Item): boolean {
+        Game.GUI.setDisplay(new CraftingDisplay(this.recipes , mob));
         return true;
     }
 

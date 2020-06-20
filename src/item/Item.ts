@@ -41,7 +41,7 @@ export default class Item {
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
         this.cooldownTime = Updater.ticks;
-        return false;
+        return levelTile.tile?.onInteract(mob, this);
     }
 
     public canAttack(): boolean {
@@ -64,13 +64,17 @@ export default class Item {
         return this.texture;
     }
 
+    public destroy(mob: Mob) {
+        mob.inventory.removeThisItem(this);
+    }
+
     public toBSON(): any {
         return {
             tag: this.tag,
         };
     }
 
-    protected getCooldown() {
-        return Updater.ticks - this.cooldownTime;
+    protected getCooldownTime(): number {
+        return (Updater.ticks - this.cooldownTime);
     }
 }
