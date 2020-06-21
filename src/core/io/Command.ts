@@ -1,6 +1,7 @@
 import Entities from "../../entity/Entities";
 import Game from "../Game";
 import {clipboard} from "electron";
+import Initializer from "../Initializer";
 
 
 export default class Command {
@@ -52,4 +53,19 @@ Command.add("seed").addFunction(() => {
     const seed = Game.level.seed.toString();
     clipboard.writeText(seed);
     return seed;
+});
+
+Command.add("speed").addFunction((args) => {
+    let speed = parseInt(args[0], 10);
+    if (isNaN(speed))speed = 1;
+    Initializer.setSpeed(speed);
+    return speed;
+});
+
+Command.add("tp").addFunction((args) => {
+    const x = parseInt(args[0], 10);
+    const y = parseInt(args[1], 10);
+    Game.player.x = x << 4;
+    Game.player.y = y << 4;
+    return `Teleported to ${x} ${y}`;
 });

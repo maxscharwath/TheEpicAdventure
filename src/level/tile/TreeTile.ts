@@ -14,7 +14,9 @@ import HurtParticle from "../../entity/particle/HurtParticle";
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
     protected damage = 0;
+    protected hurtDelay: number = 0;
     private layersTreeSprite: PIXI.Sprite[] = [];
+    private treeSprite: PIXI.Sprite;
 
     public init() {
         super.init();
@@ -23,6 +25,15 @@ export default class TreeTile extends Tile {
 
     public onTick(): void {
         super.onTick();
+        if (this.hurtDelay > 0) {
+            this.hurtDelay--;
+            this.treeSprite.scale.set(
+                1 + Math.sin(this.hurtDelay) / 10,
+                1 + Math.cos(this.hurtDelay) / 10,
+            );
+        } else {
+            this.treeSprite.scale.set(1, 1);
+        }
     }
 
     public onRender() {
@@ -44,6 +55,7 @@ export default class TreeTile extends Tile {
                 case ToolType.axe:
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
+                    this.hurtDelay = 10;
                     this.levelTile.level.add(
                         new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
                     );
@@ -78,17 +90,15 @@ export default class TreeTile extends Tile {
         this.layersTreeSprite[2].visible = false;
         this.layersTreeSprite[3].visible = false;
 
-        const sprite = new PIXI.Sprite(new PIXI.Texture(texture));
+        this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture));
 
         this.container.addChild(this.layersTreeSprite[0]);
         this.container.addChild(this.layersTreeSprite[1]);
-        this.container.addChild(sprite);
+        this.container.addChild(this.treeSprite);
         this.container.addChild(this.layersTreeSprite[2]);
         this.container.addChild(this.layersTreeSprite[3]);
-        if (this.random.boolean()) {
-            sprite.scale.x = -1;
-            sprite.pivot.x = 16;
-        }
+        this.treeSprite.anchor.set(0.5);
+        this.treeSprite.position.set(8, 8);
     }
 
     protected initTree() {

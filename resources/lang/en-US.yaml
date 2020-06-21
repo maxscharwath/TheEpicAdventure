@@ -122,3 +122,8 @@ item.potion_heal: Potion of Healing
 item.potion_hunger: Potion of Hunger
 item.potion_power: Potion of Stength
 item.potion_slow: Potion of Slowness
+
+item.bucket_empty: Empty milk
+item.bucket_water: Bucket of water
+item.bucket_lava: Bucket of lava
+item.bucket_milk: Bucket of milk

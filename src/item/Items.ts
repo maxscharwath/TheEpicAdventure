@@ -10,6 +10,8 @@ import FurnitureItem from "./FurnitureItem";
 import {Chest, Camp, Bed, MusicPlayer, Oven, Furnace, Alembic, Anvil, Workbench} from "../entity";
 import PotionItem from "./PotionItem";
 import PotionType from "./PotionType";
+import BucketItem from "./BucketItem";
+import BucketType from "./BucketType";
 
 type Type<T> = new (...args: any[]) => T;
 
@@ -133,4 +135,9 @@ export default class Items extends ItemRegister<Item> {
     public static readonly POTION_HUNGER = Items.add("potion_hunger", PotionItem, PotionType.HUNGER);
     public static readonly POTION_POWER = Items.add("potion_power", PotionItem, PotionType.POWER);
     public static readonly POTION_SLOW = Items.add("potion_slow", PotionItem, PotionType.SLOW);
+
+    public static readonly BUCKET_EMPTY = Items.add("bucket_empty", BucketItem, BucketType.empty);
+    public static readonly BUCKET_WATER = Items.add("bucket_water", BucketItem, BucketType.water);
+    public static readonly BUCKET_LAVA = Items.add("bucket_lava", BucketItem, BucketType.lava);
+    public static readonly BUCKET_MILK = Items.add("bucket_milk", BucketItem, BucketType.milk);
 }

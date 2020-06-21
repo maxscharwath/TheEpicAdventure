@@ -20,6 +20,7 @@ import LanDisplay from "../screen/LanDisplay";
 import MouseHandler from "./io/MouseHandler";
 import DialogueDisplay, {Dialogue} from "../screen/DialogueDisplay";
 import GUI from "./GUI";
+import Seed from "../utility/Seed";
 
 export default class Game {
 
@@ -73,7 +74,7 @@ export default class Game {
         this.GUI = new GUI();
         this.player = new Player();
 
-        this.levels.push(new Level());
+        this.levels.push(new Level(Seed.create("maxime")));
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         // this.level.add(new MusicPlayer(), 3, 3, true);

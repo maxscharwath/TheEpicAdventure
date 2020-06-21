@@ -28,6 +28,10 @@ export default class Initializer {
         this.tickerUpdater.start();
     }
 
+    public static setSpeed(speed: number) {
+        this.tickerUpdater.speed = speed;
+    }
+
     private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
     private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 }

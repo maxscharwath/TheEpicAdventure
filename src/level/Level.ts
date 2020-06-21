@@ -17,8 +17,8 @@ export default class Level {
 
     public maxMobCount: number = 300;
     public mobCount: number = 0;
-    public readonly seed = 0;
-    public levelGen = new LevelGen(this.seed);
+    public readonly seed: number;
+    public levelGen: LevelGen;
     public gravity = 0.4;
     public container: PIXI.Container = new PIXI.Container();
     public tilesContainer: PIXI.Container = new PIXI.Container();
@@ -32,7 +32,9 @@ export default class Level {
     private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
 
-    constructor() {
+    constructor(seed: number) {
+        this.seed = seed;
+        this.levelGen = new LevelGen(this.seed);
         this.container.addChild(this.tilesContainer, this.entitiesContainer);
     }
 

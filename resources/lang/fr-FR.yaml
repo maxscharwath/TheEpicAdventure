@@ -122,3 +122,8 @@ item.potion_heal: Potion de soins
 item.potion_hunger: Potion de faim
 item.potion_power: Potion de force
 item.potion_slow: Potion de lenteur
+
+item.bucket_empty: Seau vide
+item.bucket_water: Seau d'eau
+item.bucket_lava: Seau de lave
+item.bucket_milk: Seau de lait
