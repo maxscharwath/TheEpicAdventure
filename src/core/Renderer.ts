@@ -6,7 +6,6 @@ import Color from "../utility/Color";
 import Game from "./Game";
 import System from "./System";
 import {Readable} from "stream";
-import {Howler} from "howler";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.ROUND_PIXELS = true;
@@ -16,6 +15,7 @@ interface CanvasElement extends HTMLCanvasElement {
 }
 
 export default class Renderer {
+    public static ticks = 0;
 
     public static get ZOOM() {
         return 0;
@@ -57,6 +57,7 @@ export default class Renderer {
         Game.level?.onRender();
         Renderer.camera.update();
         Game.GUI.onRender();
+        this.ticks++;
         this.renderer.render(this.mainStage);
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);
@@ -80,6 +81,8 @@ export default class Renderer {
         this.stages.level.removeChildren();
         this.stages.level.addChild(level.container);
         if (level.weather) this.stages.level.addChild(level.weather);
+        this.stages.level.addChild(level.lightFilter);
+        Renderer.camera.setContainer(level.container, level.lightFilter.lightContainer);
     }
 
     public static addDisplay(display: Display) {
@@ -88,7 +91,8 @@ export default class Renderer {
 
     public static getNbChildren() {
         const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
-            container.children.length + container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
+            container.children.filter((c) => c.isSprite).length +
+            container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
         return f(this.mainStage);
     }
 

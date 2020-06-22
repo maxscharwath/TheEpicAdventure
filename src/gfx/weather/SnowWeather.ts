@@ -2,25 +2,24 @@ import Weather from "./Weather";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import Renderer from "../../core/Renderer";
-import Updater from "../../core/Updater";
 
-export default class RainWeather extends Weather {
+export default class SnowWeather extends Weather {
     private layers: PIXI.TilingSprite[];
     private tint: PIXI.Sprite;
     private offset: PIXI.Point;
 
     public onRender() {
         super.onRender();
-        const x = Renderer.camera.x * Renderer.camera.zoom;
-        const y = Renderer.camera.y * Renderer.camera.zoom;
-        this.offset.y += 3;
-        this.offset.x = Math.sin(Updater.ticks / 10) * 50;
+        const x = this.cameraX;
+        const y = this.cameraY;
+        this.offset.y += Renderer.camera.zoom;
+        this.offset.x = Math.sin(Renderer.ticks / 40) * (Renderer.camera.zoom * 25);
         for (const layer of this.layers) {
             layer.width = Renderer.getScreen().width;
             layer.height = Renderer.getScreen().height;
             layer.tilePosition.y = -y + this.offset.y / layer.zIndex;
             layer.tilePosition.x = -x + this.offset.x / layer.zIndex;
-            layer.tileScale.set(4 / layer.zIndex);
+            layer.tileScale.set(Renderer.camera.zoom / layer.zIndex);
         }
     }
     protected init() {

@@ -22,6 +22,8 @@ import AcaciaTreeTile from "./AcaciaTreeTile";
 import PotatoTile from "./PotatoTile";
 import DarkGrassTile from "./DarkGrassTile";
 import RailTile from "./RailTile";
+import BushTile from "./BushTile";
+import FlowerTile from "./FlowerTile";
 
 export class TileRegister<T extends typeof Tile> {
 
@@ -79,5 +81,7 @@ export default class Tiles extends TileRegister<typeof Tile> {
     public static PLANK = Tiles.add(19, "plank", PlankTile);
     public static DARK_GRASS = Tiles.add(20, "dark_grass", DarkGrassTile);
     public static RAIL = Tiles.add(21, "rail", RailTile);
+    public static BUSH = Tiles.add(22, "bush", BushTile);
+    public static FLOWER = Tiles.add(23, "flower", FlowerTile);
 
 }

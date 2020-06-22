@@ -24,7 +24,7 @@ export default class Camera {
         this._zoom = value;
     }
 
-    private container?: PIXI.Container;
+    private containers: PIXI.Container[] = [];
 
     private _zoom: number = 4;
 
@@ -49,15 +49,15 @@ export default class Camera {
 
     public update(): void {
         this.move();
-        if (this.container instanceof PIXI.Container) {
-            this.container.position.set(Renderer.getScreen().width >> 1, Renderer.getScreen().height >> 1);
-            this.container.pivot.set(this.x, this.y);
-            this.container.scale.set(this.zoom);
-        }
+        this.containers.forEach((container) => {
+            container.position.set(Renderer.getScreen().width >> 1, Renderer.getScreen().height >> 1);
+            container.pivot.set(this.x, this.y);
+            container.scale.set(this.zoom);
+        });
     }
 
-    public setContainer(container: PIXI.Container) {
-        this.container = container;
+    public setContainer(...containers: PIXI.Container[]) {
+        this.containers = containers;
     }
 
     private move() {

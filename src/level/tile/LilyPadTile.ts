@@ -7,6 +7,7 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+import Renderer from "../../core/Renderer";
 
 export default class LilyPadTile extends Tile {
     public static readonly TAG = "lilypad";
@@ -20,7 +21,7 @@ export default class LilyPadTile extends Tile {
         this.container.addChild(this.groundTile.container);
         this.groundTile.init();
         this.sprite = new PIXI.Sprite(LilyPadTile.tileTextures[this.random.int(LilyPadTile.tileTextures.length)]);
-        this.container.addChild(this.sprite);
+        this.sortableContainer.addChild(this.sprite);
     }
 
     public onTick(): void {
@@ -29,7 +30,7 @@ export default class LilyPadTile extends Tile {
 
     public onRender() {
         super.onRender();
-        this.sprite?.pivot.set(0, Math.sin(Updater.ticks / 2) / 4);
+        this.sprite?.pivot.set(0, Math.sin(Renderer.ticks / 6) / 4);
     }
 
     public mayPass(e: Entity): boolean {

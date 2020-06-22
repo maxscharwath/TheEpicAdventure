@@ -23,6 +23,7 @@ export default class InfoDisplay extends Display {
             `z : ${(Game.player.z).toFixed(2)}`,
             `biome : ${tile?.biome.getDisplayName()}`,
             `tile : ${tile?.tile?.getDisplayName()}`,
+            `l : ${tile?.lightLevel}`,
             `tile data : ${JSON.stringify(tile?.tile?.states.getStates(), null, 4)}`,
             `containers : ${Renderer.getNbChildren()}`,
             `chunks loaded : ${Game.level?.getNbChunks()}`,

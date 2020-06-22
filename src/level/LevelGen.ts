@@ -83,17 +83,17 @@ export default class LevelGen {
                 }
                 if (biome.is("savanna")) {
                     tile.setTile(Tiles.DIRT);
-                    if (random.probability(5)) {
+                    if (random.probability(15)) {
                         tile.setTile(Tiles.ACACIA);
                     }
                 }
                 if (biome.is("forest")) {
                     tile.setTile(Tiles.GRASS);
-                    if (random.probability(2)) {
+                    if (random.probability(4)) {
                         tile.setTile(Tiles.TREE);
-                    } else if (random.probability(2)) {
+                    } else if (random.probability(4)) {
                         tile.setTile(Tiles.BIRCH);
-                    } else if (random.probability(2)) {
+                    } else if (random.probability(4)) {
                         tile.setTile(Tiles.SPRUCE);
                     }
                 }
@@ -103,18 +103,25 @@ export default class LevelGen {
                     } else if (random.probability(20)) {
                         tile.setTile(Tiles.BIRCH);
                     }
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.BUSH);
+                    }
+
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.FLOWER);
+                    }
                 }
 
                 if (biome.is("tundra") || biome.is("snow")) {
                     tile.setTile(Tiles.SNOW);
-                    if (random.probability(5)) {
+                    if (random.probability(10)) {
                         tile.setTile(Tiles.SPRUCE);
                     }
                 }
 
                 if (biome.is("taiga")) {
                     tile.setTile(Tiles.DARK_GRASS);
-                    if (random.probability(5)) {
+                    if (random.probability(10)) {
                         tile.setTile(Tiles.SPRUCE);
                     }
                 }
@@ -125,7 +132,7 @@ export default class LevelGen {
                 if (biome.is("river")) {
                     tile.setTile(Tiles.DIRT);
                     if (river > 245) {
-                        tile.setTile(Tiles.WATER);
+                        tile.setTile(Tiles.LAVA);
                     }
                 }
             }

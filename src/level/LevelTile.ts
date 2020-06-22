@@ -6,6 +6,7 @@ import Level from "./Level";
 import Tile from "./tile/Tile";
 import {TileRegister} from "./tile/Tiles";
 import {EventEmitter} from "events";
+import Light from "../gfx/Light";
 
 interface LevelTileConstructor {
     level: Level;
@@ -19,7 +20,31 @@ interface LevelTileConstructor {
     tileStates?: {};
 }
 
-export default class LevelTile extends PIXI.Container  {
+export default class LevelTile {
+
+    public get x(): number {
+        return this._x;
+    }
+
+    public set x(value: number) {
+        this._x = value;
+        this.groundContainer.x = this._x;
+        this.sortableContainer.x = this._x;
+        this.lightSprite.x = this._x;
+        this.sort();
+    }
+
+    public get y(): number {
+        return this._y;
+    }
+
+    public set y(value: number) {
+        this._y = value;
+        this.groundContainer.y = this._y;
+        this.sortableContainer.y = this._y;
+        this.lightSprite.y = this._y;
+        this.sort();
+    }
 
     get tile(): Tile | undefined {
         return this._tile;
@@ -33,20 +58,24 @@ export default class LevelTile extends PIXI.Container  {
     public readonly temperature: number;
     public readonly elevation: number;
     public readonly moisture: number;
-    public readonly x: number;
-    public readonly y: number;
-    public bg?: PIXI.Sprite;
+    public lightLevel = 0;
     private initByEntity?: Entity;
     private events = new EventEmitter();
     private tileStates?: {};
     private tileClass?: typeof Tile;
     private needToUpdate: boolean = true;
     private isInitiated = false;
+    private groundContainer = new PIXI.Container();
+    private sortableContainer = new PIXI.Container();
+    private lightSprite = new Light();
+
+    private _x: number;
+
+    private _y: number;
 
     private _tile?: Tile;
 
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
-        super();
         this.biome = biome;
         this.temperature = temperature;
         this.elevation = elevation;
@@ -65,44 +94,41 @@ export default class LevelTile extends PIXI.Container  {
         this._tile?.states.set(this.tileStates);
         this.isInitiated = true;
         process.nextTick(() => {
-            this.removeChildren();
-            this.bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-            this.bg.width = LevelTile.SIZE;
-            this.bg.height = LevelTile.SIZE;
-            this.bg.tint = this.biome.color.getInt();
-            this.addChild(this.bg);
+            this.groundContainer.removeChildren();
+            this.sortableContainer.removeChildren();
+
             if (this._tile) {
                 this._tile.init();
+                this.sort();
                 if (this.initByEntity || oldTile) {
                     this._tile.onSetTile(oldTile, this.initByEntity);
                     this.initByEntity = undefined;
                 }
-                this.addChild(this._tile.container);
+                this.groundContainer.addChild(this._tile.container);
+                this.sortableContainer.addChild(this._tile.sortableContainer);
             }
             this.update();
         });
     }
 
     public remove() {
-        if (this.parent) {
-            this.parent.removeChild(this);
-        }
+        if (this.groundContainer.parent) this.groundContainer.parent.removeChild(this.groundContainer);
+        if (this.sortableContainer.parent) this.sortableContainer.parent.removeChild(this.sortableContainer);
+        if (this.lightSprite.parent) this.lightSprite.parent.removeChild(this.lightSprite);
     }
 
     public add() {
         if (!this.level) {
             return;
         }
-        this.level.tilesContainer.addChild(this);
+        this.level.groundContainer.addChild(this.groundContainer);
+        this.level.sortableContainer.addChild(this.sortableContainer);
+        this.level.lightFilter.lightContainer.addChild(this.lightSprite);
     }
 
-    public getLocalX() {
-        return this.x >> 4;
-    }
+    public getLocalX = () => this._x >> 4;
 
-    public getLocalY() {
-        return this.y >> 4;
-    }
+    public getLocalY = () => this._y >> 4;
 
     public steppedOn(entity: Entity) {
         this._tile?.steppedOn(entity);
@@ -149,6 +175,7 @@ export default class LevelTile extends PIXI.Container  {
         if (this._tile?.isInit) {
             this._tile?.onTick();
         }
+        this.updateLight();
     }
 
     public onUpdate() {
@@ -166,11 +193,13 @@ export default class LevelTile extends PIXI.Container  {
             this.onUpdate();
         }
         if (this._tile?.isInit) {
-            this._tile?.onRender();
+            this._tile.onRender();
         }
+        this.lightSprite.setBrightness(this.lightLevel / 20);
     }
 
     public getRelativeTile(x: number, y: number, generate = true): LevelTile | undefined {
+        if (x === 0 && y === 0) return this;
         return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
@@ -229,5 +258,33 @@ export default class LevelTile extends PIXI.Container  {
         this.getNeighbourTiles(1, false).forEach((levelTile) => {
             levelTile.needToUpdate = true;
         });
+    }
+
+    public destroy() {
+        this.groundContainer.destroy({children: true});
+        this.sortableContainer.destroy({children: true});
+        this.lightSprite.destroy({children: true});
+    }
+
+    public updateLight() {
+        const lightLevel = this._tile?.light;
+        if (!lightLevel || lightLevel === 0) return;
+        if (lightLevel === this.lightLevel)return;
+        const radius = Math.round(Math.sqrt(lightLevel * 2));
+        for (let x = -radius; x < radius; x++) {
+            for (let y = -radius; y < radius; y++) {
+                const tile = this.getRelativeTile(x, y);
+                if (!tile || !tile._tile) continue;
+                const value = Math.round(lightLevel * (1 - Math.hypot(x, y) / radius));
+                if (value >= tile.lightLevel) {
+                    tile.lightLevel = value;
+                }
+            }
+        }
+    }
+
+    private sort() {
+        if (!this._tile) return;
+        this.sortableContainer.zIndex = this._y + 16 * this._tile.anchor;
     }
 }

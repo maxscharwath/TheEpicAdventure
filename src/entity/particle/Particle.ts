@@ -65,7 +65,7 @@ export default class Particle extends PIXI.Container implements Tickable {
     }
 
     public add() {
-        this.level?.entitiesContainer.addChild(this);
+        this.level?.sortableContainer.addChild(this);
     }
 
     public delete(level?: Level): void {

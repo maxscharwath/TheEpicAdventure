@@ -5,6 +5,7 @@ import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 import TileStates from "./TileStates";
+import Updater from "../../core/Updater";
 
 export default class LavaTile extends AutoTilingTile {
     public static DEFAULT_STATES = {level: 10};
@@ -13,6 +14,7 @@ export default class LavaTile extends AutoTilingTile {
     protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     public states = TileStates.create(LavaTile.DEFAULT_STATES);
+    public light = 18;
     private animSprite?: PIXI.AnimatedSprite;
 
     public init() {

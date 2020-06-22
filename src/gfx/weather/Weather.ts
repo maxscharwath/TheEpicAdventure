@@ -1,16 +1,5 @@
-import * as PIXI from "pixi.js";
+import LevelFilter from "../LevelFilter";
 
-export default class Weather extends PIXI.Container {
+export default class Weather extends LevelFilter {
 
-    constructor() {
-        super();
-        this.init();
-    }
-
-    public onRender() {
-
-    }
-    protected init() {
-
-    }
 }

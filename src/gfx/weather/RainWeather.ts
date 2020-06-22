@@ -10,9 +10,9 @@ export default class RainWeather extends Weather {
 
     public onRender() {
         super.onRender();
-        const x = Renderer.camera.x * Renderer.camera.zoom;
-        const y = Renderer.camera.y * Renderer.camera.zoom;
-        this.offset.y += 20;
+        const x = this.cameraX;
+        const y = this.cameraY;
+        this.offset.y += 10;
         for (const layer of this.layers) {
             layer.width = Renderer.getScreen().width;
             layer.height = Renderer.getScreen().height;

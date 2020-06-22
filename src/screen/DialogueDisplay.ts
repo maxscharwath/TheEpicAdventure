@@ -151,7 +151,7 @@ export default class DialogueDisplay extends Display {
     }
 
     public onRender(): void {
-        this.next.pivot.y = Math.sin(Updater.ticks) / 2;
+        this.next.pivot.y = Math.sin(Renderer.ticks / 3) / 2;
     }
 
     public isBlocking() {

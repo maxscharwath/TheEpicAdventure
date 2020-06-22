@@ -13,7 +13,7 @@ export default class SnowTile extends AutoTilingTile  {
     public static readonly TAG = "snow";
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
     public friction: number = 0.25;
-
+    public light = 3;
 
     private step: number = 0;
     private stepDir: boolean = false;

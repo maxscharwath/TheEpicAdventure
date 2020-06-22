@@ -9,7 +9,6 @@ import LevelTile from "../LevelTile";
 import TileStates from "./TileStates";
 import Tiles from "./Tiles";
 
-type Type<T> = new (...args: any[]) => T;
 export default abstract class Tile {
 
     protected get level() {
@@ -25,7 +24,6 @@ export default abstract class Tile {
     }
 
     public static DEFAULT_STATES = {};
-    public static SIZE = 16;
     public static readonly TAG: string = "tile";
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
@@ -39,10 +37,12 @@ export default abstract class Tile {
     public states = TileStates.create();
     public isInit: boolean = false;
     public container = new PIXI.Container();
+    public sortableContainer = new PIXI.Container();
     public ["constructor"]: typeof Tile;
-    public light: number = 1;
+    public light: number = 2;
     public maySpawn: boolean = false;
     public friction: number = 0.1;
+    public anchor = 0;
     protected random: Random;
     protected levelTile: LevelTile;
     protected groundTile?: Tile;

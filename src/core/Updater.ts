@@ -4,7 +4,7 @@ import System from "./System";
 export default class Updater {
     public static ticks: number = 0;
     public static time: number = 0;
-    public static readonly dayLength: number = 3600;
+    public static readonly dayLength: number = 200;
     public static readonly sleepEndTime: number = Updater.dayLength / 8;
     public static readonly sleepStartTime: number = Updater.dayLength / 2 + Updater.dayLength / 8;
 
@@ -15,6 +15,10 @@ export default class Updater {
         Night: Updater.dayLength / 4 * 3,
     };
     public static delta: number;
+
+    public static getDayRatio() {
+        return this.tickCount / this.dayLength;
+    }
 
     public static onTick(dlt: number): void {
         const t1 = System.milliTime();

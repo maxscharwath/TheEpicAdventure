@@ -16,7 +16,8 @@ export default class WheatTile extends FarmlandTile {
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.sprite.anchor.set(0.5);
         this.sprite.position.set(8, 8);
-        this.container.addChild(this.sprite);
+        this.sortableContainer.addChild(this.sprite);
+        this.anchor = 0.75;
     }
 
     public steppedOn(entity: Entity) {

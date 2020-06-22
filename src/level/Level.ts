@@ -11,7 +11,9 @@ import Tile from "./tile/Tile";
 import rimraf from "rimraf";
 import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
-
+import LightFilter from "../gfx/LightFilter";
+import SnowWeather from "../gfx/weather/SnowWeather";
+import RainWeather from "../gfx/weather/RainWeather";
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
 
@@ -21,9 +23,10 @@ export default class Level {
     public levelGen: LevelGen;
     public gravity = 0.4;
     public container: PIXI.Container = new PIXI.Container();
-    public tilesContainer: PIXI.Container = new PIXI.Container();
-    public entitiesContainer: PIXI.Container = new PIXI.Container();
+    public groundContainer: PIXI.Container = new PIXI.Container();
+    public sortableContainer: PIXI.Container = new PIXI.Container();
     public weather?: Weather;
+    public lightFilter: LightFilter;
     private random: Random = new Random();
     private players: Player[] = [];
     private tickablesToAdd: Tickable[] = [];
@@ -35,7 +38,10 @@ export default class Level {
     constructor(seed: number) {
         this.seed = seed;
         this.levelGen = new LevelGen(this.seed);
-        this.container.addChild(this.tilesContainer, this.entitiesContainer);
+        this.sortableContainer.sortableChildren = true;
+        this.container.addChild(this.groundContainer, this.sortableContainer);
+        this.lightFilter = new LightFilter();
+        this.weather = new SnowWeather();
     }
 
     public getChunks() {
@@ -207,12 +213,12 @@ export default class Level {
 
     public onRender() {
         if (!this.players[0]) return;
-        Renderer.camera.setContainer(this.container);
         if (this.weather) this.weather.onRender();
+        this.lightFilter.onRender();
         Renderer.camera.setFollow(this.players[0]);
 
         this.loadedChunks.forEach((chunk) => chunk.onRender());
-        this.entitiesContainer.children.sort((a, b) => a.zIndex - b.zIndex);
+        // this.sortableContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {

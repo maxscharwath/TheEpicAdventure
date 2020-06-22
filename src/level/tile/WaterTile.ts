@@ -4,7 +4,6 @@ import {Entity, Fish} from "../../entity/";
 import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
-import Tiles from "./Tiles";
 
 export default class WaterTile extends AutoTilingTile {
     public static DEFAULT_STATES = {level: 10};

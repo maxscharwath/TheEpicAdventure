@@ -125,7 +125,7 @@ export default class Chunk {
         this.loaded = false;
         this.map.forEach((tile) => {
             tile.remove();
-            tile.destroy({children: true});
+            tile.destroy();
         });
         [].concat(this.entities, this.particles).forEach((tickable: Tickable) => {
             tickable.remove();
@@ -285,6 +285,10 @@ export default class Chunk {
             };
             process.nextTick(action);
         });
+    }
+
+    public updateLights() {
+
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {
