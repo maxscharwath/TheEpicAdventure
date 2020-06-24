@@ -54,7 +54,7 @@ export default class Player extends Mob {
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();
             this.level.findEntitiesInRadius(
-                () => true,
+                (entity) => (entity instanceof Mob),
                 (this.x >> 4) + this.dir.getX(),
                 (this.y >> 4) + this.dir.getY(),
                 1,

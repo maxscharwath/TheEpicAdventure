@@ -41,12 +41,8 @@
     "@pixi/filter-color-overlay": "^3.1.1",
     "@pixi/filter-drop-shadow": "^3.1.1",
     "@pixi/filter-reflection": "^3.1.1",
-    "blob-to-stream": "^1.0.3",
     "bson": "^4.0.4",
-    "chromecast-api": "^0.3.3",
     "express": "^4.17.1",
-    "ffmpeg-stream": "^0.6.0",
-    "fluent-stream": "^0.1.0",
     "howler": "2.2.0",
     "node-gzip": "^1.1.2",
     "pixi-tilemap": "^2.0.6",
@@ -54,7 +50,6 @@
     "rimraf": "^3.0.2",
     "socket.io": "^2.3.0",
     "uniqid": "^5.2.0",
-    "webfontloader": "^1.6.28",
     "yaml": "1.10.0"
   },
   "main": "./dist/index.js"

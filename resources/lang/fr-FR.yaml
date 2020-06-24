@@ -40,6 +40,8 @@ tile.snow: Neige
 tile.ice: Glace
 tile.plank: Planche
 tile.rail: Rail
+tile.flower: Fleur
+tile.bush: Buisson
 
 entity.player: Joueur
 entity.zombie: Zombie
