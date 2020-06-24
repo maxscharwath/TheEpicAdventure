@@ -1,5 +1,6 @@
 import Items from "../item/Items";
 import Recipe from "./Recipe";
+
 export default class Crafting {
     public static allRecipes: Recipe[] = [];
     public static handRecipes: Recipe[] = [];

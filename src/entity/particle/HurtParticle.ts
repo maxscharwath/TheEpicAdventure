@@ -1,5 +1,4 @@
 import Particle from "./Particle";
-import Random from "../../utility/Random";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
 

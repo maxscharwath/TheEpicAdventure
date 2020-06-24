@@ -7,8 +7,6 @@ import Level from "../level/Level";
 import Client from "../network/Client";
 import Server from "../network/Server";
 import Version from "../saveload/Version";
-import HotbarDisplay from "../screen/HotbaryDisplay";
-import InfoDisplay from "../screen/InfoDisplay";
 import Initializer from "./Initializer";
 import InputHandler from "./io/InputHandler";
 import Localization from "./io/Localization";
@@ -16,9 +14,7 @@ import Network from "./Network";
 import Settings from "./Settings";
 import System from "./System";
 import Renderer from "./Renderer";
-import LanDisplay from "../screen/LanDisplay";
 import MouseHandler from "./io/MouseHandler";
-import DialogueDisplay, {Dialogue} from "../screen/DialogueDisplay";
 import GUI from "./GUI";
 import Seed from "../utility/Seed";
 

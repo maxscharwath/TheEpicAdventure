@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import Items from "../../item/Items";
 import FarmlandTile from "./FarmlandTile";
-import {Entity, Mob} from "../../entity";
+import {Entity} from "../../entity";
 
 export default class WheatTile extends FarmlandTile {
     public static readonly TAG: string = "wheat";

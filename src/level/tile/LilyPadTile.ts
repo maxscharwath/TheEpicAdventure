@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import Updater from "../../core/Updater";
 import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
 import Item from "../../item/Item";

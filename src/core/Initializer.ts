@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
-import WebFont from "webfontloader";
 import Game from "./Game";
 import Renderer from "./Renderer";
-import System from "./System";
 import Updater from "./Updater";
 
 export default class Initializer {

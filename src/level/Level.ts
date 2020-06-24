@@ -12,6 +12,7 @@ import rimraf from "rimraf";
 import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
 import LightFilter from "../gfx/LightFilter";
+
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
 

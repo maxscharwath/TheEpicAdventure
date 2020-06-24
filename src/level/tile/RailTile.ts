@@ -5,6 +5,7 @@ import System from "../../core/System";
 import {Mob, Entity} from "../../entity";
 import TileStates from "./TileStates";
 import Tiles from "./Tiles";
+
 type Type<T> = new (...args: any[]) => T;
 
 export default class RailTile extends Tile {

@@ -5,7 +5,6 @@ import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
 import Color from "../utility/Color";
 import Display from "./Display";
-import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 
 export default class InfoDisplay extends Display {
 

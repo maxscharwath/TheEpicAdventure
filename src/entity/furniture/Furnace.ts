@@ -1,9 +1,8 @@
-import {Mob} from "../index";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import Rectangle = PIXI.Rectangle;
 import Craftable from "./Craftable";
 import Crafting from "../../crafting/Crafting";
+import Rectangle = PIXI.Rectangle;
 
 export default class Furnace extends Craftable {
 

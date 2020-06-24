@@ -3,11 +3,10 @@ import Inventory from "../../item/Inventory";
 import {Mob} from "../index";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import InventoryDisplay from "../../screen/InventoryDisplay";
-import Rectangle = PIXI.Rectangle;
 import ContainerDisplay from "../../screen/ContainerDisplay";
 import Game from "../../core/Game";
 import Item from "../../item/Item";
+import Rectangle = PIXI.Rectangle;
 
 export default class Chest extends Furniture {
 

@@ -3,12 +3,11 @@ import {Mob, Furniture} from "../index";
 import CraftingDisplay from "../../screen/CraftingDisplay";
 import Item from "../../item/Item";
 import Game from "../../core/Game";
-import ContainerDisplay from "../../screen/ContainerDisplay";
 
 export default class Craftable extends Furniture {
     private craftTime: number = 0;
     private craftRecipe?: Recipe;
-    private recipes: Recipe[];
+    private readonly recipes: Recipe[];
 
     constructor(recipes: Recipe[] = []) {
         super();

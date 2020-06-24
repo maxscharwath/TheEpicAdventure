@@ -119,6 +119,11 @@ class Container extends PIXI.Container {
 
 export default class ContainerDisplay extends Display {
     public static baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "container.png"));
+
+    private static moveItem(A: Container, B: Container) {
+        if (A.selected) A.swap(B);
+        else B.swap(A);
+    }
     public hasCommand = true;
     private container: Container[] = [];
 
@@ -142,7 +147,7 @@ export default class ContainerDisplay extends Display {
         if (Game.input.getKey("EXIT").clicked) this.hide();
 
         if (Game.input.getKey("ENTER").clicked) {
-            this.moveItem(this.container[0], this.container[1]);
+            ContainerDisplay.moveItem(this.container[0], this.container[1]);
         }
 
         this.container.forEach((container) => {
@@ -154,11 +159,6 @@ export default class ContainerDisplay extends Display {
 
     public isBlocking() {
         return true;
-    }
-
-    private moveItem(A: Container, B: Container) {
-        if (A.selected) A.swap(B);
-        else B.swap(A);
     }
 
     private selectWindow(windowId: number) {

@@ -3,7 +3,6 @@ import System from "../../core/System";
 import {Mob} from "../../entity";
 import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
-import Items from "../../item/Items";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 import Renderer from "../../core/Renderer";

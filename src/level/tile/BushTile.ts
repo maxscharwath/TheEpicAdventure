@@ -5,7 +5,6 @@ import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
-import Updater from "../../core/Updater";
 import Renderer from "../../core/Renderer";
 
 export default class BushTile extends Tile {

@@ -1,4 +1,3 @@
-import Display from "./Display";
 import SearchServer from "../network/SearchServer";
 import * as PIXI from "pixi.js";
 import Color from "../utility/Color";

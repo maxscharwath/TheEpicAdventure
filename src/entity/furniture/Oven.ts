@@ -1,4 +1,3 @@
-import {Mob} from "../index";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
 import Craftable from "./Craftable";

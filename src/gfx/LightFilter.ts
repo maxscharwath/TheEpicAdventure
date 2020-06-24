@@ -6,7 +6,7 @@ import Updater from "../core/Updater";
 export default class LightFilter extends LevelFilter {
     public lightContainer = new PIXI.Container();
     private readonly ambientLight: PIXI.Sprite;
-    private blendFilter: PIXI.filters.AlphaFilter;
+    private readonly blendFilter: PIXI.filters.AlphaFilter;
     constructor() {
         super();
 
