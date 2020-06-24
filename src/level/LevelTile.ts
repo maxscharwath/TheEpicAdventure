@@ -266,17 +266,24 @@ export default class LevelTile {
         this.lightSprite.destroy({children: true});
     }
 
+    public setLight(value: number) {
+        if (value > this.lightLevel) {
+            this.lightLevel = value;
+        }
+    }
+
     public updateLight() {
-        const lightLevel = this._tile?.light;
+        let lightLevel = this._tile?.light;
         if (!lightLevel || lightLevel === 0) return;
-        if (lightLevel === this.lightLevel)return;
+        this.lightLevel -= 1;
+        if (this.lightLevel > lightLevel) lightLevel = this.lightLevel;
         const radius = Math.round(Math.sqrt(lightLevel * 2));
         for (let x = -radius; x < radius; x++) {
             for (let y = -radius; y < radius; y++) {
                 const tile = this.getRelativeTile(x, y);
                 if (!tile || !tile._tile) continue;
-                const value = Math.round(lightLevel * (1 - Math.hypot(x, y) / radius));
-                if (value >= tile.lightLevel) {
+                const value = (lightLevel * (1 - Math.hypot(x, y) / radius));
+                if (value > tile.lightLevel) {
                     tile.lightLevel = value;
                 }
             }

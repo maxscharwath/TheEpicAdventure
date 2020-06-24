@@ -57,7 +57,7 @@ export default class Renderer {
         Game.level?.onRender();
         Renderer.camera.update();
         Game.GUI.onRender();
-        this.ticks++;
+        this.ticks += dlt;
         this.renderer.render(this.mainStage);
         this.ticksTime.unshift(System.milliTime() - t1);
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);

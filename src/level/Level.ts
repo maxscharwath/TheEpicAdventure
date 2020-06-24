@@ -12,8 +12,6 @@ import rimraf from "rimraf";
 import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
 import LightFilter from "../gfx/LightFilter";
-import SnowWeather from "../gfx/weather/SnowWeather";
-import RainWeather from "../gfx/weather/RainWeather";
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
 
@@ -41,7 +39,6 @@ export default class Level {
         this.sortableContainer.sortableChildren = true;
         this.container.addChild(this.groundContainer, this.sortableContainer);
         this.lightFilter = new LightFilter();
-        this.weather = new SnowWeather();
     }
 
     public getChunks() {

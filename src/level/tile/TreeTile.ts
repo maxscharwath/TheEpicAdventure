@@ -10,12 +10,13 @@ import DamageParticle from "../../entity/particle/DamageParticle";
 import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
 import HurtParticle from "../../entity/particle/HurtParticle";
+import Renderer from "../../core/Renderer";
 
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
     public anchor = 1;
     protected damage = 0;
-    protected hurtDelay: number = 0;
+    protected wiggleDelay: number = 0;
     private treeSprite: PIXI.Sprite;
 
     public init() {
@@ -25,19 +26,19 @@ export default class TreeTile extends Tile {
 
     public onTick(): void {
         super.onTick();
-        if (this.hurtDelay > 0) {
-            this.hurtDelay--;
-            this.treeSprite.scale.set(
-                1 + Math.sin(this.hurtDelay) / 10,
-                1 + Math.cos(this.hurtDelay) / 10,
-            );
-        } else {
-            this.treeSprite.scale.set(1, 1);
-        }
+        if (this.wiggleDelay > 0) this.wiggleDelay--;
     }
 
     public onRender() {
         super.onRender();
+        if (this.wiggleDelay > 0) {
+            this.treeSprite.scale.set(
+                1 + Math.sin(Renderer.ticks / 2) / 20,
+                1 + Math.cos(Renderer.ticks / 2) / 20,
+            );
+        } else {
+            this.treeSprite.scale.set(1, 1);
+        }
     }
 
     public onUpdate() {
@@ -54,7 +55,7 @@ export default class TreeTile extends Tile {
                 case ToolType.axe:
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
-                    this.hurtDelay = 10;
+                    this.wiggleDelay = 10;
                     this.levelTile.level.add(
                         new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
                     );
@@ -74,8 +75,8 @@ export default class TreeTile extends Tile {
         const texture = PIXI.BaseTexture.from(source);
         this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture));
         this.sortableContainer.addChild(this.treeSprite);
-        this.treeSprite.anchor.set(0.5);
-        this.treeSprite.position.set(8, 4);
+        this.treeSprite.anchor.set(0.5, 1);
+        this.treeSprite.position.set(8, 16);
     }
 
     protected initTree() {

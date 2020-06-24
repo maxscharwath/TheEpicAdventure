@@ -5,7 +5,6 @@ import Random from "../../utility/Random";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 import TileStates from "./TileStates";
-import Updater from "../../core/Updater";
 
 export default class LavaTile extends AutoTilingTile {
     public static DEFAULT_STATES = {level: 10};

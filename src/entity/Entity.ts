@@ -323,8 +323,8 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     private getCentredPos() {
         return {
-            x: this.x + this.hitbox.x + this.hitbox.width / 2,
-            y: this.y + this.hitbox.y + this.hitbox.height / 2,
+            x: this.x + this.hitbox.x,
+            y: this.y + this.hitbox.y,
         };
     }
 }

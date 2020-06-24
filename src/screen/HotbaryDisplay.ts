@@ -1,17 +1,13 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
-import {Mob, ItemEntity} from "../entity";
+import {Mob} from "../entity";
 import Item from "../item/Item";
 import Slot from "../item/Slot";
 import Color from "../utility/Color";
 import Display from "./Display";
 import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 import Game from "../core/Game";
-import CraftingDisplay from "./CraftingDisplay";
-import Crafting from "../crafting/Crafting";
-import MapDisplay from "./MapDisplay";
-import InventoryDisplay from "./InventoryDisplay";
 
 class InventorySlot extends PIXI.Container {
     public index: number = 0;

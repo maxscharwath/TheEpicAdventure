@@ -4,7 +4,7 @@ import System from "./System";
 export default class Updater {
     public static ticks: number = 0;
     public static time: number = 0;
-    public static readonly dayLength: number = 200;
+    public static readonly dayLength: number = 3600;
     public static readonly sleepEndTime: number = Updater.dayLength / 8;
     public static readonly sleepStartTime: number = Updater.dayLength / 2 + Updater.dayLength / 8;
 

@@ -26,6 +26,13 @@ export default class Camp extends Furniture {
         }
     }
 
+    public onTick() {
+        super.onTick();
+        if (this.active) {
+            this.getTile().setLight(15);
+        }
+    }
+
     public onUse(mob: Mob, item?: Item): boolean {
         if (Items.FLINT.instanceOf(item)) {
             this.active = true;

@@ -9,8 +9,8 @@ export default class Resources {
     public static seedWheat = new FarmResource("seeds_wheat.png", Tiles.WHEAT);
     public static potato = new FarmResource("potato.png", Tiles.POTATO);
     public static apple = new Resource("apple.png");
-    public static sand = new TileResource("sand.png", Tiles.SAND, Tiles.HOLE, Tiles.WATER);
-    public static dirt = new TileResource("dirt.png", Tiles.DIRT, Tiles.HOLE, Tiles.WATER);
+    public static sand = new TileResource("sand.png", Tiles.SAND, Tiles.HOLE, Tiles.WATER, Tiles.LAVA);
+    public static dirt = new TileResource("dirt.png", Tiles.DIRT, Tiles.HOLE, Tiles.WATER, Tiles.LAVA);
     public static ice = new TileResource("ice.png", Tiles.ICE, Tiles.WATER);
     public static lilypad = new TileResource("lilypad.png", Tiles.LILYPAD, Tiles.WATER);
     public static stone = new Resource("stone.png");
