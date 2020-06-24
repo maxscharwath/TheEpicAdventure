@@ -73,18 +73,14 @@ export default class DialogueDisplay extends Display {
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 64)));
         this.next = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 64, 8, 8)));
         this.nameArea = new PIXI.BitmapText("Name", {
-            font: {
-                name: "Epic",
-                size: 6,
-            },
+            fontName: "Epic",
+            fontSize: 6,
             tint: 0xff9000,
         });
         this.nameArea.position.set(8, 4);
         this.textArea = new PIXI.BitmapText("Text Body", {
-            font: {
-                name: "Epic",
-                size: 6,
-            },
+            fontName: "Epic",
+            fontSize: 6,
             tint: 0xffffff,
         });
         this.textArea.maxWidth = 176;

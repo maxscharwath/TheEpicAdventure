@@ -128,10 +128,8 @@ export default class CommandDisplay extends Display {
 
     private init() {
         this.inputText = new PIXI.BitmapText("", {
-            font: {
-                name: "Epic",
-                size: 16,
-            },
+            fontName: "Epic",
+            fontSize: 16,
             tint: Color.white.getInt(),
         });
         this.inputText.anchor = new PIXI.Point(0, 1);

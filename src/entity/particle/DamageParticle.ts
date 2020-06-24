@@ -14,10 +14,8 @@ export default class DamageParticle extends Particle {
         this.a.z = this.random.float() * 0.7 + 1;
         this.gravity = 0.15;
         this.sprite = new PIXI.BitmapText(`${value}`, {
-            font: {
-                name: "Epic",
-                size: 6,
-            },
+            fontName: "Epic",
+            fontSize: 6,
             tint: color,
         });
         this.sprite.anchor = 0.5;

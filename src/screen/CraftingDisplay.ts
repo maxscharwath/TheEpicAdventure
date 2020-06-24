@@ -72,10 +72,8 @@ export default class CraftingDisplay extends Display {
             itemSprite.y = index * 10;
             const has = this.mob.inventory.count(item);
             const itemText  = new PIXI.BitmapText(`${number}/${has}`, {
-                font: {
-                    name: "Epic",
-                    size: 6,
-                },
+                fontName: "Epic",
+                fontSize: 6,
                 tint: has >= number ? 0xffffff : 0xb4b4b4,
             });
             itemText.anchor = new PIXI.Point(0, 0.5);
@@ -99,10 +97,8 @@ export default class CraftingDisplay extends Display {
             itemSprite.x = 0;
             itemSprite.y = i * 10;
             const itemText  = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
-                font: {
-                    name: "Epic",
-                    size: 4,
-                },
+                fontName: "Epic",
+                fontSize: 4,
                 tint: recipe.canCraft ? 0xffffff : 0xa67948,
             });
             itemText.anchor = new PIXI.Point(0, 0.5);
@@ -125,10 +121,8 @@ export default class CraftingDisplay extends Display {
         this.costContainer.position.set(135, 29);
         this.recipesContainer.position.set(7, 7);
         this.hasText  = new PIXI.BitmapText("", {
-            font: {
-                name: "Epic",
-                size: 6,
-            },
+            fontName: "Epic",
+            fontSize: 6,
             tint: 0xffffff,
         });
         this.hasText.anchor = new PIXI.Point(0, 0.5);

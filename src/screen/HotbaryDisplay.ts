@@ -102,10 +102,8 @@ export default class HotbarDisplay extends Display {
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 112, 16)));
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(112, 0, 16, 16)));
         this.itemText = new PIXI.BitmapText("", {
-            font: {
-                name: "Epic",
-                size: 16,
-            },
+            fontName: "Epic",
+            fontSize: 16,
             tint: Color.white.getInt(),
         });
         this.itemText.anchor = 0.5;

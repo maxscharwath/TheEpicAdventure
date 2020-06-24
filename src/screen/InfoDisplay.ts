@@ -36,10 +36,8 @@ export default class InfoDisplay extends Display {
     constructor() {
         super();
         this.textArea = new PIXI.BitmapText("", {
-            font: {
-                name: "Epic",
-                size: 16,
-            },
+            fontName: "Epic",
+            fontSize: 16,
             tint: Color.white.getInt(),
         });
 

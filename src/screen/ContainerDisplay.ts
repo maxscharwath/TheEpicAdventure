@@ -78,10 +78,8 @@ class Container extends PIXI.Container {
             itemSprite.x = 0;
             itemSprite.y = i * 10;
             const itemText = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
-                font: {
-                    name: "Epic",
-                    size: 4,
-                },
+                fontName: "Epic",
+                fontSize: 4,
                 tint: 0xffffff,
             });
             itemText.anchor = new PIXI.Point(0, 0.5);
