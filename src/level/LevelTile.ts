@@ -5,8 +5,8 @@ import Biome from "./biome/Biome";
 import Level from "./Level";
 import Tile from "./tile/Tile";
 import {TileRegister} from "./tile/Tiles";
-import {EventEmitter} from "events";
 import Light from "../gfx/Light";
+import Renderer from "../core/Renderer";
 
 interface LevelTileConstructor {
     level: Level;
@@ -59,8 +59,8 @@ export default class LevelTile {
     public readonly elevation: number;
     public readonly moisture: number;
     public lightLevel = 0;
+    private visible: boolean;
     private initByEntity?: Entity;
-    private events = new EventEmitter();
     private tileStates?: {};
     private tileClass?: typeof Tile;
     private needToUpdate: boolean = true;
@@ -185,6 +185,7 @@ export default class LevelTile {
     }
 
     public onRender() {
+        this.checkOnScreen();
         if (!this.isInitiated) {
             this.init();
         }
@@ -290,8 +291,23 @@ export default class LevelTile {
         }
     }
 
+    public setVisible(value: boolean) {
+        this.visible = value;
+        this.groundContainer.visible = this.visible;
+        this.sortableContainer.visible = this.visible;
+        this.lightSprite.visible = this.visible;
+    }
+
+    private checkOnScreen() {
+        const p = this.groundContainer.getGlobalPosition();
+        const screen = Renderer.getScreen();
+        const s = LevelTile.SIZE * Renderer.camera.zoom;
+        const m = s;
+        this.setVisible(!(p.x < -s - m || p.x > screen.width + m || p.y < -s - m || p.y > screen.height + m));
+    }
+
     private sort() {
         if (!this._tile) return;
-        this.sortableContainer.zIndex = this._y + 16 * this._tile.anchor;
+        this.sortableContainer.zIndex = this._y + LevelTile.SIZE * this._tile.anchor;
     }
 }

@@ -91,7 +91,7 @@ export default class Renderer {
 
     public static getNbChildren() {
         const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
-            container.children.filter((c) => c.isSprite).length +
+            container.children.filter((c) => c.isSprite && c.worldVisible).length +
             container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
         return f(this.mainStage);
     }

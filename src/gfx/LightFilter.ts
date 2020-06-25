@@ -18,7 +18,7 @@ export default class LightFilter extends LevelFilter {
         this.addChild(this.ambientLight, this.lightContainer);
 
         this.blendFilter = new PIXI.filters.AlphaFilter();
-        this.blendFilter.alpha = 1;
+        this.blendFilter.alpha = 0.2;
         this.blendFilter.blendMode = PIXI.BLEND_MODES.MULTIPLY;
 
         const blurFilter = new PIXI.filters.BlurFilter();
@@ -29,7 +29,7 @@ export default class LightFilter extends LevelFilter {
     }
 
     public onRender() {
-        this.blendFilter.alpha = (Math.cos(2 * Math.PI * Updater.getDayRatio()) + 1) / 2;
+        // this.blendFilter.alpha = (Math.cos(2 * Math.PI * Updater.getDayRatio()) + 1) / 2;
     }
     protected init() {
 
