@@ -16,6 +16,7 @@ import SpriteSheet from "../gfx/SpriteSheet";
 import System from "../core/System";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
+
     protected get aSpeed(): number {
         return Math.hypot(this.a.x, this.a.y);
     }
@@ -29,7 +30,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return e;
     }
     protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-
     private static random = new Random();
     public ["constructor"]: typeof Entity;
     public x: number = 0;
@@ -72,7 +72,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     public onTick(): void {
         this.lastTick = Updater.ticks;
         this.ticks++;
-        if (this.isOnFire && this.canBurn() ) {
+        if (this.isOnFire && this.canBurn()) {
             this.fireSprite.visible = true;
             this.onFire();
         }
@@ -167,7 +167,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public add() {
-        if (this.parent)this.parent.removeChild(this);
+        if (this.parent) this.parent.removeChild(this);
         this.level?.sortableContainer.addChild(this);
     }
 

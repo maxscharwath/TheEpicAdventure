@@ -20,7 +20,7 @@ import Seed from "../utility/Seed";
 export default class Game {
     public static player: Player;
     public static readonly NAME: string = "The Epic Adventure";
-    public static readonly version: Version = new Version("0.1-dev3");
+    public static readonly version: Version = new Version("0.2-dev1");
     public static isOnline: boolean = false;
     public static isHost: boolean = false;
     public static isFocus: boolean = false;
@@ -72,7 +72,7 @@ export default class Game {
         Initializer.createAndDisplayFrame();
         Initializer.run();
         Network.startMultiplayerServer();
-        PIXI.Loader.shared.add("Epic", System.getResource("font", "Epic.xml")).load(() => {
+        PIXI.Loader.shared.add("Epic", System.getResource("font", "epic.xml")).load(() => {
             this.GUI.init();
         });
 

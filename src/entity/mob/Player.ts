@@ -7,7 +7,7 @@ import Items from "../../item/Items";
 import Mob from "./Mob";
 import FishingRodItem from "../../item/FishingRodItem";
 import FurnitureItem from "../../item/FurnitureItem";
-import {Furniture} from "../index";
+import {Furniture, ItemEntity} from "../index";
 
 export default class Player extends Mob {
 
@@ -54,7 +54,7 @@ export default class Player extends Mob {
         if (Game.input.getKey("ATTACK").down) {
             const item = this.inventory.selectedItem();
             this.level.findEntitiesInRadius(
-                (entity) => (entity instanceof Mob),
+                (entity) => !(entity instanceof ItemEntity),
                 (this.x >> 4) + this.dir.getX(),
                 (this.y >> 4) + this.dir.getY(),
                 1,

@@ -29,7 +29,7 @@ export default class LightFilter extends LevelFilter {
     }
 
     public onRender() {
-        // this.blendFilter.alpha = (Math.cos(2 * Math.PI * Updater.getDayRatio()) + 1) / 2;
+       // this.blendFilter.alpha = (Math.cos(2 * Math.PI * Updater.getDayRatio()) + 1) / 2;
     }
     protected init() {
 

@@ -69,3 +69,8 @@ Command.add("tp").addFunction((args) => {
     Game.player.y = y << 4;
     return `Teleported to ${x} ${y}`;
 });
+
+Command.add("refresh").addFunction((args) => {
+    Game.level.flushChunks();
+    return "pending...";
+});

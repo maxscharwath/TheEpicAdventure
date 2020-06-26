@@ -22,11 +22,11 @@ export default class GUI {
 
     public init() {
         this.infoDisplay = new InfoDisplay();
-        this.hotbarDisplay = new HotbarDisplay(Game.player);
+        this.hotbarDisplay = new HotbarDisplay();
         this.dialogueDisplay = new DialogueDisplay();
         this.commandDisplay = new CommandDisplay();
         new LanDisplay().show();
-        new HeartDisplay(Game.player).show();
+        new HeartDisplay().show();
 
         this.hotbarDisplay.show();
     }

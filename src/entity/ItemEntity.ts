@@ -40,7 +40,7 @@ export default class ItemEntity extends Entity {
     public onTick(): void {
         super.onTick();
         this.time++;
-        if (this.time >= this.lifeTime / 100 * 75 && this.z === 0) {
+        if (this.time >= this.lifeTime / 100 * 75 && this.z === this.getTileZ()) {
             this.a.x = this.random.gaussian() * 0.3;
             this.a.y = this.random.gaussian() * 0.2;
             this.a.z = this.random.float() * 0.7 + 1;
@@ -71,7 +71,7 @@ export default class ItemEntity extends Entity {
         if (this.isSwimming()) {
             this.offset.y = Math.sin(this.ticks / 10) * 1.5;
         }
-        this.shadow.distance = this.z * 4;
+        this.shadow.distance = (this.z > 0) ? this.z * 4 : 0;
     }
 
     public touchedBy(entity: Entity) {
@@ -94,6 +94,10 @@ export default class ItemEntity extends Entity {
 
     public canSwim(): boolean {
         return true;
+    }
+
+    protected getTileZ() {
+        return 0;
     }
 
     private updateRadiusMob() {

@@ -123,6 +123,7 @@ export default class Chunk {
 
     public destroy() {
         this.loaded = false;
+        this.generated = false;
         this.map.forEach((tile) => {
             tile.remove();
             tile.destroy();
@@ -131,6 +132,17 @@ export default class Chunk {
             tickable.remove();
             tickable.destroy({children: true});
         });
+        this.entities = [];
+        this.particles = [];
+        this.map = [];
+    }
+
+    public async reload() {
+        this.loaded = false;
+        this.generated = false;
+        await this.save();
+        this.destroy();
+        return this.fromFile();
     }
 
     public unload() {
@@ -241,7 +253,9 @@ export default class Chunk {
             map.push(lt);
         });
         for (const data of bson.entities) {
-            this.level.add((Entities.get(data.id) as unknown as typeof Entity).create(data));
+            const entity = (Entities.get(data.id) as unknown as typeof Entity);
+            if (!entity)continue;
+            this.level.add(entity.create(data));
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
         this.map = map;

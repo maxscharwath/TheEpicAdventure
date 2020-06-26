@@ -21,9 +21,11 @@ export default abstract class Mob extends Entity {
 
     protected set useMask(value: boolean) {
         if (value) {
+            if (this.container.mask) return;
             this.container.addChild(this.maskSprite);
             this.container.mask = this.maskSprite;
         } else {
+            if (!this.container.mask) return;
             this.container.removeChild(this.maskSprite);
             this.container.mask = null;
         }
@@ -130,12 +132,14 @@ export default abstract class Mob extends Entity {
 
     public onRender() {
         super.onRender();
+        const oy = (-this.z < 0) ? 0 : -this.z;
+        this.useMask = oy !== 0;
         if (this.container.mask) {
-            this.maskSprite.width = this.container.width;
-            this.maskSprite.height = this.container.height;
-            this.maskSprite.x = -this.container.width / 2;
-            const oy = (-this.z < 0) ? 0 : -this.z;
-            this.maskSprite.y = -this.container.width / 2 - oy;
+            const b = this.container.getLocalBounds();
+            this.maskSprite.width = b.width;
+            this.maskSprite.height = b.height;
+            this.maskSprite.x = b.x;
+            this.maskSprite.y = b.y - oy;
         }
     }
 

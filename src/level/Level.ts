@@ -12,6 +12,7 @@ import rimraf from "rimraf";
 import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
 import LightFilter from "../gfx/LightFilter";
+import Game from "../core/Game";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -189,6 +190,7 @@ export default class Level {
             tickable.getChunk()?.add(tickable);
             if (tickable instanceof Player && !this.players.includes(tickable)) {
                 this.players.push(tickable as Player);
+                Game.player = tickable;
             }
             this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== tickable);
         }
@@ -213,10 +215,9 @@ export default class Level {
         if (!this.players[0]) return;
         if (this.weather) this.weather.onRender();
         this.lightFilter.onRender();
-        Renderer.camera.setFollow(this.players[0]);
+        Renderer.camera.setFollow(Game.player);
 
         this.loadedChunks.forEach((chunk) => chunk.onRender());
-        // this.sortableContainer.children.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {
