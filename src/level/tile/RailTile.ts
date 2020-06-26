@@ -6,10 +6,17 @@ import {Mob, Entity} from "../../entity";
 import TileStates from "./TileStates";
 import Tiles from "./Tiles";
 
-type Type<T> = new (...args: any[]) => T;
+enum RailDirection {
+    NS,
+    EW,
+    SE,
+    SW,
+    NE,
+    NW,
+}
 
 export default class RailTile extends Tile {
-    public static DEFAULT_STATES = {connected: false, direction: 0, groundTile: 0};
+    public static DEFAULT_STATES = {connected: false, direction: RailDirection.NS, groundTile: 0};
     public static readonly TAG = "rail";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "rail.png"), 6, 16);
 
@@ -26,31 +33,38 @@ export default class RailTile extends Tile {
     public onSetTile(oldTile: Tile, entity?: Entity) {
         this.setGroundTile(oldTile);
         if (entity instanceof Mob) {
-            this.states.direction = Number(entity.getDir().isX());
+            this.states.direction = entity.getDir().isY() ? RailDirection.NS : RailDirection.EW;
         }
     }
 
-    public setGroundTile(tile: typeof Tile | Tile): Tile {
+    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
         const t = super.setGroundTile(tile);
-        this.states.groundTile =  t.getKeys().idx;
+        if (!t) return undefined;
+        this.states.groundTile = t.getKeys().idx;
         return t;
     }
 
     public onUpdate() {
         super.onUpdate();
+
+
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
-            return t && t.instanceOf(RailTile);
+            return t && t.instanceOf(RailTile) && !(t.tile as RailTile).states.connected;
         };
-        const u = test(0, -1);
-        const d = test(0, 1);
-        const l = test(-1, 0);
-        const r = test(1, 0);
-        if (d && l) this.states.direction = 3;
-        if (d && r) this.states.direction = 2;
-        if (u && l) this.states.direction = 5;
-        if (u && r) this.states.direction = 4;
-        if (u || d || l || r) this.states.connected = true;
+        const N = test(0, -1);
+        const S = test(0, 1);
+        const W = test(-1, 0);
+        const E = test(1, 0);
+
+        if (!this.states.connected &&
+            this.states.direction === RailDirection.NS || this.states.direction === RailDirection.EW) {
+            if (S && W) this.states.direction = RailDirection.SW;
+            if (S && E) this.states.direction = RailDirection.SE;
+            if (N && W) this.states.direction = RailDirection.NW;
+            if (N && E) this.states.direction = RailDirection.NE;
+        }
+        this.states.connected = (S && N) || (E && W) || (S && W) || (S && E) || (N && W) || (N && E);
         this.sprite.texture = RailTile.textures[this.states.direction];
     }
 

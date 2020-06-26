@@ -13,6 +13,7 @@ export default class WaterTile extends AutoTilingTile {
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
     public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public friction: number = 0.01;
+    public z: number = -5;
     private animSprite?: PIXI.AnimatedSprite;
 
     public init() {
@@ -51,7 +52,7 @@ export default class WaterTile extends AutoTilingTile {
     }
 
     public mayPass(e: Entity): boolean {
-        return e.canSwim() || e.canFly();
+        return e.canSwim() || e.canFly() || e.isSwimming();
     }
 
 

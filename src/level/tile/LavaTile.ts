@@ -14,6 +14,7 @@ export default class LavaTile extends AutoTilingTile {
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     public states = TileStates.create(LavaTile.DEFAULT_STATES);
     public light = 18;
+    public z: number = -5;
     private animSprite?: PIXI.AnimatedSprite;
 
     public init() {

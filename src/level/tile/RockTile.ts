@@ -8,14 +8,19 @@ import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
 import DamageParticle from "../../entity/particle/DamageParticle";
 import HurtParticle from "../../entity/particle/HurtParticle";
+import * as PIXI from "pixi.js";
 
 export default class RockTile extends AutoTilingTile {
     public static readonly TAG = "rock";
-    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock.png"));
+    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock_mask.png"));
+    private static tileTextures = RockTile.loadTextures(System.getResource("tile", "rock.png"), 3);
     private damage = 0;
 
     public init() {
         super.init();
+        this.container.addChild(
+            new PIXI.Sprite(RockTile.tileTextures[this.random.int(RockTile.tileTextures.length)]),
+        );
         this.initAutoTile();
     }
 

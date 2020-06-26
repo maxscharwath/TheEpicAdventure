@@ -48,7 +48,7 @@ export default class Player extends Mob {
         if (Game.input.getKey("MOVE-LEFT").down) ax += -3;
         if (Game.input.getKey("MOVE-DOWN").down) ay += 3;
         if (Game.input.getKey("MOVE-UP").down) ay += -3;
-        if (Game.input.getKey("JUMP").clicked && this.z === 0) this.a.z = 3;
+        if (Game.input.getKey("JUMP").clicked) this.jump(3);
 
         const levelTile = this.getInteractTile();
         if (Game.input.getKey("ATTACK").down) {

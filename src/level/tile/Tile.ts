@@ -34,6 +34,7 @@ export default abstract class Tile {
         }
         return textures;
     }
+    public z: number = 0;
     public states = TileStates.create();
     public isInit: boolean = false;
     public container = new PIXI.Container();
@@ -58,15 +59,16 @@ export default abstract class Tile {
         return Object.getPrototypeOf(this).constructor;
     }
 
-    public setGroundTile(tile: typeof Tile | Tile): Tile {
+    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
         if (tile instanceof Tile) {
-            if (this.groundTile?.instanceOf(tile.getClass()))return;
+            if (this.groundTile?.instanceOf(tile.getClass())) return undefined;
             this.groundTile = tile;
         } else {
-            if (this.groundTile?.instanceOf(tile))return;
+            if (this.groundTile?.instanceOf(tile)) return undefined;
             // @ts-ignore
             this.groundTile = new tile(this.levelTile);
         }
+        if (this.groundTile.light > this.light) this.light = this.groundTile.light;
         this.groundContainer.removeChildren();
         this.levelTile.update();
         this.groundTile.init();

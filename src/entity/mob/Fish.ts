@@ -17,6 +17,7 @@ export default class Fish extends AquaticMob {
 
     constructor() {
         super();
+        this.useMask = false;
         this.lifeDuration = 1000;
     }
 

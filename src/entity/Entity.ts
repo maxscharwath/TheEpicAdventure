@@ -84,11 +84,11 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     public onRender() {
         this.z += this.a.z;
-        if (this.z < 0) {
+        if (this.z < this.getTileZ()) {
             if (this.a.z < -2) {
                 // this.dust.set();
             }
-            this.z = 0;
+            this.z = this.getTileZ();
             this.a.z *= -0.5;
         }
         this.friction();
@@ -105,12 +105,12 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         }
 
         this.zIndex = this.calculateZIndex();
-        this.container.pivot.y = this.z;
         this.container.position.copyFrom(this.offset);
+        this.container.position.y += -this.z;
     }
 
     public onGround(): boolean {
-        return this.z <= 0;
+        return this.z <= this.getTileZ();
     }
 
     public canSwim() {
@@ -126,7 +126,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public isSwimming() {
-        if (this.canFly() || this.z > 0) return false;
+        if (this.canFly() || this.z > this.getTileZ()) return false;
         const tile = this.getTile();
         return tile && (tile.instanceOf(Tiles.LAVA.tile, Tiles.WATER.tile));
     }
@@ -265,7 +265,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     protected steppedOn() {
-        if (this.z > 0) return;
+        if (this.z > this.getTileZ()) return;
         this.level?.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
     }
 
@@ -287,8 +287,14 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
                 const tile = this.level?.getTile(xt, yt);
                 if (!tile) return false;
                 tile.bumpedInto(this);
+
                 if (!tile.mayPass(this)) {
                     blocked = true;
+                    return false;
+                }
+                if (this.z < tile.z) {
+                    blocked = true;
+                    this.onTileTooHigh();
                     return false;
                 }
             }
@@ -311,7 +317,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     protected friction() {
-        if (this.z <= 0) {
+        if (this.z <= this.getTileZ()) {
             const friction = this.getTile()?.getFriction() ?? 1;
             this.a.x -= this.a.x * friction;
             this.a.y -= this.a.y * friction;
@@ -319,6 +325,14 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             this.a.x -= this.a.x * 0.01;
             this.a.y -= this.a.y * 0.01;
         }
+    }
+
+    protected getTileZ() {
+        const tile = this.getTile();
+        return tile?.z ?? 0;
+    }
+
+    protected onTileTooHigh() {
     }
 
     private getCentredPos() {

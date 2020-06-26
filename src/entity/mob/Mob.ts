@@ -11,11 +11,22 @@ import Item from "../../item/Item";
 import PotionType from "../../item/PotionType";
 import PotionEffect from "../PotionEffect";
 import HurtParticle from "../particle/HurtParticle";
+import * as PIXI from "pixi.js";
 
 export default abstract class Mob extends Entity {
 
     protected get speed() {
         return this.speedMax;
+    }
+
+    protected set useMask(value: boolean) {
+        if (value) {
+            this.container.addChild(this.maskSprite);
+            this.container.mask = this.maskSprite;
+        } else {
+            this.container.removeChild(this.maskSprite);
+            this.container.mask = null;
+        }
     }
 
     public static create(data: any): Mob {
@@ -38,6 +49,12 @@ export default abstract class Mob extends Entity {
     protected mass = 20;
     private hurtCooldown: number = 0;
     private attackCooldown: number = 0;
+    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+
+    protected constructor() {
+        super();
+        this.useMask = true;
+    }
 
     public getInteractTile(): LevelTile | undefined {
         return this.level?.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
@@ -73,6 +90,12 @@ export default abstract class Mob extends Entity {
         this.level.add(new HurtParticle(this.x, this.y));
     }
 
+    public jump(value: number = 3) {
+        if (!this.onGround()) return false;
+        this.a.z = value;
+        return true;
+    }
+
     public dropItem(item: Item) {
         const itemEntity = new ItemEntity(item, this.x, this.y);
         if (this.level.add(itemEntity)) {
@@ -102,6 +125,17 @@ export default abstract class Mob extends Entity {
         }
         if (this.health <= 0) {
             this.die();
+        }
+    }
+
+    public onRender() {
+        super.onRender();
+        if (this.container.mask) {
+            this.maskSprite.width = this.container.width;
+            this.maskSprite.height = this.container.height;
+            this.maskSprite.x = -this.container.width / 2;
+            const oy = (-this.z < 0) ? 0 : -this.z;
+            this.maskSprite.y = -this.container.width / 2 - oy;
         }
     }
 
@@ -203,6 +237,10 @@ export default abstract class Mob extends Entity {
                 }
             });
         });
+    }
+
+    protected onTileTooHigh() {
+        this.jump(2);
     }
 
     protected getEntitiesRadius(radius = 2, predicate: (value: Entity) => boolean = () => true): Promise<Entity[]> {

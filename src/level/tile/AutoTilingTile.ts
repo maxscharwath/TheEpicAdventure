@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import {Container} from "pixi.js";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
 
@@ -23,10 +24,11 @@ export default abstract class AutoTilingTile extends Tile {
         return textures;
     }
     public ["constructor"]: typeof AutoTilingTile;
-
+    private tilesContainer: PIXI.Container;
     private sprites: PIXI.Sprite[] = [];
 
     public autoTiling() {
+        this.tilesContainer.cacheAsBitmap = false;
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
             return !(t && t.instanceOf(...[this.getClass(), ...Tiles.getSome(...this.constructor.canConnectTo)]));
@@ -45,6 +47,7 @@ export default abstract class AutoTilingTile extends Tile {
         this.sprites[1].texture = this.constructor.autoTileTextures[!u && !r ? !ur ? 4 : 11 : u && r ? 2 : u ? 1 : 5];
         this.sprites[2].texture = this.constructor.autoTileTextures[!d && !l ? !dl ? 4 : 10 : d && l ? 6 : d ? 7 : 3];
         this.sprites[3].texture = this.constructor.autoTileTextures[!d && !r ? !dr ? 4 : 9 : d && r ? 8 : d ? 7 : 5];
+        this.tilesContainer.cacheAsBitmap = true;
     }
 
     public onUpdate() {
@@ -54,11 +57,13 @@ export default abstract class AutoTilingTile extends Tile {
 
     protected initAutoTile() {
         this.sprites = [new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
+        this.tilesContainer = new Container();
         this.sprites[0].position.set(0, 0);
         this.sprites[1].position.set(8, 0);
         this.sprites[2].position.set(0, 8);
         this.sprites[3].position.set(8, 8);
-        this.container.addChild(...this.sprites);
+        this.tilesContainer.addChild(...this.sprites);
+        this.container.addChild(this.tilesContainer);
         this.autoTiling();
     }
 }

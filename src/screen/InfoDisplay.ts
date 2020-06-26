@@ -7,28 +7,7 @@ import Color from "../utility/Color";
 import Display from "./Display";
 
 export default class InfoDisplay extends Display {
-
-    private static text(): string {
-        const tile = Game.player.getInteractTile();
-        return [
-            `v : ${Game.version.toString()}`,
-            `fps : ${Math.round(Initializer.getCurFps())}`,
-            `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
-            `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
-            `time : ${Updater.ticks} (${Updater.time})`,
-            `seed : ${Game.level?.seed}`,
-            `x : ${(Game.player.x / 16).toFixed(2)}`,
-            `y : ${(Game.player.y / 16).toFixed(2)}`,
-            `z : ${(Game.player.z).toFixed(2)}`,
-            `biome : ${tile?.biome.getDisplayName()}`,
-            `tile : ${tile?.tile?.getDisplayName()}`,
-            `l : ${tile?.lightLevel}`,
-            `tile data : ${JSON.stringify(tile?.tile?.states.getStates(), null, 4)}`,
-            `containers : ${Renderer.getNbChildren()}`,
-            `chunks loaded : ${Game.level?.getNbChunks()}`,
-            `memory : ${process.memoryUsage().heapTotal >> 20} MB`,
-        ].join("\n");
-    }
+    private nbContainer: number = 0;
 
     private readonly textArea: PIXI.BitmapText;
     private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -51,7 +30,10 @@ export default class InfoDisplay extends Display {
     }
 
     public onTick(): void {
-        const text = InfoDisplay.text();
+        if (Updater.every(20)) {
+            this.nbContainer = Renderer.getNbChildren();
+        }
+        const text = this.text();
         if (this.textArea.text === text) return;
         this.textArea.text = text;
         this.textBg.x = this.textArea.x;
@@ -61,5 +43,27 @@ export default class InfoDisplay extends Display {
     }
 
     public onRender(): void {
+    }
+
+    private text(): string {
+        const tile = Game.player.getInteractTile();
+        return [
+            `v : ${Game.version.toString()}`,
+            `fps : ${Math.round(Initializer.getCurFps())}`,
+            `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
+            `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
+            `time : ${Updater.ticks} (${Updater.time})`,
+            `seed : ${Game.level?.seed}`,
+            `x : ${(Game.player.x / 16).toFixed(2)}`,
+            `y : ${(Game.player.y / 16).toFixed(2)}`,
+            `z : ${(Game.player.z).toFixed(2)}`,
+            `biome : ${tile?.biome.getDisplayName()}`,
+            `tile : ${tile?.tile?.getDisplayName()}`,
+            `l : ${tile?.lightLevel}`,
+            `tile data : ${JSON.stringify(tile?.tile?.states.getStates(), null, 4)}`,
+            `containers : ${this.nbContainer}`,
+            `chunks loaded : ${Game.level?.getNbChunks()}`,
+            `memory : ${process.memoryUsage().heapTotal >> 20} MB`,
+        ].join("\n");
     }
 }

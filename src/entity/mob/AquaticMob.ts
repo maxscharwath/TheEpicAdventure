@@ -58,6 +58,10 @@ export default abstract class AquaticMob extends Mob {
         // }
     }
 
+    protected getTileZ() {
+        return 0;
+    }
+
     protected newTarget() {
         if (!this.level) return;
         const tile = this.level.getRandomTileInEntityRadius([Tiles.WATER.tile], this, 10);

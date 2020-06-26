@@ -22,6 +22,10 @@ interface LevelTileConstructor {
 
 export default class LevelTile {
 
+    public get z(): number {
+        return this.tile?.z ?? 0;
+    }
+
     public get x(): number {
         return this._x;
     }
@@ -49,7 +53,6 @@ export default class LevelTile {
     get tile(): Tile | undefined {
         return this._tile;
     }
-
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
@@ -274,6 +277,7 @@ export default class LevelTile {
     }
 
     public updateLight() {
+        if (!this.visible) return;
         let lightLevel = this._tile?.light;
         if (!lightLevel || lightLevel === 0) return;
         this.lightLevel -= 1;

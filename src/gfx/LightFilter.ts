@@ -18,7 +18,7 @@ export default class LightFilter extends LevelFilter {
         this.addChild(this.ambientLight, this.lightContainer);
 
         this.blendFilter = new PIXI.filters.AlphaFilter();
-        this.blendFilter.alpha = 0.2;
+        this.blendFilter.alpha = 0;
         this.blendFilter.blendMode = PIXI.BLEND_MODES.MULTIPLY;
 
         const blurFilter = new PIXI.filters.BlurFilter();

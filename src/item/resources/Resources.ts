@@ -26,5 +26,5 @@ export default class Resources {
     public static flint = new Resource("flint.png");
     public static wood = new TileResource("wood.png", Tiles.PLANK, Tiles.HOLE);
     public static cactusFlower = new TileResource("cactus_flower.png", Tiles.CACTUS, Tiles.SAND);
-    public static rail = new TileResource("rail.png", Tiles.RAIL, Tiles.GRASS, Tiles.DIRT, Tiles.SAND);
+    public static rail = new TileResource("rail.png", Tiles.RAIL, Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW);
 }
