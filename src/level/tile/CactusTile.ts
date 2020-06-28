@@ -9,8 +9,9 @@ import Items from "../../item/Items";
 import HurtParticle from "../../entity/particle/HurtParticle";
 
 export default class CactusTile extends Tile {
+    public static readonly TAG = "cactus";
     public static DEFAULT_STATES = {damage: 0};
-    public static readonly TAG = "dirt";
+    public static readonly COLOR: number = 0x2a963c;
     private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
     public states = TileStates.create(CactusTile.DEFAULT_STATES);
 

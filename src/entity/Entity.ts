@@ -288,7 +288,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
                 if (!tile) return false;
                 tile.bumpedInto(this);
 
-                if (!tile.mayPass(this)) {
+                if (this.getTile().mayPass(this) && !tile.mayPass(this)) {
                     blocked = true;
                     return false;
                 }

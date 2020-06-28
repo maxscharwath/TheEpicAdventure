@@ -25,6 +25,7 @@ export default abstract class Tile {
 
     public static DEFAULT_STATES = {};
     public static readonly TAG: string = "tile";
+    public static readonly COLOR: number = 0x123456;
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
@@ -40,7 +41,7 @@ export default abstract class Tile {
     public container = new PIXI.Container();
     public sortableContainer = new PIXI.Container();
     public ["constructor"]: typeof Tile;
-    public light: number = 2;
+    public light: number = 1;
     public maySpawn: boolean = false;
     public friction: number = 0.1;
     public anchor = 0;

@@ -3,8 +3,8 @@ import Tiles from "./Tiles";
 import TreeTile from "./TreeTile";
 
 export default class SpruceTreeTile extends TreeTile {
-
     public static readonly TAG: string = "spruce";
+    public static readonly COLOR: number = 0x108a4d;
 
     public onUpdate() {
         super.onUpdate();

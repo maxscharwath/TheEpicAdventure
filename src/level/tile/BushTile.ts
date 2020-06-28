@@ -9,6 +9,7 @@ import Renderer from "../../core/Renderer";
 
 export default class BushTile extends Tile {
     public static readonly TAG = "bush";
+    public static readonly COLOR: number = 0x94785c;
     public anchor = 0.9;
 
     private sprite?: PIXI.Sprite;

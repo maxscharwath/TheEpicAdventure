@@ -3,8 +3,8 @@ import Tiles from "./Tiles";
 import TreeTile from "./TreeTile";
 
 export default class AcaciaTreeTile extends TreeTile {
-
     public static readonly TAG: string = "acacia";
+    public static readonly COLOR: number = 0x969e41;
 
     protected initTree() {
         this.setGroundTile(Tiles.DIRT.tile);

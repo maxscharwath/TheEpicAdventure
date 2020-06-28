@@ -53,6 +53,7 @@ export default class LevelTile {
     get tile(): Tile | undefined {
         return this._tile;
     }
+
     public static SIZE = 16;
     public skipTick: boolean = false;
     public biome: Biome;
@@ -300,6 +301,10 @@ export default class LevelTile {
         this.groundContainer.visible = this.visible;
         this.sortableContainer.visible = this.visible;
         this.lightSprite.visible = this.visible;
+    }
+
+    public getColor() {
+        return this.tileClass?.COLOR ?? 0;
     }
 
     private checkOnScreen() {

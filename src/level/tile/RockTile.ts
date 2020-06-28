@@ -12,6 +12,7 @@ import * as PIXI from "pixi.js";
 
 export default class RockTile extends AutoTilingTile {
     public static readonly TAG = "rock";
+    public static readonly COLOR: number = 0x888888;
     protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock_mask.png"));
     private static tileTextures = RockTile.loadTextures(System.getResource("tile", "rock.png"), 3);
     private damage = 0;

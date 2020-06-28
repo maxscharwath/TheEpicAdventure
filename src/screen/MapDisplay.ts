@@ -9,6 +9,7 @@ export default class MapDisplay extends Display {
     public hasCommand = true;
     private map: PIXI.Sprite;
     private marker: PIXI.Sprite;
+
     constructor() {
         super();
         this.init();
@@ -23,32 +24,35 @@ export default class MapDisplay extends Display {
         super.onRender();
         let x = (Game.player.x >> 4) * (96 / 128);
         let y = (Game.player.y >> 4) * (96 / 128);
-        if (y < 0) y = 0; if (y > 96) y = 96;
-        if (x < 0) x = 0; if (x > 96) x = 96;
+        if (y < 0) y = 0;
+        if (y > 96) y = 96;
+        if (x < 0) x = 0;
+        if (x > 96) x = 96;
         this.marker.position.set(x, y);
     }
 
-    private drawCanvas(size= 128) {
-        const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
+    private drawMap(size = 128) {
+        const canvas = new OffscreenCanvas(size, size);
         const ctx = canvas.getContext("2d");
         const imageData = ctx.createImageData(canvas.width, canvas.height);
-        const setPixel = (x: number, y: number, color: Color) => {
+        const setPixel = (x: number, y: number, color: number) => {
             if (x < 0 || y < 0 || y > size || x > size) return;
-            const i = ( y * size + x) * 4;
-            imageData.data[i] = color.r;
-            imageData.data[i + 1] = color.g;
-            imageData.data[i + 2] = color.b;
+            const i = (y * size + x) * 4;
+            const c = Color.fromNumber(color);
+            imageData.data[i] = c.r;
+            imageData.data[i + 1] = c.g;
+            imageData.data[i + 2] = c.b;
             imageData.data[i + 3] = 255;
         };
-        for (let x = 0; x < (size >> 4); ++x) {
-            for (let y = 0; y < (size >> 4); ++y) {
-                Game.level.levelGen.genChunk(x, y).forEach((lt) => setPixel(lt.x >> 4, lt.y >> 4, lt.biome.color));
+        const t = size >> 4;
+        for (let xO = 0; xO < t; ++xO) {
+            for (let yO = 0; yO < t; ++yO) {
+                Game.level.levelGen.genChunk(xO, yO).forEach((lt) =>
+                    setPixel(lt.x >> 4, lt.y >> 4, lt.getColor()));
             }
         }
         ctx.putImageData(imageData, 0, 0);
-        return PIXI.Texture.from(canvas);
+        this.map.texture = PIXI.Texture.from(canvas as unknown as HTMLCanvasElement);
     }
 
     private init() {
@@ -60,7 +64,6 @@ export default class MapDisplay extends Display {
         this.marker.pivot.set(-8, -8);
         const background = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.map = new PIXI.Sprite(PIXI.Texture.WHITE);
-        this.map.texture = this.drawCanvas();
         this.map.width = 96;
         this.map.height = 96;
         this.map.position.set(8, 8);
@@ -75,5 +78,6 @@ export default class MapDisplay extends Display {
             (Renderer.getScreen().height - container.height) / 2,
         );
         this.addChild(background, container);
+        this.drawMap();
     }
 }

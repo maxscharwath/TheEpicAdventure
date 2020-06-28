@@ -26,6 +26,10 @@ export default class Color {
 
     public static fromHex(hex: string) {
         const rgb = parseInt(hex.replace(/[^0-9A-F]/gi, ""), 16);
+        return Color.fromNumber(rgb);
+    }
+
+    public static fromNumber(rgb: number) {
         return new Color(
             ((rgb >> 16) & 0b11111111),
             ((rgb >> 8) & 0b11111111),

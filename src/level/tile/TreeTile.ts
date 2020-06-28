@@ -14,6 +14,7 @@ import Renderer from "../../core/Renderer";
 
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
+    public static readonly COLOR: number = 0x19a02a;
     public anchor = 1;
     protected damage = 0;
     protected wiggleDelay: number = 0;

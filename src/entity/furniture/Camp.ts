@@ -8,6 +8,11 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 
 export default class Camp extends Furniture {
+    public static create({id, active, x, y}: any): Camp {
+        const e = super.create({id, x, y}) as Camp;
+        e.active = active;
+        return e;
+    }
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private active: boolean = false;
@@ -38,6 +43,13 @@ export default class Camp extends Furniture {
             this.active = true;
         }
         return true;
+    }
+
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+            active: this.active,
+        };
     }
 
     protected init() {

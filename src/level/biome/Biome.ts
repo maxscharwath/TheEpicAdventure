@@ -38,6 +38,7 @@ export default class Biome {
         Biome.add(11, "jungle", new Biome("Jungle", Color.fromHex("#1a561a")));
         Biome.add(12, "savanna", new Biome("Savanna", Color.fromHex("#9ce749")));
         Biome.add(13, "river", new Biome("River", Color.fromHex("#4cbcff")));
+        Biome.add(14, "cave", new Biome("Cave", Color.fromHex("#626262")));
     }
 
     public static from(e: number, m: number, t: number) {

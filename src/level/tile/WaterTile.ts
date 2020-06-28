@@ -6,8 +6,9 @@ import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
 
 export default class WaterTile extends AutoTilingTile {
-    public static DEFAULT_STATES = {level: 10};
     public static readonly TAG = "water";
+    public static DEFAULT_STATES = {level: 10};
+    public static readonly COLOR: number = 0x1e7cb8;
     protected static canConnectTo = ["lava", "hole", "ice"];
     protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);

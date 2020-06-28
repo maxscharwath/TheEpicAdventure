@@ -11,6 +11,7 @@ import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile  {
     public static readonly TAG = "snow";
+    public static readonly COLOR: number = 0xf0f0ff;
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
     public friction: number = 0.25;
     public light = 3;

@@ -6,6 +6,7 @@ import {Entity} from "../../entity";
 
 export default class WheatTile extends FarmlandTile {
     public static readonly TAG: string = "wheat";
+    public static readonly COLOR: number = 0x94785c;
 
     private sprite?: PIXI.Sprite;
     private wiggleDelay: number = 0;

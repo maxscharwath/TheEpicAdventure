@@ -5,7 +5,7 @@ import Updater from "../core/Updater";
 import {Entity, Player} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
-import LevelGen from "./LevelGen";
+import LevelGen from "./levelGen/LevelGen";
 import LevelTile from "./LevelTile";
 import Tile from "./tile/Tile";
 import rimraf from "rimraf";
@@ -13,6 +13,8 @@ import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
 import LightFilter from "../gfx/LightFilter";
 import Game from "../core/Game";
+import LevelGenCave from "./levelGen/LevelGenCave";
+import LevelGenOverworld from "./levelGen/LevelGenOverworld";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -35,9 +37,10 @@ export default class Level {
     private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
 
-    constructor(seed: number) {
+    constructor(seed: number, generator: typeof LevelGen = LevelGenOverworld) {
         this.seed = seed;
-        this.levelGen = new LevelGen(this.seed);
+        // @ts-ignore
+        this.levelGen = new generator(this.seed);
         this.sortableContainer.sortableChildren = true;
         this.container.addChild(this.groundContainer, this.sortableContainer);
         this.lightFilter = new LightFilter();
@@ -213,8 +216,8 @@ export default class Level {
 
     public onRender() {
         if (!this.players[0]) return;
-        if (this.weather) this.weather.onRender();
-        this.lightFilter.onRender();
+        this.weather?.onRender();
+        this.lightFilter?.onRender();
         Renderer.camera.setFollow(Game.player);
 
         this.loadedChunks.forEach((chunk) => chunk.onRender());

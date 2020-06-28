@@ -1,26 +1,19 @@
-import System from "../core/System";
-import ChunkRandom from "../utility/ChunkRandom";
-import Seed from "../utility/Seed";
-import SimplexNoise from "../utility/SimplexNoise";
-import Biome from "./biome/Biome";
-import Level from "./Level";
-import LevelTile from "./LevelTile";
-import Tiles from "./tile/Tiles";
+import System from "../../core/System";
+import ChunkRandom from "../../utility/ChunkRandom";
+import SimplexNoise from "../../utility/SimplexNoise";
+import Biome from "../biome/Biome";
+import Level from "../Level";
+import LevelTile from "../LevelTile";
+import Tiles from "../tile/Tiles";
+import LevelGen from "./LevelGen";
 
-export default class LevelGen {
-
-    public static create(seed: number | string = 0) {
-        return new LevelGen(seed);
-    }
-
-    private static chunkSize = 16;
-    public seed = 0;
+export default class LevelGenOverworld extends LevelGen {
     private elevationNoise: SimplexNoise;
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
 
     constructor(seed: number | string = 0) {
-        this.seed = Seed.create(seed);
+        super(seed);
         this.elevationNoise = new SimplexNoise(this.seed);
         this.moistureNoise = new SimplexNoise((this.seed + 1) * 16);
         this.temperatureNoise = new SimplexNoise((this.seed + 2) * 32);

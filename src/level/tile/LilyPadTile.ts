@@ -10,6 +10,7 @@ import Renderer from "../../core/Renderer";
 
 export default class LilyPadTile extends Tile {
     public static readonly TAG = "lilypad";
+    public static readonly COLOR: number = 0x0cb516;
 
     private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
     private sprite?: PIXI.Sprite;

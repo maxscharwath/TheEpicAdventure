@@ -10,6 +10,7 @@ import Tiles from "./Tiles";
 
 export default class SandTile extends AutoTilingTile {
     public static readonly TAG = "sand";
+    public static readonly COLOR: number = 0xe0f878;
     protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     private step: number = 0;
     private stepDir: boolean = false;

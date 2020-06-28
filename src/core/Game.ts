@@ -16,6 +16,8 @@ import Renderer from "./Renderer";
 import MouseHandler from "./io/MouseHandler";
 import GUI from "./GUI";
 import Seed from "../utility/Seed";
+import LevelGenCave from "../level/levelGen/LevelGenCave";
+import LevelGenOverworld from "../level/levelGen/LevelGenOverworld";
 
 export default class Game {
     public static player: Player;
@@ -65,7 +67,7 @@ export default class Game {
         this.GUI = new GUI();
         this.player = new Player();
 
-        this.levels.push(new Level(Seed.create("maxime")));
+        this.levels.push(new Level(Seed.create(123456789), LevelGenOverworld));
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         Renderer.setLevel(this.level);

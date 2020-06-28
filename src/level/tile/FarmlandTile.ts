@@ -10,8 +10,9 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class FarmlandTile extends Tile {
-    public static DEFAULT_STATES = {moisture: 0, age: 0};
     public static readonly TAG: string = "farmland";
+    public static DEFAULT_STATES = {moisture: 0, age: 0};
+    public static readonly COLOR: number = 0x94785c;
     public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
     private filter =  new PIXI.filters.ColorMatrixFilter();

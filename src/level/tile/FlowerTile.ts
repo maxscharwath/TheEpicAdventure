@@ -9,6 +9,7 @@ import Renderer from "../../core/Renderer";
 
 export default class FlowerTile extends Tile {
     public static readonly TAG = "flower";
+    public static readonly COLOR: number = 0x94785c;
 
     private static tileTextures = FlowerTile.loadTextures(System.getResource("tile", "flower.png"), 4);
     private sprite?: PIXI.Sprite;

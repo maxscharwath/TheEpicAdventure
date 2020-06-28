@@ -11,6 +11,7 @@ import Tiles from "./Tiles";
 
 export default class GrassTile extends AutoTilingTile {
     public static readonly TAG = "grass";
+    public static readonly COLOR: number = 0x3abe41;
     protected static autoTileTextures = GrassTile.loadMaskTextures(System.getResource("tile", "grass_mask.png"));
     private static tileTextures = GrassTile.loadTextures(System.getResource("tile", "grass.png"), 6);
 
