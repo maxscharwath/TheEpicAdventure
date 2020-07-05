@@ -13,8 +13,10 @@ import Tickable from "../entity/Tickable";
 import Weather from "../gfx/weather/Weather";
 import LightFilter from "../gfx/LightFilter";
 import Game from "../core/Game";
-import LevelGenCave from "./levelGen/LevelGenCave";
 import LevelGenOverworld from "./levelGen/LevelGenOverworld";
+import * as events from "events";
+import SnowWeather from "../gfx/weather/SnowWeather";
+import RainWeather from "../gfx/weather/RainWeather";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -36,6 +38,7 @@ export default class Level {
     private chunksToRemove: string[] = [];
     private chunks = new Map<string, Chunk>();
     private loadedChunks: Chunk[] = [];
+    private eventEmitter = new events.EventEmitter();
 
     constructor(seed: number, generator: typeof LevelGen = LevelGenOverworld) {
         this.seed = seed;
@@ -44,6 +47,7 @@ export default class Level {
         this.sortableContainer.sortableChildren = true;
         this.container.addChild(this.groundContainer, this.sortableContainer);
         this.lightFilter = new LightFilter();
+        // this.weather = new RainWeather();
     }
 
     public getChunks() {
@@ -66,11 +70,16 @@ export default class Level {
                 this.deleteChunk(chunk);
             }
         });
-        return chunks;
+        return new Promise((resolve, reject) => {
+            this.eventEmitter.once("deleteQueuedChunk", resolve);
+        });
     }
 
     public flushChunks() {
         this.chunksToRemove.push(...this.chunks.keys());
+        return new Promise((resolve, reject) => {
+            this.eventEmitter.once("deleteQueuedChunk", resolve);
+        });
     }
 
     public getChunksRadius(r: number = 1): Chunk[] {
@@ -316,15 +325,18 @@ export default class Level {
     }
 
     private deleteQueuedChunk() {
+        let nb = 0;
         while (this.chunksToRemove.length > 0) {
             const chunkId = this.chunksToRemove[0];
             const chunk = this.chunks.get(chunkId);
             if (chunk) {
                 chunk.save();
                 chunk.destroy();
+                nb++;
             }
             this.chunks.delete(chunkId);
             this.chunksToRemove.splice(0, 1);
         }
+        this.eventEmitter.emit("deleteQueuedChunk", nb);
     }
 }

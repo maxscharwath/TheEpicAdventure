@@ -24,6 +24,8 @@ import DarkGrassTile from "./DarkGrassTile";
 import RailTile from "./RailTile";
 import BushTile from "./BushTile";
 import FlowerTile from "./FlowerTile";
+import StoneTile from "./StoneTile";
+import MushroomTile from "./MushroomTile";
 
 export class TileRegister<T extends typeof Tile> {
 
@@ -83,5 +85,7 @@ export default class Tiles extends TileRegister<typeof Tile> {
     public static RAIL = Tiles.add(21, "rail", RailTile);
     public static BUSH = Tiles.add(22, "bush", BushTile);
     public static FLOWER = Tiles.add(23, "flower", FlowerTile);
+    public static STONE = Tiles.add(24, "stone", StoneTile);
+    public static MUSHROOM = Tiles.add(25, "mushroom", MushroomTile);
 
 }

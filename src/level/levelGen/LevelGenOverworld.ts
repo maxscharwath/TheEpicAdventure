@@ -103,6 +103,10 @@ export default class LevelGenOverworld extends LevelGen {
                     if (random.probability(20)) {
                         tile.setTile(Tiles.FLOWER);
                     }
+
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.STONE);
+                    }
                 }
 
                 if (biome.is("tundra") || biome.is("snow")) {

@@ -12,13 +12,15 @@ export default class RainWeather extends Weather {
         super.onRender();
         const x = this.cameraX;
         const y = this.cameraY;
-        this.offset.y += 10;
+        this.offset.y += 15;
+        this.offset.x += 15;
         for (const layer of this.layers) {
             layer.width = Renderer.getScreen().width;
             layer.height = Renderer.getScreen().height;
             layer.tilePosition.y = -y + this.offset.y / layer.zIndex;
             layer.tilePosition.x = -x + this.offset.x / layer.zIndex;
             layer.tileScale.set(4 / layer.zIndex);
+            layer.tileTransform.rotation = -45;
         }
     }
     protected init() {

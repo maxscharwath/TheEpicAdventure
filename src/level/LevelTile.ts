@@ -34,7 +34,7 @@ export default class LevelTile {
         this._x = value;
         this.groundContainer.x = this._x;
         this.sortableContainer.x = this._x;
-        this.lightSprite.x = this._x;
+        this.light.x = this._x;
         this.sort();
     }
 
@@ -46,7 +46,7 @@ export default class LevelTile {
         this._y = value;
         this.groundContainer.y = this._y;
         this.sortableContainer.y = this._y;
-        this.lightSprite.y = this._y;
+        this.light.y = this._y;
         this.sort();
     }
 
@@ -63,6 +63,7 @@ export default class LevelTile {
     public readonly elevation: number;
     public readonly moisture: number;
     public lightLevel = 0;
+    public readonly light = new Light();
     private visible: boolean;
     private initByEntity?: Entity;
     private tileStates?: {};
@@ -71,7 +72,6 @@ export default class LevelTile {
     private isInitiated = false;
     private groundContainer = new PIXI.Container();
     private sortableContainer = new PIXI.Container();
-    private lightSprite = new Light();
 
     private _x: number;
 
@@ -118,7 +118,7 @@ export default class LevelTile {
     public remove() {
         if (this.groundContainer.parent) this.groundContainer.parent.removeChild(this.groundContainer);
         if (this.sortableContainer.parent) this.sortableContainer.parent.removeChild(this.sortableContainer);
-        if (this.lightSprite.parent) this.lightSprite.parent.removeChild(this.lightSprite);
+        if (this.light.parent) this.light.parent.removeChild(this.light);
     }
 
     public add() {
@@ -127,7 +127,7 @@ export default class LevelTile {
         }
         this.level.groundContainer.addChild(this.groundContainer);
         this.level.sortableContainer.addChild(this.sortableContainer);
-        this.level.lightFilter.lightContainer.addChild(this.lightSprite);
+        this.level.lightFilter.lightContainer.addChild(this.light);
     }
 
     public getLocalX = () => this._x >> 4;
@@ -200,7 +200,7 @@ export default class LevelTile {
         if (this._tile?.isInit) {
             this._tile.onRender();
         }
-        this.lightSprite.setBrightness(this.lightLevel / 20);
+        this.light.setBrightness(this.lightLevel / 20);
     }
 
     public getRelativeTile(x: number, y: number, generate = true): LevelTile | undefined {
@@ -268,7 +268,7 @@ export default class LevelTile {
     public destroy() {
         this.groundContainer.destroy({children: true});
         this.sortableContainer.destroy({children: true});
-        this.lightSprite.destroy({children: true});
+        this.light.destroy({children: true});
     }
 
     public setLight(value: number) {
@@ -300,7 +300,7 @@ export default class LevelTile {
         this.visible = value;
         this.groundContainer.visible = this.visible;
         this.sortableContainer.visible = this.visible;
-        this.lightSprite.visible = this.visible;
+        this.light.visible = this.visible;
     }
 
     public getColor() {

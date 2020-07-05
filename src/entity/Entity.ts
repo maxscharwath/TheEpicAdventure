@@ -74,6 +74,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.ticks++;
         if (this.isOnFire && this.canBurn()) {
             this.fireSprite.visible = true;
+            this.getTile().lightLevel = 20;
             this.onFire();
         }
     }
@@ -122,7 +123,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public canBurn() {
-        return false;
+        return true;
     }
 
     public isSwimming() {

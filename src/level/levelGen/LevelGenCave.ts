@@ -52,6 +52,12 @@ export default class LevelGenCave extends LevelGen {
 
                 if (river > 230) {
                     tile.setTile(Tiles.DIRT);
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.STONE);
+                    }
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.MUSHROOM);
+                    }
                 }
                 if (elevation < 10 && river > 240) {
                     if (temperature > 128) {

@@ -35,9 +35,7 @@ export default class Game {
     public static mouse: MouseHandler;
     public static GUI: GUI;
 
-    public static get level(): Level {
-        return this.levels[this.currentLevel];
-    }
+    public static level: Level;
 
     public static isValidClient(): boolean {
         return this.isOnline && this.client != null;
@@ -67,7 +65,11 @@ export default class Game {
         this.GUI = new GUI();
         this.player = new Player();
 
-        this.levels.push(new Level(Seed.create(123456789), LevelGenOverworld));
+        this.levels.push(
+            new Level(Seed.create(123456789), LevelGenOverworld),
+            new Level(Seed.create(123456789), LevelGenCave),
+        );
+        this.level = this.levels[this.currentLevel];
         this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         Renderer.setLevel(this.level);
@@ -85,6 +87,18 @@ export default class Game {
                     });
                     e.returnValue = true;
                 });*/
+    }
+
+    public static changeLevel(id: number) {
+        this.level.deleteTempDir();
+        this.level.remove(this.player);
+        this.level.flushChunks().then(() => {
+            console.log("DONE");
+        });
+        this.currentLevel = id;
+        this.level = this.levels[this.currentLevel];
+        this.level.add(this.player);
+        Renderer.setLevel(this.level);
     }
 
     public static quit() {

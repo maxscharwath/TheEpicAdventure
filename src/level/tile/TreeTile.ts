@@ -19,6 +19,7 @@ export default class TreeTile extends Tile {
     protected damage = 0;
     protected wiggleDelay: number = 0;
     private treeSprite: PIXI.Sprite;
+    private leafSprite: PIXI.Sprite;
 
     public init() {
         super.init();
@@ -32,13 +33,15 @@ export default class TreeTile extends Tile {
 
     public onRender() {
         super.onRender();
+        // this.sortableContainer.angle = 20 + Math.sin((Renderer.ticks + this.x + this.y) / 5) * 5;
+        // this.leafSprite.angle = Math.sin((Renderer.ticks + this.x + this.y) / 5) * 10;
         if (this.wiggleDelay > 0) {
-            this.treeSprite.scale.set(
+            this.leafSprite.scale.set(
                 1 + Math.sin(Renderer.ticks / 2) / 20,
                 1 + Math.cos(Renderer.ticks / 2) / 20,
             );
         } else {
-            this.treeSprite.scale.set(1, 1);
+            this.leafSprite.scale.set(1, 1);
         }
     }
 
@@ -74,10 +77,16 @@ export default class TreeTile extends Tile {
 
     protected treeTilingInit(source: string) {
         const texture = PIXI.BaseTexture.from(source);
-        this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture));
+        this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(32, 0, 32, 32)));
+        this.leafSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(0, 0, 32, 32)));
+        this.sortableContainer.pivot.set(8, 16);
+        this.sortableContainer.position.set(8, 16);
         this.sortableContainer.addChild(this.treeSprite);
         this.treeSprite.anchor.set(0.5, 1);
         this.treeSprite.position.set(8, 16);
+        this.sortableContainer.addChild(this.leafSprite);
+        this.leafSprite.anchor.set(0.5, 0.5);
+        this.leafSprite.position.set(8, 0);
     }
 
     protected initTree() {

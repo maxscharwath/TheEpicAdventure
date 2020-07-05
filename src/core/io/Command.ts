@@ -74,3 +74,9 @@ Command.add("refresh").addFunction((args) => {
     Game.level.flushChunks();
     return "pending...";
 });
+
+Command.add("setLevel").addFunction((args) => {
+    const id = parseInt(args[0], 10);
+    Game.changeLevel(id);
+    return `Set level to ${id}`;
+});
