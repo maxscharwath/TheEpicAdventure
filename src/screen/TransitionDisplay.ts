@@ -9,7 +9,7 @@ export default class TransitionDisplay extends Display {
     private readonly transitionOut: boolean;
     private readonly speed: number;
 
-    constructor(out: boolean= false) {
+    constructor(out: boolean = false) {
         super();
         this.transitionOut = out;
         if (this.transitionOut) {

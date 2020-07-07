@@ -19,6 +19,7 @@ export default class LevelFilter extends PIXI.Container {
     public onRender() {
 
     }
+
     protected init() {
 
     }

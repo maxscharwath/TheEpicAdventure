@@ -90,7 +90,6 @@ export default class Biome {
     }
 
     private static biomes = new KeyedMap<Biome>();
-
     public readonly name: string;
     public readonly color: Color;
     public tag: string = "";

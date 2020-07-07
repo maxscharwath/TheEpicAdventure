@@ -99,7 +99,7 @@ class Container extends PIXI.Container {
         const item = slot.item;
         if (A.inventory.addItem(item) && this.inventory.removeItem(item)) {
             const max = this.getSlots().length;
-            if (this.select >= max)this.select = max - 1;
+            if (this.select >= max) this.select = max - 1;
             this.refresh();
             A.refresh();
         }
@@ -119,8 +119,11 @@ export default class ContainerDisplay extends Display {
     public static baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "container.png"));
 
     private static moveItem(A: Container, B: Container) {
-        if (A.selected) A.swap(B);
-        else B.swap(A);
+        if (A.selected) {
+            A.swap(B);
+        } else {
+            B.swap(A);
+        }
     }
     public hasCommand = true;
     private container: Container[] = [];

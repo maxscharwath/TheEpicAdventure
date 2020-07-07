@@ -1,15 +1,13 @@
 import {AnimatedSprite, Texture} from "pixi.js";
 import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
+import Tiles from "../../level/tile/Tiles";
 
 export default class Zombie extends HostileMob {
     private static spriteSheet = new SpriteSheet("zombie.json");
+    public isOnFire = true;
     protected speedMax: number = 1;
     private sprite?: AnimatedSprite;
-
-    public canSwim(): boolean {
-        return false;
-    }
 
     public onTick(): void {
         super.onTick();
@@ -21,6 +19,16 @@ export default class Zombie extends HostileMob {
             this.playAnimation("walk");
         } else {
             this.playAnimation("idle");
+        }
+    }
+
+    protected newTarget() {
+        super.newTarget();
+        if (this.isOnFire) {
+            const result = this.level.getRandomTileInEntityRadius([Tiles.WATER], this, 20);
+            if (result) {
+                this.target = result;
+            }
         }
     }
 

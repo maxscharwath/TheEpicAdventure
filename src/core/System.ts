@@ -36,6 +36,5 @@ export default class System {
     public static currentTimeMillis(): number {
         return (new Date()).getTime();
     }
-
     private static startTime = new Date().getTime();
 }

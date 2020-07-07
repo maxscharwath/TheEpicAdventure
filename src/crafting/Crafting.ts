@@ -9,6 +9,7 @@ export default class Crafting {
     public static alembicRecipes: Recipe[] = [];
     public static anvilRecipes: Recipe[] = [];
     public static workbenchRecipes: Recipe[] = [];
+
     public static initRecipes() {
         this.handRecipes = [
             new Recipe(Items.FISHING_ROD).addCost(Items.STICK, 3),

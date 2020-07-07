@@ -34,7 +34,7 @@ tile.spruce: Sapin
 tile.palm: Palmier
 tile.acacia: Acacia
 tile.birch: Bouleau
-tile.rock: Pierre
+tile.rock: Roche
 tile.hole: Trou
 tile.snow: Neige
 tile.ice: Glace
@@ -42,6 +42,7 @@ tile.plank: Planche
 tile.rail: Rail
 tile.flower: Fleur
 tile.bush: Buisson
+tile.stone: Pierre
 
 entity.player: Joueur
 entity.zombie: Zombie

@@ -4,6 +4,7 @@ import Craftable from "./Craftable";
 import Crafting from "../../crafting/Crafting";
 
 export default class Anvil extends Craftable {
+
     public static create({id, x, y}: any): Anvil {
         return super.create({id, x, y}) as Anvil;
     }

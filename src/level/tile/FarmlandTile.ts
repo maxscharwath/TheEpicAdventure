@@ -15,7 +15,7 @@ export default class FarmlandTile extends Tile {
     public static readonly COLOR: number = 0x94785c;
     public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
-    private filter =  new PIXI.filters.ColorMatrixFilter();
+    private filter = new PIXI.filters.ColorMatrixFilter();
 
     public onInteract(mob: Mob, item?: Item) {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {

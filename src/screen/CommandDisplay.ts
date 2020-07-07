@@ -67,7 +67,7 @@ export default class CommandDisplay extends Display {
         for (const command of commands) {
             const args = command.split(" ");
             const name = args.shift();
-            const result = Command.execute(name, args);
+            const result = Command.execute(this, name, args);
             [].concat(result).forEach((res) => {
                 this.historicResult.unshift(res.toString());
             });
@@ -86,7 +86,9 @@ export default class CommandDisplay extends Display {
 
     public onTick() {
         super.onTick();
-        while (this.historicResult.length > 15) this.historicResult.pop();
+        while (this.historicResult.length > 15) {
+            this.historicResult.pop();
+        }
         if (Updater.every(100)) this.historicResult.pop();
         if (this.active) this.input.focus();
 

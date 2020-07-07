@@ -13,6 +13,7 @@ export default class DirtTile extends Tile {
     public static readonly TAG = "dirt";
     public static readonly COLOR: number = 0x94785c;
     private static tileTextures = DirtTile.loadTextures(System.getResource("tile", "dirt.png"), 4);
+
     public init() {
         super.init();
         this.container.addChild(

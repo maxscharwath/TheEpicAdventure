@@ -38,7 +38,7 @@ export class TileRegister<T extends typeof Tile> {
         return (!tileData ? Tile : tileData);
     }
 
-    public static getSome(...tags: string[])  {
+    public static getSome(...tags: string[]) {
         return this.tiles.getSome(...tags);
     }
 
@@ -47,16 +47,20 @@ export class TileRegister<T extends typeof Tile> {
     }
 
     private static tiles = new KeyedMap<typeof Tile>();
-
     public readonly tag: string;
     public readonly tile: T;
     public readonly idx: number;
+
     protected constructor(idx: number, tag: string, tile: T) {
         this.tag = tag;
         this.tile = tile;
         this.idx = idx;
         TileRegister.tiles.add(this.idx, this.tag, this.tile);
         console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
+    }
+
+    public getClass() {
+        return this.tile;
     }
 }
 

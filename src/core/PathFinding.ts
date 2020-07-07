@@ -28,7 +28,7 @@ export default class PathFinding {
         openList.push(startNode);
         let count = 0;
         while (openList.length > 0) {
-            if (count++ > 1000)return [];
+            if (count++ > 1000) return [];
             let currentNode = openList[0];
             openList.forEach((item) => {
                 if (item.f < currentNode.f) currentNode = item;

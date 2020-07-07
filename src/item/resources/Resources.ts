@@ -4,27 +4,56 @@ import Resource from "./Resource";
 import TileResource from "./TileResource";
 
 export default class Resources {
-    public static wheat = new Resource("wheat.png");
-    public static bread = new Resource("bread.png");
-    public static seedWheat = new FarmResource("seeds_wheat.png", Tiles.WHEAT);
-    public static potato = new FarmResource("potato.png", Tiles.POTATO);
-    public static apple = new Resource("apple.png");
-    public static sand = new TileResource("sand.png", Tiles.SAND, Tiles.HOLE, Tiles.WATER, Tiles.LAVA);
-    public static dirt = new TileResource("dirt.png", Tiles.DIRT, Tiles.HOLE, Tiles.WATER, Tiles.LAVA);
-    public static ice = new TileResource("ice.png", Tiles.ICE, Tiles.WATER);
-    public static lilypad = new TileResource("lilypad.png", Tiles.LILYPAD, Tiles.WATER);
-    public static stone = new Resource("stone.png");
-    public static iron = new Resource("iron.png");
-    public static gold = new Resource("gold.png");
-    public static diamond = new Resource("diamond.png");
-    public static snowball = new Resource("snowball.png");
-    public static glass = new Resource("glass.png");
-    public static coal = new Resource("coal.png");
-    public static stick = new Resource("stick.png");
-    public static fish = new Resource("fish_salmon_raw.png");
-    public static flask = new Resource("potion.png");
-    public static flint = new Resource("flint.png");
-    public static wood = new TileResource("wood.png", Tiles.PLANK, Tiles.HOLE);
-    public static cactusFlower = new TileResource("cactus_flower.png", Tiles.CACTUS, Tiles.SAND);
-    public static rail = new TileResource("rail.png", Tiles.RAIL, Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW);
+    public static readonly WHEAT = new Resource("wheat.png");
+
+    public static readonly BREAD = new Resource("bread.png");
+
+    public static readonly SEED_WHEAT = new FarmResource("seeds_wheat.png", Tiles.WHEAT);
+
+    public static readonly POTATO = new FarmResource("potato.png", Tiles.POTATO);
+
+    public static readonly APPLE = new Resource("apple.png");
+
+    public static readonly SAND = new TileResource("sand.png", Tiles.SAND,
+        [Tiles.HOLE, Tiles.WATER, Tiles.LAVA]);
+
+    public static readonly DIRT = new TileResource("dirt.png", Tiles.DIRT,
+        [Tiles.HOLE, Tiles.WATER, Tiles.LAVA]);
+
+    public static readonly ICE = new TileResource("ice.png", Tiles.ICE,
+        [Tiles.WATER]);
+
+    public static readonly LILYPAD = new TileResource("lilypad.png", Tiles.LILYPAD,
+        [Tiles.WATER]);
+
+    public static readonly STONE = new Resource("stone.png");
+
+    public static readonly IRON = new Resource("iron.png");
+
+    public static readonly GOLD = new Resource("gold.png");
+
+    public static readonly DIAMOND = new Resource("diamond.png");
+
+    public static readonly SNOWBALL = new Resource("snowball.png");
+
+    public static readonly GLASS = new Resource("glass.png");
+
+    public static readonly COAL = new Resource("coal.png");
+
+    public static readonly STICK = new Resource("stick.png");
+
+    public static readonly FISH = new Resource("fish_salmon_raw.png");
+
+    public static readonly FLASK = new Resource("potion.png");
+
+    public static readonly FLINT = new Resource("flint.png");
+
+    public static readonly WOOD = new TileResource("wood.png", Tiles.PLANK,
+        [Tiles.HOLE]);
+
+    public static readonly CACTUS_FLOWER = new TileResource("cactus_flower.png", Tiles.CACTUS,
+        [Tiles.SAND]);
+
+    public static readonly RAIL = new TileResource("rail.png", Tiles.RAIL,
+        [Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW]);
 }

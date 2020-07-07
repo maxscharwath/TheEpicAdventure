@@ -6,12 +6,11 @@ import Updater from "../core/Updater";
 import Game from "../core/Game";
 
 export class Dialogue {
+
     public static create(name: string) {
         return new Dialogue().setName(name);
     }
-
     public hasCommand = true;
-
     public name: string;
     public sentences: string[] = [];
 
@@ -34,10 +33,12 @@ class TextAnimation {
     private started = false;
     private readonly onDone: () => void;
     private delay = 1;
+
     constructor(onUpdate: (text: string, char?: string) => void, onDone?: () => void) {
         this.onUpdate = onUpdate;
         this.onDone = onDone;
     }
+
     public start(text: string) {
         this.sourceText = text;
         this.outputText = "";
@@ -45,14 +46,14 @@ class TextAnimation {
     }
 
     public onTick() {
-        if (!this.started || !Updater.every(this.delay))return;
+        if (!this.started || !Updater.every(this.delay)) return;
         const i = this.outputText.length;
         const char = this.sourceText.charAt(i);
         this.outputText += char;
         this.onUpdate(this.outputText, char);
         if (this.outputText === this.sourceText) {
             this.started = false;
-            if (this.onDone)this.onDone();
+            if (this.onDone) this.onDone();
         }
     }
 }
@@ -119,7 +120,7 @@ export default class DialogueDisplay extends Display {
     }
 
     public startDialogue(dialogue: Dialogue) {
-        if (!this.active)this.show();
+        if (!this.active) this.show();
         this.dialogue = dialogue;
         this.sentences.push(...this.dialogue.sentences);
         this.nameArea.text = dialogue.name;

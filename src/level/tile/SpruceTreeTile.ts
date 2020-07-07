@@ -20,6 +20,7 @@ export default class SpruceTreeTile extends TreeTile {
     public onTick(): void {
         super.onTick();
     }
+
     protected initTree() {
         this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tile", "spruce.png"));

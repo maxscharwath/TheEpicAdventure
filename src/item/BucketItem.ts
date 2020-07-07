@@ -11,7 +11,7 @@ export default class BucketItem extends Item {
 
     private content: BucketType;
 
-    constructor(tag: string, content= BucketType.empty) {
+    constructor(tag: string, content = BucketType.EMPTY) {
         super(tag);
         this.content = content;
         this.texture = content.texture;

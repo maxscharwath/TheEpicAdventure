@@ -7,10 +7,6 @@ export default class Chicken extends HostileMob {
     protected speedMax: number = 1;
     private sprite?: AnimatedSprite;
 
-    public canSwim(): boolean {
-        return false;
-    }
-
     public onTick(): void {
         super.onTick();
     }

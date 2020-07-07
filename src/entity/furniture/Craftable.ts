@@ -33,7 +33,7 @@ export default class Craftable extends Furniture {
     }
 
     public onUse(mob: Mob, item?: Item): boolean {
-        Game.GUI.setDisplay(new CraftingDisplay(this.recipes , mob));
+        Game.GUI.setDisplay(new CraftingDisplay(this.recipes, mob));
         return true;
     }
 

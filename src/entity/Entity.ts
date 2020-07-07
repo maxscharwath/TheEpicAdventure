@@ -5,7 +5,7 @@ import Updater from "../core/Updater";
 import Chunk from "../level/Chunk";
 import Level from "../level/Level";
 import LevelTile from "../level/LevelTile";
-import Tiles from "../level/tile/Tiles";
+import Tiles, {TileRegister} from "../level/tile/Tiles";
 import Hitbox from "../utility/Hitbox";
 import Maths from "../utility/Maths";
 import Random from "../utility/Random";
@@ -14,6 +14,7 @@ import Entities from "./Entities";
 import Tickable from "./Tickable";
 import SpriteSheet from "../gfx/SpriteSheet";
 import System from "../core/System";
+import Tile from "../level/tile/Tile";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
 
@@ -29,12 +30,14 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         e.y = y;
         return e;
     }
+
     protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private static random = new Random();
     public ["constructor"]: typeof Entity;
     public x: number = 0;
     public y: number = 0;
     public z: number = 0;
+    public isInteractive = false;
     public offset = new PIXI.Point();
     public a: Vector3D = new Vector3D();
     public hitbox: Hitbox = new Hitbox();
@@ -72,11 +75,20 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     public onTick(): void {
         this.lastTick = Updater.ticks;
         this.ticks++;
-        if (this.isOnFire && this.canBurn()) {
-            this.fireSprite.visible = true;
-            this.getTile().lightLevel = 20;
+        this.fireSprite.visible = this.isOnFire;
+        if (this.isOnFire) {
+            const tile = this.getTile();
+            if (tile) tile.lightLevel = 20;
             this.onFire();
+            if (this.isOnTile(Tiles.WATER)) {
+                this.isOnFire = false;
+            }
         }
+    }
+
+    public isOnTile(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+        if (this.canFly() || this.z > this.getTileZ()) return false;
+        return this.getTile()?.instanceOf(...tileClass);
     }
 
     public getDistance(entity: Entity) {
@@ -127,9 +139,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public isSwimming() {
-        if (this.canFly() || this.z > this.getTileZ()) return false;
-        const tile = this.getTile();
-        return tile && (tile.instanceOf(Tiles.LAVA.tile, Tiles.WATER.tile));
+        return this.isOnTile(Tiles.LAVA, Tiles.WATER);
     }
 
     public getChunk(): Chunk | undefined {
@@ -289,7 +299,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
                 if (!tile) return false;
                 tile.bumpedInto(this);
 
-                if (this.getTile().mayPass(this) && !tile.mayPass(this)) {
+                if (this.getTile()?.mayPass(this) && !tile.mayPass(this)) {
                     blocked = true;
                     return false;
                 }

@@ -23,6 +23,7 @@ export default class RainWeather extends Weather {
             layer.tileTransform.rotation = -45;
         }
     }
+
     protected init() {
         super.init();
         const texture = PIXI.Texture.from(System.getResource("weather", "rain.png"));

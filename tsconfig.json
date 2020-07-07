@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "strict": false,
-    "module": "commonjs",
+    "module": "CommonJS",
     "noImplicitAny": true,
     "sourceMap": true,
     "outDir": "dist",
@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "suppressImplicitAnyIndexErrors": true,
+    "suppressImplicitAnyIndexErrors": true
   },
   "exclude": [
     "node_modules"

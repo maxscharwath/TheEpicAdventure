@@ -9,12 +9,20 @@ export default interface Tickable extends PIXI.Container {
     z: number;
 
     remove(): void;
+
     onTick(): void;
+
     onRender(): void;
+
     getRemoved(): boolean;
+
     delete(level?: Level): void;
+
     setLevel(level: Level, x: number, y: number): void;
+
     getChunk(): Chunk | undefined;
+
     getLevel(): Level | undefined;
+
     add(): void;
 }

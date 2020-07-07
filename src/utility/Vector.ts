@@ -12,15 +12,15 @@ export default class Vector {
         this.y *= mag / this.magnitude;
     }
 
+    public get rotation() {
+        return Math.atan2(this.x, this.y);
+    }
+
     private get vector(): Vector {
         if (!this.constant) {
             return this;
         }
         return this.clone();
-    }
-
-    public get rotation() {
-        return Math.atan2(this.x, this.y);
     }
 
     public static create(x?: number, y?: number) {

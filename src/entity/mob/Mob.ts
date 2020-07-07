@@ -41,6 +41,7 @@ export default abstract class Mob extends Entity {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
 
+    public isInteractive = true;
     public maxHealth: number = 20;
     public health: number = this.maxHealth;
     public inventory = new Inventory(9);

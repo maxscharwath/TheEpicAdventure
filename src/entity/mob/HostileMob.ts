@@ -4,7 +4,7 @@ import Renderer from "../../core/Renderer";
 import Maths from "../../utility/Maths";
 
 export default abstract class HostileMob extends Mob {
-    protected target = {x: 0, y: 0};
+    protected target: { x: number, y: number } = {x: 0, y: 0};
 
     constructor() {
         super();
@@ -17,6 +17,11 @@ export default abstract class HostileMob extends Mob {
             !(this.target instanceof Entity) && this.random.probability(100)) {
             this.newTarget();
         }
+    }
+
+    public canSwim(): boolean {
+        if (this.isOnFire) return true;
+        return false;
     }
 
     public onRender() {

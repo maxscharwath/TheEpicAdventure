@@ -12,8 +12,8 @@ export default class InputHandler {
     private static keyTyped(e: Event): void {
         e.preventDefault();
     }
-    public preventDefault: boolean = true;
 
+    public preventDefault: boolean = true;
     private keymap = new Map();
     private keyboard = new Map();
 

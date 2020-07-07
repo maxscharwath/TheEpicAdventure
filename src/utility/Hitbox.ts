@@ -6,7 +6,7 @@ export default class Hitbox extends PIXI.Sprite {
     public width: number = 0;
     public height: number = 0;
 
-    constructor(x= 0, y= 0, width= 0, height= 0) {
+    constructor(x = 0, y = 0, width = 0, height = 0) {
         super(PIXI.Texture.WHITE);
         this.set(x, y, width, height);
         this.anchor.set(0.5);

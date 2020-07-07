@@ -4,21 +4,26 @@ import Display from "./Display";
 import Texture = PIXI.Texture;
 
 export default class BackgroundDisplay extends Display {
-    get height(): number {
-        return this._height;
-    }
-    set height(value: number) {
-        this._height = value;
-    }
+
     get width(): number {
         return this._width;
     }
+
     set width(value: number) {
         this._width = value;
     }
-    private _width: number = 0;
-    private _height: number = 0;
 
+    get height(): number {
+        return this._height;
+    }
+
+    set height(value: number) {
+        this._height = value;
+    }
+
+    private _width: number = 0;
+
+    private _height: number = 0;
     constructor() {
         super();
         const container = new PIXI.Container();

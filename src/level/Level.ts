@@ -15,8 +15,7 @@ import LightFilter from "../gfx/LightFilter";
 import Game from "../core/Game";
 import LevelGenOverworld from "./levelGen/LevelGenOverworld";
 import * as events from "events";
-import SnowWeather from "../gfx/weather/SnowWeather";
-import RainWeather from "../gfx/weather/RainWeather";
+import {TileRegister} from "./tile/Tiles";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -97,6 +96,28 @@ export default class Level {
         return chunks;
     }
 
+    public getChunksVisible() {
+        const s = Chunk.SIZE * LevelTile.SIZE;
+        let {width, height} = Renderer.getScreen();
+        width /= Renderer.camera.zoom;
+        height /= Renderer.camera.zoom;
+        const {x, y} = Renderer.camera;
+        const x1 = Math.floor((x - width / 2) / s);
+        const x2 = Math.ceil((x + width / 2) / s);
+        const y1 = Math.floor((y - height / 2) / s);
+        const y2 = Math.ceil((y + height / 2) / s);
+        const chunks = [];
+        for (let cx = x1; cx < x2; cx++) {
+            for (let cy = y1; cy < y2; cy++) {
+                const chunk = this.getChunk(cx, cy);
+                if (chunk && chunk.isGenerated() && chunk.isActive()) {
+                    chunks.push(chunk);
+                }
+            }
+        }
+        return chunks;
+    }
+
     public remove(t: Tickable): void {
         this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== t);
         if (!this.tickablesToRemove.includes(t)) {
@@ -143,7 +164,7 @@ export default class Level {
     }
 
     public getRandomTileInEntityRadius(
-        tiles: Array<typeof Tile>,
+        tiles: Array<TileRegister<typeof Tile>>,
         entity: Entity,
         radiusEnd: number,
         radiusStart = 0,
@@ -180,7 +201,7 @@ export default class Level {
         if (Updater.every(50)) {
             this.flushInactiveChunks();
         }
-        const chunks = this.getChunksRadius(1);
+        const chunks = this.getChunksVisible();
         chunks.forEach((chunk) => {
             if (!this.loadedChunks.includes(chunk)) {
                 chunk.load();
@@ -318,7 +339,7 @@ export default class Level {
     }
 
     private trySpawn(): void {
-        const spawnSkipChance = ~~Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2);
+        const spawnSkipChance = ~~(Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2));
         if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
             return;
         }

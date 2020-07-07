@@ -25,14 +25,13 @@ export default class Camera {
     }
 
     private containers: PIXI.Container[] = [];
-
-    private _zoom: number = 4;
-
     private follow?: { x: number; y: number; };
     private fx: number = 0;
     private fy: number = 0;
     private cx: number = 0;
     private cy: number = 0;
+
+    private _zoom: number = 5;
 
     constructor() {
     }

@@ -15,6 +15,7 @@ export default class CraftingDisplay extends Display {
     private costContainer = new PIXI.Container();
     private recipesContainer = new PIXI.Container();
     private hasText: PIXI.BitmapText;
+
     constructor(recipes: Recipe[], mob: Mob) {
         super();
         this.mob = mob;
@@ -56,7 +57,7 @@ export default class CraftingDisplay extends Display {
         return true;
     }
 
-    private setSelect(val: number, force: boolean= false) {
+    private setSelect(val: number, force: boolean = false) {
         if (!force && val === this.selected) return;
         this.selected = val;
         this.refresh();
@@ -71,7 +72,7 @@ export default class CraftingDisplay extends Display {
             itemSprite.x = 0;
             itemSprite.y = index * 10;
             const has = this.mob.inventory.count(item);
-            const itemText  = new PIXI.BitmapText(`${number}/${has}`, {
+            const itemText = new PIXI.BitmapText(`${number}/${has}`, {
                 fontName: "Epic",
                 fontSize: 6,
                 tint: has >= number ? 0xffffff : 0xb4b4b4,
@@ -96,7 +97,7 @@ export default class CraftingDisplay extends Display {
             const itemSprite = item.getSprite();
             itemSprite.x = 0;
             itemSprite.y = i * 10;
-            const itemText  = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
+            const itemText = new PIXI.BitmapText(item.getDisplayName().toUpperCase(), {
                 fontName: "Epic",
                 fontSize: 4,
                 tint: recipe.canCraft ? 0xffffff : 0xa67948,
@@ -120,7 +121,7 @@ export default class CraftingDisplay extends Display {
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
         this.costContainer.position.set(135, 29);
         this.recipesContainer.position.set(7, 7);
-        this.hasText  = new PIXI.BitmapText("", {
+        this.hasText = new PIXI.BitmapText("", {
             fontName: "Epic",
             fontSize: 6,
             tint: 0xffffff,

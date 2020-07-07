@@ -3,6 +3,7 @@ import PotionType from "../item/PotionType";
 export default class PotionEffect {
     public readonly type: PotionType;
     public duration: number;
+
     constructor(potionType: PotionType) {
         this.type = potionType;
         this.duration = potionType.duration;

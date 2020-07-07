@@ -20,7 +20,10 @@ export default class CactusTile extends Tile {
         this.groundTile = new (Tiles.SAND.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
         this.groundTile.init();
-        this.container.addChild(new PIXI.Sprite(CactusTile.tileTexture));
+        const sprite = new PIXI.Sprite(CactusTile.tileTexture);
+        sprite.anchor.set(0, 1);
+        sprite.position.y = 16;
+        this.sortableContainer.addChild(sprite);
     }
 
     public mayPass(): boolean {

@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
-import {Mob} from "../entity";
 import Item from "../item/Item";
 import Slot from "../item/Slot";
 import Color from "../utility/Color";

@@ -73,11 +73,17 @@ export default class LevelGenOverworld extends LevelGen {
                     if (random.probability(50)) {
                         tile.setTile(Tiles.CACTUS);
                     }
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.STONE);
+                    }
                 }
                 if (biome.is("savanna")) {
                     tile.setTile(Tiles.DIRT);
                     if (random.probability(15)) {
                         tile.setTile(Tiles.ACACIA);
+                    }
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.STONE);
                     }
                 }
                 if (biome.is("forest")) {
@@ -88,6 +94,12 @@ export default class LevelGenOverworld extends LevelGen {
                         tile.setTile(Tiles.BIRCH);
                     } else if (random.probability(4)) {
                         tile.setTile(Tiles.SPRUCE);
+                    }
+                    if (random.probability(20)) {
+                        tile.setTile(Tiles.FLOWER);
+                    }
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.STONE);
                     }
                 }
                 if (biome.is("grassland")) {
@@ -103,8 +115,7 @@ export default class LevelGenOverworld extends LevelGen {
                     if (random.probability(20)) {
                         tile.setTile(Tiles.FLOWER);
                     }
-
-                    if (random.probability(20)) {
+                    if (random.probability(50)) {
                         tile.setTile(Tiles.STONE);
                     }
                 }
@@ -114,12 +125,18 @@ export default class LevelGenOverworld extends LevelGen {
                     if (random.probability(10)) {
                         tile.setTile(Tiles.SPRUCE);
                     }
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.STONE);
+                    }
                 }
 
                 if (biome.is("taiga")) {
                     tile.setTile(Tiles.DARK_GRASS);
                     if (random.probability(10)) {
                         tile.setTile(Tiles.SPRUCE);
+                    }
+                    if (random.probability(50)) {
+                        tile.setTile(Tiles.STONE);
                     }
                 }
 

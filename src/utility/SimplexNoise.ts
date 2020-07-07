@@ -53,13 +53,13 @@ export default class SimplexNoise {
     }
 
     public get(x: number, y: number, {
-        amplitude= 1,
-        zoom= 1,
-        frequency= 1,
-        octaves= 1,
-        evolution= 2,
-        persistence= 0.5,
-    }= {}): number {
+        amplitude = 1,
+        zoom = 1,
+        frequency = 1,
+        octaves = 1,
+        evolution = 2,
+        persistence = 0.5,
+    } = {}): number {
         let value = this.noise2D(x / frequency / zoom, y / frequency / zoom);
         let tot = 1;
         for (let octave = 1; octave < octaves; octave++) {

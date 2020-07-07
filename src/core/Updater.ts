@@ -40,11 +40,15 @@ export default class Updater {
 
     public static setTime(ticks: number): void {
         if (ticks < this.Time.Morning) ticks = 0;
-        if (ticks < this.Time.Day) this.time = 0;
-        else if (ticks < this.Time.Evening) this.time = 1;
-        else if (ticks < this.Time.Night) this.time = 2;
-        else if (ticks < this.dayLength) this.time = 3;
-        else {
+        if (ticks < this.Time.Day) {
+            this.time = 0;
+        } else if (ticks < this.Time.Evening) {
+            this.time = 1;
+        } else if (ticks < this.Time.Night) {
+            this.time = 2;
+        } else if (ticks < this.dayLength) {
+            this.time = 3;
+        } else {
             this.time = 0;
             ticks = 0;
         }

@@ -4,6 +4,7 @@ import Direction from "../Direction";
 import Item from "../../item/Item";
 
 export default abstract class Furniture extends Entity {
+    public isInteractive = true;
     private pushDir: Direction = Direction.NONE;
     private pushTime: number = 0;
 

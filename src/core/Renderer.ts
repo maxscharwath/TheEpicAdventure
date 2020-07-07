@@ -15,7 +15,6 @@ interface CanvasElement extends HTMLCanvasElement {
 }
 
 export default class Renderer {
-    public static ticks = 0;
 
     public static get ZOOM() {
         return 0;
@@ -40,7 +39,7 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
-
+    public static ticks = 0;
     public static delta: number;
     public static readonly DEFAULT_WIDTH: number = 240;
     public static readonly DEFAULT_HEIGHT: number = 160;
@@ -123,11 +122,11 @@ export default class Renderer {
         gui: new PIXI.Container(),
     };
     private static renderer = new PIXI.Renderer({
-        width: 960,
-        height: 540,
+        width: 960 * 2,
+        height: 540 * 2,
         backgroundColor: Color.black.getInt(),
-        autoDensity: false,
-        antialias: false,
+        autoDensity: true,
+        antialias: true,
         clearBeforeRender: false,
         powerPreference: "high-performance",
     });

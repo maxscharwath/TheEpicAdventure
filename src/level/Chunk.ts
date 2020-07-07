@@ -13,7 +13,6 @@ import Tiles from "./tile/Tiles";
 import Particle from "../entity/particle/Particle";
 import Tickable from "../entity/Tickable";
 
-type Type<T> = new (...args: any[]) => T;
 export default class Chunk {
     public static SIZE = 16;
 
@@ -116,8 +115,8 @@ export default class Chunk {
     }
 
     public remove(tickable: Tickable) {
-        if (tickable instanceof Entity) this.entities.splice(this.entities.indexOf(tickable), 1);
-        if (tickable instanceof Particle) this.particles.splice(this.particles.indexOf(tickable), 1);
+        if (tickable instanceof Entity) this.entities = this.entities.filter((item) => item !== tickable);
+        if (tickable instanceof Particle) this.particles = this.particles.filter((item) => item !== tickable);
         tickable.remove();
     }
 
@@ -220,7 +219,6 @@ export default class Chunk {
         return gzip(bson).then((buffer) => fsp.writeFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`), buffer, "binary"));
     }
 
-
     public async fromFile() {
         const fileBuffer = await fsp.readFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`));
         const ungzipBuffer = await ungzip(fileBuffer);
@@ -254,7 +252,7 @@ export default class Chunk {
         });
         for (const data of bson.entities) {
             const entity = (Entities.get(data.id) as unknown as typeof Entity);
-            if (!entity)continue;
+            if (!entity) continue;
             this.level.add(entity.create(data));
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
@@ -264,7 +262,7 @@ export default class Chunk {
         return this;
     }
 
-    public generate() {
+    public async generate() {
         this.map = this.level.levelGen.genChunk(this.x, this.y, this.level);
         this.save();
         this.map.forEach((lt) => lt.init());
@@ -303,6 +301,10 @@ export default class Chunk {
 
     public updateLights() {
 
+    }
+
+    private async wait(time: number) {
+        return new Promise((resolve) => setTimeout(resolve, time));
     }
 
     private moveEntity(entity: Entity, chunk: Chunk) {

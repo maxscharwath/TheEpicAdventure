@@ -138,7 +138,7 @@ export default class LevelTile {
         this._tile?.steppedOn(entity);
     }
 
-    public is(...tileClasses: Array<typeof Tile>) {
+    public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>) {
         return tileClasses.some((tileClass) => this._tile?.getClass() === tileClass);
     }
 
@@ -254,7 +254,7 @@ export default class LevelTile {
         return this._tile?.friction ?? 1;
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile>) {
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
         return this._tile?.instanceOf(...tileClass);
     }
 

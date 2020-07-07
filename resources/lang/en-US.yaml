@@ -42,6 +42,7 @@ tile.plank: Plank
 tile.rail: Rail
 tile.flower: Flower
 tile.bush: Bush
+tile.stone: Stone
 
 entity.player: Player
 entity.zombie: Zombie

@@ -22,6 +22,7 @@ export default class SnowWeather extends Weather {
             layer.tileScale.set(Renderer.camera.zoom / layer.zIndex);
         }
     }
+
     protected init() {
         super.init();
         const texture = PIXI.Texture.from(System.getResource("weather", "snow.png"));

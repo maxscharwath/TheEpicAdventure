@@ -10,13 +10,17 @@ export default class FurnitureItem extends Item {
     public static create(data: any) {
         return super.create(data) as FurnitureItem;
     }
+
     private readonly furniture: Furniture;
 
-    constructor(tag: string, furniture: typeof Furniture|Furniture) {
+    constructor(tag: string, furniture: typeof Furniture | Furniture) {
         super(tag);
-        // @ts-ignore
-        if (!(furniture instanceof Furniture)) this.furniture = new furniture();
-        else this.furniture = furniture;
+        if (!(furniture instanceof Furniture)) {
+            // @ts-ignore
+            this.furniture = new furniture();
+        } else {
+            this.furniture = furniture;
+        }
         this.texture = PIXI.Texture.from(System.getResource("items", `${tag}.png`));
     }
 

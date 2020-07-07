@@ -9,7 +9,7 @@ import ToolType from "../../item/ToolType";
 import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
-export default class SnowTile extends AutoTilingTile  {
+export default class SnowTile extends AutoTilingTile {
     public static readonly TAG = "snow";
     public static readonly COLOR: number = 0xf0f0ff;
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));

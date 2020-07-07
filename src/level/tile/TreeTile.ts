@@ -11,6 +11,8 @@ import ToolItem from "../../item/ToolItem";
 import ToolType from "../../item/ToolType";
 import HurtParticle from "../../entity/particle/HurtParticle";
 import Renderer from "../../core/Renderer";
+import LeafParticle from "../../entity/particle/LeafParticle";
+import Random from "../../utility/Random";
 
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
@@ -20,6 +22,7 @@ export default class TreeTile extends Tile {
     protected wiggleDelay: number = 0;
     private treeSprite: PIXI.Sprite;
     private leafSprite: PIXI.Sprite;
+    private leavesDropDelay: number = 0;
 
     public init() {
         super.init();
@@ -29,6 +32,7 @@ export default class TreeTile extends Tile {
     public onTick(): void {
         super.onTick();
         if (this.wiggleDelay > 0) this.wiggleDelay--;
+        if (this.leavesDropDelay > 0) this.leavesDropDelay--;
     }
 
     public onRender() {
@@ -60,6 +64,7 @@ export default class TreeTile extends Tile {
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
                     this.wiggleDelay = 10;
+                    this.leavesDrop();
                     this.levelTile.level.add(
                         new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
                     );
@@ -73,6 +78,11 @@ export default class TreeTile extends Tile {
             }
         }
         return false;
+    }
+
+    public bumpedInto(entity: Entity) {
+        super.bumpedInto(entity);
+        this.leavesDrop();
     }
 
     protected treeTilingInit(source: string) {
@@ -92,5 +102,17 @@ export default class TreeTile extends Tile {
     protected initTree() {
         this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tile", "tree.png"));
+    }
+
+    private leavesDrop() {
+        if (this.leavesDropDelay > 0) return;
+        this.leavesDropDelay = 20;
+        this.wiggleDelay = 10;
+        for (let i = 0; i < Random.int(5, 20); i++) {
+            this.level.add(new LeafParticle(
+                (this.x << 4) + Random.int(16),
+                (this.y << 4) + Random.int(16),
+            ));
+        }
     }
 }

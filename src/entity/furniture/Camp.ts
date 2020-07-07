@@ -8,6 +8,7 @@ import Item from "../../item/Item";
 import Items from "../../item/Items";
 
 export default class Camp extends Furniture {
+
     public static create({id, active, x, y}: any): Camp {
         const e = super.create({id, x, y}) as Camp;
         e.active = active;

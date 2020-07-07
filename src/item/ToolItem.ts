@@ -64,7 +64,7 @@ export default class ToolItem extends Item {
         if (this.getCooldownTime() <= this.getCooldown()) return false;
         if (super.useOn(levelTile, mob)) {
             this.durability--;
-            return  true;
+            return true;
         }
         return false;
     }

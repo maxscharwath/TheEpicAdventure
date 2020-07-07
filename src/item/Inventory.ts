@@ -78,7 +78,7 @@ export default class Inventory {
         return false;
     }
 
-    public removeThisItem(item: Item, itemNb: number= 1) {
+    public removeThisItem(item: Item, itemNb: number = 1) {
         for (const slot of this.slots) {
             if (slot.item === item) {
                 slot.removeItem(itemNb);

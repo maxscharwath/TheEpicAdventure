@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import Display from "./Display";
-import {Mob} from "../entity";
 import SpriteSheet from "../gfx/SpriteSheet";
 import System from "../core/System";
 import Game from "../core/Game";

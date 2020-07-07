@@ -7,7 +7,7 @@ import {ItemRegister} from "../../item/Items";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
 import TileStates from "./TileStates";
-import Tiles from "./Tiles";
+import Tiles, {TileRegister} from "./Tiles";
 
 export default abstract class Tile {
 
@@ -123,9 +123,12 @@ export default abstract class Tile {
         return this;
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile>) {
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
         const ground = this.groundTile;
-        return tileClass.some((c) => this instanceof c || ground instanceof c);
+        return tileClass.some((t) => {
+            const c = t instanceof TileRegister ? t.tile : t;
+            return this instanceof c || ground instanceof c;
+        });
     }
 
     public bumpedInto(entity: Entity) {

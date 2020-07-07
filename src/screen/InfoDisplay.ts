@@ -54,6 +54,8 @@ export default class InfoDisplay extends Display {
             `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
             `time : ${Updater.ticks} (${Updater.time})`,
             `seed : ${Game.level?.seed}`,
+            `cx : ${Game.player.x >> 8}`,
+            `cy : ${Game.player.y >> 8}`,
             `x : ${(Game.player.x / 16).toFixed(2)}`,
             `y : ${(Game.player.y / 16).toFixed(2)}`,
             `z : ${(Game.player.z).toFixed(2)}`,

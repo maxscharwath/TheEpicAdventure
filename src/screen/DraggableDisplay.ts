@@ -7,7 +7,7 @@ class DraggableArea extends PIXI.Container {
     private offset = new PIXI.Point();
     private parentContainer: PIXI.Container;
 
-    constructor(parentContainer: PIXI.Container, x= 0, y= 0) {
+    constructor(parentContainer: PIXI.Container, x = 0, y = 0) {
         super();
         this.x = x;
         this.y = y;

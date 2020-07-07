@@ -55,7 +55,7 @@ export class ItemRegister<T extends Item> {
     }
 
     public instanceOf(item: Item) {
-        if (!(item instanceof Item))return false;
+        if (!(item instanceof Item)) return false;
         return item.tag === this.tag;
     }
 }
@@ -91,31 +91,31 @@ export default class Items extends ItemRegister<Item> {
     public static readonly DIAMOND_SHOVEL = Items.add("diamond_shovel", ToolItem, ToolType.shovel, Tiers.DIAMOND);
     public static readonly DIAMOND_SWORD = Items.add("diamond_sword", ToolItem, ToolType.sword, Tiers.DIAMOND);
 
-    public static readonly WHEAT = Items.add("wheat", ResourceItem, Resources.wheat);
-    public static readonly SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.seedWheat);
-    public static readonly BREAD = Items.add("bread", ResourceItem, Resources.bread);
-    public static readonly POTATO = Items.add("potato", ResourceItem, Resources.potato);
-    public static readonly APPLE = Items.add("apple", ResourceItem, Resources.apple);
+    public static readonly WHEAT = Items.add("wheat", ResourceItem, Resources.WHEAT);
+    public static readonly SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.SEED_WHEAT);
+    public static readonly BREAD = Items.add("bread", ResourceItem, Resources.BREAD);
+    public static readonly POTATO = Items.add("potato", ResourceItem, Resources.POTATO);
+    public static readonly APPLE = Items.add("apple", ResourceItem, Resources.APPLE);
 
-    public static readonly SNOWBALL = Items.add("snowball", ResourceItem, Resources.snowball);
+    public static readonly SNOWBALL = Items.add("snowball", ResourceItem, Resources.SNOWBALL);
 
-    public static readonly SAND = Items.add("sand", ResourceItem, Resources.sand);
-    public static readonly GLASS = Items.add("glass", ResourceItem, Resources.glass);
-    public static readonly DIRT = Items.add("dirt", ResourceItem, Resources.dirt);
-    public static readonly STONE = Items.add("stone", ResourceItem, Resources.stone);
-    public static readonly IRON = Items.add("iron", ResourceItem, Resources.iron);
-    public static readonly GOLD = Items.add("gold", ResourceItem, Resources.gold);
-    public static readonly DIAMOND = Items.add("diamond", ResourceItem, Resources.diamond);
-    public static readonly RAIL = Items.add("rail", ResourceItem, Resources.rail);
-    public static readonly FLINT = Items.add("flint", ResourceItem, Resources.flint);
+    public static readonly SAND = Items.add("sand", ResourceItem, Resources.SAND);
+    public static readonly GLASS = Items.add("glass", ResourceItem, Resources.GLASS);
+    public static readonly DIRT = Items.add("dirt", ResourceItem, Resources.DIRT);
+    public static readonly STONE = Items.add("stone", ResourceItem, Resources.STONE);
+    public static readonly IRON = Items.add("iron", ResourceItem, Resources.IRON);
+    public static readonly GOLD = Items.add("gold", ResourceItem, Resources.GOLD);
+    public static readonly DIAMOND = Items.add("diamond", ResourceItem, Resources.DIAMOND);
+    public static readonly RAIL = Items.add("rail", ResourceItem, Resources.RAIL);
+    public static readonly FLINT = Items.add("flint", ResourceItem, Resources.FLINT);
 
-    public static readonly STICK = Items.add("stick", ResourceItem, Resources.stick);
-    public static readonly WOOD = Items.add("wood", ResourceItem, Resources.wood);
-    public static readonly COAL = Items.add("coal", ResourceItem, Resources.coal);
-    public static readonly LILYPAD = Items.add("lilypad", ResourceItem, Resources.lilypad);
-    public static readonly ICE = Items.add("ice", ResourceItem, Resources.ice);
-    public static readonly CACTUS_FLOWER = Items.add("cactus_flower", ResourceItem, Resources.cactusFlower);
-    public static readonly FISH = Items.add("fish", ResourceItem, Resources.fish);
+    public static readonly STICK = Items.add("stick", ResourceItem, Resources.STICK);
+    public static readonly WOOD = Items.add("wood", ResourceItem, Resources.WOOD);
+    public static readonly COAL = Items.add("coal", ResourceItem, Resources.COAL);
+    public static readonly LILYPAD = Items.add("lilypad", ResourceItem, Resources.LILYPAD);
+    public static readonly ICE = Items.add("ice", ResourceItem, Resources.ICE);
+    public static readonly CACTUS_FLOWER = Items.add("cactus_flower", ResourceItem, Resources.CACTUS_FLOWER);
+    public static readonly FISH = Items.add("fish", ResourceItem, Resources.FISH);
 
     public static readonly FISHING_ROD = Items.add("fishing_rod", FishingRodItem);
 
@@ -129,15 +129,15 @@ export default class Items extends ItemRegister<Item> {
     public static readonly WORKBENCH = Items.add("workbench", FurnitureItem, Workbench);
     public static readonly MUSIC_PLAYER = Items.add("music_player", FurnitureItem, MusicPlayer);
 
-    public static readonly FLASK = Items.add("flask", ResourceItem, Resources.flask);
+    public static readonly FLASK = Items.add("flask", ResourceItem, Resources.FLASK);
     public static readonly POTION_SPEED = Items.add("potion_speed", PotionItem, PotionType.SPEED);
     public static readonly POTION_HEAL = Items.add("potion_heal", PotionItem, PotionType.HEAL);
     public static readonly POTION_HUNGER = Items.add("potion_hunger", PotionItem, PotionType.HUNGER);
     public static readonly POTION_POWER = Items.add("potion_power", PotionItem, PotionType.POWER);
     public static readonly POTION_SLOW = Items.add("potion_slow", PotionItem, PotionType.SLOW);
 
-    public static readonly BUCKET_EMPTY = Items.add("bucket_empty", BucketItem, BucketType.empty);
-    public static readonly BUCKET_WATER = Items.add("bucket_water", BucketItem, BucketType.water);
-    public static readonly BUCKET_LAVA = Items.add("bucket_lava", BucketItem, BucketType.lava);
-    public static readonly BUCKET_MILK = Items.add("bucket_milk", BucketItem, BucketType.milk);
+    public static readonly BUCKET_EMPTY = Items.add("bucket_empty", BucketItem, BucketType.EMPTY);
+    public static readonly BUCKET_WATER = Items.add("bucket_water", BucketItem, BucketType.WATER);
+    public static readonly BUCKET_LAVA = Items.add("bucket_lava", BucketItem, BucketType.LAVA);
+    public static readonly BUCKET_MILK = Items.add("bucket_milk", BucketItem, BucketType.MILK);
 }

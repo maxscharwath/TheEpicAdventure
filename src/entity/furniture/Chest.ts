@@ -15,6 +15,7 @@ export default class Chest extends Furniture {
         e.inventory = Inventory.create(inventory);
         return e;
     }
+
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "chest.png"));
     public inventory = new Inventory(16);
 
