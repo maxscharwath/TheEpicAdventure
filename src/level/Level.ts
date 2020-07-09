@@ -61,11 +61,9 @@ export default class Level {
         rimraf.sync(System.getAppData("tmp"));
     }
 
-    public flushInactiveChunks() {
-        const chunks: Chunk[] = [];
+    public flushInactiveChunks(): Promise<number> {
         this.chunks.forEach((chunk) => {
             if (!chunk.isActive()) {
-                chunks.push(chunk);
                 this.deleteChunk(chunk);
             }
         });
@@ -74,7 +72,7 @@ export default class Level {
         });
     }
 
-    public flushChunks() {
+    public flushChunks(): Promise<number> {
         this.chunksToRemove.push(...this.chunks.keys());
         return new Promise((resolve, reject) => {
             this.eventEmitter.once("deleteQueuedChunk", resolve);
@@ -163,39 +161,6 @@ export default class Level {
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
-    public getRandomTileInEntityRadius(
-        tiles: Array<TileRegister<typeof Tile>>,
-        entity: Entity,
-        radiusEnd: number,
-        radiusStart = 0,
-    ): LevelTile | false {
-        if (!(entity instanceof Entity) || radiusStart >= radiusEnd) {
-            return false;
-        }
-
-        const i = performance.now();
-        while (true) {
-            const rx = Random.int(radiusEnd * 2) - radiusEnd;
-            const ry = Random.int(radiusEnd * 2) - radiusEnd;
-            if (Math.abs(rx) < radiusStart || Math.abs(ry) < radiusStart) {
-                continue;
-            }
-            const x = (entity.x >> 4) + rx;
-            const y = (entity.y >> 4) + ry;
-
-            const lt = this.getTile(x, y, false);
-            if (lt) {
-                if (lt.instanceOf(...tiles)) {
-                    return lt;
-                }
-            }
-
-            if ((performance.now() - i) > 5) {
-                return false;
-            }
-        }
-    }
-
     public onTick(): void {
         this.deleteQueuedChunk();
         if (Updater.every(50)) {
@@ -260,8 +225,8 @@ export default class Level {
             y = tickable.y;
         }
         if (tileCoords) {
-            x = x * 16 + 8;
-            y = y * 16 + 8;
+            x = (x << 4) + 8;
+            y = (y << 4) + 8;
         }
         tickable.setLevel(this, x, y);
         this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
@@ -280,8 +245,46 @@ export default class Level {
         return Promise.all(Array.from(this.chunks).map((chunk) => chunk[1].save()));
     }
 
+
+    public findRandomTileInEntityRadius(
+        tiles: Array<TileRegister<typeof Tile>>,
+        entity: Entity,
+        radiusEnd: number,
+        radiusStart = 0,
+    ): LevelTile | false {
+        if (!(entity instanceof Entity) || radiusStart >= radiusEnd) {
+            return false;
+        }
+
+        const i = performance.now();
+        while (true) {
+            const rx = Random.int(radiusEnd * 2) - radiusEnd;
+            const ry = Random.int(radiusEnd * 2) - radiusEnd;
+            if (Math.abs(rx) < radiusStart || Math.abs(ry) < radiusStart) {
+                continue;
+            }
+            const x = (entity.x >> 4) + rx;
+            const y = (entity.y >> 4) + ry;
+
+            const lt = this.getTile(x, y, false);
+            if (lt) {
+                if (lt.instanceOf(...tiles)) {
+                    return lt;
+                }
+            }
+
+            if ((performance.now() - i) > 5) {
+                return false;
+            }
+        }
+    }
+
     public findEntitiesInRadius(
-        predicate: (value: Entity) => boolean, x: number, y: number, radius: number): Promise<Entity[]> {
+        predicate: (value: Entity) => boolean,
+        x: number,
+        y: number,
+        radius: number,
+    ): Promise<Entity[]> {
         const result: Array<Promise<Entity[]>> = [];
         const chunks: Chunk[] = [];
         for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {

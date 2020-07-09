@@ -14,7 +14,8 @@ export default class Fish extends AquaticMob {
     private points?: PIXI.Point[];
     private hooked?: Hook;
     private hookedAt: number = 0;
-    private fishSprite: PIXI.SimpleRope;
+    private shadowSprite: PIXI.SimpleRope;
+    private fishSprite: PIXI.Sprite;
 
     constructor() {
         super();
@@ -59,10 +60,17 @@ export default class Fish extends AquaticMob {
             this.vector.x -= (this.vector.x - this.a.x) / 30;
             this.vector.y -= (this.vector.y - this.a.y) / 30;
         }
+        const isSwimming = this.isSwimming();
+        this.fishSprite.visible = !isSwimming;
+        this.shadowSprite.visible = isSwimming;
 
-        this.fishSprite.rotation = -this.vector.rotation - Math.PI / 2;
-        if (this.points) {
-            this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+        if (isSwimming) {
+            this.shadowSprite.rotation = -this.vector.rotation - Math.PI / 2;
+            if (this.points) {
+                this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+            }
+        } else {
+            this.jump(2);
         }
     }
 
@@ -86,16 +94,18 @@ export default class Fish extends AquaticMob {
         this.points.push(new PIXI.Point(0, 0));
         this.points.push(new PIXI.Point(8, 0));
         this.points.push(new PIXI.Point(16, 0));
-        this.fishSprite = new PIXI.SimpleRope(
+        this.shadowSprite = new PIXI.SimpleRope(
             PIXI.Texture.from(System.getResource("entity", "fish_shadow.png")),
             this.points,
         );
-        this.fishSprite.pivot.x = 5;
-        this.fishSprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
-        this.container.addChild(this.fishSprite);
+        this.shadowSprite.pivot.x = 5;
+        this.shadowSprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+        this.fishSprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("entity", "fish.png")));
+        this.fishSprite.anchor.set(0.5);
+        this.container.addChild(this.shadowSprite, this.fishSprite);
     }
 
     protected calculateZIndex(): number {
-        return -Infinity;
+        return this.isSwimming() ? -Infinity : super.calculateZIndex();
     }
 }

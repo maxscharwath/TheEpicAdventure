@@ -19,9 +19,7 @@ export default class RLE {
             const nb = b[j + 1];
             const id = b[j];
             for (let i = 0; i < nb; i++) {
-                if (each) {
-                    each(id, data.length);
-                }
+                if (each) each(id, data.length);
                 data.push(id);
             }
         }

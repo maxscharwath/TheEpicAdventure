@@ -25,7 +25,7 @@ export default class Zombie extends HostileMob {
     protected newTarget() {
         super.newTarget();
         if (this.isOnFire) {
-            const result = this.level.getRandomTileInEntityRadius([Tiles.WATER], this, 20);
+            const result = this.level.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
             if (result) {
                 this.target = result;
             }

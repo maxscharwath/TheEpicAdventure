@@ -9,9 +9,10 @@ import RLE from "../utility/RLE";
 import Biome from "./biome/Biome";
 import Level from "./Level";
 import LevelTile from "./LevelTile";
-import Tiles from "./tile/Tiles";
+import Tiles, {TileRegister} from "./tile/Tiles";
 import Particle from "../entity/particle/Particle";
 import Tickable from "../entity/Tickable";
+import Tile from "./tile/Tile";
 
 export default class Chunk {
     public static SIZE = 16;
@@ -85,6 +86,19 @@ export default class Chunk {
         for (const particle of this.particles) {
             if (!(particle instanceof Particle) || particle.getRemoved() || !particle.getLevel()) continue;
             particle.onTick();
+        }
+    }
+
+    public onRender() {
+        if (!this.isGenerated()) return;
+        this.map.forEach((lt) => lt.onRender());
+        for (const entity of this.entities) {
+            if (!(entity instanceof Entity) || entity.getRemoved() || !entity.getLevel()) continue;
+            entity.onRender();
+        }
+        for (const particle of this.particles) {
+            if (!(particle instanceof Particle) || particle.getRemoved() || !particle.getLevel()) continue;
+            particle.onRender();
         }
     }
 
@@ -168,21 +182,6 @@ export default class Chunk {
         this.entities.forEach((entity) => {
             entity.add();
         });
-    }
-
-    public onRender() {
-        if (!this.isGenerated()) {
-            return;
-        }
-        this.map.forEach((lt) => lt.onRender());
-        for (const entity of this.entities) {
-            if (!(entity instanceof Entity) || entity.getRemoved() || !entity.getLevel()) continue;
-            entity.onRender();
-        }
-        for (const particle of this.particles) {
-            if (!(particle instanceof Particle) || particle.getRemoved() || !particle.getLevel()) continue;
-            particle.onRender();
-        }
     }
 
     public save() {
@@ -299,8 +298,34 @@ export default class Chunk {
         });
     }
 
-    public updateLights() {
+    public findTiles(
+        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<LevelTile[]> {
+        const map = this.map.concat();
+        const result: LevelTile[] = [];
+        return new Promise((resolve) => {
+            const action = () => {
+                const tile = map.shift();
+                if (tile.instanceOf(...tiles) && predicate instanceof Function && predicate(tile)) result.push(tile);
+                if (map.length > 0) return process.nextTick(action);
+                resolve(result);
+            };
+            process.nextTick(action);
+        });
+    }
 
+    public findTile(
+        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<LevelTile> {
+        const map = this.map.concat();
+        return new Promise((resolve) => {
+            const action = () => {
+                const tile = map.shift();
+                if (tile.instanceOf(...tiles)) {
+                    return predicate instanceof Function && !predicate(tile) ? undefined : resolve(tile);
+                }
+                if (map.length > 0) process.nextTick(action);
+            };
+            process.nextTick(action);
+        });
     }
 
     private async wait(time: number) {
