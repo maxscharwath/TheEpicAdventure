@@ -74,6 +74,10 @@ export default class ItemEntity extends Entity {
         this.shadow.distance = (this.z > 0) ? this.z * 4 : 0;
     }
 
+    public onFire() {
+        this.time += 20;
+    }
+
     public touchedBy(entity: Entity) {
         if (this.deleted) return;
         super.touchedBy(entity);

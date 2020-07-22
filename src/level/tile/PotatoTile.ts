@@ -19,7 +19,9 @@ export default class PotatoTile extends CropTile {
 
     protected harvest() {
         if (this.states.age >= 50) {
-            this.addItemEntity(Items.POTATO, 4);
+            this.addItemEntity(Items.POTATO, 3);
+        } else {
+            this.addItemEntity(Items.POTATO, 1);
         }
     }
 

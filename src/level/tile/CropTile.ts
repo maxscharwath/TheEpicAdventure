@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import FarmlandTile from "./FarmlandTile";
 import {Entity} from "../../entity";
 
-export default class CropTile extends FarmlandTile {
+export default abstract class CropTile extends FarmlandTile {
     public static readonly TAG: string = "crop";
 
     protected sprite?: PIXI.Sprite;

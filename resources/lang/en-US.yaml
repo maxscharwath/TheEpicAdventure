@@ -65,6 +65,8 @@ item.wheat: Wheat
 item.potato: Potato
 item.carrot: Carrot
 item.corn: Corn
+item.cake: Cake
+item.egg: Egg
 item.seed_wheat: Wheat seed
 item.stone: Stone
 item.wood: Wood

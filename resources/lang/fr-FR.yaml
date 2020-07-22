@@ -65,6 +65,8 @@ item.wheat: Blé
 item.potato: Patate
 item.carrot: Carotte
 item.corn: Maïs
+item.cake: Gâteau
+item.egg: Œuf
 item.seed_wheat: Graine de blé
 item.stone: Pierre
 item.wood: Bois

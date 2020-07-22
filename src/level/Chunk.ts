@@ -13,9 +13,11 @@ import Tiles, {TileRegister} from "./tile/Tiles";
 import Particle from "../entity/particle/Particle";
 import Tickable from "../entity/Tickable";
 import Tile from "./tile/Tile";
+import {Mob, Player} from "../entity";
 
 export default class Chunk {
     public static SIZE = 16;
+    public static MOB_CAP = 32;
 
     public static fileExist(level: Level, cX: number, cY: number) {
         return fsp.access(System.getAppData("tmp", `c.${cX}.${cY}.bin`));
@@ -38,6 +40,7 @@ export default class Chunk {
     public readonly x: number;
     public readonly y: number;
     public readonly level: Level;
+    private mobCap: number = 0;
     private particles: Particle[] = [];
     private entities: Entity[] = [];
     private generated: boolean = false;
@@ -116,6 +119,9 @@ export default class Chunk {
     public add(tickable: Tickable) {
         if (tickable instanceof Entity) {
             if (!this.entities.includes(tickable)) {
+                if (tickable instanceof Mob && !(tickable instanceof Player)) {
+                    this.mobCap++;
+                }
                 this.entities.push(tickable);
                 if (this.loaded) tickable.add();
             }
@@ -129,7 +135,12 @@ export default class Chunk {
     }
 
     public remove(tickable: Tickable) {
-        if (tickable instanceof Entity) this.entities = this.entities.filter((item) => item !== tickable);
+        if (tickable instanceof Entity) {
+            this.entities = this.entities.filter((item) => item !== tickable);
+            if (tickable instanceof Mob && !(tickable instanceof Player)) {
+                this.mobCap--;
+            }
+        }
         if (tickable instanceof Particle) this.particles = this.particles.filter((item) => item !== tickable);
         tickable.remove();
     }
@@ -252,7 +263,7 @@ export default class Chunk {
         for (const data of bson.entities) {
             const entity = (Entities.get(data.id) as unknown as typeof Entity);
             if (!entity) continue;
-            this.level.add(entity.create(data));
+            this.add(entity.create(data));
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
         this.map = map;

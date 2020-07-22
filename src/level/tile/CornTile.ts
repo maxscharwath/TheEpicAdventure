@@ -20,6 +20,8 @@ export default class CornTile extends CropTile {
     protected harvest() {
         if (this.states.age >= 50) {
             this.addItemEntity(Items.CORN, 3);
+        } else {
+            this.addItemEntity(Items.CORN, 1);
         }
     }
 

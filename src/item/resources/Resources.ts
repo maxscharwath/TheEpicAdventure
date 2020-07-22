@@ -18,6 +18,10 @@ export default class Resources {
 
     public static readonly APPLE = new Resource("apple.png");
 
+    public static readonly CAKE = new Resource("cake.png");
+
+    public static readonly EGG = new Resource("egg.png");
+
     public static readonly SAND = new TileResource("sand.png", Tiles.SAND,
         [Tiles.HOLE, Tiles.WATER, Tiles.LAVA]);
 

@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
 import Updater from "../core/Updater";
-import {Entity, Player} from "../entity/";
+import {Entity, Player, Zombie} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./levelGen/LevelGen";
@@ -20,8 +20,6 @@ import {TileRegister} from "./tile/Tiles";
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
 
-    public maxMobCount: number = 300;
-    public mobCount: number = 0;
     public readonly seed: number;
     public levelGen: LevelGen;
     public gravity = 0.4;
@@ -195,9 +193,6 @@ export default class Level {
         });
         this.loadedChunks = chunks;
 
-        // return;
-        const count = 0;
-
         while (this.tickablesToAdd.length > 0) {
             const tickable: Tickable = this.tickablesToAdd[0];
             tickable.getChunk()?.add(tickable);
@@ -217,11 +212,7 @@ export default class Level {
             }
             this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
         }
-        this.mobCount = count;
-
-        if (count < this.maxMobCount) {
-            this.trySpawn();
-        }
+        this.trySpawn();
     }
 
     public onRender() {
@@ -357,9 +348,15 @@ export default class Level {
     }
 
     private trySpawn(): void {
-        const spawnSkipChance = ~~(Level.MOB_SPAWN_FACTOR * Math.pow(this.mobCount, 2) / Math.pow(this.maxMobCount, 2));
-        if (spawnSkipChance > 0 && this.random.int(spawnSkipChance) !== 0) {
-            return;
+        const player = this.players[~~(Random.float() * this.players.length)];
+        const radius = Random.int(8, 80);
+        const angle = Random.number(Math.PI * 2);
+        const x = (player.x >> 4) + ~~(radius * Math.cos(angle));
+        const y = (player.y >> 4) + ~~(radius * Math.sin(angle));
+        const tile = this.getTile(x, y, false);
+        if (!tile)return;
+        if (Zombie.spawnCondition(tile)) {
+            this.add(new Zombie(), x, y, true);
         }
     }
 

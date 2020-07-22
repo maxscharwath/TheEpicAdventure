@@ -2,8 +2,14 @@ import Mob from "./Mob";
 import {Entity} from "../";
 import Renderer from "../../core/Renderer";
 import Maths from "../../utility/Maths";
+import LevelTile from "../../level/LevelTile";
+import Tiles from "../../level/tile/Tiles";
 
 export default abstract class HostileMob extends Mob {
+    public static spawnCondition(levelTile: LevelTile): boolean {
+        if (levelTile.getLightLevel() > 12)return false;
+        return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
+    }
     protected target: { x: number, y: number } = {x: 0, y: 0};
 
     constructor() {

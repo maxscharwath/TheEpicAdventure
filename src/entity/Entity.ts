@@ -49,6 +49,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     protected isMoving: boolean = false;
     protected container = new PIXI.Container();
     protected isOnFire = false;
+    protected fireDelay: number;
     private lastTick: number = Updater.ticks;
     private uid: string = uniqid();
 
@@ -77,16 +78,24 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.fireSprite.visible = this.isOnFire;
         if (this.isOnFire) {
             const tile = this.getTile();
-            if (tile) tile.lightLevel = 20;
+            tile?.setLight(20);
             this.onFire();
-            if (this.isOnTile(Tiles.WATER)) {
-                this.isOnFire = false;
+            if (this.fireDelay++ > 200 || this.isOnTile(Tiles.WATER)) {
+                this.setOnFire(false);
             }
         } else {
             if (this.isOnTile(Tiles.LAVA)) {
-                this.isOnFire = true;
+                this.setOnFire(true);
             }
         }
+    }
+
+    public setOnFire(value: boolean) {
+        if (!value && this.isOnFire) {
+            // fizz
+        }
+        this.isOnFire = value;
+        this.fireDelay = 0;
     }
 
     public isOnTile(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
@@ -231,7 +240,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     public touchedBy(entity: Entity): void {
         if (entity.isOnFire) {
-            this.isOnFire = true;
+            this.setOnFire(true);
         }
     }
 

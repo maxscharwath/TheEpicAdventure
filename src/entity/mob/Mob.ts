@@ -15,6 +15,7 @@ import * as PIXI from "pixi.js";
 import Updater from "../../core/Updater";
 import System from "../../core/System";
 import SpriteSheet from "../../gfx/SpriteSheet";
+import Tiles from "../../level/tile/Tiles";
 
 export default abstract class Mob extends Entity {
 
@@ -34,6 +35,10 @@ export default abstract class Mob extends Entity {
         }
     }
 
+    public static spawnCondition(levelTile: LevelTile): boolean {
+        return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
+    }
+
     public static create(data: any): Mob {
         const e = super.create(data) as Mob;
         e.inventory = Inventory.create(data.inventory);
@@ -43,7 +48,6 @@ export default abstract class Mob extends Entity {
     protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
-
     public isInteractive = true;
     public maxHealth: number = 20;
     public health: number = this.maxHealth;
@@ -112,7 +116,7 @@ export default abstract class Mob extends Entity {
 
     public burn(): boolean {
         if (!this.canBurn() || this.isSwimming() || this.isOnFire) return false;
-        this.isOnFire = true;
+        this.setOnFire(true);
         return true;
     }
 

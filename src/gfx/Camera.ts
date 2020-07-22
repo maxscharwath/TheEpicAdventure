@@ -30,8 +30,7 @@ export default class Camera {
     private fy: number = 0;
     private cx: number = 0;
     private cy: number = 0;
-
-    private _zoom: number = 5;
+    private _zoom: number = 6;
 
     constructor() {
     }

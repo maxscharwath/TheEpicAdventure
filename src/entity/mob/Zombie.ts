@@ -10,7 +10,7 @@ export default class Zombie extends HostileMob {
 
     public onTick(): void {
         super.onTick();
-        if (this.getLevel().getAmbientLightLevel() > 10) {
+        if (this.getLevel().getAmbientLightLevel() > 12) {
             this.burn();
         }
     }
