@@ -52,12 +52,6 @@ export default abstract class AquaticMob extends Mob {
         }
     }
 
-    public touchedBy(entity: Entity): void {
-        // if(!(entity instanceof HostileMob)){
-        //     this.target = entity;
-        // }
-    }
-
     protected getTileZ() {
         return 0;
     }

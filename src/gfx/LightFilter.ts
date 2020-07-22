@@ -2,15 +2,17 @@ import * as PIXI from "pixi.js";
 import LevelFilter from "./LevelFilter";
 import Renderer from "../core/Renderer";
 import Updater from "../core/Updater";
+import Level from "../level/Level";
 
 export default class LightFilter extends LevelFilter {
     public lightContainer = new PIXI.Container();
     private readonly ambientLight: PIXI.Sprite;
     private readonly blendFilter: PIXI.filters.AlphaFilter;
+    private level: Level;
 
-    constructor() {
+    constructor(level: Level) {
         super();
-
+        this.level = level;
         this.ambientLight = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.ambientLight.width = Renderer.getScreen().width;
         this.ambientLight.height = Renderer.getScreen().height;
@@ -30,7 +32,7 @@ export default class LightFilter extends LevelFilter {
     }
 
     public onRender() {
-         // this.blendFilter.alpha = (Math.cos(2 * Math.PI * Updater.getDayRatio()) + 1) / 2;
+        this.blendFilter.alpha = 1 - (this.level.getAmbientLightLevel() / 20);
     }
 
     protected init() {

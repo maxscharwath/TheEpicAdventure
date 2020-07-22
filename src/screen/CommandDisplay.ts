@@ -128,6 +128,11 @@ export default class CommandDisplay extends Display {
         return true;
     }
 
+    public onResize() {
+        super.onResize();
+        this.inputText.y = Renderer.getScreen().height;
+    }
+
     private init() {
         this.inputText = new PIXI.BitmapText("", {
             fontName: "Epic",
@@ -135,7 +140,7 @@ export default class CommandDisplay extends Display {
             tint: Color.white.getInt(),
         });
         this.inputText.anchor = new PIXI.Point(0, 1);
-        this.inputText.y = Renderer.getScreen().height;
         this.addChild(this.inputText);
+        this.onResize();
     }
 }

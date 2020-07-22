@@ -19,9 +19,10 @@ export default class FarmlandTile extends Tile {
 
     public onInteract(mob: Mob, item?: Item) {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
-            console.log("harvest");
             this.harvest();
-            this.levelTile.setTile(Tiles.FARMLAND);
+            this.levelTile.setTile(Tiles.FARMLAND, {
+                moisture: this.states.moisture,
+            });
             return true;
         }
         return false;
@@ -32,6 +33,7 @@ export default class FarmlandTile extends Tile {
         const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "farmland.png")));
         sprite.filters = [this.filter];
         this.container.addChild(sprite);
+        this.filter.brightness(this.states.moisture / -40 + 1, false);
     }
 
     public onTick(): void {

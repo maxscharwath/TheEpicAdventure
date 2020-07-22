@@ -24,6 +24,7 @@ export default class BackgroundDisplay extends Display {
     private _width: number = 0;
 
     private _height: number = 0;
+
     constructor() {
         super();
         const container = new PIXI.Container();

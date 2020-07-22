@@ -5,12 +5,14 @@ import Tiles from "../../level/tile/Tiles";
 
 export default class Zombie extends HostileMob {
     private static spriteSheet = new SpriteSheet("zombie.json");
-    public isOnFire = true;
     protected speedMax: number = 1;
     private sprite?: AnimatedSprite;
 
     public onTick(): void {
         super.onTick();
+        if (this.getLevel().getAmbientLightLevel() > 10) {
+            this.burn();
+        }
     }
 
     public onRender() {
@@ -25,7 +27,7 @@ export default class Zombie extends HostileMob {
     protected newTarget() {
         super.newTarget();
         if (this.isOnFire) {
-            const result = this.level.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
+            const result = this.level?.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
             if (result) {
                 this.target = result;
             }

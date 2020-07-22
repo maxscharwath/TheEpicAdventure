@@ -29,7 +29,7 @@ export default class MusicPlayer extends Furniture {
         super.onTick();
         if (this.playing) {
             if (Updater.every(10)) {
-                this.level.add(new NoteParticle(this.x, this.y + 2));
+                this.level?.add(new NoteParticle(this.x, this.y + 2));
             }
         }
     }

@@ -14,6 +14,7 @@ export default class Camp extends Furniture {
         e.active = active;
         return e;
     }
+
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private active: boolean = false;
@@ -28,14 +29,14 @@ export default class Camp extends Furniture {
         super.onRender();
         this.campFire.visible = this.active;
         if (this.active) {
-            this.level.add(new DustParticle(this.x, this.y - 4));
+            this.level?.add(new DustParticle(this.x, this.y - 4));
         }
     }
 
     public onTick() {
         super.onTick();
         if (this.active) {
-            this.getTile().setLight(15);
+            this.getTile()?.setLight(15);
         }
     }
 

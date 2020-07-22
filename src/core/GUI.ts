@@ -58,6 +58,12 @@ export default class GUI {
         });
     }
 
+    public onResize() {
+        this.displays.forEach((display) => {
+            display.onResize();
+        });
+    }
+
     public isBlocking() {
         return this.blocks;
     }

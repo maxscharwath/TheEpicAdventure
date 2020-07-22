@@ -10,6 +10,7 @@ export class Dialogue {
     public static create(name: string) {
         return new Dialogue().setName(name);
     }
+
     public hasCommand = true;
     public name: string;
     public sentences: string[] = [];

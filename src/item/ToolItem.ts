@@ -59,7 +59,7 @@ export default class ToolItem extends Item {
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
         if (this.durability <= 0) {
             this.destroy(mob);
-            return;
+            return false;
         }
         if (this.getCooldownTime() <= this.getCooldown()) return false;
         if (super.useOn(levelTile, mob)) {

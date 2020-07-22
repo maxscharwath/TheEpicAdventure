@@ -12,6 +12,10 @@ export default class Resources {
 
     public static readonly POTATO = new FarmResource("potato.png", Tiles.POTATO);
 
+    public static readonly CARROT = new FarmResource("carrot.png", Tiles.CARROT);
+
+    public static readonly CORN = new FarmResource("corn.png", Tiles.CORN);
+
     public static readonly APPLE = new Resource("apple.png");
 
     public static readonly SAND = new TileResource("sand.png", Tiles.SAND,

@@ -2,6 +2,7 @@ import Item from "./Item";
 import Mob from "../entity/mob/Mob";
 import LevelTile from "../level/LevelTile";
 import BucketType from "./BucketType";
+import Tiles from "../level/tile/Tiles";
 
 export default class BucketItem extends Item {
 
@@ -13,8 +14,7 @@ export default class BucketItem extends Item {
 
     constructor(tag: string, content = BucketType.EMPTY) {
         super(tag);
-        this.content = content;
-        this.texture = content.texture;
+        this.setContent(content);
     }
 
     public isStackable() {
@@ -26,6 +26,20 @@ export default class BucketItem extends Item {
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
+        if (this.content === BucketType.EMPTY) {
+            if (levelTile.is(BucketType.WATER.tile)) {
+                this.setContent(BucketType.WATER);
+                levelTile.setTile(Tiles.HOLE);
+            } else if (levelTile.is(BucketType.LAVA.tile)) {
+                this.setContent(BucketType.LAVA);
+                levelTile.setTile(Tiles.HOLE);
+            }
+        } else {
+            if (levelTile.is(Tiles.HOLE) && this.content.tile) {
+                levelTile.setTile(this.content.tile);
+                this.setContent(BucketType.EMPTY);
+            }
+        }
         return false;
     }
 
@@ -33,6 +47,11 @@ export default class BucketItem extends Item {
         return {
             ...super.toBSON(),
         };
+    }
+
+    private setContent(content = BucketType.EMPTY) {
+        this.content = content;
+        this.texture = content.texture;
     }
 
 }

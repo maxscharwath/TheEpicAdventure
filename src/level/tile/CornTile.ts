@@ -3,13 +3,13 @@ import System from "../../core/System";
 import Items from "../../item/Items";
 import CropTile from "./CropTile";
 
-export default class WheatTile extends CropTile {
-    public static readonly TAG: string = "wheat";
+export default class CornTile extends CropTile {
+    public static readonly TAG: string = "corn";
     public static readonly COLOR: number = 0x94785c;
 
     protected initCrop() {
         super.initCrop();
-        const baseTexture = new PIXI.BaseTexture(System.getResource("tile", "wheat.png"));
+        const baseTexture = new PIXI.BaseTexture(System.getResource("tile", "corn.png"));
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.sprite.anchor.set(0.5);
         this.sprite.position.set(8, 8);
@@ -19,9 +19,8 @@ export default class WheatTile extends CropTile {
 
     protected harvest() {
         if (this.states.age >= 50) {
-            this.addItemEntity(Items.WHEAT, 3);
+            this.addItemEntity(Items.CORN, 3);
         }
-        this.addItemEntity(Items.SEED_WHEAT);
     }
 
 }

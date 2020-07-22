@@ -38,6 +38,10 @@ export default class Display extends PIXI.Container {
 
     }
 
+    public onResize(): void {
+
+    }
+
     public onCommand(): void {
 
     }

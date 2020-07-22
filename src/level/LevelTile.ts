@@ -62,8 +62,8 @@ export default class LevelTile {
     public readonly temperature: number;
     public readonly elevation: number;
     public readonly moisture: number;
-    public lightLevel = 0;
     public readonly light = new Light();
+    protected lightLevel = 0;
     private visible: boolean;
     private initByEntity?: Entity;
     private tileStates?: {};
@@ -95,9 +95,9 @@ export default class LevelTile {
         const oldTile = this._tile;
         // @ts-ignore
         this._tile = new this.tileClass(this);
-        this._tile?.states.set(this.tileStates);
-        this.isInitiated = true;
+        this._tile.states.set(this.tileStates);
         process.nextTick(() => {
+            this.isInitiated = true;
             this.groundContainer.removeChildren();
             this.sortableContainer.removeChildren();
 
@@ -139,7 +139,8 @@ export default class LevelTile {
     }
 
     public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>) {
-        return tileClasses.some((tileClass) => this._tile?.getClass() === tileClass);
+        return tileClasses.some((tileClass) =>
+            this._tile?.getClass() === ((tileClass instanceof TileRegister) ? tileClass.getClass() : tileClass));
     }
 
     public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
@@ -277,6 +278,11 @@ export default class LevelTile {
         }
     }
 
+    public getLightLevel() {
+        const l = Math.round((this.lightLevel + this.level.getAmbientLightLevel()));
+        return l > 20 ? 20 : l;
+    }
+
     public updateLight() {
         if (!this.visible) return;
         let lightLevel = this._tile?.light;
@@ -317,6 +323,6 @@ export default class LevelTile {
 
     private sort() {
         if (!this._tile) return;
-        this.sortableContainer.zIndex = this._y + LevelTile.SIZE * this._tile.anchor;
+        this.sortableContainer.zIndex = this._y + LevelTile.SIZE * this._tile.anchor + this._tile.offset.y;
     }
 }

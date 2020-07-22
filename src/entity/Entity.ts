@@ -54,7 +54,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     protected constructor() {
         super();
-        this.container.sortDirty = true;
         this.fireSprite = new PIXI.AnimatedSprite(Entity.fireFrames);
         this.fireSprite.anchor.set(0.5);
         this.fireSprite.animationSpeed = 0.5;
@@ -82,6 +81,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             this.onFire();
             if (this.isOnTile(Tiles.WATER)) {
                 this.isOnFire = false;
+            }
+        } else {
+            if (this.isOnTile(Tiles.LAVA)) {
+                this.isOnFire = true;
             }
         }
     }
@@ -227,7 +230,9 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     public touchedBy(entity: Entity): void {
-
+        if (entity.isOnFire) {
+            this.isOnFire = true;
+        }
     }
 
     public blocks(entity: Entity) {
@@ -252,7 +257,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
     }
 
     protected onFire() {
-
     }
 
     protected init() {

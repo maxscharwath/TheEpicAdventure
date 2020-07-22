@@ -45,8 +45,23 @@ export default class Level {
         this.levelGen = new generator(this.seed);
         this.sortableContainer.sortableChildren = true;
         this.container.addChild(this.groundContainer, this.sortableContainer);
-        this.lightFilter = new LightFilter();
+        this.lightFilter = new LightFilter(this);
         // this.weather = new RainWeather();
+    }
+
+    public getAmbientLightLevel() {
+        const ease = (x: number) => x * x * (3 - 2 * x);
+        if (this.levelGen instanceof LevelGenOverworld) {
+            const r = Updater.time.ratio();
+            switch (Updater.time) {
+                case Updater.Time.Morning: return ease(r) * 20;
+                case Updater.Time.Day: return 20;
+                case Updater.Time.Evening: return (1 - ease(r)) * 20;
+                case Updater.Time.Night: return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     public getChunks() {

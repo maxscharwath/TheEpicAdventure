@@ -95,6 +95,8 @@ export default class Items extends ItemRegister<Item> {
     public static readonly SEED_WHEAT = Items.add("seed_wheat", ResourceItem, Resources.SEED_WHEAT);
     public static readonly BREAD = Items.add("bread", ResourceItem, Resources.BREAD);
     public static readonly POTATO = Items.add("potato", ResourceItem, Resources.POTATO);
+    public static readonly CARROT = Items.add("carrot", ResourceItem, Resources.CARROT);
+    public static readonly CORN = Items.add("corn", ResourceItem, Resources.CORN);
     public static readonly APPLE = Items.add("apple", ResourceItem, Resources.APPLE);
 
     public static readonly SNOWBALL = Items.add("snowball", ResourceItem, Resources.SNOWBALL);

@@ -39,6 +39,7 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
+
     public static ticks = 0;
     public static delta: number;
     public static readonly DEFAULT_WIDTH: number = 240;
@@ -70,6 +71,11 @@ export default class Renderer {
         document.body.appendChild(this.renderer.view);
         this.mainStage.addChild(this.stages.level);
         this.mainStage.addChild(this.stages.gui);
+        window.addEventListener("resize", () => this.onResize());
+    }
+
+    public static resize() {
+        this.renderer.resize(window.innerWidth, window.innerHeight);
     }
 
     public static getScreen() {
@@ -130,4 +136,9 @@ export default class Renderer {
         clearBeforeRender: false,
         powerPreference: "high-performance",
     });
+
+    private static onResize() {
+        this.resize();
+        Game.GUI.onResize();
+    }
 }

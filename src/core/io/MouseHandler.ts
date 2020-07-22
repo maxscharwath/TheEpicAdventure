@@ -1,7 +1,7 @@
 export default class MouseHandler {
-    public deltaX: number;
-    public deltaY: number;
-    public deltaZ: number;
+    public deltaX: number = 0;
+    public deltaY: number = 0;
+    public deltaZ: number = 0;
 
     constructor() {
         document.addEventListener("wheel", (e) => this.onwheel(e), {passive: false});

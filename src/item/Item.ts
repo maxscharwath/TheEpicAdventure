@@ -6,6 +6,7 @@ import Mob from "../entity/mob/Mob";
 import LevelTile from "../level/LevelTile";
 import Items from "./Items";
 import Updater from "../core/Updater";
+import System from "../core/System";
 
 export default class Item {
 
@@ -20,7 +21,7 @@ export default class Item {
     public craftedBy?: Mob;
     public tag: string;
     public uid: string = uniqid();
-    protected texture: PIXI.Texture = PIXI.Texture.EMPTY;
+    protected texture: PIXI.Texture = PIXI.Texture.from(System.getResource("no_texture.png"));
     private cooldownTime = 0;
 
     constructor(tag: string) {
@@ -28,7 +29,8 @@ export default class Item {
     }
 
     public getSprite(centred: boolean = false) {
-        const sprite = new PIXI.Sprite(this.texture);
+        const texture = (!this.texture.valid) ? PIXI.Texture.from(System.getResource("no_texture.png")) : this.texture;
+        const sprite = new PIXI.Sprite(texture);
         if (centred) {
             sprite.anchor.set(0.5);
         }

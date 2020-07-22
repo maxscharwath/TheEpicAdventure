@@ -9,8 +9,9 @@ import CommandDisplay from "../../screen/CommandDisplay";
 export default class Command {
 
     public static execute(display: CommandDisplay, commandName: string, args: any[] = []): any {
-        if (!this.commandList.has(commandName)) return `"${commandName}" unknown`;
-        return this.commandList.get(commandName).execute(args, display);
+        const command = this.commandList.get(commandName);
+        if (!command) return `"${commandName}" unknown`;
+        return command.execute(args, display);
     }
 
     public static add(commandName: string) {

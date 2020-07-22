@@ -58,6 +58,8 @@ export default class TreeTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
+        const x = this.levelTile.x + 8 + this.offset.x;
+        const y = this.levelTile.y + 8 + this.offset.y;
         if (item instanceof ToolItem) {
             switch (item.type) {
                 case ToolType.axe:
@@ -66,9 +68,9 @@ export default class TreeTile extends Tile {
                     this.wiggleDelay = 10;
                     this.leavesDrop();
                     this.levelTile.level.add(
-                        new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                        new DamageParticle(x, y, -hurt, 0xc80000),
                     );
-                    this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
+                    this.levelTile.level.add(new HurtParticle(x, y));
                     if (this.damage >= 15) {
                         if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
                         this.addItemEntity(Items.WOOD);
@@ -89,14 +91,17 @@ export default class TreeTile extends Tile {
         const texture = PIXI.BaseTexture.from(source);
         this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(32, 0, 32, 32)));
         this.leafSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(0, 0, 32, 32)));
+        this.offset.set(
+            this.random.int(-4, 4),
+            this.random.int(-4, 4),
+        );
         this.sortableContainer.pivot.set(8, 16);
-        this.sortableContainer.position.set(8, 16);
-        this.sortableContainer.addChild(this.treeSprite);
+        this.sortableContainer.position.set(8 + this.offset.x, 16 + this.offset.y);
         this.treeSprite.anchor.set(0.5, 1);
         this.treeSprite.position.set(8, 16);
-        this.sortableContainer.addChild(this.leafSprite);
         this.leafSprite.anchor.set(0.5, 0.5);
         this.leafSprite.position.set(8, 0);
+        this.sortableContainer.addChild(this.treeSprite, this.leafSprite);
     }
 
     protected initTree() {
@@ -110,8 +115,8 @@ export default class TreeTile extends Tile {
         this.wiggleDelay = 10;
         for (let i = 0; i < Random.int(5, 20); i++) {
             this.level.add(new LeafParticle(
-                (this.x << 4) + Random.int(16),
-                (this.y << 4) + Random.int(16),
+                (this.x << 4) + this.offset.x + Random.int(16),
+                (this.y << 4) + this.offset.y + Random.int(16),
             ));
         }
     }

@@ -76,6 +76,7 @@ export default class ItemEntity extends Entity {
 
     public touchedBy(entity: Entity) {
         if (this.deleted) return;
+        super.touchedBy(entity);
         if (entity instanceof Mob && this.onGround()) {
             entity.touchItem(this);
         }
@@ -103,7 +104,7 @@ export default class ItemEntity extends Entity {
     private updateRadiusMob() {
         if (Updater.ticks - this.lastCheck < 100) return;
         this.lastCheck = Updater.ticks;
-        this.level.findEntitiesInRadius(
+        this.level?.findEntitiesInRadius(
             (entity) => entity instanceof Mob, this.x >> 4, this.y >> 4, 10)
             .then((entities) => this.radiusMobs = entities as Mob[]);
     }

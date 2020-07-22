@@ -9,6 +9,8 @@ export default class MapDisplay extends Display {
     public hasCommand = true;
     private map: PIXI.Sprite;
     private marker: PIXI.Sprite;
+    private container: PIXI.Container;
+    private background: PIXI.Sprite;
 
     constructor() {
         super();
@@ -29,6 +31,16 @@ export default class MapDisplay extends Display {
         if (x < 0) x = 0;
         if (x > 96) x = 96;
         this.marker.position.set(x, y);
+    }
+
+    public onResize() {
+        super.onResize();
+        this.background.width = Renderer.getScreen().width;
+        this.background.height = Renderer.getScreen().height;
+        this.container.position.set(
+            (Renderer.getScreen().width - this.container.width) / 2,
+            (Renderer.getScreen().height - this.container.height) / 2,
+        );
     }
 
     private drawMap(size = 128) {
@@ -56,28 +68,23 @@ export default class MapDisplay extends Display {
     }
 
     private init() {
-        const container = new PIXI.Container();
+        this.container = new PIXI.Container();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "map.png"));
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 112, 112)));
         this.marker = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(112, 8, 8, 8)));
         this.marker.anchor.set(0.5);
         this.marker.pivot.set(-8, -8);
-        const background = new PIXI.Sprite(PIXI.Texture.WHITE);
+        this.background = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.map = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.map.width = 96;
         this.map.height = 96;
         this.map.position.set(8, 8);
-        background.width = Renderer.getScreen().width;
-        background.height = Renderer.getScreen().height;
-        background.tint = 0x000000;
-        background.alpha = 0.75;
-        container.addChild(sprite, this.map, this.marker);
-        container.scale.set(4);
-        container.position.set(
-            (Renderer.getScreen().width - container.width) / 2,
-            (Renderer.getScreen().height - container.height) / 2,
-        );
-        this.addChild(background, container);
+        this.background.tint = 0x000000;
+        this.background.alpha = 0.75;
+        this.container.addChild(sprite, this.map, this.marker);
+        this.container.scale.set(4);
+        this.addChild(this.background, this.container);
         this.drawMap();
+        this.onResize();
     }
 }

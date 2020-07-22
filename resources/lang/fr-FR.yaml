@@ -19,6 +19,7 @@ biome.desert: Désert
 biome.jungle: Jungle
 biome.savanna: Savane
 biome.river: Rivière
+biome.cave: Grotte
 
 tile.water: Eau
 tile.sand:  Sable
@@ -29,6 +30,8 @@ tile.lava: Lave
 tile.farmland: Terre labourée
 tile.wheat: Blé
 tile.potato: Patate
+tile.carrot: Carotte
+tile.corn: Maïs
 tile.tree: Arbre
 tile.spruce: Sapin
 tile.palm: Palmier
@@ -60,6 +63,8 @@ item.snowball: Boule de neige
 item.apple: Pomme
 item.wheat: Blé
 item.potato: Patate
+item.carrot: Carotte
+item.corn: Maïs
 item.seed_wheat: Graine de blé
 item.stone: Pierre
 item.wood: Bois

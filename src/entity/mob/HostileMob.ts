@@ -54,12 +54,6 @@ export default abstract class HostileMob extends Mob {
         }
     }
 
-    public touchedBy(entity: Entity): void {
-        // if(!(entity instanceof HostileMob)){
-        //     this.target = entity;
-        // }
-    }
-
     protected newTarget() {
         this.target = {
             x: this.random.int(Renderer.WIDTH * -10, Renderer.WIDTH * 10),

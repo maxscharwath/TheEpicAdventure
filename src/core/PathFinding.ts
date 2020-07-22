@@ -5,9 +5,9 @@ class Node {
     public g = 0;
     public h = 0;
     public f = 0;
-    public readonly pos?: number[];
+    public readonly pos: number[];
 
-    constructor(parent?: Node, position?: number[]) {
+    constructor(parent?: Node, position: number[] = []) {
         this.parent = parent;
         this.pos = position;
     }
@@ -21,8 +21,8 @@ class Node {
 
 export default class PathFinding {
     public static astar(entity: Entity, end: [number, number]) {
-        const startNode = new Node(null, [entity.x >> 4, entity.y >> 4]);
-        const endNode = new Node(null, end);
+        const startNode = new Node(undefined, [entity.x >> 4, entity.y >> 4]);
+        const endNode = new Node(undefined, end);
         const openList: Node[] = [];
         const closedList: Node[] = [];
         openList.push(startNode);

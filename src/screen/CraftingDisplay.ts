@@ -15,6 +15,8 @@ export default class CraftingDisplay extends Display {
     private costContainer = new PIXI.Container();
     private recipesContainer = new PIXI.Container();
     private hasText: PIXI.BitmapText;
+    private container: PIXI.Container;
+    private background: PIXI.Sprite;
 
     constructor(recipes: Recipe[], mob: Mob) {
         super();
@@ -55,6 +57,16 @@ export default class CraftingDisplay extends Display {
 
     public isBlocking() {
         return true;
+    }
+
+    public onResize() {
+        super.onResize();
+        this.background.width = Renderer.getScreen().width;
+        this.background.height = Renderer.getScreen().height;
+        this.container.position.set(
+            (Renderer.getScreen().width - this.container.width) / 2,
+            (Renderer.getScreen().height - this.container.height) / 2,
+        );
     }
 
     private setSelect(val: number, force: boolean = false) {
@@ -110,14 +122,12 @@ export default class CraftingDisplay extends Display {
     }
 
     private init() {
-        const container = new PIXI.Container();
+        this.container = new PIXI.Container();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "crafting.png"));
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 112)));
-        const background = new PIXI.Sprite(PIXI.Texture.WHITE);
-        background.width = Renderer.getScreen().width;
-        background.height = Renderer.getScreen().height;
-        background.tint = 0x000000;
-        background.alpha = 0.75;
+        this.background = new PIXI.Sprite(PIXI.Texture.WHITE);
+        this.background.tint = 0x000000;
+        this.background.alpha = 0.75;
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
         this.costContainer.position.set(135, 29);
         this.recipesContainer.position.set(7, 7);
@@ -128,15 +138,12 @@ export default class CraftingDisplay extends Display {
         });
         this.hasText.anchor = new PIXI.Point(0, 0.5);
         this.hasText.position.set(150, 12);
-        container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
-        container.scale.set(4);
-        container.position.set(
-            (Renderer.getScreen().width - container.width) / 2,
-            (Renderer.getScreen().height - container.height) / 2,
-        );
-        this.addChild(background, container);
+        this.container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
+        this.container.scale.set(4);
+        this.addChild(this.background, this.container);
         this.initRecipe();
         this.setSelect(0, true);
+        this.onResize();
     }
 
     private refresh() {

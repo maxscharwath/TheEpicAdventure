@@ -7,7 +7,7 @@ import Items from "../../item/Items";
 import Mob from "./Mob";
 import FishingRodItem from "../../item/FishingRodItem";
 import FurnitureItem from "../../item/FurnitureItem";
-import {Furniture, ItemEntity} from "../index";
+import {Furniture} from "../index";
 
 export default class Player extends Mob {
 

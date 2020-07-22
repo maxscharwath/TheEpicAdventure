@@ -1,20 +1,44 @@
 import Game from "./Game";
 import System from "./System";
 
+class Time {
+    public get start(): number {
+        return Updater.dayLength * this.startPercent;
+    }
+    public get end(): number {
+        return Updater.dayLength * this.endPercent;
+    }
+    public id: number;
+    private readonly startPercent: number;
+    private readonly endPercent: number;
+
+    constructor(id: number, start: number, end: number) {
+        this.id = id;
+        this.startPercent = start;
+        this.endPercent = end;
+    }
+
+    public ratio(): number {
+        const S = this.start;
+        const E = this.end;
+        return (Updater.tickCount - S) / (E - S);
+    }
+}
+
 export default class Updater {
     public static ticks: number = 0;
-    public static time: number = 0;
-    public static readonly dayLength: number = 3600;
+    public static readonly dayLength: number = 15000;
     public static readonly sleepEndTime: number = Updater.dayLength / 8;
     public static readonly sleepStartTime: number = Updater.dayLength / 2 + Updater.dayLength / 8;
-
     public static readonly Time = {
-        Morning: 0,
-        Day: Updater.dayLength / 4,
-        Evening: Updater.dayLength / 2,
-        Night: Updater.dayLength / 4 * 3,
+        Morning: new Time(0, 0, 0.1),
+        Day: new Time(1, 0.1, 0.5),
+        Evening: new Time(2, 0.5, 0.6),
+        Night: new Time(3, 0.6, 1),
     };
+    public static time: Time = Updater.Time.Morning;
     public static delta: number;
+    public static tickCount: number = 0;
 
     public static getDayRatio() {
         return this.tickCount / this.dayLength;
@@ -39,17 +63,17 @@ export default class Updater {
     }
 
     public static setTime(ticks: number): void {
-        if (ticks < this.Time.Morning) ticks = 0;
-        if (ticks < this.Time.Day) {
-            this.time = 0;
-        } else if (ticks < this.Time.Evening) {
-            this.time = 1;
-        } else if (ticks < this.Time.Night) {
-            this.time = 2;
+        if (ticks < this.Time.Morning.start) ticks = 0;
+        if (ticks < this.Time.Day.start) {
+            this.time = this.Time.Morning;
+        } else if (ticks < this.Time.Evening.start) {
+            this.time = this.Time.Day;
+        } else if (ticks < this.Time.Night.start) {
+            this.time = this.Time.Evening;
         } else if (ticks < this.dayLength) {
-            this.time = 3;
+            this.time = this.Time.Night;
         } else {
-            this.time = 0;
+            this.time = this.Time.Morning;
             ticks = 0;
         }
         this.tickCount = ticks;
@@ -58,6 +82,5 @@ export default class Updater {
     public static every(tick: number): boolean {
         return (this.tickCount % tick) === 0;
     }
-    private static tickCount: number = 0;
     private static ticksTime: number[] = [];
 }

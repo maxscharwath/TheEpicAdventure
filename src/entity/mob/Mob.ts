@@ -12,6 +12,9 @@ import PotionType from "../../item/PotionType";
 import PotionEffect from "../PotionEffect";
 import HurtParticle from "../particle/HurtParticle";
 import * as PIXI from "pixi.js";
+import Updater from "../../core/Updater";
+import System from "../../core/System";
+import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default abstract class Mob extends Entity {
 
@@ -53,10 +56,19 @@ export default abstract class Mob extends Entity {
     private hurtCooldown: number = 0;
     private attackCooldown: number = 0;
     private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+    private readonly waveSprite: PIXI.AnimatedSprite;
 
     protected constructor() {
         super();
         this.useMask = true;
+
+        const waveTexture = SpriteSheet.loadTextures(System.getResource("entity", "water_wave.png"), 2, 16, 9);
+        this.waveSprite = new PIXI.AnimatedSprite(waveTexture);
+        this.waveSprite.anchor.set(0.5);
+        this.waveSprite.position.y = 8;
+        this.waveSprite.animationSpeed = 0.1;
+        this.waveSprite.play();
+        this.addChildAt(this.waveSprite, 0);
     }
 
     public getInteractTile(): LevelTile | undefined {
@@ -86,11 +98,22 @@ export default abstract class Mob extends Entity {
         if (this.hurtCooldown > 0) return;
         this.hurtCooldown = 5;
         this.a.z = 2;
-        this.a.x = attackDir.getX() * 2;
-        this.a.y = attackDir.getY() * 2;
+        if (attackDir === Direction.NONE) {
+            this.a.x = Random.number(-1, 1);
+            this.a.y = Random.number(-1, 1);
+        } else {
+            this.a.x = attackDir.getX() * 2;
+            this.a.y = attackDir.getY() * 2;
+        }
         this.health -= dmg;
         this.level.add(new DamageParticle(this.x, this.y, -dmg, 0xc80000));
         this.level.add(new HurtParticle(this.x, this.y));
+    }
+
+    public burn(): boolean {
+        if (!this.canBurn() || this.isSwimming() || this.isOnFire) return false;
+        this.isOnFire = true;
+        return true;
     }
 
     public jump(value: number = 3) {
@@ -142,6 +165,8 @@ export default abstract class Mob extends Entity {
             this.maskSprite.x = b.x;
             this.maskSprite.y = b.y - oy;
         }
+
+        this.waveSprite.visible = this.z < 0 && this.isSwimming();
     }
 
     public touchItem(itemEntity: ItemEntity) {
@@ -183,6 +208,13 @@ export default abstract class Mob extends Entity {
             return true;
         }
         return false;
+    }
+
+    protected onFire() {
+        super.onFire();
+        if (Updater.every(10)) {
+            this.hurt(1);
+        }
     }
 
     protected move(xa: number, ya: number): boolean {

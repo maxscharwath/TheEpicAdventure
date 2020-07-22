@@ -52,6 +52,11 @@ export default class HotbarDisplay extends Display {
     constructor() {
         super();
         this.init();
+        this.onResize();
+    }
+
+    public onResize() {
+        super.onResize();
         this.position.x = (Renderer.getScreen().width - this.width) >> 1;
         this.position.y = Renderer.getScreen().height - this.height - 20;
     }

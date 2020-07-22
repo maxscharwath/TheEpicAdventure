@@ -45,6 +45,7 @@ export default abstract class Tile {
     public maySpawn: boolean = false;
     public friction: number = 0.1;
     public anchor = 0;
+    public offset = new PIXI.Point();
     protected random: Random;
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
@@ -56,7 +57,7 @@ export default abstract class Tile {
         this.container.addChild(this.groundContainer);
     }
 
-    public getClass() {
+    public getClass(): typeof Tile {
         return Object.getPrototypeOf(this).constructor;
     }
 
@@ -142,8 +143,9 @@ export default abstract class Tile {
         for (let i = 0; i < nb; i++) {
             this.level.add(
                 new ItemEntity(item,
-                    (this.x << 4) + Random.int(10) + 3,
-                    (this.y << 4) + Random.int(10) + 3),
+                    (this.x << 4) + Random.int(16),
+                    (this.y << 4) + Random.int(16),
+                ),
             );
         }
     }
