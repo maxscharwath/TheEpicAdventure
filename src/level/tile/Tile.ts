@@ -124,7 +124,7 @@ export default abstract class Tile {
         return this;
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public instanceOf(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
         const ground = this.groundTile;
         return tileClass.some((t) => {
             const c = t instanceof TileRegister ? t.tile : t;

@@ -253,7 +253,7 @@ export default class Level {
 
 
     public findRandomTileInEntityRadius(
-        tiles: Array<TileRegister<typeof Tile>>,
+        tiles: TileRegister<typeof Tile>[],
         entity: Entity,
         radiusEnd: number,
         radiusStart = 0,
@@ -291,7 +291,7 @@ export default class Level {
         y: number,
         radius: number,
     ): Promise<Entity[]> {
-        const result: Array<Promise<Entity[]>> = [];
+        const result: Promise<Entity[]>[] = [];
         const chunks: Chunk[] = [];
         for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {
             for (let cy = (y - radius) >> 4; cy <= (y + radius) >> 4; cy++) {
@@ -320,7 +320,7 @@ export default class Level {
 
     public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
         const chunksId = Array.from(this.chunks.keys());
-        const result: Array<Promise<Entity[]>> = [];
+        const result: Promise<Entity[]>[] = [];
         return new Promise((resolve) => {
             const action = () => {
                 const chunk = this.chunks.get(chunksId.shift() ?? "");

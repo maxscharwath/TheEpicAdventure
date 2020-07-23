@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "strict": false,
-    "module": "CommonJS",
+    "module": "commonjs",
     "noImplicitAny": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "dist",
     "baseUrl": ".",
-    "target": "ES2019",
+    "target": "ES2020",
     "esModuleInterop": true,
     "removeComments": true,
     "moduleResolution": "node",

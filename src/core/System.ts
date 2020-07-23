@@ -1,10 +1,11 @@
-import * as electron from "electron";
 import path from "path";
+import {app, remote} from "electron";
 
 export default class System {
 
-    public static appData: string = (electron.app || electron.remote.app).getPath("userData");
-    public static resources: string = path.dirname(require.main?.filename as string);
+    public static appData: string = (app || remote.app).getPath("userData");
+    public static resources: string = path.join(__dirname, '../../resources');
+    private static startTime = new Date().getTime();
 
     public static milliTime(): number {
         const hr = process.hrtime();
@@ -36,5 +37,4 @@ export default class System {
     public static currentTimeMillis(): number {
         return (new Date()).getTime();
     }
-    private static startTime = new Date().getTime();
 }

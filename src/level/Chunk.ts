@@ -310,7 +310,7 @@ export default class Chunk {
     }
 
     public findTiles(
-        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<LevelTile[]> {
+        tiles: TileRegister<typeof Tile>[], predicate?: (value: LevelTile) => boolean): Promise<LevelTile[]> {
         const map = this.map.concat();
         const result: LevelTile[] = [];
         return new Promise((resolve) => {
@@ -325,7 +325,7 @@ export default class Chunk {
     }
 
     public findTile(
-        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<LevelTile> {
+        tiles: TileRegister<typeof Tile>[], predicate?: (value: LevelTile) => boolean): Promise<LevelTile> {
         const map = this.map.concat();
         return new Promise((resolve) => {
             const action = () => {

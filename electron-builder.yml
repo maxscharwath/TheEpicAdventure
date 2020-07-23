@@ -3,8 +3,6 @@ productName: "The Epic Adventure"
 files:
   - "dist/"
   - "resources/"
-  - "node_modules/"
-  - "package.json"
 directories:
   output: "release"
 mac:

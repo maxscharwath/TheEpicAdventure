@@ -5,7 +5,7 @@ interface KeyData<T> {
 }
 
 export default class KeyedMap<T> {
-    private data: Array<KeyData<T>> = [];
+    private data: KeyData<T>[] = [];
 
     public add(idx: number, tag: string, data: T) {
         if (this.getByIdx(idx) || this.getByTag(tag)) {

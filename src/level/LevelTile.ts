@@ -138,7 +138,7 @@ export default class LevelTile {
         this._tile?.steppedOn(entity);
     }
 
-    public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public is(...tileClasses: (typeof Tile | TileRegister<typeof Tile>)[]) {
         return tileClasses.some((tileClass) =>
             this._tile?.getClass() === ((tileClass instanceof TileRegister) ? tileClass.getClass() : tileClass));
     }
@@ -154,7 +154,7 @@ export default class LevelTile {
         this.initByEntity = entity;
     }
 
-    public findTileRadius(radius: number, ...tiles: Array<typeof Tile>) {
+    public findTileRadius(radius: number, ...tiles: typeof Tile[]) {
         for (let x = -radius; x < radius; x++) {
             const height = ~~(Math.sqrt(radius * radius - x * x));
             for (let y = -height; y < height; y++) {
@@ -255,7 +255,7 @@ export default class LevelTile {
         return this._tile?.friction ?? 1;
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public instanceOf(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
         return this._tile?.instanceOf(...tileClass);
     }
 

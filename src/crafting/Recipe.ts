@@ -5,7 +5,7 @@ import {ItemRegister} from "../item/Items";
 export default class Recipe {
     public canCraft = false;
     public readonly result: ItemRegister<Item>;
-    public cost: Array<[ItemRegister<Item>, number]> = [];
+    public cost: [ItemRegister<Item>, number][] = [];
     private craftTime = 50;
 
     constructor(result: ItemRegister<Item>) {

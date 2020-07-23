@@ -98,7 +98,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.fireDelay = 0;
     }
 
-    public isOnTile(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public isOnTile(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
         if (this.canFly() || this.z > this.getTileZ()) return false;
         return this.getTile()?.instanceOf(...tileClass);
     }

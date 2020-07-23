@@ -5,13 +5,13 @@ import Direction from "../entity/Direction";
 
 interface SpriteSheetData {
     url: string;
-    animations: Array<{
+    animations: {
         name: string;
         width: number;
         height: number;
         type: { [key: string]: number; };
         frames: number[][]
-    }>;
+    }[];
 }
 
 export default class SpriteSheet {

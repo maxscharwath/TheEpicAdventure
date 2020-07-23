@@ -160,7 +160,7 @@ export default class Inventory {
     }
 
     public toBSON() {
-        const slots: Array<{ pos: number, item?: Item, nb: number }> = [];
+        const slots: { pos: number, item?: Item, nb: number }[] = [];
         this.slots.forEach((slot, index) => {
             if (slot instanceof Slot && !slot.isEmpty()) {
                 slots.push({

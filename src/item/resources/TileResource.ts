@@ -5,10 +5,10 @@ import {TileRegister} from "../../level/tile/Tiles";
 import Resource from "./Resource";
 
 export default class TileResource extends Resource {
-    private readonly sourceTiles: Array<typeof Tile> = [];
+    private readonly sourceTiles: typeof Tile[] = [];
     private readonly targetTile: typeof Tile;
 
-    constructor(path: string, targetTile: TileRegister<typeof Tile>, sourceTiles: Array<TileRegister<typeof Tile>>) {
+    constructor(path: string, targetTile: TileRegister<typeof Tile>, sourceTiles: TileRegister<typeof Tile>[]) {
         super(path);
         this.targetTile = targetTile.tile;
         this.sourceTiles = sourceTiles.map((t) => t.tile);
