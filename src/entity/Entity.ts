@@ -15,21 +15,11 @@ import Tickable from "./Tickable";
 import SpriteSheet from "../gfx/SpriteSheet";
 import System from "../core/System";
 import Tile from "../level/tile/Tile";
+import DustParticle from "./particle/DustParticle";
+import WaterDropParticle from "./particle/WaterDropParticle";
+import SmokeParticle from "./particle/SmokeParticle";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
-
-    protected get aSpeed(): number {
-        return Math.hypot(this.a.x, this.a.y);
-    }
-
-    public static create({id, x, y}: any): Entity | undefined {
-        const EntityClass = Entities.getByTag(id);
-        if (!EntityClass) return;
-        const e = new EntityClass();
-        e.x = x;
-        e.y = y;
-        return e;
-    }
 
     protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private static random = new Random();
@@ -68,26 +58,21 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.container.addChild(this.fireSprite);
     }
 
-    public isActive() {
-        return (Updater.ticks - this.lastTick) < 50;
+    protected get aSpeed(): number {
+        return Math.hypot(this.a.x, this.a.y);
     }
 
-    public onTick(): void {
-        this.lastTick = Updater.ticks;
-        this.ticks++;
-        this.fireSprite.visible = this.isOnFire;
-        if (this.isOnFire) {
-            const tile = this.getTile();
-            tile?.setLight(20);
-            this.onFire();
-            if (this.fireDelay++ > 200 || this.isOnTile(Tiles.WATER)) {
-                this.setOnFire(false);
-            }
-        } else {
-            if (this.isOnTile(Tiles.LAVA)) {
-                this.setOnFire(true);
-            }
-        }
+    public static create({id, x, y}: any): Entity | undefined {
+        const EntityClass = Entities.getByTag(id);
+        if (!EntityClass) return;
+        const e = new EntityClass();
+        e.x = x;
+        e.y = y;
+        return e;
+    }
+
+    public isActive() {
+        return (Updater.ticks - this.lastTick) < 50;
     }
 
     public setOnFire(value: boolean) {
@@ -107,11 +92,41 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return Math.hypot(this.x - entity.x, this.y - entity.y);
     }
 
+    public onTick(): void {
+        this.lastTick = Updater.ticks;
+        this.ticks++;
+        this.fireSprite.visible = this.isOnFire;
+        if (this.isOnFire) {
+            const tile = this.getTile();
+            tile?.setLight(20);
+            if (Updater.every(5)) {
+                this.level?.add(new SmokeParticle(this.x, this.y - 4));
+            }
+            this.onFire();
+            if (this.fireDelay++ > 200 || this.isOnTile(Tiles.WATER)) {
+                this.setOnFire(false);
+            }
+        } else {
+            if (this.isOnTile(Tiles.LAVA)) {
+                this.setOnFire(true);
+            }
+        }
+    }
+
     public onRender() {
         this.z += this.a.z;
         if (this.z < this.getTileZ()) {
             if (this.a.z < -2) {
                 // this.dust.set();
+                if (this.isSwimming()) {
+                    for (let i = 0; i < this.random.number(1, 4); ++i) {
+                        this.level?.add(new WaterDropParticle(this.x, this.y + 4));
+                    }
+                } else {
+                    for (let i = 0; i < this.random.number(2, 4); ++i) {
+                        this.level?.add(new DustParticle(this.x, this.y + 4));
+                    }
+                }
             }
             this.z = this.getTileZ();
             this.a.z *= -0.5;
@@ -132,6 +147,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.zIndex = this.calculateZIndex();
         this.container.position.copyFrom(this.offset);
         this.container.position.y += -this.z;
+
     }
 
     public onGround(): boolean {

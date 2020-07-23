@@ -18,24 +18,6 @@ import {Mob, Player} from "../entity";
 export default class Chunk {
     public static SIZE = 16;
     public static MOB_CAP = 32;
-
-    public static fileExist(level: Level, cX: number, cY: number) {
-        return fsp.access(System.getAppData("tmp", `c.${cX}.${cY}.bin`));
-    }
-
-    public static empty(level: Level, cX: number, cY: number): Chunk {
-        return new Chunk(level, cX, cY, false);
-    }
-
-    public static fromFile(level: Level, cX: number, cY: number): Chunk {
-        const chunk = this.empty(level, cX, cY);
-        chunk.fromFile();
-        return chunk;
-    }
-
-    public static generate(level: Level, cX: number, cY: number) {
-        return new Chunk(level, cX, cY, true);
-    }
     private static CHUNK_TIMEOUT: number = 500;
     public readonly x: number;
     public readonly y: number;
@@ -56,6 +38,24 @@ export default class Chunk {
         if (generate) {
             this.generate();
         }
+    }
+
+    public static fileExist(level: Level, cX: number, cY: number) {
+        return fsp.access(System.getAppData("tmp", `c.${cX}.${cY}.bin`));
+    }
+
+    public static empty(level: Level, cX: number, cY: number): Chunk {
+        return new Chunk(level, cX, cY, false);
+    }
+
+    public static fromFile(level: Level, cX: number, cY: number): Chunk {
+        const chunk = this.empty(level, cX, cY);
+        chunk.fromFile();
+        return chunk;
+    }
+
+    public static generate(level: Level, cX: number, cY: number) {
+        return new Chunk(level, cX, cY, true);
     }
 
     public getEntities(): Entity[] {
@@ -127,7 +127,7 @@ export default class Chunk {
             }
         }
         if (tickable instanceof Particle) {
-            if (!this.particles.includes(tickable)) {
+            if (!this.particles.includes(tickable) && this.particles.length < 1000) {
                 this.particles.push(tickable);
                 if (this.loaded) tickable.add();
             }
@@ -179,7 +179,6 @@ export default class Chunk {
         });
         this.particles.forEach((particle) => {
             particle.remove();
-            particle.destroy({children: true});
         });
         this.particles = [];
     }

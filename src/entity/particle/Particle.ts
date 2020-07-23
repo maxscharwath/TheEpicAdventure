@@ -78,6 +78,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         if (level === this.level) {
             this.deleted = true;
             this.level = undefined;
+            this.destroy({children:true});
         }
     }
 

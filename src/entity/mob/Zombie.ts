@@ -5,7 +5,7 @@ import Tiles from "../../level/tile/Tiles";
 
 export default class Zombie extends HostileMob {
     private static spriteSheet = new SpriteSheet("zombie.json");
-    protected speedMax: number = 1;
+    protected speedMax: number = 0.25;
     private sprite?: AnimatedSprite;
 
     public onTick(): void {

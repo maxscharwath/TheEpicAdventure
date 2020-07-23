@@ -52,10 +52,14 @@ export default class Level {
         if (this.levelGen instanceof LevelGenOverworld) {
             const r = Updater.time.ratio();
             switch (Updater.time) {
-                case Updater.Time.Morning: return ease(r) * 20;
-                case Updater.Time.Day: return 20;
-                case Updater.Time.Evening: return (1 - ease(r)) * 20;
-                case Updater.Time.Night: return 0;
+                case Updater.Time.Morning:
+                    return ease(r) * 20;
+                case Updater.Time.Day:
+                    return 20;
+                case Updater.Time.Evening:
+                    return (1 - ease(r)) * 20;
+                case Updater.Time.Night:
+                    return 0;
             }
         } else {
             return 0;
@@ -195,22 +199,24 @@ export default class Level {
 
         while (this.tickablesToAdd.length > 0) {
             const tickable: Tickable = this.tickablesToAdd[0];
+            this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== tickable);
+            if (!tickable) continue;
             tickable.getChunk()?.add(tickable);
             if (tickable instanceof Player && !this.players.includes(tickable)) {
                 this.players.push(tickable as Player);
                 Game.player = tickable;
             }
-            this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== tickable);
         }
 
         while (this.tickablesToRemove.length > 0) {
             const tickable: Tickable = this.tickablesToRemove[0];
+            this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
+            if (!tickable) continue;
             tickable.getChunk()?.remove(tickable);
             tickable.delete(this);
             if (tickable instanceof Player) {
                 this.players = this.players.filter((item) => item !== tickable);
             }
-            this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
         }
         this.trySpawn();
     }
@@ -354,7 +360,7 @@ export default class Level {
         const x = (player.x >> 4) + ~~(radius * Math.cos(angle));
         const y = (player.y >> 4) + ~~(radius * Math.sin(angle));
         const tile = this.getTile(x, y, false);
-        if (!tile)return;
+        if (!tile) return;
         if (Zombie.spawnCondition(tile)) {
             this.add(new Zombie(), x, y, true);
         }

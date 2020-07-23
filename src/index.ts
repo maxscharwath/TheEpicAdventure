@@ -2,8 +2,6 @@ import * as path from "path";
 import {app, BrowserWindow, remote} from "electron";
 let mainWindow: BrowserWindow | null;
 
-// tslint:disable-next-line:no-var-requires
-// require("electron-reload")(__dirname);
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 400,

@@ -3,6 +3,7 @@ import System from "../../core/System";
 import Vector from "../../utility/Vector";
 import AquaticMob from "./AquaticMob";
 import {Hook} from "../index";
+import WaterDropParticle from "../particle/WaterDropParticle";
 
 export default class Fish extends AquaticMob {
     protected speedMax: number = 1;
@@ -50,6 +51,10 @@ export default class Fish extends AquaticMob {
             this.hooked.unHookFish();
             this.hooked = undefined;
             this.newTarget();
+        }
+
+        if(this.random.probability(1000)){
+            for (let i = 0; i < this.random.number(1,4); ++i) this.level?.add(new WaterDropParticle(this.x, this.y));
         }
     }
 

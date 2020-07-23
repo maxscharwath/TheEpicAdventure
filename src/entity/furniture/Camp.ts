@@ -1,11 +1,12 @@
 import Furniture from "./Furniture";
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import DustParticle from "../particle/DustParticle";
+import SmokeParticle from "../particle/SmokeParticle";
 import SpriteSheet from "../../gfx/SpriteSheet";
 import {Mob} from "../index";
 import Item from "../../item/Item";
 import Items from "../../item/Items";
+import Entity from "../Entity";
 
 export default class Camp extends Furniture {
 
@@ -29,7 +30,7 @@ export default class Camp extends Furniture {
         super.onRender();
         this.campFire.visible = this.active;
         if (this.active) {
-            this.level?.add(new DustParticle(this.x, this.y - 4));
+            this.level?.add(new SmokeParticle(this.x, this.y - 4));
         }
     }
 
@@ -45,6 +46,13 @@ export default class Camp extends Furniture {
             this.active = true;
         }
         return true;
+    }
+
+    public touchedBy(entity: Entity) {
+        super.touchedBy(entity);
+        if(this.active && entity instanceof Mob){
+            entity.burn();
+        }
     }
 
     public toBSON(): any {
