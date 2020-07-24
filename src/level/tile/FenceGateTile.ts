@@ -13,7 +13,7 @@ import FenceTile from "./FenceTile";
 
 export default class FenceGateTile extends Tile {
     public static DEFAULT_STATES = {groundTile: 0, open: false};
-    public static readonly TAG = "fence";
+    public static readonly TAG = "fence_gate";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence_gate.png"), 4, 16);
 
     public states = TileStates.create(FenceGateTile.DEFAULT_STATES);

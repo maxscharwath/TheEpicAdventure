@@ -46,6 +46,8 @@ tile.rail: Rail
 tile.flower: Flower
 tile.bush: Bush
 tile.stone: Stone
+tile.fence: Fence
+tile.fence_gate: Fence Gate
 
 entity.player: Player
 entity.zombie: Zombie
@@ -79,6 +81,8 @@ item.glass: Glass
 item.coal: Coal
 item.flask: Flask
 item.flint: Flint
+item.fence: Fence
+item.fence_gate: Fence Gate
 
 item.iron: Iron
 item.gold: Gold

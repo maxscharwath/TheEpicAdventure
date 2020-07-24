@@ -46,6 +46,8 @@ tile.rail: Rail
 tile.flower: Fleur
 tile.bush: Buisson
 tile.stone: Pierre
+tile.fence: Barrière
+tile.fence_gate: Portillon
 
 entity.player: Joueur
 entity.zombie: Zombie
@@ -79,6 +81,8 @@ item.glass: Verre
 item.coal: Charbon
 item.flask: Fiole
 item.flint: Silex
+item.fence: Barrière
+item.fence_gate: Portillon
 
 item.iron: Fer
 item.gold: Or
