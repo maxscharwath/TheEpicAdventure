@@ -35,8 +35,13 @@ export default class MushroomTile extends Tile {
         });
     }
 
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTileToGround();
+    }
+
     public onInteract(mob: Mob, item?: Item): boolean {
-        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+        this.onDestroy();
         return true;
     }
 }

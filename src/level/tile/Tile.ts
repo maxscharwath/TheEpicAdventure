@@ -11,30 +11,9 @@ import Tiles, {TileRegister} from "./Tiles";
 
 export default abstract class Tile {
 
-    protected get level() {
-        return this.levelTile.level;
-    }
-
-    protected get x() {
-        return this.levelTile.getLocalX();
-    }
-
-    protected get y() {
-        return this.levelTile.getLocalY();
-    }
-
     public static DEFAULT_STATES = {};
     public static readonly TAG: string = "tile";
     public static readonly COLOR: number = 0x123456;
-
-    protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
-        const bt = PIXI.BaseTexture.from(path);
-        const textures = [];
-        for (let x = 0; x < nb; x++) {
-            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * 16, 0, 16, 16)));
-        }
-        return textures;
-    }
     public z: number = 0;
     public states = TileStates.create();
     public isInit: boolean = false;
@@ -55,6 +34,27 @@ export default abstract class Tile {
         this.levelTile = levelTile;
         this.random = levelTile.random;
         this.container.addChild(this.groundContainer);
+    }
+
+    protected get level() {
+        return this.levelTile.level;
+    }
+
+    protected get x() {
+        return this.levelTile.getLocalX();
+    }
+
+    protected get y() {
+        return this.levelTile.getLocalY();
+    }
+
+    protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
+        const bt = PIXI.BaseTexture.from(path);
+        const textures = [];
+        for (let x = 0; x < nb; x++) {
+            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * 16, 0, 16, 16)));
+        }
+        return textures;
     }
 
     public getClass(): typeof Tile {
@@ -139,8 +139,10 @@ export default abstract class Tile {
         return Tiles.getKeys(this.getClass());
     }
 
-    protected addItemEntity(item: Item | ItemRegister<Item>, nb: number = 1) {
-        for (let i = 0; i < nb; i++) {
+    protected addItemEntity(item: Item | ItemRegister<Item>, nb: number | [number, number] = 1): void {
+        const x = Array.isArray(nb) ? this.random.int(nb[0], nb[1]) : nb;
+        if (x <= 0) return;
+        for (let i = 0; i < x; i++) {
             this.level.add(
                 new ItemEntity(item,
                     (this.x << 4) + Random.int(16),
@@ -148,5 +150,13 @@ export default abstract class Tile {
                 ),
             );
         }
+    }
+
+    protected setTileToGround(){
+        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+    }
+
+    protected onDestroy() {
+
     }
 }

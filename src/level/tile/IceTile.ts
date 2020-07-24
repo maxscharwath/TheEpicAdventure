@@ -21,9 +21,14 @@ export default class IceTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
-    public onInteract(mob: Mob, item?: Item): boolean {
+    protected onDestroy() {
+        super.onDestroy();
         this.levelTile.setTile(Tiles.WATER);
         this.addItemEntity(Items.ICE);
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.onDestroy();
         return true;
     }
 }

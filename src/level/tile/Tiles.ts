@@ -28,6 +28,9 @@ import StoneTile from "./StoneTile";
 import MushroomTile from "./MushroomTile";
 import CarrotTile from "./CarrotTile";
 import CornTile from "./CornTile";
+import SugarCaneTile from "./SugarCaneTile";
+import FenceTile from "./FenceTile";
+import FenceGateTile from "./FenceGateTile";
 
 export class TileRegister<T extends typeof Tile> {
 
@@ -95,5 +98,8 @@ export default class Tiles extends TileRegister<typeof Tile> {
     public static FLOWER = Tiles.add(25, "flower", FlowerTile);
     public static STONE = Tiles.add(26, "stone", StoneTile);
     public static MUSHROOM = Tiles.add(27, "mushroom", MushroomTile);
+    public static SUGAR_CANE = Tiles.add(28, "sugar_cane", SugarCaneTile);
+    public static FENCE = Tiles.add(29, "fence", FenceTile);
+    public static FENCE_GATE = Tiles.add(30, "fence_gate", FenceGateTile);
 
 }

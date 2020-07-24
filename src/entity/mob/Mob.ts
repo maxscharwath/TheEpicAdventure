@@ -94,7 +94,6 @@ export default abstract class Mob extends Entity {
     }
 
     public hurtByEntity(dmg: number, entity: Entity): void {
-        console.log(`Hurted by ${entity.toString()}`);
         this.hurt(dmg, Mob.getAttackDir(entity, this));
     }
 
@@ -273,7 +272,6 @@ export default abstract class Mob extends Entity {
         this.getEntitiesVisible(2).then((entities) => {
             entities.forEach((entity) => {
                 if (entity instanceof Mob) {
-                    console.log("ATTACK", entity.toString());
                     entity.hurtByEntity(dmg, this);
                 }
             });

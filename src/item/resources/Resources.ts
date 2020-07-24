@@ -64,4 +64,10 @@ export default class Resources {
 
     public static readonly RAIL = new TileResource("rail.png", Tiles.RAIL,
         [Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW]);
+
+    public static readonly FENCE = new TileResource("fence.png", Tiles.FENCE,
+        [Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW]);
+
+    public static readonly FENCE_GATE = new TileResource("fenceGate.png", Tiles.FENCE_GATE,
+        [Tiles.GRASS, Tiles.DIRT, Tiles.SAND, Tiles.SNOW]);
 }

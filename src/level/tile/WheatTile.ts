@@ -19,7 +19,7 @@ export default class WheatTile extends CropTile {
 
     protected harvest() {
         if (this.states.age >= 50) {
-            this.addItemEntity(Items.WHEAT, 3);
+            this.addItemEntity(Items.WHEAT, [2, 3]);
             this.addItemEntity(Items.SEED_WHEAT);
         }
         this.addItemEntity(Items.SEED_WHEAT);

@@ -27,6 +27,12 @@ export default class GrassTile extends AutoTilingTile {
         super.onTick();
     }
 
+    protected onDestroy() {
+        super.onDestroy();
+        this.levelTile.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.DIRT);
+    }
+
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
@@ -46,9 +52,4 @@ export default class GrassTile extends AutoTilingTile {
         }
         return false;
     }
-
-    public steppedOn(entity: Entity) {
-        super.steppedOn(entity);
-    }
-
 }

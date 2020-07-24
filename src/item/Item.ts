@@ -43,7 +43,7 @@ export default class Item {
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
         this.cooldownTime = Updater.ticks;
-        return levelTile.tile?.onInteract(mob, this);
+        return levelTile.onInteract(mob, this);
     }
 
     public canAttack(): boolean {

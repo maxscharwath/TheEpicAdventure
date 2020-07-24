@@ -37,7 +37,7 @@ export default class CactusTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+        this.setTileToGround();
         this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
         this.addItemEntity(Items.CACTUS_FLOWER);
         return true;

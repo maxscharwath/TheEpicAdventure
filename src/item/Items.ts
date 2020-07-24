@@ -111,6 +111,8 @@ export default class Items extends ItemRegister<Item> {
     public static readonly GOLD = Items.add("gold", ResourceItem, Resources.GOLD);
     public static readonly DIAMOND = Items.add("diamond", ResourceItem, Resources.DIAMOND);
     public static readonly RAIL = Items.add("rail", ResourceItem, Resources.RAIL);
+    public static readonly FENCE = Items.add("fence", ResourceItem, Resources.FENCE);
+    public static readonly FENCE_GATE = Items.add("fence_gate", ResourceItem, Resources.FENCE_GATE);
     public static readonly FLINT = Items.add("flint", ResourceItem, Resources.FLINT);
 
     public static readonly STICK = Items.add("stick", ResourceItem, Resources.STICK);

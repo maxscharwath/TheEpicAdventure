@@ -34,6 +34,12 @@ export default class DirtTile extends Tile {
         }
     }
 
+    protected onDestroy() {
+        super.onDestroy();
+        this.levelTile.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.DIRT);
+    }
+
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {

@@ -58,24 +58,13 @@ export default class TreeTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        const x = this.levelTile.x + 8 + this.offset.x;
-        const y = this.levelTile.y + 8 + this.offset.y;
-        if (item instanceof ToolItem) {
+        if (!item) {
+            this.hurt(1);
+        } else if (item instanceof ToolItem) {
             switch (item.type) {
                 case ToolType.axe:
                     const hurt = item.getAttackDamageBonus();
-                    this.damage += hurt;
-                    this.wiggleDelay = 10;
-                    this.leavesDrop();
-                    this.levelTile.level.add(
-                        new DamageParticle(x, y, -hurt, 0xc80000),
-                    );
-                    this.levelTile.level.add(new HurtParticle(x, y));
-                    if (this.damage >= 15) {
-                        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
-                        this.addItemEntity(Items.WOOD);
-                        this.addItemEntity(Items.STICK, 2);
-                    }
+                    this.hurt(hurt);
                     return true;
             }
         }
@@ -85,6 +74,13 @@ export default class TreeTile extends Tile {
     public bumpedInto(entity: Entity) {
         super.bumpedInto(entity);
         this.leavesDrop();
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTileToGround();
+        this.addItemEntity(Items.WOOD);
+        this.addItemEntity(Items.STICK, [0, 2]);
     }
 
     protected treeTilingInit(source: string) {
@@ -107,6 +103,21 @@ export default class TreeTile extends Tile {
     protected initTree() {
         this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tile", "tree.png"));
+    }
+
+    private hurt(dmg: number) {
+        const x = this.levelTile.x + 8 + this.offset.x;
+        const y = this.levelTile.y + 8 + this.offset.y;
+        this.damage += dmg;
+        this.wiggleDelay = 10;
+        this.leavesDrop();
+        this.levelTile.level.add(
+            new DamageParticle(x, y, -dmg, 0xc80000),
+        );
+        this.levelTile.level.add(new HurtParticle(x, y));
+        if (this.damage >= 15) {
+            this.onDestroy();
+        }
     }
 
     private leavesDrop() {

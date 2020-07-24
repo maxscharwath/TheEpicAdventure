@@ -46,6 +46,12 @@ export default class SandTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
+    protected onDestroy() {
+        super.onDestroy();
+        this.levelTile.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.SAND);
+    }
+
     public onTick(): void {
         super.onTick();
         if (this.step > 0) {

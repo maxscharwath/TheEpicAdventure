@@ -55,8 +55,11 @@ export default class LevelGenOverworld extends LevelGen {
 
                 if (biome.tag.includes("ocean")) {
                     tile.setTile(Tiles.WATER);
-                    if (random.probability(50)) {
+                    if (random.probability(60)) {
                         tile.setTile(Tiles.LILYPAD);
+                    }
+                    if (random.probability(30) && elevation > 20) {
+                        tile.setTile(Tiles.SUGAR_CANE);
                     }
                     if (temperature < 40 && random.probability(temperature / 25)) {
                         tile.setTile(Tiles.ICE);

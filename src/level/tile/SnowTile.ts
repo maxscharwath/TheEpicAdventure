@@ -49,12 +49,17 @@ export default class SnowTile extends AutoTilingTile {
         }
     }
 
+    protected onDestroy() {
+        super.onDestroy();
+        this.addItemEntity(Items.SNOWBALL, [1, 3]);
+        this.levelTile.setTile(Tiles.DIRT);
+    }
+
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
                 case ToolType.shovel:
-                    this.addItemEntity(Items.SNOWBALL, 3);
-                    this.levelTile.setTile(Tiles.DIRT);
+                    this.onDestroy();
                     return true;
             }
         }

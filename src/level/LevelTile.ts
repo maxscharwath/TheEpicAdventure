@@ -7,6 +7,8 @@ import Tile from "./tile/Tile";
 import {TileRegister} from "./tile/Tiles";
 import Light from "../gfx/Light";
 import Renderer from "../core/Renderer";
+import {Mob} from "../entity";
+import Item from "../item/Item";
 
 interface LevelTileConstructor {
     level: Level;
@@ -307,6 +309,11 @@ export default class LevelTile {
         this.groundContainer.visible = this.visible;
         this.sortableContainer.visible = this.visible;
         this.light.visible = this.visible;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if(!this._tile)return false;
+        return this._tile.onInteract(mob,item);
     }
 
     public getColor() {

@@ -52,7 +52,7 @@ export default class StoneTile extends Tile {
                     this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
                     if (this.damage >= 5) {
                         if (this.groundTile) {
-                            this.levelTile.setTile(this.groundTile.getClass());
+                            this.setTileToGround();
                         } else {
                             this.levelTile.setTile(Tiles.DIRT);
                         }
