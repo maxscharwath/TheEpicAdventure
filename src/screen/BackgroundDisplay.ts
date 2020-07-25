@@ -45,17 +45,9 @@ export default class BackgroundDisplay extends Display {
         });
     }
 
-    private _width: number = 0;
-
-    get width(): number {
-        return this._width;
-    }
-
-    set width(value: number) {
-        this._width = value;
-    }
-
     private _height: number = 0;
+
+    private _width: number = 0;
 
     get height(): number {
         return this._height;
@@ -63,6 +55,14 @@ export default class BackgroundDisplay extends Display {
 
     set height(value: number) {
         this._height = value;
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    set width(value: number) {
+        this._width = value;
     }
 
 

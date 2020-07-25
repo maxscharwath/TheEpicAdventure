@@ -7,15 +7,15 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class LavaTile extends AutoTilingTile {
-    public static readonly TAG = "lava";
-    public static DEFAULT_STATES = {level: 10};
-    public static readonly COLOR: number = 0xc83000;
-    protected static canConnectTo = ["hole", "water"];
-    protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
-    private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
-    public states = TileStates.create(LavaTile.DEFAULT_STATES);
     public light = 19;
+    public states = TileStates.create(LavaTile.DEFAULT_STATES);
     public z: number = -5;
+    protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
+    protected static canConnectTo = ["hole", "water"];
+    public static readonly COLOR: number = 0xc83000;
+    public static DEFAULT_STATES = {level: 10};
+    public static readonly TAG = "lava";
+    private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     private animSprite?: PIXI.AnimatedSprite;
 
     public init() {
@@ -26,6 +26,10 @@ export default class LavaTile extends AutoTilingTile {
             this.animSprite,
         );
         this.initAutoTile();
+    }
+
+    public mayPass(e: Entity): boolean {
+        return e.canSwim() || e.canFly();
     }
 
     public onTick(): void {
@@ -40,10 +44,6 @@ export default class LavaTile extends AutoTilingTile {
         if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.WATER.tile))) {
             this.setTile(Tiles.ROCK);
         }
-    }
-
-    public mayPass(e: Entity): boolean {
-        return e.canSwim() || e.canFly();
     }
 
 }

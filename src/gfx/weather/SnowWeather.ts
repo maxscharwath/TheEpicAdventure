@@ -4,9 +4,9 @@ import System from "../../core/System";
 import Renderer from "../../core/Renderer";
 
 export default class SnowWeather extends Weather {
-    private layers: PIXI.TilingSprite[];
-    private tint: PIXI.Sprite;
+    private layers: Array<PIXI.TilingSprite>;
     private offset: PIXI.Point;
+    private tint: PIXI.Sprite;
 
     public onRender() {
         super.onRender();

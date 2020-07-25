@@ -4,16 +4,9 @@ import HostileMob from "./HostileMob";
 import Tiles from "../../level/tile/Tiles";
 
 export default class Zombie extends HostileMob {
-    private static spriteSheet = new SpriteSheet("zombie.json");
     protected speedMax: number = 0.25;
+    private static spriteSheet = new SpriteSheet("zombie.json");
     private sprite?: AnimatedSprite;
-
-    public onTick(): void {
-        super.onTick();
-        if (this.getLevel().getAmbientLightLevel() > 12) {
-            this.burn();
-        }
-    }
 
     public onRender() {
         super.onRender();
@@ -24,13 +17,10 @@ export default class Zombie extends HostileMob {
         }
     }
 
-    protected newTarget() {
-        super.newTarget();
-        if (this.isOnFire) {
-            const result = this.level?.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
-            if (result) {
-                this.target = result;
-            }
+    public onTick(): void {
+        super.onTick();
+        if (this.getLevel().getAmbientLightLevel() > 12) {
+            this.burn();
         }
     }
 
@@ -40,6 +30,16 @@ export default class Zombie extends HostileMob {
         this.sprite.anchor.set(0.5);
         this.container.addChild(this.sprite);
         this.playAnimation("walk");
+    }
+
+    protected newTarget() {
+        super.newTarget();
+        if (this.isOnFire) {
+            const result = this.level?.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
+            if (result) {
+                this.target = result;
+            }
+        }
     }
 
     private playAnimation(name: string, loop: boolean = true): AnimatedSprite | undefined {

@@ -7,10 +7,6 @@ import Display from "./Display";
 import Game from "../core/Game";
 
 class InventorySlot extends PIXI.Container {
-    private slot: Slot;
-    private item?: Item;
-
-    private itemSprite?: PIXI.Sprite;
 
     constructor(slot: Slot) {
         super();
@@ -29,6 +25,10 @@ class InventorySlot extends PIXI.Container {
 
         this.addChild(sprite);
     }
+    private item?: Item;
+
+    private itemSprite?: PIXI.Sprite;
+    private slot: Slot;
 
     public update() {
         if (this.item === this.slot.item) return;
@@ -45,13 +45,17 @@ class InventorySlot extends PIXI.Container {
 
 export default class InventoryDisplay extends Display {
     public hasCommand = true;
-    private inventory: Inventory;
-    private slots: InventorySlot[] = [];
 
     constructor(inventory: Inventory) {
         super();
         this.inventory = inventory;
         this.init();
+    }
+    private inventory: Inventory;
+    private slots: Array<InventorySlot> = [];
+
+    public isBlocking() {
+        return true;
     }
 
     public onCommand(): void {
@@ -62,10 +66,6 @@ export default class InventoryDisplay extends Display {
     public onTick(): void {
         super.onTick();
         this.slots.forEach((slot) => slot.update());
-    }
-
-    public isBlocking() {
-        return true;
     }
 
     private init() {

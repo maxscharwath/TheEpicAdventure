@@ -4,8 +4,16 @@ import Items from "../../item/Items";
 import CropTile from "./CropTile";
 
 export default class PotatoTile extends CropTile {
-    public static readonly TAG: string = "potato";
     public static readonly COLOR: number = 0x94785c;
+    public static readonly TAG: string = "potato";
+
+    protected harvest() {
+        if (this.states.age >= 50) {
+            this.addItemEntity(Items.POTATO, [2, 3]);
+        } else {
+            this.addItemEntity(Items.POTATO, 1);
+        }
+    }
 
     protected initCrop() {
         super.initCrop();
@@ -15,14 +23,6 @@ export default class PotatoTile extends CropTile {
         this.sprite.position.set(8, 4);
         this.sortableContainer.addChild(this.sprite);
         this.anchor = 0.75;
-    }
-
-    protected harvest() {
-        if (this.states.age >= 50) {
-            this.addItemEntity(Items.POTATO, [2, 3]);
-        } else {
-            this.addItemEntity(Items.POTATO, 1);
-        }
     }
 
 }

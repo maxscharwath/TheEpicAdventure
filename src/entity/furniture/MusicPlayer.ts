@@ -9,14 +9,14 @@ import Item from "../../item/Item";
 
 export default class MusicPlayer extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "musicPlayer.png"));
-    private disk: PIXI.Sprite;
-    private playing = false;
-    private sound: Howl;
 
     constructor() {
         super();
         this.hitbox.set(0, 3, 16, 10);
     }
+    private disk: PIXI.Sprite;
+    private playing = false;
+    private sound: Howl;
 
     public onRender() {
         super.onRender();

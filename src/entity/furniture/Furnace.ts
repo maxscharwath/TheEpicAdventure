@@ -8,12 +8,12 @@ export default class Furnace extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "furnace.png"));
 
-    constructor() {
-        super(Crafting.furnaceRecipes);
-    }
-
     public static create({id, x, y}: any): Furnace {
         return super.create({id, x, y}) as Furnace;
+    }
+
+    constructor() {
+        super(Crafting.furnaceRecipes);
     }
 
     public toBSON(): any {

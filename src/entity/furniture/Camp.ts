@@ -12,19 +12,19 @@ export default class Camp extends Furniture {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-    private active: boolean = false;
-    private campFire: PIXI.AnimatedSprite;
-
-    constructor() {
-        super();
-        this.hitbox.set(0, 3, 16, 10);
-    }
 
     public static create({id, active, x, y}: any): Camp {
         const e = super.create({id, x, y}) as Camp;
         e.active = active;
         return e;
     }
+
+    constructor() {
+        super();
+        this.hitbox.set(0, 3, 16, 10);
+    }
+    private active: boolean = false;
+    private campFire: PIXI.AnimatedSprite;
 
     public onRender() {
         super.onRender();
@@ -48,18 +48,18 @@ export default class Camp extends Furniture {
         return true;
     }
 
-    public touchedBy(entity: Entity) {
-        super.touchedBy(entity);
-        if (this.active && entity instanceof Mob) {
-            entity.burn();
-        }
-    }
-
     public toBSON(): any {
         return {
             ...super.toBSON(),
             active: this.active,
         };
+    }
+
+    public touchedBy(entity: Entity) {
+        super.touchedBy(entity);
+        if (this.active && entity instanceof Mob) {
+            entity.burn();
+        }
     }
 
     protected init() {

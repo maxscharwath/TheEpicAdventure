@@ -1,14 +1,24 @@
 import System from "../core/System";
 
 export default class Random {
+    public seed: number;
 
     private static $ = Random.create();
-    public seed: number;
-    private nextGaussian: number = 0;
-    private haveNextGaussian: boolean = false;
 
-    constructor(seed = System.currentTimeMillis()) {
-        this.seed = seed;
+    public static boolean(): boolean {
+        return Random.$.boolean();
+    }
+
+    public static create(seed?: number): Random {
+        return new Random(seed);
+    }
+
+    public static float(): number {
+        return Random.$.float();
+    }
+
+    public static gaussian(): number {
+        return Random.$.gaussian();
     }
 
     public static int(num1: number, num2?: number): number {
@@ -19,60 +29,22 @@ export default class Random {
         return Random.$.number(num1, num2);
     }
 
-    public static float(): number {
-        return Random.$.float();
-    }
-
-    public static boolean(): boolean {
-        return Random.$.boolean();
-    }
-
     public static probability(prob: number): boolean {
         return Random.$.probability(prob);
     }
 
-    public static gaussian(): number {
-        return Random.$.gaussian();
+    constructor(seed = System.currentTimeMillis()) {
+        this.seed = seed;
     }
-
-    public static create(seed?: number): Random {
-        return new Random(seed);
-    }
-
-    public random(): number {
-        const x = Math.sin(this.seed++) * 10000;
-        return x - Math.floor(x);
-    }
-
-    public int(num1: number, num2?: number): number {
-        if (num2 === undefined) {
-            return Math.floor(this.random() * num1);
-        } else {
-            return Math.floor(this.random() * (num2 - num1)) + num1;
-        }
-    }
-
-    public number(num1: number, num2?: number): number {
-        if (num2 === undefined) {
-            return this.random() * num1;
-        } else {
-            return this.random() * (num2 - num1) + num1;
-        }
-    }
-
-    public float(): number {
-        return this.random();
-    }
+    private haveNextGaussian: boolean = false;
+    private nextGaussian: number = 0;
 
     public boolean(): boolean {
         return this.random() >= 0.5;
     }
 
-    public probability(prob: number): boolean {
-        if (prob === 0) {
-            return false;
-        }
-        return this.random() <= 1 / prob;
+    public float(): number {
+        return this.random();
     }
 
     public gaussian(): number {
@@ -91,5 +63,33 @@ export default class Random {
             this.haveNextGaussian = true;
             return v1 * multiplier;
         }
+    }
+
+    public int(num1: number, num2?: number): number {
+        if (num2 === undefined) {
+            return Math.floor(this.random() * num1);
+        } else {
+            return Math.floor(this.random() * (num2 - num1)) + num1;
+        }
+    }
+
+    public number(num1: number, num2?: number): number {
+        if (num2 === undefined) {
+            return this.random() * num1;
+        } else {
+            return this.random() * (num2 - num1) + num1;
+        }
+    }
+
+    public probability(prob: number): boolean {
+        if (prob === 0) {
+            return false;
+        }
+        return this.random() <= 1 / prob;
+    }
+
+    public random(): number {
+        const x = Math.sin(this.seed++) * 10000;
+        return x - Math.floor(x);
     }
 }

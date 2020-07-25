@@ -5,9 +5,9 @@ import Tile from "../level/tile/Tile";
 
 export default class BucketType {
     public static readonly EMPTY = new BucketType("empty", "bucket_empty.png");
-    public static readonly WATER = new BucketType("water", "bucket_water.png", Tiles.WATER);
     public static readonly LAVA = new BucketType("lava", "bucket_lava.png", Tiles.LAVA);
     public static readonly MILK = new BucketType("milk", "bucket_milk.png");
+    public static readonly WATER = new BucketType("water", "bucket_water.png", Tiles.WATER);
 
     public readonly name: string;
     public readonly texture: PIXI.Texture;

@@ -10,13 +10,9 @@ import FurnitureItem from "../../item/FurnitureItem";
 import {Furniture} from "../index";
 
 export default class Player extends Mob {
+    protected speedMax: number = 1;
 
     private static spriteSheet = new SpriteSheet("player.json");
-    protected speedMax: number = 1;
-    private targetTile?: PIXI.Sprite;
-    private holdItemContainer: PIXI.Container;
-    private sprite?: PIXI.AnimatedSprite;
-    private holdItem: FurnitureItem;
 
     constructor() {
         super();
@@ -28,13 +24,17 @@ export default class Player extends Mob {
         this.inventory.addItem(Items.WOOD_SWORD);
         this.inventory.addItem(Items.FISHING_ROD);
     }
-
-    public destroy(): void {
-        return;
-    }
+    private holdItem: FurnitureItem;
+    private holdItemContainer: PIXI.Container;
+    private sprite?: PIXI.AnimatedSprite;
+    private targetTile?: PIXI.Sprite;
 
     public canSwim(): boolean {
         return true;
+    }
+
+    public destroy(): void {
+        return;
     }
 
     public die(): void {
@@ -80,6 +80,23 @@ export default class Player extends Mob {
         }
     }
 
+    public onRender() {
+        super.onRender();
+        const holdItem = this.inventory.selectedItem() instanceof FurnitureItem;
+        if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
+            this.playAnimation("walk", holdItem ? "hold" : "normal");
+        } else if (this.inventory.selectedItem() instanceof FishingRodItem) {
+            this.playAnimation("fishing");
+        } else {
+            this.playAnimation("idle", holdItem ? "hold" : "normal");
+        }
+
+        const levelTile = this.getInteractTile();
+        if (levelTile && this.targetTile) {
+            this.targetTile.position.set(levelTile.x - this.x, levelTile.y - this.y);
+        }
+    }
+
     public onTick(): void {
         super.onTick();
         if (!Game.GUI.isBlocking()) {
@@ -95,23 +112,6 @@ export default class Player extends Mob {
         } else {
             this.holdItem = undefined;
             this.holdItemContainer.removeChildren();
-        }
-    }
-
-    public onRender() {
-        super.onRender();
-        const holdItem = this.inventory.selectedItem() instanceof FurnitureItem;
-        if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
-            this.playAnimation("walk", holdItem ? "hold" : "normal");
-        } else if (this.inventory.selectedItem() instanceof FishingRodItem) {
-            this.playAnimation("fishing");
-        } else {
-            this.playAnimation("idle", holdItem ? "hold" : "normal");
-        }
-
-        const levelTile = this.getInteractTile();
-        if (levelTile && this.targetTile) {
-            this.targetTile.position.set(levelTile.x - this.x, levelTile.y - this.y);
         }
     }
 

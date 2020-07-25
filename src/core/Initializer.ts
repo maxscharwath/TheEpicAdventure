@@ -8,16 +8,16 @@ export default class Initializer {
     private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
     private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 
-    public static getCurFps(): number {
-        return this.tickerRender.FPS;
-    }
-
     public static createAndDisplayFrame(): void {
         Game.isFocus = true;
         window.onblur = () => Game.isFocus = false;
         window.onfocus = () => Game.isFocus = true;
         document.title = Game.NAME + " v" + Game.version.toString();
         Renderer.init();
+    }
+
+    public static getCurFps(): number {
+        return this.tickerRender.FPS;
     }
 
     public static run() {

@@ -1,37 +1,14 @@
 export default class Vector {
 
-    public x: number = 0;
-    public y: number = 0;
-    private readonly constant: boolean = false;
-
-    constructor(x: number = 0, y: number = 0, constant: boolean = false) {
-        this.x = x;
-        this.y = y;
-        this.constant = constant;
-    }
-
-    public get magnitude() {
-        return Math.hypot(this.x, this.y);
-    }
-
-    public set magnitude(mag: number) {
-        if (this.magnitude === 0) {
-            return;
-        }
-        this.x *= mag / this.magnitude;
-        this.y *= mag / this.magnitude;
-    }
-
-    public get rotation() {
-        return Math.atan2(this.x, this.y);
-    }
-
     private get vector(): Vector {
         if (!this.constant) {
             return this;
         }
         return this.clone();
     }
+
+    public x: number = 0;
+    public y: number = 0;
 
     public static create(x?: number, y?: number) {
         return new Vector(x, y);
@@ -41,11 +18,12 @@ export default class Vector {
         return new Vector(x, y, true);
     }
 
-    public negative(): Vector {
-        this.vector.x *= -1;
-        this.vector.y *= -1;
-        return this.vector;
+    constructor(x: number = 0, y: number = 0, constant: boolean = false) {
+        this.x = x;
+        this.y = y;
+        this.constant = constant;
     }
+    private readonly constant: boolean = false;
 
     public add(v: Vector | number): Vector {
         if (v instanceof Vector) {
@@ -58,26 +36,16 @@ export default class Vector {
         return this.vector;
     }
 
-    public subtract(v: Vector | number): Vector {
-        if (v instanceof Vector) {
-            this.vector.x -= v.x;
-            this.vector.y -= v.y;
-        } else {
-            this.vector.x -= v;
-            this.vector.y -= v;
-        }
-        return this.vector;
+    public angleBetween(a: Vector): number {
+        return Math.acos(this.dot(a) / (this.length() * a.length()));
     }
 
-    public multiply(v: Vector | number): Vector {
-        if (v instanceof Vector) {
-            this.vector.x *= v.x;
-            this.vector.y *= v.y;
-        } else {
-            this.vector.x *= v;
-            this.vector.y *= v;
-        }
-        return this.vector;
+    public clone(): Vector {
+        return new Vector(this.x, this.y);
+    }
+
+    public cross(v: Vector): number {
+        return this.x * v.y - this.y * v.x;
     }
 
     public divide(v: Vector | number): Vector {
@@ -97,16 +65,12 @@ export default class Vector {
         return this.vector;
     }
 
-    public equals(v: Vector): boolean {
-        return this.x === v.x && this.y === v.y;
-    }
-
     public dot(v: Vector): number {
         return this.x * v.x + this.y * v.y;
     }
 
-    public cross(v: Vector): number {
-        return this.x * v.y - this.y * v.x;
+    public equals(v: Vector): boolean {
+        return this.x === v.x && this.y === v.y;
     }
 
     public length(): number {
@@ -117,20 +81,39 @@ export default class Vector {
         return this.dot(this);
     }
 
-    public normalize(): Vector {
-        return this.vector.divide(this.vector.length());
+    public max(): number {
+        return Math.max(this.x, this.y);
     }
 
     public min(): number {
         return Math.min(this.x, this.y);
     }
 
-    public max(): number {
-        return Math.max(this.x, this.y);
+    public multiply(v: Vector | number): Vector {
+        if (v instanceof Vector) {
+            this.vector.x *= v.x;
+            this.vector.y *= v.y;
+        } else {
+            this.vector.x *= v;
+            this.vector.y *= v;
+        }
+        return this.vector;
     }
 
-    public toAngle(): number {
-        return -Math.atan2(-this.y, this.x);
+    public negative(): Vector {
+        this.vector.x *= -1;
+        this.vector.y *= -1;
+        return this.vector;
+    }
+
+    public normalize(): Vector {
+        return this.vector.divide(this.vector.length());
+    }
+
+    public set(x: number, y: number): Vector {
+        this.vector.x = x;
+        this.vector.y = y;
+        return this.vector;
     }
 
     public setAngle(a: number): Vector {
@@ -140,22 +123,39 @@ export default class Vector {
         return this.vector;
     }
 
-    public angleBetween(a: Vector): number {
-        return Math.acos(this.dot(a) / (this.length() * a.length()));
+    public subtract(v: Vector | number): Vector {
+        if (v instanceof Vector) {
+            this.vector.x -= v.x;
+            this.vector.y -= v.y;
+        } else {
+            this.vector.x -= v;
+            this.vector.y -= v;
+        }
+        return this.vector;
     }
 
-    public toArray(n: number): number[] {
+    public toAngle(): number {
+        return -Math.atan2(-this.y, this.x);
+    }
+
+    public toArray(n: number): Array<number> {
         return [this.x, this.y].slice(0, n || 2);
     }
 
-    public clone(): Vector {
-        return new Vector(this.x, this.y);
+    public get magnitude() {
+        return Math.hypot(this.x, this.y);
     }
 
-    public set(x: number, y: number): Vector {
-        this.vector.x = x;
-        this.vector.y = y;
-        return this.vector;
+    public set magnitude(mag: number) {
+        if (this.magnitude === 0) {
+            return;
+        }
+        this.x *= mag / this.magnitude;
+        this.y *= mag / this.magnitude;
+    }
+
+    public get rotation() {
+        return Math.atan2(this.x, this.y);
     }
 
 

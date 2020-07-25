@@ -10,35 +10,23 @@ import TileStates from "./TileStates";
 import Tiles, {TileRegister} from "./Tiles";
 
 export default abstract class Tile {
-
-    public static DEFAULT_STATES = {};
-    public static readonly TAG: string = "tile";
-    public static readonly COLOR: number = 0x123456;
-    public z: number = 0;
-    public states = TileStates.create();
-    public isInit: boolean = false;
-    public container = new PIXI.Container();
-    public sortableContainer = new PIXI.Container();
     public ["constructor"]: typeof Tile;
-    public light: number = 1;
-    public friction: number = 0.1;
     public anchor = 0;
-    public offset = new PIXI.Point();
-    private isMainTile = true;
-    protected random: Random;
-    protected levelTile: LevelTile;
-    protected groundTile?: Tile;
+    public container = new PIXI.Container();
+    public friction: number = 0.1;
     protected groundContainer = new PIXI.Container();
-
-    constructor(levelTile: LevelTile) {
-        this.levelTile = levelTile;
-        this.random = levelTile.random;
-        this.container.addChild(this.groundContainer);
-    }
+    protected groundTile?: Tile;
+    public isInit: boolean = false;
 
     protected get level() {
         return this.levelTile.level;
     }
+    protected levelTile: LevelTile;
+    public light: number = 1;
+    public offset = new PIXI.Point();
+    protected random: Random;
+    public sortableContainer = new PIXI.Container();
+    public states = TileStates.create();
 
     protected get x() {
         return this.levelTile.getLocalX();
@@ -47,8 +35,13 @@ export default abstract class Tile {
     protected get y() {
         return this.levelTile.getLocalY();
     }
+    public z: number = 0;
+    public static readonly COLOR: number = 0x123456;
 
-    protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
+    public static DEFAULT_STATES = {};
+    public static readonly TAG: string = "tile";
+
+    protected static loadTextures(path: string, nb: number): Array<PIXI.Texture> {
         const bt = PIXI.BaseTexture.from(path);
         const textures = [];
         for (let x = 0; x < nb; x++) {
@@ -57,8 +50,67 @@ export default abstract class Tile {
         return textures;
     }
 
+    constructor(levelTile: LevelTile) {
+        this.levelTile = levelTile;
+        this.random = levelTile.random;
+        this.container.addChild(this.groundContainer);
+    }
+    private isMainTile = true;
+
+    public bumpedInto(entity: Entity) {
+    }
+
     public getClass(): typeof Tile {
         return Object.getPrototypeOf(this).constructor;
+    }
+
+    public getDisplayName(): string {
+        return Localization.get(`tile.${this.constructor.TAG}`);
+    }
+
+    public getKeys() {
+        return Tiles.getKeys(this.getClass());
+    }
+
+    public init() {
+        this.isInit = true;
+    }
+
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+        const ground = this.groundTile;
+        return tileClass.some((t) => {
+            const c = t instanceof TileRegister ? t.tile : t;
+            return this instanceof c || ground instanceof c;
+        });
+    }
+
+    public mayPass(e: Entity): boolean {
+        return true;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        return false;
+    }
+
+    public onRender() {
+        if (this.groundTile) {
+            this.groundTile.onRender();
+        }
+    }
+
+    public onSetTile(oldTile: Tile, entity?: Entity) {
+    }
+
+    public onTick(): void {
+        if (this.groundTile) {
+            this.groundTile.onTick();
+        }
+    }
+
+    public onUpdate() {
+        if (this.groundTile) {
+            this.groundTile.onUpdate();
+        }
     }
 
     public setGroundTile(tile: typeof Tile | Tile | TileRegister<typeof Tile>): Tile | undefined {
@@ -82,61 +134,6 @@ export default abstract class Tile {
         return this.groundTile;
     }
 
-    public init() {
-        this.isInit = true;
-    }
-
-    public mayPass(e: Entity): boolean {
-        return true;
-    }
-
-    public steppedOn(entity: Entity) {
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        return false;
-    }
-
-    public onTick(): void {
-        if (this.groundTile) {
-            this.groundTile.onTick();
-        }
-    }
-
-    public onRender() {
-        if (this.groundTile) {
-            this.groundTile.onRender();
-        }
-    }
-
-    public onUpdate() {
-        if (this.groundTile) {
-            this.groundTile.onUpdate();
-        }
-    }
-
-    public onSetTile(oldTile: Tile, entity?: Entity) {
-    }
-
-    public getDisplayName(): string {
-        return Localization.get(`tile.${this.constructor.TAG}`);
-    }
-
-    public instanceOf(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
-        const ground = this.groundTile;
-        return tileClass.some((t) => {
-            const c = t instanceof TileRegister ? t.tile : t;
-            return this instanceof c || ground instanceof c;
-        });
-    }
-
-    public bumpedInto(entity: Entity) {
-    }
-
-    public getKeys() {
-        return Tiles.getKeys(this.getClass());
-    }
-
 
     public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
     public setTile<T extends typeof Tile>(
@@ -148,6 +145,9 @@ export default abstract class Tile {
         } else {
             this.setGroundTile(tile);
         }
+    }
+
+    public steppedOn(entity: Entity) {
     }
 
     protected addItemEntity(item: Item | ItemRegister<Item>, nb: number | [number, number] = 1): void {
@@ -163,11 +163,11 @@ export default abstract class Tile {
         }
     }
 
-    protected setTileToGround() {
-        if (this.groundTile) this.setTile(this.groundTile.getClass());
-    }
-
     protected onDestroy() {
 
+    }
+
+    protected setTileToGround() {
+        if (this.groundTile) this.setTile(this.groundTile.getClass());
     }
 }

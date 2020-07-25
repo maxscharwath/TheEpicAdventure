@@ -10,22 +10,15 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile {
-    public static readonly TAG = "snow";
-    public static readonly COLOR: number = 0xf0f0ff;
-    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
     public friction: number = 0.25;
     public light = 3;
+    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
+    public static readonly COLOR: number = 0xf0f0ff;
+    public static readonly TAG = "snow";
+    private footprintSprite?: PIXI.Sprite;
 
     private step: number = 0;
     private stepDir: boolean = false;
-    private footprintSprite?: PIXI.Sprite;
-
-    public steppedOn(entity: Entity) {
-        if (this.step < 550 && entity instanceof Mob) {
-            this.step = 600;
-            this.stepDir = entity.getDir().isX();
-        }
-    }
 
     public init() {
         super.init();
@@ -34,6 +27,21 @@ export default class SnowTile extends AutoTilingTile {
         this.footprintSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         this.footprintSprite.visible = false;
         this.container.addChild(this.footprintSprite);
+    }
+
+    public mayPass(): boolean {
+        return true;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.SHOVEL:
+                    this.onDestroy();
+                    return true;
+            }
+        }
+        return false;
     }
 
     public onTick(): void {
@@ -49,19 +57,11 @@ export default class SnowTile extends AutoTilingTile {
         }
     }
 
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (item instanceof ToolItem) {
-            switch (item.type) {
-                case ToolType.shovel:
-                    this.onDestroy();
-                    return true;
-            }
+    public steppedOn(entity: Entity) {
+        if (this.step < 550 && entity instanceof Mob) {
+            this.step = 600;
+            this.stepDir = entity.getDir().isX();
         }
-        return false;
-    }
-
-    public mayPass(): boolean {
-        return true;
     }
 
     protected onDestroy() {

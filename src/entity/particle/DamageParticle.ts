@@ -3,7 +3,6 @@ import Random from "../../utility/Random";
 import * as PIXI from "pixi.js";
 
 export default class DamageParticle extends Particle {
-    private readonly sprite: PIXI.BitmapText;
 
     constructor(x: number, y: number, value: number = 0, color = 0xffffff) {
         super(x, y);
@@ -21,10 +20,7 @@ export default class DamageParticle extends Particle {
         this.sprite.anchor = 0.5;
         this.addChild(this.sprite);
     }
-
-    public onTick() {
-        super.onTick();
-    }
+    private readonly sprite: PIXI.BitmapText;
 
     public onRender() {
         super.onRender();
@@ -35,6 +31,10 @@ export default class DamageParticle extends Particle {
             this.a.y *= 0.6;
         }
         this.a.z -= this.gravity;
+    }
+
+    public onTick() {
+        super.onTick();
     }
 
 }

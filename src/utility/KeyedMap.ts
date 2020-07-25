@@ -1,11 +1,11 @@
 interface KeyData<T> {
+    data: T;
     idx: number;
     tag: string;
-    data: T;
 }
 
 export default class KeyedMap<T> {
-    private data: KeyData<T>[] = [];
+    private data: Array<KeyData<T>> = [];
 
     public add(idx: number, tag: string, data: T) {
         if (this.getByIdx(idx) || this.getByTag(tag)) {
@@ -15,8 +15,8 @@ export default class KeyedMap<T> {
         return true;
     }
 
-    public getSome(...tags: string[]): T[] {
-        return this.data.flatMap((kd) => tags.includes(kd.tag) ? [kd.data] : []);
+    public get(index: string | number): T | undefined {
+        return isNaN(index as number) ? this.getByTag(index as string) : this.getByIdx(index as number);
     }
 
     public getByIdx(idx: number): T | undefined {
@@ -27,15 +27,15 @@ export default class KeyedMap<T> {
         return this.data.find((kd) => kd.tag === tag)?.data;
     }
 
-    public get(index: string | number): T | undefined {
-        return isNaN(index as number) ? this.getByTag(index as string) : this.getByIdx(index as number);
-    }
-
-    public getKeys(data: T): { tag: string | undefined; idx: number | undefined } {
+    public getKeys(data: T): { idx: number | undefined, tag: string | undefined } {
         const keyData = this.data.find((kd) => kd.data === data);
         return {
             idx: keyData?.idx,
             tag: keyData?.tag,
         };
+    }
+
+    public getSome(...tags: Array<string>): Array<T> {
+        return this.data.flatMap((kd) => tags.includes(kd.tag) ? [kd.data] : []);
     }
 }

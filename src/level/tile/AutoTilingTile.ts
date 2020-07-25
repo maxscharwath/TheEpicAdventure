@@ -4,14 +4,11 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default abstract class AutoTilingTile extends Tile {
+    protected static autoTileTextures: Array<PIXI.Texture>;
 
-    protected static canConnectTo: string[] = [];
-    protected static autoTileTextures: PIXI.Texture[];
-    public ["constructor"]: typeof AutoTilingTile;
-    private tilesContainer: PIXI.Container;
-    private sprites: PIXI.Sprite[] = [];
+    protected static canConnectTo: Array<string> = [];
 
-    protected static loadMaskTextures(path: string): PIXI.Texture[] {
+    protected static loadMaskTextures(path: string): Array<PIXI.Texture> {
         const textures = [];
         const baseTexture = PIXI.BaseTexture.from(path);
         for (let y = 0; y < 3; y++) {
@@ -26,6 +23,9 @@ export default abstract class AutoTilingTile extends Tile {
         }
         return textures;
     }
+    public ["constructor"]: typeof AutoTilingTile;
+    private sprites: Array<PIXI.Sprite> = [];
+    private tilesContainer: PIXI.Container;
 
     public autoTiling() {
         this.tilesContainer.cacheAsBitmap = false;

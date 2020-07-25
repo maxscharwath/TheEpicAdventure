@@ -9,31 +9,12 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SandTile extends AutoTilingTile {
-    public static readonly TAG = "sand";
-    public static readonly COLOR: number = 0xe0f878;
     protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
+    public static readonly COLOR: number = 0xe0f878;
+    public static readonly TAG = "sand";
+    private footprintSprite?: PIXI.Sprite;
     private step: number = 0;
     private stepDir: boolean = false;
-    private footprintSprite?: PIXI.Sprite;
-
-    public steppedOn(entity: Entity) {
-        if (this.step < 550 && entity instanceof Mob) {
-            this.step = 600;
-            this.stepDir = entity.getDir().isX();
-        }
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (item instanceof ToolItem) {
-            switch (item.type) {
-                case ToolType.shovel:
-                    this.addItemEntity(Items.SAND);
-                    this.setTile(Tiles.DIRT);
-                    return true;
-            }
-        }
-        return false;
-    }
 
     public init() {
         super.init();
@@ -46,6 +27,18 @@ export default class SandTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.SHOVEL:
+                    this.addItemEntity(Items.SAND);
+                    this.setTile(Tiles.DIRT);
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public onTick(): void {
         super.onTick();
         if (this.step > 0) {
@@ -56,6 +49,13 @@ export default class SandTile extends AutoTilingTile {
                 this.footprintSprite.texture.frame = new PIXI.Rectangle(this.stepDir ? 16 : 0, 0, 16, 16);
             }
             this.footprintSprite.visible = this.step > 0;
+        }
+    }
+
+    public steppedOn(entity: Entity) {
+        if (this.step < 550 && entity instanceof Mob) {
+            this.step = 600;
+            this.stepDir = entity.getDir().isX();
         }
     }
 

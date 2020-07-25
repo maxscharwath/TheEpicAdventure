@@ -16,24 +16,41 @@ import Random from "../../utility/Random";
 import RainWeather from "../../gfx/weather/RainWeather";
 
 export default class TreeTile extends Tile {
-    public static readonly TAG: string = "tree";
-    public static readonly COLOR: number = 0x19a02a;
-    public anchor = 1;
     protected damage = 0;
     protected wiggleDelay: number = 0;
-    private treeSprite: PIXI.Sprite;
+    public static readonly COLOR: number = 0x19a02a;
+    public static readonly TAG: string = "tree";
+    public anchor = 1;
     private leafSprite: PIXI.Sprite;
     private leavesDropDelay: number = 0;
+    private treeSprite: PIXI.Sprite;
+
+    public bumpedInto(entity: Entity) {
+        super.bumpedInto(entity);
+        this.leavesDrop();
+    }
 
     public init() {
         super.init();
         this.initTree();
     }
 
-    public onTick(): void {
-        super.onTick();
-        if (this.wiggleDelay > 0) this.wiggleDelay--;
-        if (this.leavesDropDelay > 0) this.leavesDropDelay--;
+    public mayPass(e: Entity): boolean {
+        return false;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (!item) {
+            this.hurt(1);
+        } else if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.AXE:
+                    const hurt = item.getAttackDamageBonus();
+                    this.hurt(hurt);
+                    return true;
+            }
+        }
+        return false;
     }
 
     public onRender() {
@@ -54,31 +71,19 @@ export default class TreeTile extends Tile {
         }
     }
 
+    public onTick(): void {
+        super.onTick();
+        if (this.wiggleDelay > 0) this.wiggleDelay--;
+        if (this.leavesDropDelay > 0) this.leavesDropDelay--;
+    }
+
     public onUpdate() {
         super.onUpdate();
     }
 
-    public mayPass(e: Entity): boolean {
-        return false;
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (!item) {
-            this.hurt(1);
-        } else if (item instanceof ToolItem) {
-            switch (item.type) {
-                case ToolType.axe:
-                    const hurt = item.getAttackDamageBonus();
-                    this.hurt(hurt);
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public bumpedInto(entity: Entity) {
-        super.bumpedInto(entity);
-        this.leavesDrop();
+    protected initTree() {
+        this.setGroundTile(Tiles.GRASS.tile);
+        this.treeTilingInit(System.getResource("tile", "tree.png"));
     }
 
     protected onDestroy() {
@@ -103,11 +108,6 @@ export default class TreeTile extends Tile {
         this.leafSprite.anchor.set(0.5, 0.5);
         this.leafSprite.position.set(8, 0);
         this.sortableContainer.addChild(this.treeSprite, this.leafSprite);
-    }
-
-    protected initTree() {
-        this.setGroundTile(Tiles.GRASS.tile);
-        this.treeTilingInit(System.getResource("tile", "tree.png"));
     }
 
     private hurt(dmg: number) {

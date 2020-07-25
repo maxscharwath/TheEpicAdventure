@@ -6,14 +6,18 @@ import Tiles from "./Tiles";
 import WaterTile from "./WaterTile";
 
 export default class HoleTile extends AutoTilingTile {
-    public static readonly TAG = "hole";
-    public static readonly COLOR: number = 0x402e29;
-    protected static canConnectTo = ["lava", "water"];
     protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("tile", "hole.png"));
+    protected static canConnectTo = ["lava", "water"];
+    public static readonly COLOR: number = 0x402e29;
+    public static readonly TAG = "hole";
 
     public init() {
         super.init();
         this.initAutoTile();
+    }
+
+    public mayPass(e: Entity): boolean {
+        return e.canSwim() || e.canFly();
     }
 
     public onTick(): void {
@@ -35,10 +39,6 @@ export default class HoleTile extends AutoTilingTile {
                 }
             }
         }
-    }
-
-    public mayPass(e: Entity): boolean {
-        return e.canSwim() || e.canFly();
     }
 
 }

@@ -6,7 +6,6 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import Color from "../../utility/Color";
 
 export default class NoteParticle extends Particle {
-    private static frames = SpriteSheet.loadTextures(System.getResource("particle", "note.png"), 4, 8);
     private static colors = [
         Color.red.getInt(),
         Color.green.getInt(),
@@ -14,7 +13,7 @@ export default class NoteParticle extends Particle {
         Color.yellow.getInt(),
         Color.black.getInt(),
     ];
-    private readonly sprite: PIXI.Sprite;
+    private static frames = SpriteSheet.loadTextures(System.getResource("particle", "note.png"), 4, 8);
 
     constructor(x: number, y: number, startFrame = 0) {
         super(x, y);
@@ -31,10 +30,7 @@ export default class NoteParticle extends Particle {
         this.sprite.angle = Random.number(-25, 25);
         this.addChild(this.sprite);
     }
-
-    public onTick() {
-        super.onTick();
-    }
+    private readonly sprite: PIXI.Sprite;
 
     public onRender() {
         super.onRender();
@@ -46,5 +42,9 @@ export default class NoteParticle extends Particle {
         }
         this.a.z -= this.gravity;
         this.sprite.alpha = 1 - this.lifePercent() * this.lifePercent() * this.lifePercent();
+    }
+
+    public onTick() {
+        super.onTick();
     }
 }

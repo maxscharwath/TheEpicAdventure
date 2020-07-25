@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
 
 export default class Light extends PIXI.Sprite {
-    private tintColor = 0xffffff;
-    private brightness = 1;
 
     constructor() {
         super(PIXI.Texture.WHITE);
@@ -12,13 +10,8 @@ export default class Light extends PIXI.Sprite {
         this.alpha = 1;
         this.visible = false;
     }
-
-    public setColor(color: number) {
-        if (this.tintColor === color) return this;
-        this.tintColor = color;
-        this.updateTint();
-        return this;
-    }
+    private brightness = 1;
+    private tintColor = 0xffffff;
 
     public getColor() {
         return this.tintColor;
@@ -29,6 +22,13 @@ export default class Light extends PIXI.Sprite {
         if (value > 1) value = 1;
         if (this.brightness === value) return this;
         this.brightness = value;
+        this.updateTint();
+        return this;
+    }
+
+    public setColor(color: number) {
+        if (this.tintColor === color) return this;
+        this.tintColor = color;
         this.updateTint();
         return this;
     }

@@ -3,8 +3,24 @@ import Random from "./Random";
 export default class SimplexNoise {
     private static F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
     private static G2 = (3.0 - Math.sqrt(3.0)) / 6.0;
-    private random?: Random;
-    private p?: Uint8Array;
+
+    private static buildPermutationTable(random: Random) {
+        const p = new Uint8Array(256);
+        for (let i = 0; i < 256; i++) {
+            p[i] = i;
+        }
+        for (let i = 0; i < 255; i++) {
+            const r = i + ~~(random.float() * (256 - i));
+            const aux = p[i];
+            p[i] = p[r];
+            p[r] = aux;
+        }
+        return p;
+    }
+
+    constructor(seed?: number) {
+        this.setSeed(seed);
+    }
     private grad3 = new Float32Array([
         1, 1, 0,
         -1, 1, 0,
@@ -22,35 +38,10 @@ export default class SimplexNoise {
         0, 1, -1,
         0, -1, -1,
     ]);
+    private p?: Uint8Array;
     private perm = new Uint8Array(512);
     private permMod12 = new Uint8Array(512);
-
-    constructor(seed?: number) {
-        this.setSeed(seed);
-    }
-
-    private static buildPermutationTable(random: Random) {
-        const p = new Uint8Array(256);
-        for (let i = 0; i < 256; i++) {
-            p[i] = i;
-        }
-        for (let i = 0; i < 255; i++) {
-            const r = i + ~~(random.float() * (256 - i));
-            const aux = p[i];
-            p[i] = p[r];
-            p[r] = aux;
-        }
-        return p;
-    }
-
-    public setSeed(seed?: number) {
-        this.random = new Random(seed);
-        this.p = SimplexNoise.buildPermutationTable(this.random);
-        for (let i = 0; i < 512; i++) {
-            this.perm[i] = this.p[i & 255];
-            this.permMod12[i] = this.perm[i] % 12;
-        }
-    }
+    private random?: Random;
 
     public get(x: number, y: number, {
         amplitude = 1,
@@ -130,5 +121,14 @@ export default class SimplexNoise {
         // Add contributions from each corner to get the final noise value.
         // The result is scaled to return values in the interval [-1,1].
         return (70.0 * (n0 + n1 + n2) + 1) * 0.5; // return value [0,1];
+    }
+
+    public setSeed(seed?: number) {
+        this.random = new Random(seed);
+        this.p = SimplexNoise.buildPermutationTable(this.random);
+        for (let i = 0; i < 512; i++) {
+            this.perm[i] = this.p[i & 255];
+            this.permMod12[i] = this.perm[i] % 12;
+        }
     }
 }

@@ -5,45 +5,30 @@ import Entity from "../entity/Entity";
 
 export default class Camera {
 
-    private containers: PIXI.Container[] = [];
-    private follow?: { x: number; y: number; };
-    private fx: number = 0;
-    private fy: number = 0;
-    private cx: number = 0;
-    private cy: number = 0;
-
     constructor() {
-    }
-
-    public get x() {
-        return (this.cx);
-    }
-
-    public get y() {
-        return (this.cy);
     }
 
     private _zoom: number = 6;
 
-    public get zoom(): number {
-        return this._zoom;
+    private containers: Array<PIXI.Container> = [];
+    private cx: number = 0;
+    private cy: number = 0;
+    private follow?: { x: number; y: number; };
+    private fx: number = 0;
+    private fy: number = 0;
+
+    public setContainer(...containers: Array<PIXI.Container>) {
+        this.containers = containers;
     }
 
-    public set zoom(value: number) {
-        if (value < 0.5) {
-            value = 0.5;
-        }
-        this._zoom = value;
+    public setFollow(obj: Entity) {
+        this.follow = obj;
     }
 
     public setPos(x: number, y: number) {
         this.fx = x;
         this.fy = y;
         this.follow = undefined;
-    }
-
-    public setFollow(obj: Entity) {
-        this.follow = obj;
     }
 
     public update(): void {
@@ -55,8 +40,23 @@ export default class Camera {
         });
     }
 
-    public setContainer(...containers: PIXI.Container[]) {
-        this.containers = containers;
+    public get x() {
+        return (this.cx);
+    }
+
+    public get y() {
+        return (this.cy);
+    }
+
+    public get zoom(): number {
+        return this._zoom;
+    }
+
+    public set zoom(value: number) {
+        if (value < 0.5) {
+            value = 0.5;
+        }
+        this._zoom = value;
     }
 
     private move() {

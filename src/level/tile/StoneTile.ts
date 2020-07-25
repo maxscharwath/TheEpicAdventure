@@ -12,8 +12,8 @@ import HurtParticle from "../../entity/particle/HurtParticle";
 import Items from "../../item/Items";
 
 export default class StoneTile extends Tile {
-    public static readonly TAG = "stone";
     public static readonly COLOR: number = 0x0cb516;
+    public static readonly TAG = "stone";
 
     private static tileTextures = StoneTile.loadTextures(System.getResource("tile", "stone.png"), 5);
     private damage = 0;
@@ -30,20 +30,10 @@ export default class StoneTile extends Tile {
         return false;
     }
 
-    public onUpdate() {
-        super.onUpdate();
-        const n = this.levelTile.getDirectNeighbourTiles(false);
-        [Tiles.DIRT, Tiles.GRASS, Tiles.SAND, Tiles.SNOW, Tiles.DARK_GRASS].forEach((tile) => {
-            if (n.some((l) => !l.skipTick && l.instanceOf(tile.tile))) {
-                this.setGroundTile(tile.tile);
-            }
-        });
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.pickaxe:
+                case ToolType.PICKAXE:
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
                     this.levelTile.level.add(
@@ -65,5 +55,15 @@ export default class StoneTile extends Tile {
                     return true;
             }
         }
+    }
+
+    public onUpdate() {
+        super.onUpdate();
+        const n = this.levelTile.getDirectNeighbourTiles(false);
+        [Tiles.DIRT, Tiles.GRASS, Tiles.SAND, Tiles.SNOW, Tiles.DARK_GRASS].forEach((tile) => {
+            if (n.some((l) => !l.skipTick && l.instanceOf(tile.tile))) {
+                this.setGroundTile(tile.tile);
+            }
+        });
     }
 }

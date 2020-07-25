@@ -20,28 +20,23 @@ import WaterDropParticle from "./particle/WaterDropParticle";
 import SmokeParticle from "./particle/SmokeParticle";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
-
-    protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-    private static random = new Random();
     public ["constructor"]: typeof Entity;
-    public x: number = 0;
-    public y: number = 0;
-    public z: number = 0;
-    public isInteractive = false;
-    public offset = new PIXI.Point();
     public a: Vector3D = new Vector3D();
-    public hitbox: Hitbox = new Hitbox();
-    public ticks: number = 0;
-    protected fireSprite: PIXI.AnimatedSprite;
-    protected random = this.constructor.random;
-    protected level?: Level;
-    protected deleted: boolean = false;
-    protected isMoving: boolean = false;
+
+    protected get aSpeed(): number {
+        return Math.hypot(this.a.x, this.a.y);
+    }
     protected container = new PIXI.Container();
-    protected isOnFire = false;
+    protected deleted: boolean = false;
     protected fireDelay: number;
-    private lastTick: number = Updater.ticks;
-    private uid: string = uniqid();
+    protected fireSprite: PIXI.AnimatedSprite;
+    public hitbox: Hitbox = new Hitbox();
+    public isInteractive = false;
+    protected isMoving: boolean = false;
+    protected isOnFire = false;
+    protected level?: Level;
+    public offset = new PIXI.Point();
+    protected random = this.constructor.random;
 
     protected constructor() {
         super();
@@ -57,10 +52,13 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.init();
         this.container.addChild(this.fireSprite);
     }
+    public ticks: number = 0;
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
 
-    protected get aSpeed(): number {
-        return Math.hypot(this.a.x, this.a.y);
-    }
+    protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
+    private static random = new Random();
 
     public static create({id, x, y}: any): Entity | undefined {
         const EntityClass = Entities.getByTag(id);
@@ -70,47 +68,120 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         e.y = y;
         return e;
     }
+    private lastTick: number = Updater.ticks;
+    private uid: string = uniqid();
 
-    public isActive() {
-        return (Updater.ticks - this.lastTick) < 50;
+    public add() {
+        if (this.parent) this.parent.removeChild(this);
+        this.level?.sortableContainer.addChild(this);
     }
 
-    public setOnFire(value: boolean) {
-        if (!value && this.isOnFire) {
-            // fizz
+    public blocks(entity: Entity) {
+        return false;
+    }
+
+    public canBurn() {
+        return true;
+    }
+
+    public canFly() {
+        return false;
+    }
+
+    public canSwim() {
+        return false;
+    }
+
+    public collision(e: Entity, xa: number = 0, ya: number = 0): boolean {
+        const aX0 = (this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x;
+        const aY0 = (this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y;
+        const aX1 = (this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x;
+        const aY1 = (this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y;
+
+        const bX0 = e.x - e.hitbox.width * 0.5 + e.hitbox.x;
+        const bY0 = e.y - e.hitbox.height * 0.5 + e.hitbox.y;
+        const bX1 = e.x + e.hitbox.width * 0.5 + e.hitbox.x;
+        const bY1 = e.y + e.hitbox.height * 0.5 + e.hitbox.y;
+
+        return !((bX0 >= aX1)
+            || (bX1 <= aX0)
+            || (bY0 >= aY1)
+            || (bY1 <= aY0));
+    }
+
+    public delete(level?: Level): void {
+        this.remove();
+        if (level === undefined) {
+            this.deleted = true;
+            if (this.level instanceof Level) this.level.remove(this);
+            return;
         }
-        this.isOnFire = value;
-        this.fireDelay = 0;
+        if (level === this.level) {
+            this.deleted = true;
+            this.level = undefined;
+        }
     }
 
-    public isOnTile(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
-        if (this.canFly() || this.z > this.getTileZ()) return false;
-        return this.getTile()?.instanceOf(...tileClass);
+    public die(): void {
+        this.delete();
+    }
+
+    public getChunk(): Chunk | undefined {
+        return this.level?.getChunk(this.x >> 8, this.y >> 8);
+    }
+
+    public getChunkNeighbour(): Array<Chunk> {
+        return this.level?.getChunkNeighbour(this.x >> 8, this.y >> 8) ?? [];
+    }
+
+    public getClass() {
+        return Object.getPrototypeOf(this).constructor;
     }
 
     public getDistance(entity: Entity) {
         return Math.hypot(this.x - entity.x, this.y - entity.y);
     }
 
-    public onTick(): void {
-        this.lastTick = Updater.ticks;
-        this.ticks++;
-        this.fireSprite.visible = this.isOnFire;
-        if (this.isOnFire) {
-            const tile = this.getTile();
-            tile?.setLight(20);
-            if (Updater.every(5)) {
-                this.level?.add(new SmokeParticle(this.x, this.y - 4));
-            }
-            this.onFire();
-            if (this.fireDelay++ > 200 || this.isOnTile(Tiles.WATER)) {
-                this.setOnFire(false);
-            }
-        } else {
-            if (this.isOnTile(Tiles.LAVA)) {
-                this.setOnFire(true);
-            }
-        }
+    public getKeys() {
+        return Entities.getKeys(this.getClass());
+    }
+
+    public getLevel(): Level | undefined {
+        return this.level;
+    }
+
+    public getLightRadius(): number {
+        return 0;
+    }
+
+    public getName() {
+        return this.constructor.name;
+    }
+
+    public getRemoved(): boolean {
+        return this.deleted;
+    }
+
+    public getTile(): LevelTile | undefined {
+        const {x, y} = this.getCentredPos();
+        return this.level?.getTile(x >> 4, y >> 4);
+    }
+
+    public isActive() {
+        return (Updater.ticks - this.lastTick) < 50;
+    }
+
+    public isOnTile(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+        if (this.canFly() || this.z > this.getTileZ()) return false;
+        return this.getTile()?.instanceOf(...tileClass);
+    }
+
+    public isSwimming() {
+        return this.isOnTile(Tiles.LAVA, Tiles.WATER);
+    }
+
+    public onGround(): boolean {
+        return this.z <= this.getTileZ();
     }
 
     public onRender() {
@@ -150,76 +221,30 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
 
     }
 
-    public onGround(): boolean {
-        return this.z <= this.getTileZ();
-    }
-
-    public canSwim() {
-        return false;
-    }
-
-    public canFly() {
-        return false;
-    }
-
-    public canBurn() {
-        return true;
-    }
-
-    public isSwimming() {
-        return this.isOnTile(Tiles.LAVA, Tiles.WATER);
-    }
-
-    public getChunk(): Chunk | undefined {
-        return this.level?.getChunk(this.x >> 8, this.y >> 8);
-    }
-
-    public getChunkNeighbour(): Chunk[] {
-        return this.level?.getChunkNeighbour(this.x >> 8, this.y >> 8) ?? [];
-    }
-
-    public getLevel(): Level | undefined {
-        return this.level;
-    }
-
-    public getTile(): LevelTile | undefined {
-        const {x, y} = this.getCentredPos();
-        return this.level?.getTile(x >> 4, y >> 4);
-    }
-
-    public getRemoved(): boolean {
-        return this.deleted;
-    }
-
-    public getLightRadius(): number {
-        return 0;
-    }
-
-    public die(): void {
-        this.delete();
+    public onTick(): void {
+        this.lastTick = Updater.ticks;
+        this.ticks++;
+        this.fireSprite.visible = this.isOnFire;
+        if (this.isOnFire) {
+            const tile = this.getTile();
+            tile?.setLight(20);
+            if (Updater.every(5)) {
+                this.level?.add(new SmokeParticle(this.x, this.y - 4));
+            }
+            this.onFire();
+            if (this.fireDelay++ > 200 || this.isOnTile(Tiles.WATER)) {
+                this.setOnFire(false);
+            }
+        } else {
+            if (this.isOnTile(Tiles.LAVA)) {
+                this.setOnFire(true);
+            }
+        }
     }
 
     public remove() {
         if (this.parent) {
             this.parent.removeChild(this);
-        }
-    }
-
-    public add() {
-        if (this.parent) this.parent.removeChild(this);
-        this.level?.sortableContainer.addChild(this);
-    }
-
-    public delete(level?: Level): void {
-        this.remove();
-        if (level === undefined) {
-            this.deleted = true;
-            if (this.level instanceof Level) this.level.remove(this);
-            return;
-        }
-        if (level === this.level) {
-            this.deleted = true;
-            this.level = undefined;
         }
     }
 
@@ -229,20 +254,12 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.y = y;
     }
 
-    public getName() {
-        return this.constructor.name;
-    }
-
-    public toString(): string {
-        return `${this.getName()}#${this.uid}`;
-    }
-
-    public getClass() {
-        return Object.getPrototypeOf(this).constructor;
-    }
-
-    public getKeys() {
-        return Entities.getKeys(this.getClass());
+    public setOnFire(value: boolean) {
+        if (!value && this.isOnFire) {
+            // fizz
+        }
+        this.isOnFire = value;
+        this.fireDelay = 0;
     }
 
     public toBSON() {
@@ -254,34 +271,34 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         };
     }
 
+    public toString(): string {
+        return `${this.getName()}#${this.uid}`;
+    }
+
     public touchedBy(entity: Entity): void {
         if (entity.isOnFire) {
             this.setOnFire(true);
         }
     }
 
-    public blocks(entity: Entity) {
-        return false;
+    protected calculateZIndex() {
+        return this.y + this.hitbox.y + this.hitbox.height / 2;
     }
 
-    public collision(e: Entity, xa: number = 0, ya: number = 0): boolean {
-        const aX0 = (this.x + xa) - this.hitbox.width * 0.5 + this.hitbox.x;
-        const aY0 = (this.y + ya) - this.hitbox.height * 0.5 + this.hitbox.y;
-        const aX1 = (this.x + xa) + this.hitbox.width * 0.5 + this.hitbox.x;
-        const aY1 = (this.y + ya) + this.hitbox.height * 0.5 + this.hitbox.y;
-
-        const bX0 = e.x - e.hitbox.width * 0.5 + e.hitbox.x;
-        const bY0 = e.y - e.hitbox.height * 0.5 + e.hitbox.y;
-        const bX1 = e.x + e.hitbox.width * 0.5 + e.hitbox.x;
-        const bY1 = e.y + e.hitbox.height * 0.5 + e.hitbox.y;
-
-        return !((bX0 >= aX1)
-            || (bX1 <= aX0)
-            || (bY0 >= aY1)
-            || (bY1 <= aY0));
+    protected friction() {
+        if (this.z <= this.getTileZ()) {
+            const friction = this.getTile()?.getFriction() ?? 1;
+            this.a.x -= this.a.x * friction;
+            this.a.y -= this.a.y * friction;
+        } else {
+            this.a.x -= this.a.x * 0.01;
+            this.a.y -= this.a.y * 0.01;
+        }
     }
 
-    protected onFire() {
+    protected getTileZ() {
+        const tile = this.getTile();
+        return tile?.z ?? 0;
     }
 
     protected init() {
@@ -302,11 +319,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
             return false;
         }
         return false;
-    }
-
-    protected steppedOn() {
-        if (this.z > this.getTileZ()) return;
-        this.level?.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
     }
 
     protected move2(xa: number, ya: number): boolean {
@@ -352,27 +364,15 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return true;
     }
 
-    protected calculateZIndex() {
-        return this.y + this.hitbox.y + this.hitbox.height / 2;
-    }
-
-    protected friction() {
-        if (this.z <= this.getTileZ()) {
-            const friction = this.getTile()?.getFriction() ?? 1;
-            this.a.x -= this.a.x * friction;
-            this.a.y -= this.a.y * friction;
-        } else {
-            this.a.x -= this.a.x * 0.01;
-            this.a.y -= this.a.y * 0.01;
-        }
-    }
-
-    protected getTileZ() {
-        const tile = this.getTile();
-        return tile?.z ?? 0;
+    protected onFire() {
     }
 
     protected onTileTooHigh() {
+    }
+
+    protected steppedOn() {
+        if (this.z > this.getTileZ()) return;
+        this.level?.getTile(this.x >> 4, this.y >> 4)?.steppedOn(this);
     }
 
     private getCentredPos() {

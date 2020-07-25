@@ -7,11 +7,11 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class MushroomTile extends Tile {
-    public static readonly TAG = "mushroom";
     public static readonly COLOR: number = 0x0cb516;
+    public static readonly TAG = "mushroom";
+    public light = 10;
 
     private static tileTextures = MushroomTile.loadTextures(System.getResource("tile", "mushroom.png"), 3);
-    public light = 10;
     private sprite?: PIXI.Sprite;
 
     public init() {
@@ -25,6 +25,11 @@ export default class MushroomTile extends Tile {
         return true;
     }
 
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.onDestroy();
+        return true;
+    }
+
     public onUpdate() {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
@@ -33,11 +38,6 @@ export default class MushroomTile extends Tile {
                 this.setGroundTile(tile.tile);
             }
         });
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        this.onDestroy();
-        return true;
     }
 
     protected onDestroy() {

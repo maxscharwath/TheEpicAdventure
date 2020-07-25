@@ -3,8 +3,12 @@ import Tiles from "./Tiles";
 import TreeTile from "./TreeTile";
 
 export default class SpruceTreeTile extends TreeTile {
-    public static readonly TAG: string = "spruce";
     public static readonly COLOR: number = 0x108a4d;
+    public static readonly TAG: string = "spruce";
+
+    public onTick(): void {
+        super.onTick();
+    }
 
     public onUpdate() {
         super.onUpdate();
@@ -15,10 +19,6 @@ export default class SpruceTreeTile extends TreeTile {
         if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.DARK_GRASS.tile))) {
             this.setGroundTile(Tiles.DARK_GRASS.tile);
         }
-    }
-
-    public onTick(): void {
-        super.onTick();
     }
 
     protected initTree() {

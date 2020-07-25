@@ -4,9 +4,16 @@ import "./String";
 
 export default class InputHandler {
 
+    private static isMod(keyName: string): boolean {
+        keyName = keyName.toUpperCase();
+        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
+    }
+
+    private static keyTyped(e: Event): void {
+        e.preventDefault();
+    }
+
     public preventDefault: boolean = true;
-    private keymap = new Map();
-    private keyboard = new Map();
 
     constructor() {
         this.initKeyMap();
@@ -17,37 +24,10 @@ export default class InputHandler {
         this.keyboard.set("CONTROL-LEFT", new Key(true));
         this.keyboard.set("ALT-LEFT", new Key(true));
     }
+    private keyboard = new Map();
+    private keymap = new Map();
 
-    private static isMod(keyName: string): boolean {
-        keyName = keyName.toUpperCase();
-        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
-    }
-
-    private static keyTyped(e: Event): void {
-        e.preventDefault();
-    }
-
-    public resetKeyBindings(): void {
-        this.keymap.clear();
-        this.initKeyMap();
-    }
-
-    public releaseAll(): void {
-        for (const key of this.keyboard.values()) {
-            key.release();
-        }
-    }
-
-    public onTick() {
-        if (!Game.isFocus) {
-            this.releaseAll();
-        }
-        for (const key of this.keyboard.values()) {
-            key.onTick();
-        }
-    }
-
-    public getAllPressedKeys(): Key[] {
+    public getAllPressedKeys(): Array<Key> {
         const keys = [];
         for (const key of this.keyboard.values()) {
             if (key.down) {
@@ -133,6 +113,35 @@ export default class InputHandler {
         return key;
     }
 
+    public onTick() {
+        if (!Game.isFocus) {
+            this.releaseAll();
+        }
+        for (const key of this.keyboard.values()) {
+            key.onTick();
+        }
+    }
+
+    public releaseAll(): void {
+        for (const key of this.keyboard.values()) {
+            key.release();
+        }
+    }
+
+    public resetKeyBindings(): void {
+        this.keymap.clear();
+        this.initKeyMap();
+    }
+
+    private getPhysKey(keytext: string): Key {
+        keytext = keytext.toUpperCase();
+        if (this.keyboard.has(keytext)) {
+            return this.keyboard.get(keytext);
+        } else {
+            return new Key();
+        }
+    }
+
     private initKeyMap(): void {
         this.keymap.set("MOVE-UP", "KEY-W|ARROW-UP");
         this.keymap.set("MOVE-DOWN", "KEY-S|ARROW-DOWN");
@@ -177,21 +186,6 @@ export default class InputHandler {
         this.keymap.set("HOTBAR-9", "DIGIT-9");
     }
 
-
-    private toggle(keyCode: string, pressed: boolean): void {
-        const keytext: string = keyCode.toUpperCase();
-        this.getPhysKey(keytext).toggle(pressed);
-    }
-
-    private getPhysKey(keytext: string): Key {
-        keytext = keytext.toUpperCase();
-        if (this.keyboard.has(keytext)) {
-            return this.keyboard.get(keytext);
-        } else {
-            return new Key();
-        }
-    }
-
     private keyPressed(e: KeyboardEvent): void {
         if (this.preventDefault) e.preventDefault();
         this.toggle(e.code.spinalCase(), true);
@@ -200,6 +194,12 @@ export default class InputHandler {
     private keyReleased(e: KeyboardEvent): void {
         if (this.preventDefault) e.preventDefault();
         this.toggle(e.code.spinalCase(), false);
+    }
+
+
+    private toggle(keyCode: string, pressed: boolean): void {
+        const keytext: string = keyCode.toUpperCase();
+        this.getPhysKey(keytext).toggle(pressed);
     }
 }
 

@@ -5,7 +5,6 @@ import * as PIXI from "pixi.js";
 import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default class WaterDropParticle extends Particle {
-    private readonly sprite: PIXI.AnimatedSprite;
 
     constructor(x: number, y: number, startFrame = 0) {
         super(x, y);
@@ -28,4 +27,5 @@ export default class WaterDropParticle extends Particle {
         };
         this.addChild(this.sprite);
     }
+    private readonly sprite: PIXI.AnimatedSprite;
 }

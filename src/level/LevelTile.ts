@@ -12,37 +12,29 @@ import Item from "../item/Item";
 import Chunk from "./Chunk";
 
 interface LevelTileConstructor {
-    level: Level;
-    x: number;
-    y: number;
     biome: Biome;
-    temperature: number;
     elevation: number;
+    level: Level;
     moisture: number;
+    temperature: number;
     tileClass?: typeof Tile;
     tileStates?: {};
+    x: number;
+    y: number;
 }
 
 export default class LevelTile {
-
-    public static SIZE = 16;
-    public skipTick: boolean = false;
     public biome: Biome;
-    public level: Level;
-    public random: TileRandom = new TileRandom(this);
-    public readonly temperature: number;
     public readonly elevation: number;
-    public readonly moisture: number;
+    public level: Level;
     public readonly light = new Light();
     protected lightLevel = 0;
-    private visible: boolean;
-    private initByEntity?: Entity;
-    private tileStates?: {};
-    private tileClass?: typeof Tile;
-    private needToUpdate: boolean = true;
-    private isInitiated = false;
-    private groundContainer = new PIXI.Container();
-    private sortableContainer = new PIXI.Container();
+    public readonly moisture: number;
+    public random: TileRandom = new TileRandom(this);
+    public skipTick: boolean = false;
+    public readonly temperature: number;
+
+    public static SIZE = 16;
 
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         this.biome = biome;
@@ -56,42 +48,116 @@ export default class LevelTile {
         this.tileStates = tileStates;
     }
 
-    public get z(): number {
-        return this.tile?.z ?? 0;
-    }
+    private _tile?: Tile;
 
     private _x: number;
 
-    public get x(): number {
-        return this._x;
-    }
-
-    public set x(value: number) {
-        this._x = value;
-        this.groundContainer.x = this._x;
-        this.sortableContainer.x = this._x;
-        this.light.x = this._x;
-        this.sort();
-    }
-
     private _y: number;
+    private groundContainer = new PIXI.Container();
+    private initByEntity?: Entity;
+    private isInitiated = false;
+    private needToUpdate: boolean = true;
+    private sortableContainer = new PIXI.Container();
+    private tileClass?: typeof Tile;
+    private tileStates?: {};
+    private visible: boolean;
 
-    public get y(): number {
-        return this._y;
+    public add() {
+        if (!this.level) {
+            return;
+        }
+        this.level.groundContainer.addChild(this.groundContainer);
+        this.level.sortableContainer.addChild(this.sortableContainer);
+        this.level.lightFilter.lightContainer.addChild(this.light);
     }
 
-    public set y(value: number) {
-        this._y = value;
-        this.groundContainer.y = this._y;
-        this.sortableContainer.y = this._y;
-        this.light.y = this._y;
-        this.sort();
+    public bumpedInto(entity: Entity) {
+        return this._tile?.bumpedInto(entity);
     }
 
-    private _tile?: Tile;
+    public destroy() {
+        this.groundContainer.destroy({children: true});
+        this.sortableContainer.destroy({children: true});
+        this.light.destroy({children: true});
+    }
 
-    get tile(): Tile | undefined {
-        return this._tile;
+    public findTileRadius(radius: number, ...tiles: Array<typeof Tile>) {
+        for (let x = -radius; x < radius; x++) {
+            const height = ~~(Math.sqrt(radius * radius - x * x));
+            for (let y = -height; y < height; y++) {
+                const lt = this.getRelativeTile(x, y, false);
+                if (lt && lt.instanceOf(...tiles)) return true;
+            }
+        }
+        return false;
+    }
+
+    public getChunk(generate = true): Chunk | undefined {
+        return this.level.getChunk(this.getLocalX() >> 4, this.getLocalY() >> 4, generate);
+    }
+
+    public getColor() {
+        return this.tileClass?.COLOR ?? 0;
+    }
+
+    public getDirectNeighbourTiles(generate = true): Array<LevelTile> {
+        const lt = [];
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                if (Math.abs(i) === Math.abs(j)) {
+                    continue;
+                }
+                const t = this.getRelativeTile(i, j, generate);
+                if (t) {
+                    lt.push(t);
+                }
+            }
+        }
+        return lt;
+    }
+
+    public getFriction() {
+        return this._tile?.friction ?? 1;
+    }
+
+    public getLightLevel() {
+        const l = Math.round((this.lightLevel + this.level.getAmbientLightLevel()));
+        return l > 20 ? 20 : l;
+    }
+
+    public getLocalX = () => this._x >> 4;
+
+    public getLocalY = () => this._y >> 4;
+
+    public getNeighbourTiles(radius: number = 1, generate = true): Array<LevelTile> {
+        const lt = [];
+        const x = this.getLocalX();
+        const y = this.getLocalY();
+        for (let i = x - radius; i <= x + radius; i++) {
+            for (let j = y - radius; j <= y + radius; j++) {
+                if (i === x && j === y) {
+                    continue;
+                }
+                const t = this.level.getTile(i, j, generate);
+                if (t) {
+                    lt.push(t);
+                }
+            }
+        }
+        return lt;
+    }
+
+    public getRelativeTile(x: number, y: number, generate = true): LevelTile | undefined {
+        if (x === 0 && y === 0) return this;
+        return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
+    }
+
+    public getTileClass() {
+        return this.tileClass;
+    }
+
+    public hasEntity(): boolean {
+        return this.getChunk()?.getEntities().some((e) => e.getTile() === this);
     }
 
     public init() {
@@ -118,58 +184,37 @@ export default class LevelTile {
         });
     }
 
-    public remove() {
-        if (this.groundContainer.parent) this.groundContainer.parent.removeChild(this.groundContainer);
-        if (this.sortableContainer.parent) this.sortableContainer.parent.removeChild(this.sortableContainer);
-        if (this.light.parent) this.light.parent.removeChild(this.light);
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+        return this._tile?.instanceOf(...tileClass);
     }
 
-    public add() {
-        if (!this.level) {
-            return;
-        }
-        this.level.groundContainer.addChild(this.groundContainer);
-        this.level.sortableContainer.addChild(this.sortableContainer);
-        this.level.lightFilter.lightContainer.addChild(this.light);
-    }
-
-    public getLocalX = () => this._x >> 4;
-
-    public getLocalY = () => this._y >> 4;
-
-    public steppedOn(entity: Entity) {
-        this._tile?.steppedOn(entity);
-    }
-
-    public is(...tileClasses: (typeof Tile | TileRegister<typeof Tile>)[]) {
+    public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>) {
         return tileClasses.some((tileClass) =>
             this._tile?.getClass() === ((tileClass instanceof TileRegister) ? tileClass.getClass() : tileClass));
     }
 
-    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
-    public setTile<T extends typeof Tile>(
-        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
-    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}, entity?: Entity): void {
-        this.isInitiated = false;
-        this.skipTick = true;
-        this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
-        this.tileStates = states;
-        this.initByEntity = entity;
+    public mayPass(entity: Entity) {
+        return this._tile?.mayPass(entity);
     }
 
-    public findTileRadius(radius: number, ...tiles: typeof Tile[]) {
-        for (let x = -radius; x < radius; x++) {
-            const height = ~~(Math.sqrt(radius * radius - x * x));
-            for (let y = -height; y < height; y++) {
-                const lt = this.getRelativeTile(x, y, false);
-                if (lt && lt.instanceOf(...tiles)) return true;
-            }
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (!this._tile) return false;
+        return this._tile.onInteract(mob, item);
+    }
+
+    public onRender() {
+        this.checkOnScreen();
+        if (!this.isInitiated) {
+            this.init();
         }
-        return false;
-    }
-
-    public getTileClass() {
-        return this.tileClass;
+        if (this.needToUpdate) {
+            this.needToUpdate = false;
+            this.onUpdate();
+        }
+        if (this._tile?.isInit) {
+            this._tile.onRender();
+        }
+        this.light.setBrightness(this.lightLevel / 20);
     }
 
     public onTick() {
@@ -192,95 +237,10 @@ export default class LevelTile {
         }
     }
 
-    public onRender() {
-        this.checkOnScreen();
-        if (!this.isInitiated) {
-            this.init();
-        }
-        if (this.needToUpdate) {
-            this.needToUpdate = false;
-            this.onUpdate();
-        }
-        if (this._tile?.isInit) {
-            this._tile.onRender();
-        }
-        this.light.setBrightness(this.lightLevel / 20);
-    }
-
-    public getRelativeTile(x: number, y: number, generate = true): LevelTile | undefined {
-        if (x === 0 && y === 0) return this;
-        return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
-    }
-
-    public getNeighbourTiles(radius: number = 1, generate = true): LevelTile[] {
-        const lt = [];
-        const x = this.getLocalX();
-        const y = this.getLocalY();
-        for (let i = x - radius; i <= x + radius; i++) {
-            for (let j = y - radius; j <= y + radius; j++) {
-                if (i === x && j === y) {
-                    continue;
-                }
-                const t = this.level.getTile(i, j, generate);
-                if (t) {
-                    lt.push(t);
-                }
-            }
-        }
-        return lt;
-    }
-
-    public getDirectNeighbourTiles(generate = true): LevelTile[] {
-        const lt = [];
-        for (let i = -1; i < 2; i++) {
-            for (let j = -1; j < 2; j++) {
-                if (Math.abs(i) === Math.abs(j)) {
-                    continue;
-                }
-                const t = this.getRelativeTile(i, j, generate);
-                if (t) {
-                    lt.push(t);
-                }
-            }
-        }
-        return lt;
-    }
-
-    public mayPass(entity: Entity) {
-        return this._tile?.mayPass(entity);
-    }
-
-    public getChunk(generate = true): Chunk | undefined {
-        return this.level.getChunk(this.getLocalX() >> 4, this.getLocalY() >> 4, generate);
-    }
-
-    public hasEntity(): boolean {
-        return this.getChunk()?.getEntities().some((e) => e.getTile() === this);
-    }
-
-    public bumpedInto(entity: Entity) {
-        return this._tile?.bumpedInto(entity);
-    }
-
-    public getFriction() {
-        return this._tile?.friction ?? 1;
-    }
-
-    public instanceOf(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {
-        return this._tile?.instanceOf(...tileClass);
-    }
-
-    public update() {
-        this.needToUpdate = true;
-        this.getNeighbourTiles(1, false).forEach((levelTile) => {
-            levelTile.needToUpdate = true;
-        });
-    }
-
-    public destroy() {
-        this.groundContainer.destroy({children: true});
-        this.sortableContainer.destroy({children: true});
-        this.light.destroy({children: true});
+    public remove() {
+        if (this.groundContainer.parent) this.groundContainer.parent.removeChild(this.groundContainer);
+        if (this.sortableContainer.parent) this.sortableContainer.parent.removeChild(this.sortableContainer);
+        if (this.light.parent) this.light.parent.removeChild(this.light);
     }
 
     public setLight(value: number) {
@@ -289,9 +249,33 @@ export default class LevelTile {
         }
     }
 
-    public getLightLevel() {
-        const l = Math.round((this.lightLevel + this.level.getAmbientLightLevel()));
-        return l > 20 ? 20 : l;
+    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(
+        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}, entity?: Entity): void {
+        this.isInitiated = false;
+        this.skipTick = true;
+        this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
+        this.tileStates = states;
+        this.initByEntity = entity;
+    }
+
+    public setVisible(value: boolean) {
+        this.visible = value;
+        this.groundContainer.visible = this.visible;
+        this.sortableContainer.visible = this.visible;
+        this.light.visible = this.visible;
+    }
+
+    public steppedOn(entity: Entity) {
+        this._tile?.steppedOn(entity);
+    }
+
+    public update() {
+        this.needToUpdate = true;
+        this.getNeighbourTiles(1, false).forEach((levelTile) => {
+            levelTile.needToUpdate = true;
+        });
     }
 
     public updateLight() {
@@ -313,20 +297,36 @@ export default class LevelTile {
         }
     }
 
-    public setVisible(value: boolean) {
-        this.visible = value;
-        this.groundContainer.visible = this.visible;
-        this.sortableContainer.visible = this.visible;
-        this.light.visible = this.visible;
+    get tile(): Tile | undefined {
+        return this._tile;
     }
 
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (!this._tile) return false;
-        return this._tile.onInteract(mob, item);
+    public get x(): number {
+        return this._x;
     }
 
-    public getColor() {
-        return this.tileClass?.COLOR ?? 0;
+    public set x(value: number) {
+        this._x = value;
+        this.groundContainer.x = this._x;
+        this.sortableContainer.x = this._x;
+        this.light.x = this._x;
+        this.sort();
+    }
+
+    public get y(): number {
+        return this._y;
+    }
+
+    public set y(value: number) {
+        this._y = value;
+        this.groundContainer.y = this._y;
+        this.sortableContainer.y = this._y;
+        this.light.y = this._y;
+        this.sort();
+    }
+
+    public get z(): number {
+        return this.tile?.z ?? 0;
     }
 
     private checkOnScreen() {

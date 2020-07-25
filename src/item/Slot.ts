@@ -1,9 +1,9 @@
 import Item from "./Item";
 
 export default class Slot {
+    public item?: Item;
 
     public nb: number = 0;
-    public item?: Item;
 
     constructor(item?: Item, nb: number = 0) {
         this.nb = nb;
@@ -13,6 +13,14 @@ export default class Slot {
     public clear() {
         this.item = undefined;
         this.nb = 0;
+    }
+
+    public clone(): Slot {
+        return new Slot(this.item, this.nb);
+    }
+
+    public isEmpty(): boolean {
+        return this.item === null || this.nb === null || this.nb <= 0;
     }
 
     public isItem() {
@@ -27,13 +35,5 @@ export default class Slot {
             this.clear();
         }
         return n;
-    }
-
-    public clone(): Slot {
-        return new Slot(this.item, this.nb);
-    }
-
-    public isEmpty(): boolean {
-        return this.item === null || this.nb === null || this.nb <= 0;
     }
 }

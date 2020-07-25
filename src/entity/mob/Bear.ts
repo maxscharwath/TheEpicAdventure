@@ -3,16 +3,12 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Bear extends HostileMob {
-    private static spriteSheet = new SpriteSheet("bear.json");
     protected speedMax: number = 1;
+    private static spriteSheet = new SpriteSheet("bear.json");
     private sprite?: AnimatedSprite;
 
     public canSwim(): boolean {
         return false;
-    }
-
-    public onTick(): void {
-        super.onTick();
     }
 
     public onRender() {
@@ -22,6 +18,10 @@ export default class Bear extends HostileMob {
         } else {
             this.playAnimation("idle");
         }
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
     protected init() {

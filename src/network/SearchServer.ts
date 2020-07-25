@@ -2,17 +2,21 @@ import udp from "dgram";
 import IP from "./IP";
 
 interface ServerPacket {
-    uid: string;
     ip: string;
     port: number;
+    uid: string;
 }
 
 export default class SearchServer {
-
-    private static results: ServerPacket[] = [];
-    private static timer?: NodeJS.Timeout;
-    private static searching: boolean = false;
     private static PORT = 20000;
+
+    private static results: Array<ServerPacket> = [];
+    private static searching: boolean = false;
+    private static timer?: NodeJS.Timeout;
+
+    public static getResults() {
+        return this.results;
+    }
 
     public static start(callback?: (server: ServerPacket) => void) {
         if (this.searching) return this;
@@ -41,10 +45,6 @@ export default class SearchServer {
     public static stop() {
         this.searching = false;
         if (this.timer) clearInterval(this.timer);
-    }
-
-    public static getResults() {
-        return this.results;
     }
 }
 

@@ -4,14 +4,6 @@ import Slot from "./Slot";
 
 export default class Inventory {
 
-    public indexedSlot: number = 0;
-    public slots: Slot[] = [];
-    private STACK_MAX: number = 64;
-
-    constructor(nbSlot: number = 9) {
-        this.addSlots(nbSlot);
-    }
-
     public static create(data: any): Inventory {
         const inventory = new Inventory(data.nbSlots);
         for (const slotData of data.slots) {
@@ -22,84 +14,13 @@ export default class Inventory {
         return inventory;
     }
 
-    public selectedSlot(): Slot {
-        return this.slots[this.indexedSlot];
-    }
+    public indexedSlot: number = 0;
+    public slots: Array<Slot> = [];
 
-    public selectedItem(): Item | undefined {
-        const slot = this.slots[this.indexedSlot];
-        if (!(slot && slot.isItem())) return undefined;
-        return slot.item;
+    constructor(nbSlot: number = 9) {
+        this.addSlots(nbSlot);
     }
-
-    public addSlots(nb: number): void {
-        for (let i = 0; i < nb; i++) {
-            this.slots.push(new Slot());
-        }
-    }
-
-    public move(a: number, b: number) {
-        if (a < 0) {
-            a += this.slots.length;
-        }
-        if (a >= this.slots.length) {
-            a -= this.slots.length;
-        }
-        if (b < 0) {
-            b += this.slots.length;
-        }
-        if (b >= this.slots.length) {
-            b -= this.slots.length;
-        }
-        this.fusion(a, b);
-        this.slots[a] = this.slots.splice(b, 1, this.slots[a])[0];
-        return b;
-    }
-
-    public clear(): void {
-        for (const slot of this.slots) {
-            slot.clear();
-        }
-    }
-
-    public getItem(item: Item): Item | boolean {
-        return false;
-    }
-
-    public hasItem(item: Item | ItemRegister<Item>, count: number) {
-        for (const slot of this.slots) {
-            if (slot.item instanceof Item) {
-                if (slot.item.tag === item.tag) {
-                    return (slot.nb >= count);
-                }
-            }
-
-        }
-        return false;
-    }
-
-    public removeThisItem(item: Item, itemNb: number = 1) {
-        for (const slot of this.slots) {
-            if (slot.item === item) {
-                slot.removeItem(itemNb);
-            }
-        }
-    }
-
-    public removeItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
-        if (!item) return false;
-        for (const slot of this.slots) {
-            if (slot.item == null) {
-                continue;
-            }
-            if (slot.item.tag === item.tag) {
-                const n = slot.removeItem(itemNb);
-                if (n >= 0) return true;
-                itemNb += n;
-            }
-        }
-        return false;
-    }
+    private STACK_MAX: number = 64;
 
     public addItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
         if (item instanceof ItemRegister) {
@@ -135,6 +56,26 @@ export default class Inventory {
         return true;
     }
 
+    public addSlots(nb: number): void {
+        for (let i = 0; i < nb; i++) {
+            this.slots.push(new Slot());
+        }
+    }
+
+    public clear(): void {
+        for (const slot of this.slots) {
+            slot.clear();
+        }
+    }
+
+    public clone() {
+        const inventory = new Inventory();
+        for (const slot of this.slots) {
+            inventory.slots.push(slot.clone());
+        }
+        return inventory;
+    }
+
     public count(item: Item) {
         let count = 0;
         for (const slot of this.slots) {
@@ -147,20 +88,79 @@ export default class Inventory {
         return count;
     }
 
-    public clone() {
-        const inventory = new Inventory();
-        for (const slot of this.slots) {
-            inventory.slots.push(slot.clone());
-        }
-        return inventory;
+    public getItem(item: Item): Item | boolean {
+        return false;
     }
 
     public getSlot(index: number): Slot {
         return this.slots[index];
     }
 
+    public hasItem(item: Item | ItemRegister<Item>, count: number) {
+        for (const slot of this.slots) {
+            if (slot.item instanceof Item) {
+                if (slot.item.tag === item.tag) {
+                    return (slot.nb >= count);
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public move(a: number, b: number) {
+        if (a < 0) {
+            a += this.slots.length;
+        }
+        if (a >= this.slots.length) {
+            a -= this.slots.length;
+        }
+        if (b < 0) {
+            b += this.slots.length;
+        }
+        if (b >= this.slots.length) {
+            b -= this.slots.length;
+        }
+        this.fusion(a, b);
+        this.slots[a] = this.slots.splice(b, 1, this.slots[a])[0];
+        return b;
+    }
+
+    public removeItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
+        if (!item) return false;
+        for (const slot of this.slots) {
+            if (slot.item == null) {
+                continue;
+            }
+            if (slot.item.tag === item.tag) {
+                const n = slot.removeItem(itemNb);
+                if (n >= 0) return true;
+                itemNb += n;
+            }
+        }
+        return false;
+    }
+
+    public removeThisItem(item: Item, itemNb: number = 1) {
+        for (const slot of this.slots) {
+            if (slot.item === item) {
+                slot.removeItem(itemNb);
+            }
+        }
+    }
+
+    public selectedItem(): Item | undefined {
+        const slot = this.slots[this.indexedSlot];
+        if (!(slot && slot.isItem())) return undefined;
+        return slot.item;
+    }
+
+    public selectedSlot(): Slot {
+        return this.slots[this.indexedSlot];
+    }
+
     public toBSON() {
-        const slots: { pos: number, item?: Item, nb: number }[] = [];
+        const slots: Array<{ item?: Item, nb: number, pos: number }> = [];
         this.slots.forEach((slot, index) => {
             if (slot instanceof Slot && !slot.isEmpty()) {
                 slots.push({

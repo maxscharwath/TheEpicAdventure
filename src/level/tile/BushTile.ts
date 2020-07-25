@@ -8,8 +8,8 @@ import Tiles from "./Tiles";
 import Renderer from "../../core/Renderer";
 
 export default class BushTile extends Tile {
-    public static readonly TAG = "bush";
     public static readonly COLOR: number = 0x94785c;
+    public static readonly TAG = "bush";
     public anchor = 0.9;
 
     private sprite?: PIXI.Sprite;
@@ -29,8 +29,17 @@ export default class BushTile extends Tile {
         this.container.addChild(shadow);
     }
 
-    public steppedOn(entity: Entity) {
-        this.wiggleDelay = 5;
+    public mayPass(e: Entity): boolean {
+        return true;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.setTile(Tiles.GRASS);
+        return true;
+    }
+
+    public onRender() {
+        super.onRender();
     }
 
     public onTick(): void {
@@ -48,16 +57,7 @@ export default class BushTile extends Tile {
         }
     }
 
-    public onRender() {
-        super.onRender();
-    }
-
-    public mayPass(e: Entity): boolean {
-        return true;
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        this.setTile(Tiles.GRASS);
-        return true;
+    public steppedOn(entity: Entity) {
+        this.wiggleDelay = 5;
     }
 }

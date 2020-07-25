@@ -6,13 +6,13 @@ import Game from "../core/Game";
 
 export default class HeartDisplay extends Display {
     private static textures = SpriteSheet.loadTextures(System.getResource("screen", "heart.png"), 3, 8);
-    private hearts: PIXI.Sprite[] = [];
-    private health: number;
 
     constructor() {
         super();
         this.init();
     }
+    private health: number;
+    private hearts: Array<PIXI.Sprite> = [];
 
     public onRender() {
         super.onRender();
@@ -22,6 +22,21 @@ export default class HeartDisplay extends Display {
     public onTick() {
         super.onTick();
         this.updateHeartBar();
+    }
+
+    private addHeart() {
+        const h = new PIXI.Sprite(HeartDisplay.textures[0]);
+        this.hearts.push(h);
+        this.addChild(h);
+    }
+
+    private init() {
+        this.scale.set(4);
+    }
+
+    private removeHeart() {
+        const h = this.hearts.pop();
+        h?.parent.removeChild(h);
     }
 
     private updateHeartBar() {
@@ -49,20 +64,5 @@ export default class HeartDisplay extends Display {
             }
             heart.position.set(x, y);
         });
-    }
-
-    private init() {
-        this.scale.set(4);
-    }
-
-    private removeHeart() {
-        const h = this.hearts.pop();
-        h?.parent.removeChild(h);
-    }
-
-    private addHeart() {
-        const h = new PIXI.Sprite(HeartDisplay.textures[0]);
-        this.hearts.push(h);
-        this.addChild(h);
     }
 }

@@ -2,10 +2,6 @@ import * as PIXI from "pixi.js";
 import Display from "./Display";
 
 class DraggableArea extends PIXI.Container {
-    private dragging: boolean = false;
-    private data: any;
-    private offset = new PIXI.Point();
-    private parentContainer: PIXI.Container;
 
     constructor(parentContainer: PIXI.Container, x = 0, y = 0) {
         super();
@@ -23,6 +19,10 @@ class DraggableArea extends PIXI.Container {
 
         this.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
     }
+    private data: any;
+    private dragging: boolean = false;
+    private offset = new PIXI.Point();
+    private parentContainer: PIXI.Container;
 
     public disable() {
         this.interactive = false;
@@ -32,13 +32,6 @@ class DraggableArea extends PIXI.Container {
     public enable() {
         this.interactive = true;
         this.visible = false;
-    }
-
-    private onDragStart(event: any) {
-        this.data = event.data;
-        this.offset = this.data.getLocalPosition(this);
-        this.alpha = 0.5;
-        this.dragging = true;
     }
 
     private onDragEnd() {
@@ -53,6 +46,13 @@ class DraggableArea extends PIXI.Container {
             this.parentContainer.x = newPosition.x - (this.offset.x * this.scale.x);
             this.parentContainer.y = newPosition.y - (this.offset.y * this.scale.y);
         }
+    }
+
+    private onDragStart(event: any) {
+        this.data = event.data;
+        this.offset = this.data.getLocalPosition(this);
+        this.alpha = 0.5;
+        this.dragging = true;
     }
 }
 

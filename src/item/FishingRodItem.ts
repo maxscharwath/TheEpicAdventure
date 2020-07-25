@@ -6,19 +6,24 @@ import System from "../core/System";
 
 export default class FishingRodItem extends Item {
 
-    private hook?: Hook;
-    private readonly durabilityMax: number = 50;
-    private durability: number = this.durabilityMax;
-
-    constructor() {
-        super("fishing_rod");
-        this.texture = PIXI.Texture.from(System.getResource("items", "fishing_rod.png"));
-    }
-
     public static create(data: any) {
         const item = super.create(data) as FishingRodItem;
         item.durability = data.durability;
         return item;
+    }
+
+    constructor() {
+        super("fishing_rod");
+        this.durability = this.durabilityMax;
+        this.texture = PIXI.Texture.from(System.getResource("items", "fishing_rod.png"));
+    }
+    private durability: number;
+    private readonly durabilityMax: number = 50;
+
+    private hook?: Hook;
+
+    public clearHook() {
+        this.hook = undefined;
     }
 
     public fix(amount: number) {
@@ -27,6 +32,13 @@ export default class FishingRodItem extends Item {
 
     public isStackable() {
         return false;
+    }
+
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+            durability: this.durability,
+        };
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
@@ -39,16 +51,5 @@ export default class FishingRodItem extends Item {
         this.hook.a.z = 2;
         mob.getLevel()?.add(this.hook, mob.x + mob.getDir().getX() * 10, mob.y + mob.getDir().getY() * 10);
         return true;
-    }
-
-    public toBSON(): any {
-        return {
-            ...super.toBSON(),
-            durability: this.durability,
-        };
-    }
-
-    public clearHook() {
-        this.hook = undefined;
     }
 }

@@ -7,12 +7,17 @@ import Game from "../core/Game";
 
 export class Dialogue {
 
-    public hasCommand = true;
-    public name: string;
-    public sentences: string[] = [];
-
     public static create(name: string) {
         return new Dialogue().setName(name);
+    }
+
+    public hasCommand = true;
+    public name: string;
+    public sentences: Array<string> = [];
+
+    public addSentence(text: string) {
+        this.sentences.push(text);
+        return this;
     }
 
     public setName(name: string) {
@@ -20,31 +25,20 @@ export class Dialogue {
         return this;
     }
 
-    public addSentence(text: string) {
-        this.sentences.push(text);
-        return this;
-    }
-
 }
 
 class TextAnimation {
-    private sourceText: string;
-    private readonly onUpdate: (text: string, char?: string) => void;
-    private outputText: string = "";
-    private started = false;
-    private readonly onDone: () => void;
-    private delay = 1;
 
     constructor(onUpdate: (text: string, char?: string) => void, onDone?: () => void) {
         this.onUpdate = onUpdate;
         this.onDone = onDone;
     }
-
-    public start(text: string) {
-        this.sourceText = text;
-        this.outputText = "";
-        this.started = true;
-    }
+    private delay = 1;
+    private readonly onDone: () => void;
+    private readonly onUpdate: (text: string, char?: string) => void;
+    private outputText: string = "";
+    private sourceText: string;
+    private started = false;
 
     public onTick() {
         if (!this.started || !Updater.every(this.delay)) return;
@@ -57,16 +51,16 @@ class TextAnimation {
             if (this.onDone) this.onDone();
         }
     }
+
+    public start(text: string) {
+        this.sourceText = text;
+        this.outputText = "";
+        this.started = true;
+    }
 }
 
 export default class DialogueDisplay extends Display {
     public hasCommand = true;
-    private dialogue: Dialogue;
-    private sentences: string[] = [];
-    private readonly nameArea: PIXI.BitmapText;
-    private readonly textArea: PIXI.BitmapText;
-    private readonly next: PIXI.Sprite;
-    private animation: TextAnimation;
 
     constructor() {
         super();
@@ -119,14 +113,12 @@ export default class DialogueDisplay extends Display {
             },
         );
     }
-
-    public startDialogue(dialogue: Dialogue) {
-        if (!this.active) this.show();
-        this.dialogue = dialogue;
-        this.sentences.push(...this.dialogue.sentences);
-        this.nameArea.text = dialogue.name;
-        this.displayNextSentence();
-    }
+    private animation: TextAnimation;
+    private dialogue: Dialogue;
+    private readonly nameArea: PIXI.BitmapText;
+    private readonly next: PIXI.Sprite;
+    private sentences: Array<string> = [];
+    private readonly textArea: PIXI.BitmapText;
 
     public displayNextSentence() {
         if (this.sentences.length <= 0) return this.endDialogue();
@@ -139,20 +131,28 @@ export default class DialogueDisplay extends Display {
         this.hide();
     }
 
+    public isBlocking() {
+        return true;
+    }
+
     public onCommand() {
         super.onCommand();
         if (Game.input.getKey("NEXT").clicked || Game.input.getKey("ENTER").clicked) this.displayNextSentence();
-    }
-
-    public onTick(): void {
-        this.animation.onTick();
     }
 
     public onRender(): void {
         this.next.pivot.y = Math.sin(Renderer.ticks / 3) / 2;
     }
 
-    public isBlocking() {
-        return true;
+    public onTick(): void {
+        this.animation.onTick();
+    }
+
+    public startDialogue(dialogue: Dialogue) {
+        if (!this.active) this.show();
+        this.dialogue = dialogue;
+        this.sentences.push(...this.dialogue.sentences);
+        this.nameArea.text = dialogue.name;
+        this.displayNextSentence();
     }
 }

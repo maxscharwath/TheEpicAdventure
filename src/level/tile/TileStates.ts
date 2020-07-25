@@ -1,22 +1,15 @@
 type ExtendedProperties<T> = { [P in keyof T]: T[P] };
 export default class TileStates<T extends {}> {
 
+    public static create<T>(def: T = {} as T): TileStates<T> & ExtendedProperties<T> {
+        return new TileStates(def) as TileStates<T> & ExtendedProperties<T>;
+    }
+
     private readonly defaultStates: T;
 
     private constructor(defaultStates: T) {
         this.defaultStates = defaultStates;
         this.resetDefault();
-    }
-
-    public static create<T>(def: T = {} as T): TileStates<T> & ExtendedProperties<T> {
-        return new TileStates(def) as TileStates<T> & ExtendedProperties<T>;
-    }
-
-    public resetDefault() {
-        Object.keys(this.defaultStates).forEach((key: any) => {
-            this[key] = this.defaultStates[key];
-        });
-        return this;
     }
 
     public getStates(): T {
@@ -26,6 +19,22 @@ export default class TileStates<T extends {}> {
             data[key] = this[key];
         });
         return data as T;
+    }
+
+    public resetDefault() {
+        Object.keys(this.defaultStates).forEach((key: any) => {
+            this[key] = this.defaultStates[key];
+        });
+        return this;
+    }
+
+    public set(data: T = {} as T) {
+        Object.keys(data).forEach((key: any) => {
+            if (this.defaultStates.hasOwnProperty(key)) {
+                this[key] = data[key];
+            }
+        });
+        return this;
     }
 
     public toBSON() {
@@ -43,14 +52,5 @@ export default class TileStates<T extends {}> {
             return null;
         }
         return data;
-    }
-
-    public set(data: T = {} as T) {
-        Object.keys(data).forEach((key: any) => {
-            if (this.defaultStates.hasOwnProperty(key)) {
-                this[key] = data[key];
-            }
-        });
-        return this;
     }
 }

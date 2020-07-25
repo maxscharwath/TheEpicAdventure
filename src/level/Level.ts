@@ -17,26 +17,19 @@ import LevelGenOverworld from "./levelGen/LevelGenOverworld";
 import * as events from "events";
 import {TileRegister} from "./tile/Tiles";
 import RainWeather from "../gfx/weather/RainWeather";
+import Time from "../core/Time";
 
 export default class Level {
-    private static MOB_SPAWN_FACTOR: number = 100;
+    public container: PIXI.Container = new PIXI.Container();
+    public gravity = 0.4;
+    public groundContainer: PIXI.Container = new PIXI.Container();
+    public levelGen: LevelGen;
+    public lightFilter: LightFilter;
 
     public readonly seed: number;
-    public levelGen: LevelGen;
-    public gravity = 0.4;
-    public container: PIXI.Container = new PIXI.Container();
-    public groundContainer: PIXI.Container = new PIXI.Container();
     public sortableContainer: PIXI.Container = new PIXI.Container();
     public weather?: Weather;
-    public lightFilter: LightFilter;
-    private random: Random = new Random();
-    private players: Player[] = [];
-    private tickablesToAdd: Tickable[] = [];
-    private tickablesToRemove: Tickable[] = [];
-    private chunksToRemove: string[] = [];
-    private chunks = new Map<string, Chunk>();
-    private loadedChunks: Chunk[] = [];
-    private eventEmitter = new events.EventEmitter();
+    private static MOB_SPAWN_FACTOR: number = 100;
 
     constructor(seed: number, generator: typeof LevelGen = LevelGenOverworld) {
         this.seed = seed;
@@ -47,36 +40,142 @@ export default class Level {
         this.lightFilter = new LightFilter(this);
         // this.weather = new RainWeather();
     }
+    private chunks = new Map<string, Chunk>();
+    private chunksToRemove: Array<string> = [];
+    private eventEmitter = new events.EventEmitter();
+    private loadedChunks: Array<Chunk> = [];
+    private players: Array<Player> = [];
+    private random: Random = new Random();
+    private tickablesToAdd: Array<Tickable> = [];
+    private tickablesToRemove: Array<Tickable> = [];
 
-    public getAmbientLightLevel() {
-        const ease = (x: number) => x * x * (3 - 2 * x);
-        if (this.levelGen instanceof LevelGenOverworld) {
-            const r = Updater.time.ratio();
-            switch (Updater.time) {
-                case Updater.Time.Morning:
-                    return ease(r) * 20;
-                case Updater.Time.Day:
-                    return 20;
-                case Updater.Time.Evening:
-                    return (1 - ease(r)) * 20;
-                case Updater.Time.Night:
-                    return 0;
-            }
-        } else {
-            return 0;
+    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {
+        if (!tickable) return false;
+        if (x === undefined || y === undefined) {
+            x = tickable.x;
+            y = tickable.y;
         }
+        if (tileCoords) {
+            x = (x << 4) + 8;
+            y = (y << 4) + 8;
+        }
+        tickable.setLevel(this, x, y);
+        this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
+        if (!this.tickablesToAdd.includes(tickable)) {
+            this.tickablesToAdd.push(tickable);
+            return true;
+        }
+        return false;
     }
 
-    public getChunks() {
-        return Array.from(this.chunks.values());
-    }
-
-    public getNbChunks(): number {
-        return this.chunks.size;
+    public deleteChunk(chunk: Chunk) {
+        this.chunksToRemove.push(chunk.x + ":" + chunk.y);
     }
 
     public deleteTempDir() {
         rimraf.sync(System.getAppData("tmp"));
+    }
+
+    public findEntities(predicate: (value: Entity) => boolean): Promise<Array<Entity>> {
+        const chunksId = Array.from(this.chunks.keys());
+        const result: Array<Promise<Array<Entity>>> = [];
+        return new Promise((resolve) => {
+            const action = () => {
+                const chunk = this.chunks.get(chunksId.shift() ?? "");
+                if (chunk) result.push(chunk.findEntities(predicate));
+                if (chunksId.length > 0) return process.nextTick(action);
+                Promise.all(result).then((value) => {
+                    resolve(value.flat());
+                });
+            };
+            process.nextTick(action);
+        });
+    }
+
+    public findEntitiesInRadius(
+        predicate: (value: Entity) => boolean,
+        x: number,
+        y: number,
+        radius: number,
+    ): Promise<Array<Entity>> {
+        const result: Array<Promise<Array<Entity>>> = [];
+        const chunks: Array<Chunk> = [];
+        for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {
+            for (let cy = (y - radius) >> 4; cy <= (y + radius) >> 4; cy++) {
+                const chunk = this.getChunk(cx, cy, false);
+                if (chunk) chunks.push(chunk);
+            }
+        }
+        return new Promise((resolve) => {
+            const action = () => {
+                const chunk = chunks.shift();
+                if (chunk) {
+                    result.push(
+                        chunk.findEntities(
+                            (e) => predicate(e) && Math.hypot((e.x >> 4) - x, (e.y >> 4) - y) < radius,
+                        ),
+                    );
+                }
+                if (chunks.length > 0) return process.nextTick(action);
+                Promise.all(result).then((value) => {
+                    resolve(value.flat());
+                });
+            };
+            process.nextTick(action);
+        });
+    }
+
+    public findEntity<T extends Entity>(
+        entityClass: new (...args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
+        const chunksId = Array.from(this.chunks.keys());
+        return new Promise((resolve) => {
+            const action = () => {
+                this.chunks.get(chunksId.shift() ?? "")?.findEntity(entityClass, predicate)
+                    .then((entity) => resolve(entity as T));
+                if (chunksId.length > 0) process.nextTick(action);
+            };
+            process.nextTick(action);
+        });
+    }
+
+    public findRandomTileInEntityRadius(
+        tiles: Array<TileRegister<typeof Tile>>,
+        entity: Entity,
+        radiusEnd: number,
+        radiusStart = 0,
+    ): LevelTile | false {
+        if (!(entity instanceof Entity) || radiusStart >= radiusEnd) {
+            return false;
+        }
+
+        const i = performance.now();
+        while (true) {
+            const rx = Random.int(radiusEnd * 2) - radiusEnd;
+            const ry = Random.int(radiusEnd * 2) - radiusEnd;
+            if (Math.abs(rx) < radiusStart || Math.abs(ry) < radiusStart) {
+                continue;
+            }
+            const x = (entity.x >> 4) + rx;
+            const y = (entity.y >> 4) + ry;
+
+            const lt = this.getTile(x, y, false);
+            if (lt) {
+                if (lt.instanceOf(...tiles)) {
+                    return lt;
+                }
+            }
+
+            if ((performance.now() - i) > 5) {
+                return false;
+            }
+        }
+    }
+
+    public flushChunks(): Promise<number> {
+        this.chunksToRemove.push(...this.chunks.keys());
+        return new Promise((resolve, reject) => {
+            this.eventEmitter.once("deleteQueuedChunk", resolve);
+        });
     }
 
     public flushInactiveChunks(): Promise<number> {
@@ -90,14 +189,60 @@ export default class Level {
         });
     }
 
-    public flushChunks(): Promise<number> {
-        this.chunksToRemove.push(...this.chunks.keys());
-        return new Promise((resolve, reject) => {
-            this.eventEmitter.once("deleteQueuedChunk", resolve);
-        });
+    public getAmbientLightLevel() {
+        const ease = (x: number) => x * x * (3 - 2 * x);
+        if (this.levelGen instanceof LevelGenOverworld) {
+            const r = Updater.time.ratio();
+            switch (Updater.time) {
+                case Time.MORNING:
+                    return ease(r) * 20;
+                case Time.DAY:
+                    return 20;
+                case Time.EVENING:
+                    return (1 - ease(r)) * 20;
+                case Time.NIGHT:
+                    return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
-    public getChunksRadius(r: number = 1): Chunk[] {
+    public getChunk(x: number, y: number, generate = true): Chunk | undefined {
+        x = ~~x;
+        y = ~~y;
+        const id = x + ":" + y;
+        if (!this.chunks.has(id)) {
+            if (!generate) return undefined;
+            const chunk = Chunk.empty(this, x, y);
+            Chunk.fileExist(this, x, y)
+                .then(() => {
+                    return chunk.fromFile().catch((e) => console.error(e));
+                })
+                .catch(() => chunk.generate());
+            this.chunks.set(id, chunk);
+        }
+        return this.chunks.get(id);
+    }
+
+    public getChunkNeighbour(x: number, y: number): Array<Chunk> {
+        x = ~~x;
+        y = ~~y;
+        const chunks = [];
+        for (let i = x - 1; i < x + 1; i++) {
+            for (let j = y - 1; j < y + 1; j++) {
+                const chunk = this.getChunk(i, j);
+                if (chunk) chunks.push(chunk);
+            }
+        }
+        return chunks;
+    }
+
+    public getChunks() {
+        return Array.from(this.chunks.values());
+    }
+
+    public getChunksRadius(r: number = 1): Array<Chunk> {
         const chunks = [];
         for (let x = -r; x < r; x++) {
             for (let y = -r; y < r; y++) {
@@ -134,51 +279,23 @@ export default class Level {
         return chunks;
     }
 
-    public remove(t: Tickable): void {
-        this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== t);
-        if (!this.tickablesToRemove.includes(t)) {
-            this.tickablesToRemove.push(t);
-        }
-    }
-
-    public deleteChunk(chunk: Chunk) {
-        this.chunksToRemove.push(chunk.x + ":" + chunk.y);
-    }
-
-    public getChunk(x: number, y: number, generate = true): Chunk | undefined {
-        x = ~~x;
-        y = ~~y;
-        const id = x + ":" + y;
-        if (!this.chunks.has(id)) {
-            if (!generate) return undefined;
-            const chunk = Chunk.empty(this, x, y);
-            Chunk.fileExist(this, x, y)
-                .then(() => {
-                    return chunk.fromFile().catch((e) => console.error(e));
-                })
-                .catch(() => chunk.generate());
-            this.chunks.set(id, chunk);
-        }
-        return this.chunks.get(id);
-    }
-
-    public getChunkNeighbour(x: number, y: number): Chunk[] {
-        x = ~~x;
-        y = ~~y;
-        const chunks = [];
-        for (let i = x - 1; i < x + 1; i++) {
-            for (let j = y - 1; j < y + 1; j++) {
-                const chunk = this.getChunk(i, j);
-                if (chunk) chunks.push(chunk);
-            }
-        }
-        return chunks;
+    public getNbChunks(): number {
+        return this.chunks.size;
     }
 
     public getTile(x: number, y: number, generate = true): LevelTile | undefined {
         const chunk = this.getChunk(x >> 4, y >> 4, generate);
         if (!chunk) return undefined;
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
+    }
+
+    public onRender() {
+        if (!this.players[0]) return;
+        this.weather?.onRender();
+        this.lightFilter?.onRender();
+        Renderer.camera.setFollow(Game.player);
+
+        this.loadedChunks.forEach((chunk) => chunk.onRender());
     }
 
     public onTick(): void {
@@ -224,148 +341,19 @@ export default class Level {
         this.trySpawn();
     }
 
-    public onRender() {
-        if (!this.players[0]) return;
-        this.weather?.onRender();
-        this.lightFilter?.onRender();
-        Renderer.camera.setFollow(Game.player);
-
-        this.loadedChunks.forEach((chunk) => chunk.onRender());
+    public remove(t: Tickable): void {
+        this.tickablesToAdd = this.tickablesToAdd.filter((item) => item !== t);
+        if (!this.tickablesToRemove.includes(t)) {
+            this.tickablesToRemove.push(t);
+        }
     }
 
-    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {
-        if (!tickable) return false;
-        if (x === undefined || y === undefined) {
-            x = tickable.x;
-            y = tickable.y;
-        }
-        if (tileCoords) {
-            x = (x << 4) + 8;
-            y = (y << 4) + 8;
-        }
-        tickable.setLevel(this, x, y);
-        this.tickablesToRemove = this.tickablesToRemove.filter((item) => item !== tickable);
-        if (!this.tickablesToAdd.includes(tickable)) {
-            this.tickablesToAdd.push(tickable);
-            return true;
-        }
-        return false;
+    public save(): Promise<Array<void>> {
+        return Promise.all(Array.from(this.chunks).map(([id, chunk]) => chunk.save()));
     }
 
     public toString(): string {
         return "Level";
-    }
-
-    public save(): Promise<void[]> {
-        return Promise.all(Array.from(this.chunks).map(([id, chunk]) => chunk.save()));
-    }
-
-    public findRandomTileInEntityRadius(
-        tiles: TileRegister<typeof Tile>[],
-        entity: Entity,
-        radiusEnd: number,
-        radiusStart = 0,
-    ): LevelTile | false {
-        if (!(entity instanceof Entity) || radiusStart >= radiusEnd) {
-            return false;
-        }
-
-        const i = performance.now();
-        while (true) {
-            const rx = Random.int(radiusEnd * 2) - radiusEnd;
-            const ry = Random.int(radiusEnd * 2) - radiusEnd;
-            if (Math.abs(rx) < radiusStart || Math.abs(ry) < radiusStart) {
-                continue;
-            }
-            const x = (entity.x >> 4) + rx;
-            const y = (entity.y >> 4) + ry;
-
-            const lt = this.getTile(x, y, false);
-            if (lt) {
-                if (lt.instanceOf(...tiles)) {
-                    return lt;
-                }
-            }
-
-            if ((performance.now() - i) > 5) {
-                return false;
-            }
-        }
-    }
-
-    public findEntitiesInRadius(
-        predicate: (value: Entity) => boolean,
-        x: number,
-        y: number,
-        radius: number,
-    ): Promise<Entity[]> {
-        const result: Promise<Entity[]>[] = [];
-        const chunks: Chunk[] = [];
-        for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {
-            for (let cy = (y - radius) >> 4; cy <= (y + radius) >> 4; cy++) {
-                const chunk = this.getChunk(cx, cy, false);
-                if (chunk) chunks.push(chunk);
-            }
-        }
-        return new Promise((resolve) => {
-            const action = () => {
-                const chunk = chunks.shift();
-                if (chunk) {
-                    result.push(
-                        chunk.findEntities(
-                            (e) => predicate(e) && Math.hypot((e.x >> 4) - x, (e.y >> 4) - y) < radius,
-                        ),
-                    );
-                }
-                if (chunks.length > 0) return process.nextTick(action);
-                Promise.all(result).then((value) => {
-                    resolve(value.flat());
-                });
-            };
-            process.nextTick(action);
-        });
-    }
-
-    public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
-        const chunksId = Array.from(this.chunks.keys());
-        const result: Promise<Entity[]>[] = [];
-        return new Promise((resolve) => {
-            const action = () => {
-                const chunk = this.chunks.get(chunksId.shift() ?? "");
-                if (chunk) result.push(chunk.findEntities(predicate));
-                if (chunksId.length > 0) return process.nextTick(action);
-                Promise.all(result).then((value) => {
-                    resolve(value.flat());
-                });
-            };
-            process.nextTick(action);
-        });
-    }
-
-    public findEntity<T extends Entity>(
-        entityClass: new (...args: any) => T, predicate?: (value: T) => boolean): Promise<T> {
-        const chunksId = Array.from(this.chunks.keys());
-        return new Promise((resolve) => {
-            const action = () => {
-                this.chunks.get(chunksId.shift() ?? "")?.findEntity(entityClass, predicate)
-                    .then((entity) => resolve(entity as T));
-                if (chunksId.length > 0) process.nextTick(action);
-            };
-            process.nextTick(action);
-        });
-    }
-
-    private trySpawn(): void {
-        const player = this.players[~~(Random.float() * this.players.length)];
-        const radius = Random.int(8, 80);
-        const angle = Random.number(Math.PI * 2);
-        const x = (player.x >> 4) + ~~(radius * Math.cos(angle));
-        const y = (player.y >> 4) + ~~(radius * Math.sin(angle));
-        const tile = this.getTile(x, y, false);
-        if (!tile) return;
-        if (Zombie.spawnCondition(tile)) {
-            this.add(new Zombie(), x, y, true);
-        }
     }
 
     private async deleteQueuedChunk() {
@@ -382,5 +370,18 @@ export default class Level {
             this.chunksToRemove.splice(0, 1);
         }
         this.eventEmitter.emit("deleteQueuedChunk", nb);
+    }
+
+    private trySpawn(): void {
+        const player = this.players[~~(Random.float() * this.players.length)];
+        const radius = Random.int(8, 80);
+        const angle = Random.number(Math.PI * 2);
+        const x = (player.x >> 4) + ~~(radius * Math.cos(angle));
+        const y = (player.y >> 4) + ~~(radius * Math.sin(angle));
+        const tile = this.getTile(x, y, false);
+        if (!tile) return;
+        if (Zombie.spawnCondition(tile)) {
+            this.add(new Zombie(), x, y, true);
+        }
     }
 }

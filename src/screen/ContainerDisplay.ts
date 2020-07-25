@@ -13,10 +13,6 @@ enum Direction {
 
 class Container extends PIXI.Container {
 
-    private inventory: Inventory;
-    private readonly selectSprite: PIXI.Sprite;
-    private readonly container: PIXI.Container;
-
     constructor(inventory: Inventory, x: number = 0, y: number = 0, direction: Direction = Direction.LEFT) {
         super();
         this.position.set(x, y);
@@ -39,26 +35,15 @@ class Container extends PIXI.Container {
 
     private _select = 0;
 
-    public get select(): number {
-        return this._select;
-    }
-
-    public set select(value: number) {
-        const max = this.getSlots().length;
-        value = (value + max) % max;
-        this._select = isNaN(value) ? 0 : value;
-        this.refresh();
-    }
-
     private _selected = true;
+    private readonly container: PIXI.Container;
 
-    public get selected(): boolean {
-        return this._selected;
-    }
+    private inventory: Inventory;
+    private readonly selectSprite: PIXI.Sprite;
 
-    public set selected(value: boolean) {
-        this._selected = value;
-        this.selectSprite.visible = value;
+    public onCommand(): void {
+        if (Game.input.getKey("CURSOR-DOWN").clicked || Game.mouse.deltaY > 0) this.select++;
+        if (Game.input.getKey("CURSOR-UP").clicked || Game.mouse.deltaY < 0) this.select--;
     }
 
     public refresh() {
@@ -88,11 +73,6 @@ class Container extends PIXI.Container {
         }
     }
 
-    public onCommand(): void {
-        if (Game.input.getKey("CURSOR-DOWN").clicked || Game.mouse.deltaY > 0) this.select++;
-        if (Game.input.getKey("CURSOR-UP").clicked || Game.mouse.deltaY < 0) this.select--;
-    }
-
     public swap(A: Container) {
         const slot = this.getSlot();
         if (!slot?.isItem()) return;
@@ -106,6 +86,26 @@ class Container extends PIXI.Container {
         return false;
     }
 
+    public get select(): number {
+        return this._select;
+    }
+
+    public set select(value: number) {
+        const max = this.getSlots().length;
+        value = (value + max) % max;
+        this._select = isNaN(value) ? 0 : value;
+        this.refresh();
+    }
+
+    public get selected(): boolean {
+        return this._selected;
+    }
+
+    public set selected(value: boolean) {
+        this._selected = value;
+        this.selectSprite.visible = value;
+    }
+
     private getSlot() {
         return this.getSlots()[this.select];
     }
@@ -116,9 +116,16 @@ class Container extends PIXI.Container {
 }
 
 export default class ContainerDisplay extends Display {
-    public static baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "container.png"));
     public hasCommand = true;
-    private container: Container[] = [];
+    public static baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "container.png"));
+
+    private static moveItem(A: Container, B: Container) {
+        if (A.selected) {
+            A.swap(B);
+        } else {
+            B.swap(A);
+        }
+    }
 
     constructor(mob: Mob, inventory: Inventory) {
         super();
@@ -128,13 +135,10 @@ export default class ContainerDisplay extends Display {
         );
         this.init();
     }
+    private container: Array<Container> = [];
 
-    private static moveItem(A: Container, B: Container) {
-        if (A.selected) {
-            A.swap(B);
-        } else {
-            B.swap(A);
-        }
+    public isBlocking() {
+        return true;
     }
 
     public onCommand(): void {
@@ -158,16 +162,6 @@ export default class ContainerDisplay extends Display {
         });
     }
 
-    public isBlocking() {
-        return true;
-    }
-
-    private selectWindow(windowId: number) {
-        this.container.forEach((container, index) => {
-            container.selected = index === windowId;
-        });
-    }
-
     private init() {
         const container = new PIXI.Container();
         const sprite = new PIXI.Sprite(
@@ -188,5 +182,11 @@ export default class ContainerDisplay extends Display {
         );
         this.addChild(background, container);
         this.selectWindow(0);
+    }
+
+    private selectWindow(windowId: number) {
+        this.container.forEach((container, index) => {
+            container.selected = index === windowId;
+        });
     }
 }

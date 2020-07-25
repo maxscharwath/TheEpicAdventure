@@ -12,17 +12,13 @@ import Items from "../../item/Items";
 import FenceGateTile from "./FenceGateTile";
 
 export default class FenceTile extends Tile {
-    public static DEFAULT_STATES = {groundTile: 0};
-    public static readonly TAG = "fence";
-    protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence.png"), 16, 16);
     public anchor = 0.75;
 
     public states = TileStates.create(FenceTile.DEFAULT_STATES);
+    public static DEFAULT_STATES = {groundTile: 0};
+    public static readonly TAG = "fence";
+    protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence.png"), 16, 16);
     private sprite: PIXI.Sprite;
-
-    public mayPass(e: Entity): boolean {
-        return false;
-    }
 
     public init() {
         super.init();
@@ -32,15 +28,23 @@ export default class FenceTile extends Tile {
         this.setGroundTile(Tiles.get(this.states.groundTile));
     }
 
-    public onSetTile(oldTile: Tile, entity?: Entity) {
-        this.setGroundTile(oldTile);
+    public mayPass(e: Entity): boolean {
+        return false;
     }
 
-    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
-        const t = super.setGroundTile(tile);
-        if (!t) return undefined;
-        this.states.groundTile = t.getKeys().idx;
-        return t;
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.AXE:
+                    this.onDestroy();
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public onSetTile(oldTile: Tile, entity?: Entity) {
+        this.setGroundTile(oldTile);
     }
 
     public onUpdate() {
@@ -57,15 +61,11 @@ export default class FenceTile extends Tile {
         this.sprite.texture = FenceTile.textures[id];
     }
 
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (item instanceof ToolItem) {
-            switch (item.type) {
-                case ToolType.axe:
-                    this.onDestroy();
-                    return true;
-            }
-        }
-        return false;
+    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
+        const t = super.setGroundTile(tile);
+        if (!t) return undefined;
+        this.states.groundTile = t.getKeys().idx;
+        return t;
     }
 
     protected onDestroy() {

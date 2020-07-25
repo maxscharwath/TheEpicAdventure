@@ -9,33 +9,29 @@ import CommandDisplay from "../../screen/CommandDisplay";
 export default class Command {
 
     private static commandList: Map<string, Command> = new Map<string, Command>();
-    private name: string;
-    private callback?: (args: any[], display: CommandDisplay) => any;
-
-    constructor(commandName: string) {
-        this.name = commandName;
-        Command.commandList.set(commandName, this);
-    }
-
-    public static execute(display: CommandDisplay, commandName: string, args: any[] = []): any {
-        const command = this.commandList.get(commandName);
-        if (!command) return `"${commandName}" unknown`;
-        return command.execute(args, display);
-    }
 
     public static add(commandName: string) {
         return new Command(commandName);
+    }
+
+    public static execute(display: CommandDisplay, commandName: string, args: Array<any> = []): any {
+        const command = this.commandList.get(commandName);
+        if (!command) return `"${commandName}" unknown`;
+        return command.execute(args, display);
     }
 
     public static getAll() {
         return this.commandList;
     }
 
-    public getName() {
-        return this.name;
+    constructor(commandName: string) {
+        this.name = commandName;
+        Command.commandList.set(commandName, this);
     }
+    private callback?: (args: Array<any>, display: CommandDisplay) => any;
+    private name: string;
 
-    public addFunction(callback: (args: any[], display: CommandDisplay) => any) {
+    public addFunction(callback: (args: Array<any>, display: CommandDisplay) => any) {
         if (callback instanceof Function) {
             this.callback = callback;
             return true;
@@ -43,11 +39,15 @@ export default class Command {
         return false;
     }
 
-    public execute(args: any[] = [], display: CommandDisplay) {
+    public execute(args: Array<any> = [], display: CommandDisplay) {
         if (this.callback instanceof Function) {
             return this.callback(args, display);
         }
         return false;
+    }
+
+    public getName() {
+        return this.name;
     }
 }
 

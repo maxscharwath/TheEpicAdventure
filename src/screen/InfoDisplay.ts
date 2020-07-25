@@ -7,10 +7,6 @@ import Color from "../utility/Color";
 import Display from "./Display";
 
 export default class InfoDisplay extends Display {
-    private nbContainer: number = 0;
-
-    private readonly textArea: PIXI.BitmapText;
-    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
     constructor() {
         super();
@@ -28,6 +24,13 @@ export default class InfoDisplay extends Display {
 
         this.addChild(this.textBg, this.textArea);
     }
+    private nbContainer: number = 0;
+
+    private readonly textArea: PIXI.BitmapText;
+    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
+
+    public onRender(): void {
+    }
 
     public onTick(): void {
         if (Updater.every(20)) {
@@ -40,9 +43,6 @@ export default class InfoDisplay extends Display {
         this.textBg.y = this.textArea.y;
         this.textBg.width = this.textArea.width;
         this.textBg.height = this.textArea.height;
-    }
-
-    public onRender(): void {
     }
 
     private text(): string {

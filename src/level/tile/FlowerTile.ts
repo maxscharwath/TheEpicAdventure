@@ -8,8 +8,8 @@ import Tiles from "./Tiles";
 import Renderer from "../../core/Renderer";
 
 export default class FlowerTile extends Tile {
-    public static readonly TAG = "flower";
     public static readonly COLOR: number = 0x94785c;
+    public static readonly TAG = "flower";
 
     private static tileTextures = FlowerTile.loadTextures(System.getResource("tile", "flower.png"), 4);
     private sprite?: PIXI.Sprite;
@@ -26,8 +26,17 @@ export default class FlowerTile extends Tile {
         this.container.addChild(this.sprite);
     }
 
-    public steppedOn(entity: Entity) {
-        this.wiggleDelay = 1;
+    public mayPass(e: Entity): boolean {
+        return true;
+    }
+
+    public onInteract(mob: Mob, item?: Item): boolean {
+        this.setTile(Tiles.GRASS);
+        return true;
+    }
+
+    public onRender() {
+        super.onRender();
     }
 
     public onTick(): void {
@@ -45,16 +54,7 @@ export default class FlowerTile extends Tile {
         }
     }
 
-    public onRender() {
-        super.onRender();
-    }
-
-    public mayPass(e: Entity): boolean {
-        return true;
-    }
-
-    public onInteract(mob: Mob, item?: Item): boolean {
-        this.setTile(Tiles.GRASS);
-        return true;
+    public steppedOn(entity: Entity) {
+        this.wiggleDelay = 1;
     }
 }

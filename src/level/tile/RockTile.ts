@@ -11,9 +11,9 @@ import HurtParticle from "../../entity/particle/HurtParticle";
 import * as PIXI from "pixi.js";
 
 export default class RockTile extends AutoTilingTile {
-    public static readonly TAG = "rock";
-    public static readonly COLOR: number = 0x888888;
     protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock_mask.png"));
+    public static readonly COLOR: number = 0x888888;
+    public static readonly TAG = "rock";
     private static tileTextures = RockTile.loadTextures(System.getResource("tile", "rock.png"), 3);
     private damage = 0;
 
@@ -25,10 +25,6 @@ export default class RockTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
-    public onTick(): void {
-        super.onTick();
-    }
-
     public mayPass(): boolean {
         return false;
     }
@@ -36,7 +32,7 @@ export default class RockTile extends AutoTilingTile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.pickaxe:
+                case ToolType.PICKAXE:
                     const hurt = item.getAttackDamageBonus();
                     this.damage += hurt;
                     this.levelTile.level.add(
@@ -50,6 +46,10 @@ export default class RockTile extends AutoTilingTile {
                     return true;
             }
         }
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
 }

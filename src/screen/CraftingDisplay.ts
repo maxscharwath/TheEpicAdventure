@@ -8,17 +8,8 @@ import Renderer from "../core/Renderer";
 
 export default class CraftingDisplay extends Display {
     public hasCommand = true;
-    private readonly mob: Mob;
-    private readonly recipes: Recipe[];
-    private selected: number = 0;
-    private selectSprite: PIXI.Sprite;
-    private costContainer = new PIXI.Container();
-    private recipesContainer = new PIXI.Container();
-    private hasText: PIXI.BitmapText;
-    private container: PIXI.Container;
-    private background: PIXI.Sprite;
 
-    constructor(recipes: Recipe[], mob: Mob) {
+    constructor(recipes: Array<Recipe>, mob: Mob) {
         super();
         this.mob = mob;
         this.recipes = Array.from(recipes);
@@ -29,6 +20,19 @@ export default class CraftingDisplay extends Display {
             return 0;
         });
         this.init();
+    }
+    private background: PIXI.Sprite;
+    private container: PIXI.Container;
+    private costContainer = new PIXI.Container();
+    private hasText: PIXI.BitmapText;
+    private readonly mob: Mob;
+    private readonly recipes: Array<Recipe>;
+    private recipesContainer = new PIXI.Container();
+    private selected: number = 0;
+    private selectSprite: PIXI.Sprite;
+
+    public isBlocking() {
+        return true;
     }
 
     public onCommand(): void {
@@ -55,10 +59,6 @@ export default class CraftingDisplay extends Display {
         super.onRender();
     }
 
-    public isBlocking() {
-        return true;
-    }
-
     public onResize() {
         super.onResize();
         this.background.width = Renderer.getScreen().width;
@@ -69,10 +69,29 @@ export default class CraftingDisplay extends Display {
         );
     }
 
-    private setSelect(val: number, force: boolean = false) {
-        if (!force && val === this.selected) return;
-        this.selected = val;
-        this.refresh();
+    private init() {
+        this.container = new PIXI.Container();
+        const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "crafting.png"));
+        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 112)));
+        this.background = new PIXI.Sprite(PIXI.Texture.WHITE);
+        this.background.tint = 0x000000;
+        this.background.alpha = 0.75;
+        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
+        this.costContainer.position.set(135, 29);
+        this.recipesContainer.position.set(7, 7);
+        this.hasText = new PIXI.BitmapText("", {
+            fontName: "Epic",
+            fontSize: 6,
+            tint: 0xffffff,
+        });
+        this.hasText.anchor = new PIXI.Point(0, 0.5);
+        this.hasText.position.set(150, 12);
+        this.container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
+        this.container.scale.set(4);
+        this.addChild(this.background, this.container);
+        this.initRecipe();
+        this.setSelect(0, true);
+        this.onResize();
     }
 
     private initCost(recipe: Recipe) {
@@ -121,34 +140,15 @@ export default class CraftingDisplay extends Display {
         this.hasText.text = `${this.mob.inventory.count(this.recipes[this.selected].result.item)}`;
     }
 
-    private init() {
-        this.container = new PIXI.Container();
-        const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "crafting.png"));
-        const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 112)));
-        this.background = new PIXI.Sprite(PIXI.Texture.WHITE);
-        this.background.tint = 0x000000;
-        this.background.alpha = 0.75;
-        this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 112, 128, 16)));
-        this.costContainer.position.set(135, 29);
-        this.recipesContainer.position.set(7, 7);
-        this.hasText = new PIXI.BitmapText("", {
-            fontName: "Epic",
-            fontSize: 6,
-            tint: 0xffffff,
-        });
-        this.hasText.anchor = new PIXI.Point(0, 0.5);
-        this.hasText.position.set(150, 12);
-        this.container.addChild(sprite, this.costContainer, this.selectSprite, this.recipesContainer, this.hasText);
-        this.container.scale.set(4);
-        this.addChild(this.background, this.container);
-        this.initRecipe();
-        this.setSelect(0, true);
-        this.onResize();
-    }
-
     private refresh() {
         this.recipes.forEach((recipe) => recipe.checkCanCraft(this.mob));
         this.initRecipe();
         this.initCost(this.recipes[this.selected]);
+    }
+
+    private setSelect(val: number, force: boolean = false) {
+        if (!force && val === this.selected) return;
+        this.selected = val;
+        this.refresh();
     }
 }

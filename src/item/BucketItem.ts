@@ -6,23 +6,29 @@ import Tiles from "../level/tile/Tiles";
 
 export default class BucketItem extends Item {
 
-    private content: BucketType;
+    public static create(data: any) {
+        return super.create(data) as BucketItem;
+    }
 
     constructor(tag: string, content = BucketType.EMPTY) {
         super(tag);
         this.setContent(content);
     }
 
-    public static create(data: any) {
-        return super.create(data) as BucketItem;
+    private content: BucketType;
+
+    public canAttack(): boolean {
+        return true;
     }
 
     public isStackable() {
         return false;
     }
 
-    public canAttack(): boolean {
-        return true;
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+        };
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
@@ -41,12 +47,6 @@ export default class BucketItem extends Item {
             }
         }
         return false;
-    }
-
-    public toBSON(): any {
-        return {
-            ...super.toBSON(),
-        };
     }
 
     private setContent(content = BucketType.EMPTY) {

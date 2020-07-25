@@ -11,12 +11,6 @@ import uniqid from "uniqid";
 import Renderer from "../core/Renderer";
 
 export default class Server {
-    private uid: string = uniqid();
-    private port: number;
-    private name: string = "MY SUPER SERVER";
-    private readonly server: http.Server;
-    private io: socketio.Server;
-    private udp = new ServerUDP(this);
 
     constructor() {
         Game.isOnline = true;
@@ -55,19 +49,12 @@ export default class Server {
             Renderer.createStream().pipe(res, {end: false});
         });
     }
-
-    public getPacketUDP() {
-        return Buffer.from(JSON.stringify({
-            uid: this.uid,
-            ip: IP.address(),
-            port: this.port,
-        }));
-    }
-
-    public startConnection() {
-        this.udp.startConnection();
-        this.server.listen(this.port);
-    }
+    private io: socketio.Server;
+    private name: string = "MY SUPER SERVER";
+    private port: number;
+    private readonly server: http.Server;
+    private udp = new ServerUDP(this);
+    private uid: string = uniqid();
 
     public endConnection(): void {
         console.log("Server closing in 3s");
@@ -78,7 +65,20 @@ export default class Server {
         }, 3000);
     }
 
+    public getPacketUDP() {
+        return Buffer.from(JSON.stringify({
+            uid: this.uid,
+            ip: IP.address(),
+            port: this.port,
+        }));
+    }
+
     public hasClients(): boolean {
         return this.io.sockets.clients.length > 0;
+    }
+
+    public startConnection() {
+        this.udp.startConnection();
+        this.server.listen(this.port);
     }
 }

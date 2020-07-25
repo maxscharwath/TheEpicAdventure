@@ -15,20 +15,12 @@ interface CanvasElement extends HTMLCanvasElement {
 }
 
 export default class Renderer {
-
-    public static ticks = 0;
-    public static delta: number;
-    public static readonly DEFAULT_WIDTH: number = 240;
-    public static readonly DEFAULT_HEIGHT: number = 160;
-    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
-    public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
     public static camera: Camera = new Camera();
-    private static ticksTime: number[] = [];
+    public static readonly DEFAULT_HEIGHT: number = 160;
+    public static readonly DEFAULT_WIDTH: number = 240;
+    public static delta: number;
+    public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
     private static mainStage = new PIXI.Container();
-    private static stages = {
-        level: new PIXI.Container(),
-        gui: new PIXI.Container(),
-    };
     private static renderer = new PIXI.Renderer({
         width: 960 * 2,
         height: 540 * 2,
@@ -38,82 +30,17 @@ export default class Renderer {
         clearBeforeRender: false,
         powerPreference: "high-performance",
     });
+    private static stages = {
+        level: new PIXI.Container(),
+        gui: new PIXI.Container(),
+    };
 
-    public static get ZOOM() {
-        return 0;
-    }
-
-    public static get REAL_WIDTH() {
-        return this.WIDTH * this.ZOOM;
-    }
-
-    public static get REAL_HEIGHT() {
-        return this.HEIGHT * this.ZOOM;
-    }
-
-    public static get clientRect(): any {
-        return null;
-    }
-
-    public static get xScroll() {
-        return (this.camera.x - this.WIDTH / this.camera.zoom / 2);
-    }
-
-    public static get yScroll() {
-        return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
-    }
-
-    public static render(dlt: number): void {
-        const t1 = System.milliTime();
-        Renderer.delta = dlt;
-        if (!Game.isFocus) {
-            return;
-        }
-        Game.level?.onRender();
-        Renderer.camera.update();
-        Game.GUI.onRender();
-        this.ticks += dlt;
-        this.renderer.render(this.mainStage);
-        this.ticksTime.unshift(System.milliTime() - t1);
-        this.ticksTime.length = Math.min(this.ticksTime.length, 50);
-    }
-
-    public static getTickTime(): number {
-        return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
-    }
-
-    public static init() {
-        document.body.appendChild(this.renderer.view);
-        this.mainStage.addChild(this.stages.level);
-        this.mainStage.addChild(this.stages.gui);
-        window.addEventListener("resize", () => this.onResize());
-    }
-
-    public static resize() {
-        this.renderer.resize(window.innerWidth, window.innerHeight);
-    }
-
-    public static getScreen() {
-        return this.renderer.screen;
-    }
-
-    public static setLevel(level: Level) {
-        this.stages.level.removeChildren();
-        this.stages.level.addChild(level.container);
-        if (level.weather) this.stages.level.addChild(level.weather);
-        this.stages.level.addChild(level.lightFilter);
-        Renderer.camera.setContainer(level.container, level.lightFilter.lightContainer);
-    }
+    public static ticks = 0;
+    private static ticksTime: Array<number> = [];
+    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
 
     public static addDisplay(display: Display) {
         this.stages.gui.addChild(display);
-    }
-
-    public static getNbChildren() {
-        const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
-            container.children.filter((c) => c.isSprite && c.worldVisible).length +
-            container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
-        return f(this.mainStage);
     }
 
     public static createStream() {
@@ -137,8 +64,81 @@ export default class Renderer {
         return reader;
     }
 
+    public static getNbChildren() {
+        const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
+            container.children.filter((c) => c.isSprite && c.worldVisible).length +
+            container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
+        return f(this.mainStage);
+    }
+
+    public static getScreen() {
+        return this.renderer.screen;
+    }
+
+    public static getTickTime(): number {
+        return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
+    }
+
+    public static init() {
+        document.body.appendChild(this.renderer.view);
+        this.mainStage.addChild(this.stages.level);
+        this.mainStage.addChild(this.stages.gui);
+        window.addEventListener("resize", () => this.onResize());
+    }
+
     private static onResize() {
         this.resize();
         Game.GUI.onResize();
+    }
+
+    public static render(dlt: number): void {
+        const t1 = System.milliTime();
+        Renderer.delta = dlt;
+        if (!Game.isFocus) {
+            return;
+        }
+        Game.level?.onRender();
+        Renderer.camera.update();
+        Game.GUI.onRender();
+        this.ticks += dlt;
+        this.renderer.render(this.mainStage);
+        this.ticksTime.unshift(System.milliTime() - t1);
+        this.ticksTime.length = Math.min(this.ticksTime.length, 50);
+    }
+
+    public static resize() {
+        this.renderer.resize(window.innerWidth, window.innerHeight);
+    }
+
+    public static setLevel(level: Level) {
+        this.stages.level.removeChildren();
+        this.stages.level.addChild(level.container);
+        if (level.weather) this.stages.level.addChild(level.weather);
+        this.stages.level.addChild(level.lightFilter);
+        Renderer.camera.setContainer(level.container, level.lightFilter.lightContainer);
+    }
+
+    public static get clientRect(): any {
+        return null;
+    }
+
+    public static get REAL_HEIGHT() {
+        return this.HEIGHT * this.ZOOM;
+    }
+
+    public static get REAL_WIDTH() {
+        return this.WIDTH * this.ZOOM;
+    }
+
+    public static get xScroll() {
+        return (this.camera.x - this.WIDTH / this.camera.zoom / 2);
+    }
+
+    public static get yScroll() {
+        return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
+    }
+
+    public static get ZOOM() {
+        return 0;
     }
 }

@@ -5,20 +5,20 @@ import Item from "../../item/Item";
 
 export default abstract class Furniture extends Entity {
     public isInteractive = true;
-    private pushDir: Direction = Direction.NONE;
-    private pushTime: number = 0;
 
     constructor() {
         super();
         this.hitbox.set(0, 0, 14, 14);
     }
-
-    public getSprite() {
-        return this;
-    }
+    private pushDir: Direction = Direction.NONE;
+    private pushTime: number = 0;
 
     public blocks(entity: Entity): boolean {
         return true;
+    }
+
+    public getSprite() {
+        return this;
     }
 
     public onTick() {

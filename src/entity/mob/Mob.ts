@@ -18,37 +18,19 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import Tiles from "../../level/tile/Tiles";
 
 export default abstract class Mob extends Entity {
+    protected dir: Direction = Direction.DOWN;
+    public health: number;
+    public inventory = new Inventory(9);
 
     public isInteractive = true;
-    public maxHealth: number = 20;
-    public health: number = this.maxHealth;
-    public inventory = new Inventory(9);
-    protected speedMax: number = 1;
-    protected potionEffect: PotionEffect[] = [];
-    protected walkDist: number = 0;
-    protected dir: Direction = Direction.DOWN;
     protected mass = 20;
-    private hurtCooldown: number = 0;
-    private attackCooldown: number = 0;
-    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    private readonly waveSprite: PIXI.AnimatedSprite;
-
-    protected constructor() {
-        super();
-        this.useMask = true;
-
-        const waveTexture = SpriteSheet.loadTextures(System.getResource("entity", "water_wave.png"), 2, 16, 9);
-        this.waveSprite = new PIXI.AnimatedSprite(waveTexture);
-        this.waveSprite.anchor.set(0.5);
-        this.waveSprite.position.y = 8;
-        this.waveSprite.animationSpeed = 0.1;
-        this.waveSprite.play();
-        this.addChildAt(this.waveSprite, 0);
-    }
+    public maxHealth: number = 20;
+    protected potionEffect: Array<PotionEffect> = [];
 
     protected get speed() {
         return this.speedMax;
     }
+    protected speedMax: number = 1;
 
     protected set useMask(value: boolean) {
         if (value) {
@@ -61,9 +43,19 @@ export default abstract class Mob extends Entity {
             this.container.mask = null;
         }
     }
+    protected walkDist: number = 0;
 
-    public static spawnCondition(levelTile: LevelTile): boolean {
-        return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
+    protected constructor() {
+        super();
+        this.useMask = true;
+        this.health = this.maxHealth;
+        const waveTexture = SpriteSheet.loadTextures(System.getResource("entity", "water_wave.png"), 2, 16, 9);
+        this.waveSprite = new PIXI.AnimatedSprite(waveTexture);
+        this.waveSprite.anchor.set(0.5);
+        this.waveSprite.position.y = 8;
+        this.waveSprite.animationSpeed = 0.1;
+        this.waveSprite.play();
+        this.addChildAt(this.waveSprite, 0);
     }
 
     public static create(data: any): Mob {
@@ -76,8 +68,35 @@ export default abstract class Mob extends Entity {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
     }
 
-    public getInteractTile(): LevelTile | undefined {
-        return this.level?.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
+    public static spawnCondition(levelTile: LevelTile): boolean {
+        return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
+    }
+    private attackCooldown: number = 0;
+    private hurtCooldown: number = 0;
+    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+    private readonly waveSprite: PIXI.AnimatedSprite;
+
+    public addPotionEffect(type: PotionType) {
+        if (!this.checkPotionEffect(type)) {
+            this.potionEffect.push(new PotionEffect(type));
+            return true;
+        }
+        return false;
+    }
+
+    public burn(): boolean {
+        if (!this.canBurn() || this.isSwimming() || this.isOnFire) return false;
+        this.setOnFire(true);
+        return true;
+    }
+
+    public checkPotionEffect(type: PotionType) {
+        for (const effect of this.potionEffect) {
+            if (effect.type === type) {
+                return effect;
+            }
+        }
+        return false;
     }
 
     public die(): void {
@@ -94,8 +113,23 @@ export default abstract class Mob extends Entity {
         this.delete();
     }
 
-    public hurtByEntity(dmg: number, entity: Entity): void {
-        this.hurt(dmg, Mob.getAttackDir(entity, this));
+    public dropItem(item: Item) {
+        const itemEntity = new ItemEntity(item, this.x, this.y);
+        if (this.level?.add(itemEntity)) {
+            this.inventory.removeItem(item, 1);
+            const force = this.random.number(0.5, 1.5);
+            const range = this.random.number(-0.25, 0.25);
+            itemEntity.a.x = this.dir.getX() * force + range;
+            itemEntity.a.y = this.dir.getY() * force + range;
+        }
+    }
+
+    public getDir(): Direction {
+        return this.dir;
+    }
+
+    public getInteractTile(): LevelTile | undefined {
+        return this.level?.getTile((this.x + (this.dir.getX() * 12)) >> 4, (this.y + (this.dir.getY() * 12)) >> 4);
     }
 
     public hurt(dmg: number, attackDir: Direction = Direction.NONE): void {
@@ -114,10 +148,8 @@ export default abstract class Mob extends Entity {
         this.level?.add(new HurtParticle(this.x, this.y));
     }
 
-    public burn(): boolean {
-        if (!this.canBurn() || this.isSwimming() || this.isOnFire) return false;
-        this.setOnFire(true);
-        return true;
+    public hurtByEntity(dmg: number, entity: Entity): void {
+        this.hurt(dmg, Mob.getAttackDir(entity, this));
     }
 
     public jump(value: number = 3) {
@@ -126,15 +158,19 @@ export default abstract class Mob extends Entity {
         return true;
     }
 
-    public dropItem(item: Item) {
-        const itemEntity = new ItemEntity(item, this.x, this.y);
-        if (this.level?.add(itemEntity)) {
-            this.inventory.removeItem(item, 1);
-            const force = this.random.number(0.5, 1.5);
-            const range = this.random.number(-0.25, 0.25);
-            itemEntity.a.x = this.dir.getX() * force + range;
-            itemEntity.a.y = this.dir.getY() * force + range;
+    public onRender() {
+        super.onRender();
+        const oy = (-this.z < 0) ? 0 : -this.z;
+        this.useMask = oy !== 0;
+        if (this.container.mask) {
+            const b = this.container.getLocalBounds();
+            this.maskSprite.width = b.width;
+            this.maskSprite.height = b.height;
+            this.maskSprite.x = b.x;
+            this.maskSprite.y = b.y - oy;
         }
+
+        this.waveSprite.visible = this.z < 0 && this.isSwimming();
     }
 
     public onTick(): void {
@@ -158,29 +194,11 @@ export default abstract class Mob extends Entity {
         }
     }
 
-    public onRender() {
-        super.onRender();
-        const oy = (-this.z < 0) ? 0 : -this.z;
-        this.useMask = oy !== 0;
-        if (this.container.mask) {
-            const b = this.container.getLocalBounds();
-            this.maskSprite.width = b.width;
-            this.maskSprite.height = b.height;
-            this.maskSprite.x = b.x;
-            this.maskSprite.y = b.y - oy;
-        }
-
-        this.waveSprite.visible = this.z < 0 && this.isSwimming();
-    }
-
-    public touchItem(itemEntity: ItemEntity) {
-        if (this.inventory.addItem(itemEntity.item, 1)) {
-            itemEntity.take(this);
-        }
-    }
-
-    public getDir(): Direction {
-        return this.dir;
+    public removePotionEffect(effect: PotionEffect): void;
+    public removePotionEffect(type: PotionType): void;
+    public removePotionEffect(value: PotionEffect | PotionType): void {
+        const type = value instanceof PotionEffect ? value.type : value;
+        this.potionEffect = this.potionEffect.filter((effect) => effect.type !== type);
     }
 
     public toBSON(): any {
@@ -190,35 +208,42 @@ export default abstract class Mob extends Entity {
         };
     }
 
-    public checkPotionEffect(type: PotionType) {
-        for (const effect of this.potionEffect) {
-            if (effect.type === type) {
-                return effect;
-            }
+    public touchItem(itemEntity: ItemEntity) {
+        if (this.inventory.addItem(itemEntity.item, 1)) {
+            itemEntity.take(this);
         }
-        return false;
     }
 
-    public removePotionEffect(effect: PotionEffect): void;
-    public removePotionEffect(type: PotionType): void;
-    public removePotionEffect(value: PotionEffect | PotionType): void {
-        const type = value instanceof PotionEffect ? value.type : value;
-        this.potionEffect = this.potionEffect.filter((effect) => effect.type !== type);
+    protected attack(dmg: number) {
+        if (this.attackCooldown > 0) return;
+        this.attackCooldown = 30;
+        this.getEntitiesVisible(2).then((entities) => {
+            entities.forEach((entity) => {
+                if (entity instanceof Mob) {
+                    entity.hurtByEntity(dmg, this);
+                }
+            });
+        });
     }
 
-    public addPotionEffect(type: PotionType) {
-        if (!this.checkPotionEffect(type)) {
-            this.potionEffect.push(new PotionEffect(type));
-            return true;
-        }
-        return false;
+    protected getEntitiesRadius(
+        radius = 2,
+        predicate: (value: Entity) => boolean = () => true
+    ): Promise<Array<Entity>> {
+        return this.level.findEntitiesInRadius(predicate, this.x >> 4, this.y >> 4, radius);
     }
 
-    protected onFire() {
-        super.onFire();
-        if (Updater.every(10)) {
-            this.hurt(1);
-        }
+    protected getEntitiesVisible(radius: number = 2, fov = 90): Promise<Array<Entity>> {
+        return this.getEntitiesRadius(radius, (entity) => {
+            if (entity === this) return false;
+            const a = (Math.atan2(this.y - entity.y, this.x - entity.x) * 180 / Math.PI + 180) % 360;
+            return (
+                (this.dir === Direction.DOWN && a >= 90 - fov / 2 && a <= 90 + fov / 2) ||
+                (this.dir === Direction.UP && a >= 270 - fov / 2 && a <= 270 + fov / 2) ||
+                (this.dir === Direction.LEFT && a >= 180 - fov / 2 && a <= 180 + fov / 2) ||
+                (this.dir === Direction.RIGHT && a >= 360 - fov / 2 || a <= fov / 2)
+            );
+        });
     }
 
     protected move(xa: number, ya: number): boolean {
@@ -267,36 +292,14 @@ export default abstract class Mob extends Entity {
 
     }
 
-    protected attack(dmg: number) {
-        if (this.attackCooldown > 0) return;
-        this.attackCooldown = 30;
-        this.getEntitiesVisible(2).then((entities) => {
-            entities.forEach((entity) => {
-                if (entity instanceof Mob) {
-                    entity.hurtByEntity(dmg, this);
-                }
-            });
-        });
+    protected onFire() {
+        super.onFire();
+        if (Updater.every(10)) {
+            this.hurt(1);
+        }
     }
 
     protected onTileTooHigh() {
         this.jump(2);
-    }
-
-    protected getEntitiesRadius(radius = 2, predicate: (value: Entity) => boolean = () => true): Promise<Entity[]> {
-        return this.level.findEntitiesInRadius(predicate, this.x >> 4, this.y >> 4, radius);
-    }
-
-    protected getEntitiesVisible(radius: number = 2, fov = 90): Promise<Entity[]> {
-        return this.getEntitiesRadius(radius, (entity) => {
-            if (entity === this) return false;
-            const a = (Math.atan2(this.y - entity.y, this.x - entity.x) * 180 / Math.PI + 180) % 360;
-            return (
-                (this.dir === Direction.DOWN && a >= 90 - fov / 2 && a <= 90 + fov / 2) ||
-                (this.dir === Direction.UP && a >= 270 - fov / 2 && a <= 270 + fov / 2) ||
-                (this.dir === Direction.LEFT && a >= 180 - fov / 2 && a <= 180 + fov / 2) ||
-                (this.dir === Direction.RIGHT && a >= 360 - fov / 2 || a <= fov / 2)
-            );
-        });
     }
 }

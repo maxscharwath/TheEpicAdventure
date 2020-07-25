@@ -1,22 +1,15 @@
 export default class Key {
+    public clicked: boolean = false;
 
     public down: boolean = false;
-    public clicked: boolean = false;
     public sticky: boolean = false;
-    private presses: number = 0;
-    private absorbs: number = 0;
-    private stayDown: boolean = false;
 
     constructor(stayDown: boolean = false) {
         this.stayDown = stayDown;
     }
-
-    public toggle(pressed: boolean): void {
-        this.down = pressed;
-        if (pressed && !this.sticky) {
-            this.presses++;
-        }
-    }
+    private absorbs: number = 0;
+    private presses: number = 0;
+    private stayDown: boolean = false;
 
     public onTick(): void {
         if (this.absorbs < this.presses) {
@@ -43,6 +36,13 @@ export default class Key {
         this.presses = 0;
         this.absorbs = 0;
         this.sticky = false;
+    }
+
+    public toggle(pressed: boolean): void {
+        this.down = pressed;
+        if (pressed && !this.sticky) {
+            this.presses++;
+        }
     }
 
     public toString(): string {

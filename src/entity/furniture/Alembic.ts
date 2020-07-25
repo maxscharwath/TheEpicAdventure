@@ -7,12 +7,12 @@ export default class Alembic extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "alembic.png"));
 
-    constructor() {
-        super(Crafting.alembicRecipes);
-    }
-
     public static create({id, x, y}: any): Alembic {
         return super.create({id, x, y}) as Alembic;
+    }
+
+    constructor() {
+        super(Crafting.alembicRecipes);
     }
 
     public toBSON(): any {

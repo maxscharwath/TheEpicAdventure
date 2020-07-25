@@ -20,6 +20,25 @@
     "ordered-imports": false,
     "max-classes-per-file": false,
     "unified-signatures": false,
-    "curly": [true, "ignore-same-line"]
+    "curly": [true, "ignore-same-line"],
+    "array-type": [true, "generic"],
+    "whitespace": true,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "static-field",
+          "static-method",
+          "static-accessor",
+          "public-constructor",
+          "private-instance-field",
+          "private-constructor",
+          "public-instance-method",
+          "public-instance-accessor",
+          "protected-instance-method",
+          "private-instance-method"
+        ]
+      }
+    ]
   }
 }

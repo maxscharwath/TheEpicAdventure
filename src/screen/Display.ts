@@ -3,17 +3,11 @@ import Game from "../core/Game";
 import Renderer from "../core/Renderer";
 
 export default class Display extends PIXI.Container {
-    public hasCommand = false;
     public active: boolean = false;
+    public hasCommand = false;
 
     constructor() {
         super();
-    }
-
-    public show() {
-        this.active = true;
-        Renderer.addDisplay(this);
-        Game.GUI.addDisplay(this);
     }
 
     public hide() {
@@ -22,19 +16,15 @@ export default class Display extends PIXI.Container {
         Game.GUI.removeDisplay(this);
     }
 
-    public toggle() {
-        if (this.active) {
-            this.hide();
-        } else {
-            this.show();
-        }
+    public isBlocking() {
+        return false;
+    }
+
+    public onCommand(): void {
+
     }
 
     public onRender(): void {
-
-    }
-
-    public onTick(): void {
 
     }
 
@@ -42,11 +32,21 @@ export default class Display extends PIXI.Container {
 
     }
 
-    public onCommand(): void {
+    public onTick(): void {
 
     }
 
-    public isBlocking() {
-        return false;
+    public show() {
+        this.active = true;
+        Renderer.addDisplay(this);
+        Game.GUI.addDisplay(this);
+    }
+
+    public toggle() {
+        if (this.active) {
+            this.hide();
+        } else {
+            this.show();
+        }
     }
 }

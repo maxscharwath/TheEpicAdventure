@@ -7,12 +7,12 @@ export default class Oven extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "oven.png"));
 
-    constructor() {
-        super(Crafting.ovenRecipes);
-    }
-
     public static create({id, x, y}: any): Oven {
         return super.create({id, x, y}) as Oven;
+    }
+
+    constructor() {
+        super(Crafting.ovenRecipes);
     }
 
     public toBSON(): any {

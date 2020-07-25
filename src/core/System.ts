@@ -7,9 +7,16 @@ export default class System {
     public static resources: string = path.join(__dirname, "../../resources");
     private static startTime = new Date().getTime();
 
-    public static milliTime(): number {
-        const hr = process.hrtime();
-        return hr[0] * 1e3 + hr[1] / 1e6;
+    public static currentTimeMillis(): number {
+        return (new Date()).getTime();
+    }
+
+    public static getAppData(...url: Array<string>): string {
+        return path.join(this.appData, ...url);
+    }
+
+    public static getResource(...url: Array<string>): string {
+        return path.join(this.resources, ...url);
     }
 
     public static microTime(): number {
@@ -17,24 +24,17 @@ export default class System {
         return hr[0] * 1e6 + hr[1] / 1e3;
     }
 
+    public static milliTime(): number {
+        const hr = process.hrtime();
+        return hr[0] * 1e3 + hr[1] / 1e6;
+    }
+
     public static nanoTime(): number {
         const hr = process.hrtime();
         return hr[0] * 1e9 + hr[1];
     }
 
-    public static getAppData(...url: string[]): string {
-        return path.join(this.appData, ...url);
-    }
-
-    public static getResource(...url: string[]): string {
-        return path.join(this.resources, ...url);
-    }
-
     public static startTimeMillis(): number {
         return this.currentTimeMillis() - System.startTime;
-    }
-
-    public static currentTimeMillis(): number {
-        return (new Date()).getTime();
     }
 }

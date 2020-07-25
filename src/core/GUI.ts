@@ -12,13 +12,19 @@ import MapDisplay from "../screen/MapDisplay";
 import CommandDisplay from "../screen/CommandDisplay";
 
 export default class GUI {
-    private displays: Display[] = [];
-    private mainDisplay?: Display;
-    private infoDisplay?: InfoDisplay;
-    private hotbarDisplay?: HotbarDisplay;
-    private dialogueDisplay?: DialogueDisplay;
-    private commandDisplay?: CommandDisplay;
     private blocks: boolean = false;
+    private commandDisplay?: CommandDisplay;
+    private dialogueDisplay?: DialogueDisplay;
+    private displays: Array<Display> = [];
+    private hotbarDisplay?: HotbarDisplay;
+    private infoDisplay?: InfoDisplay;
+    private mainDisplay?: Display;
+
+    public addDisplay(display: Display) {
+        if (!this.displays.includes(display)) {
+            this.displays.push(display);
+        }
+    }
 
     public init() {
         this.infoDisplay = new InfoDisplay();
@@ -31,25 +37,8 @@ export default class GUI {
         this.hotbarDisplay.show();
     }
 
-    public setDisplay(display: Display) {
-        if (this.mainDisplay) {
-            this.mainDisplay.hide();
-        }
-        this.mainDisplay = display;
-        this.mainDisplay.show();
-    }
-
-    public addDisplay(display: Display) {
-        if (!this.displays.includes(display)) {
-            this.displays.push(display);
-        }
-    }
-
-    public removeDisplay(display: Display) {
-        this.displays.splice(this.displays.indexOf(display));
-        if (display === this.mainDisplay) {
-            this.mainDisplay = undefined;
-        }
+    public isBlocking() {
+        return this.blocks;
     }
 
     public onRender() {
@@ -62,10 +51,6 @@ export default class GUI {
         this.displays.forEach((display) => {
             display.onResize();
         });
-    }
-
-    public isBlocking() {
-        return this.blocks;
     }
 
     public onTick() {
@@ -93,5 +78,20 @@ export default class GUI {
         if (Game.input.getKey("MAP").clicked) {
             this.setDisplay(new MapDisplay());
         }
+    }
+
+    public removeDisplay(display: Display) {
+        this.displays.splice(this.displays.indexOf(display));
+        if (display === this.mainDisplay) {
+            this.mainDisplay = undefined;
+        }
+    }
+
+    public setDisplay(display: Display) {
+        if (this.mainDisplay) {
+            this.mainDisplay.hide();
+        }
+        this.mainDisplay = display;
+        this.mainDisplay.show();
     }
 }

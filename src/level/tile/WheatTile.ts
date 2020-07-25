@@ -4,8 +4,16 @@ import Items from "../../item/Items";
 import CropTile from "./CropTile";
 
 export default class WheatTile extends CropTile {
-    public static readonly TAG: string = "wheat";
     public static readonly COLOR: number = 0x94785c;
+    public static readonly TAG: string = "wheat";
+
+    protected harvest() {
+        if (this.states.age >= 50) {
+            this.addItemEntity(Items.WHEAT, [2, 3]);
+            this.addItemEntity(Items.SEED_WHEAT);
+        }
+        this.addItemEntity(Items.SEED_WHEAT);
+    }
 
     protected initCrop() {
         super.initCrop();
@@ -15,14 +23,6 @@ export default class WheatTile extends CropTile {
         this.sprite.position.set(8, 8);
         this.sortableContainer.addChild(this.sprite);
         this.anchor = 0.75;
-    }
-
-    protected harvest() {
-        if (this.states.age >= 50) {
-            this.addItemEntity(Items.WHEAT, [2, 3]);
-            this.addItemEntity(Items.SEED_WHEAT);
-        }
-        this.addItemEntity(Items.SEED_WHEAT);
     }
 
 }

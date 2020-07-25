@@ -6,24 +6,16 @@ import LevelTile from "../../level/LevelTile";
 import Tiles from "../../level/tile/Tiles";
 
 export default abstract class HostileMob extends Mob {
-    protected target: { x: number, y: number } = {x: 0, y: 0};
-
-    constructor() {
-        super();
-        this.newTarget();
-    }
 
     public static spawnCondition(levelTile: LevelTile): boolean {
         if (levelTile.getLightLevel() > 12) return false;
         return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
     }
+    protected target: { x: number, y: number } = {x: 0, y: 0};
 
-    public onTick(): void {
-        super.onTick();
-        if (this.target instanceof Entity && this.target.getRemoved() ||
-            !(this.target instanceof Entity) && this.random.probability(100)) {
-            this.newTarget();
-        }
+    constructor() {
+        super();
+        this.newTarget();
     }
 
     public canSwim(): boolean {
@@ -58,6 +50,14 @@ export default abstract class HostileMob extends Mob {
         if (this.aSpeed < this.speed) {
             this.a.x += xa / 10;
             this.a.y += ya / 10;
+        }
+    }
+
+    public onTick(): void {
+        super.onTick();
+        if (this.target instanceof Entity && this.target.getRemoved() ||
+            !(this.target instanceof Entity) && this.random.probability(100)) {
+            this.newTarget();
         }
     }
 

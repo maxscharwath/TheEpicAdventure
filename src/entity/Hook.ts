@@ -8,41 +8,23 @@ import FishingRodItem from "../item/FishingRodItem";
 import Level from "../level/Level";
 
 export default class Hook extends Entity {
-    private readonly owner: Entity;
-    private hooked?: Fish;
-    private fishingRodItem: FishingRodItem;
 
     constructor(owner: Entity, fishingRod: FishingRodItem) {
         super();
         this.owner = owner;
         this.fishingRodItem = fishingRod;
     }
+    private fishingRodItem: FishingRodItem;
+    private hooked?: Fish;
+    private readonly owner: Entity;
 
-    public init() {
-        super.init();
-        this.hitbox.set(0, 0, 5, 5);
-        const sprite = PIXI.Sprite.from(PIXI.Texture.from(System.getResource("entity", "hook.png")));
-        sprite.anchor.set(0.5);
-        this.container.addChild(sprite);
+    public canSwim(): boolean {
+        return true;
     }
 
-    public onTick() {
-        super.onTick();
-        if (!(this.owner instanceof Mob) || !(this.owner.inventory.selectedItem() instanceof FishingRodItem)) {
-            return this.delete();
-        }
-        if (this.getDistance(this.owner) > 64) return this.delete();
-    }
-
-    public onRender() {
-        super.onRender();
-        if (this.isSwimming()) {
-            this.container.pivot.y = this.isHooked() ? Math.sin(this.ticks * 2) : Math.sin(this.ticks / 4) * 0.5;
-        }
-    }
-
-    public isHooked() {
-        return this.hooked instanceof Fish;
+    public delete(level?: Level) {
+        super.delete(level);
+        this.fishingRodItem?.clearHook();
     }
 
     public getFish() {
@@ -54,13 +36,31 @@ export default class Hook extends Entity {
         this.hooked = fish;
     }
 
-    public unHookFish() {
-        this.hooked = undefined;
+    public init() {
+        super.init();
+        this.hitbox.set(0, 0, 5, 5);
+        const sprite = PIXI.Sprite.from(PIXI.Texture.from(System.getResource("entity", "hook.png")));
+        sprite.anchor.set(0.5);
+        this.container.addChild(sprite);
     }
 
-    public delete(level?: Level) {
-        super.delete(level);
-        this.fishingRodItem?.clearHook();
+    public isHooked() {
+        return this.hooked instanceof Fish;
+    }
+
+    public onRender() {
+        super.onRender();
+        if (this.isSwimming()) {
+            this.container.pivot.y = this.isHooked() ? Math.sin(this.ticks * 2) : Math.sin(this.ticks / 4) * 0.5;
+        }
+    }
+
+    public onTick() {
+        super.onTick();
+        if (!(this.owner instanceof Mob) || !(this.owner.inventory.selectedItem() instanceof FishingRodItem)) {
+            return this.delete();
+        }
+        if (this.getDistance(this.owner) > 64) return this.delete();
     }
 
     public pull(): boolean {
@@ -77,8 +77,8 @@ export default class Hook extends Entity {
         return false;
     }
 
-    public canSwim(): boolean {
-        return true;
+    public unHookFish() {
+        this.hooked = undefined;
     }
 
     protected friction() {

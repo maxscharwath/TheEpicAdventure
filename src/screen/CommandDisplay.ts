@@ -9,24 +9,6 @@ import Command from "../core/io/Command";
 export default class CommandDisplay extends Display {
 
     public hasCommand = true;
-    private inputText: PIXI.BitmapText;
-    private cursorStart: number;
-    private cursorTicks: number;
-    private cursorEnd: number;
-    private historicCommand: string[] = [];
-    private historicResult: string[] = [];
-    private selectIndex: number = 0;
-    private input: HTMLInputElement;
-
-    constructor() {
-        super();
-        this.input = CommandDisplay.createInput();
-        this.init();
-    }
-
-    public get message() {
-        return this.input.value;
-    }
 
     public static createInput() {
         const _commandInput = document.createElement("input");
@@ -39,22 +21,23 @@ export default class CommandDisplay extends Display {
         return _commandInput;
     }
 
-    public show() {
-        super.show();
-        this.clear();
-        Game.input.preventDefault = false;
+    constructor() {
+        super();
+        this.input = CommandDisplay.createInput();
+        this.init();
     }
+    private cursorEnd: number;
+    private cursorStart: number;
+    private cursorTicks: number;
+    private historicCommand: Array<string> = [];
+    private historicResult: Array<string> = [];
+    private input: HTMLInputElement;
+    private inputText: PIXI.BitmapText;
+    private selectIndex: number = 0;
 
-    public hide() {
-        super.hide();
-        this.clear();
-        this.input.blur();
-        Game.input.preventDefault = true;
-    }
-
-    public sendMessage(msg: any) {
-        if (msg === undefined) return;
-        this.historicResult.unshift(msg.toString());
+    public clear() {
+        this.input.value = "";
+        this.inputText.text = "";
     }
 
     public execute() {
@@ -77,13 +60,43 @@ export default class CommandDisplay extends Display {
         this.clear();
     }
 
+    public hide() {
+        super.hide();
+        this.clear();
+        this.input.blur();
+        Game.input.preventDefault = true;
+    }
+
+    public isBlocking() {
+        return true;
+    }
+
+    public onCommand() {
+        super.onCommand();
+        if (Game.input.getKey("EXIT").clicked) this.hide();
+        if (!this.active) return;
+        if (Game.input.getKey("ENTER").clicked) this.execute();
+        if (Game.input.getKey("CURSOR-UP").clicked) {
+            if (this.selectIndex < this.historicCommand.length) this.selectIndex++;
+            if (this.historicCommand[this.selectIndex - 1]) {
+                this.input.value = this.historicCommand[this.selectIndex - 1];
+            }
+        }
+        if (Game.input.getKey("CURSOR-DOWN").clicked) {
+            if (this.selectIndex > 1) this.selectIndex--;
+            if (this.historicCommand[this.selectIndex - 1]) {
+                this.input.value = this.historicCommand[this.selectIndex - 1];
+            }
+        }
+    }
+
     public onRender() {
         super.onRender();
     }
 
-    public clear() {
-        this.input.value = "";
-        this.inputText.text = "";
+    public onResize() {
+        super.onResize();
+        this.inputText.y = Renderer.getScreen().height;
     }
 
     public onTick() {
@@ -107,32 +120,19 @@ export default class CommandDisplay extends Display {
         }
     }
 
-    public onCommand() {
-        super.onCommand();
-        if (Game.input.getKey("EXIT").clicked) this.hide();
-        if (!this.active) return;
-        if (Game.input.getKey("ENTER").clicked) this.execute();
-        if (Game.input.getKey("CURSOR-UP").clicked) {
-            if (this.selectIndex < this.historicCommand.length) this.selectIndex++;
-            if (this.historicCommand[this.selectIndex - 1]) {
-                this.input.value = this.historicCommand[this.selectIndex - 1];
-            }
-        }
-        if (Game.input.getKey("CURSOR-DOWN").clicked) {
-            if (this.selectIndex > 1) this.selectIndex--;
-            if (this.historicCommand[this.selectIndex - 1]) {
-                this.input.value = this.historicCommand[this.selectIndex - 1];
-            }
-        }
+    public sendMessage(msg: any) {
+        if (msg === undefined) return;
+        this.historicResult.unshift(msg.toString());
     }
 
-    public isBlocking() {
-        return true;
+    public show() {
+        super.show();
+        this.clear();
+        Game.input.preventDefault = false;
     }
 
-    public onResize() {
-        super.onResize();
-        this.inputText.y = Renderer.getScreen().height;
+    public get message() {
+        return this.input.value;
     }
 
     private init() {

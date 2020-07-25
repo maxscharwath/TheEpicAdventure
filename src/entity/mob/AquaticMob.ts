@@ -20,14 +20,6 @@ export default abstract class AquaticMob extends Mob {
         return levelTile.is(Tiles.WATER);
     }
 
-    public onTick(): void {
-        super.onTick();
-        if ((this.target instanceof Entity && this.target.getRemoved()) ||
-            (!(this.target instanceof Entity) && this.random.probability(100))) {
-            this.newTarget();
-        }
-    }
-
     public onRender() {
         super.onRender();
         let speedX = this.speed;
@@ -58,19 +50,16 @@ export default abstract class AquaticMob extends Mob {
         }
     }
 
-    protected getTileZ() {
-        return 0;
+    public onTick(): void {
+        super.onTick();
+        if ((this.target instanceof Entity && this.target.getRemoved()) ||
+            (!(this.target instanceof Entity) && this.random.probability(100))) {
+            this.newTarget();
+        }
     }
 
-    protected newTarget() {
-        if (!this.level) return;
-        const tile = this.level.findRandomTileInEntityRadius([Tiles.WATER], this, 10);
-        if (tile) {
-            this.target = {
-                x: tile.getLocalX() << 4,
-                y: tile.getLocalY() << 4,
-            };
-        }
+    protected getTileZ() {
+        return 0;
     }
 
     protected move(xa: number, ya: number): boolean {
@@ -144,5 +133,16 @@ export default abstract class AquaticMob extends Mob {
         this.x += xa;
         this.y += ya;
         return true;
+    }
+
+    protected newTarget() {
+        if (!this.level) return;
+        const tile = this.level.findRandomTileInEntityRadius([Tiles.WATER], this, 10);
+        if (tile) {
+            this.target = {
+                x: tile.getLocalX() << 4,
+                y: tile.getLocalY() << 4,
+            };
+        }
     }
 }

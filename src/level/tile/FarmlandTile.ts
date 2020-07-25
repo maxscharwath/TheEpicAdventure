@@ -10,23 +10,12 @@ import Tiles from "./Tiles";
 import TileStates from "./TileStates";
 
 export default class FarmlandTile extends Tile {
-    public static readonly TAG: string = "farmland";
-    public static DEFAULT_STATES = {moisture: 0, age: 0};
     public static readonly COLOR: number = 0x94785c;
+    public static DEFAULT_STATES = {moisture: 0, age: 0};
+    public static readonly TAG: string = "farmland";
     public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
     private filter = new PIXI.filters.ColorMatrixFilter();
-
-    public onInteract(mob: Mob, item?: Item) {
-        if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
-            this.harvest();
-            this.setTile(Tiles.FARMLAND, {
-                moisture: this.states.moisture,
-            });
-            return true;
-        }
-        return false;
-    }
 
     public init() {
         super.init();
@@ -34,6 +23,17 @@ export default class FarmlandTile extends Tile {
         sprite.filters = [this.filter];
         this.container.addChild(sprite);
         this.filter.brightness(this.states.moisture / -40 + 1, false);
+    }
+
+    public onInteract(mob: Mob, item?: Item) {
+        if (!item || (item instanceof ToolItem && item.type === ToolType.HOE)) {
+            this.harvest();
+            this.setTile(Tiles.FARMLAND, {
+                moisture: this.states.moisture,
+            });
+            return true;
+        }
+        return false;
     }
 
     public onTick(): void {

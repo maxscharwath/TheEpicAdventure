@@ -12,17 +12,13 @@ import Items from "../../item/Items";
 import FenceTile from "./FenceTile";
 
 export default class FenceGateTile extends Tile {
-    public static DEFAULT_STATES = {groundTile: 0, open: false};
-    public static readonly TAG = "fence_gate";
-    protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence_gate.png"), 4, 16);
     public anchor = 0.75;
 
     public states = TileStates.create(FenceGateTile.DEFAULT_STATES);
+    public static DEFAULT_STATES = {groundTile: 0, open: false};
+    public static readonly TAG = "fence_gate";
+    protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence_gate.png"), 4, 16);
     private sprite: PIXI.Sprite;
-
-    public mayPass(e: Entity): boolean {
-        return this.states.open;
-    }
 
     public init() {
         super.init();
@@ -32,15 +28,28 @@ export default class FenceGateTile extends Tile {
         this.setGroundTile(Tiles.get(this.states.groundTile));
     }
 
-    public onSetTile(oldTile: Tile, entity?: Entity) {
-        this.setGroundTile(oldTile);
+    public mayPass(e: Entity): boolean {
+        return this.states.open;
     }
 
-    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
-        const t = super.setGroundTile(tile);
-        if (!t) return undefined;
-        this.states.groundTile = t.getKeys().idx;
-        return t;
+    public onInteract(mob: Mob, item?: Item): boolean {
+        if (!item && !this.levelTile.hasEntity()) {
+            this.states.open = !this.states.open;
+            this.onUpdate();
+            return true;
+        }
+        if (item instanceof ToolItem) {
+            switch (item.type) {
+                case ToolType.AXE:
+                    this.onDestroy();
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public onSetTile(oldTile: Tile, entity?: Entity) {
+        this.setGroundTile(oldTile);
     }
 
     public onUpdate() {
@@ -62,20 +71,11 @@ export default class FenceGateTile extends Tile {
         this.sprite.texture = FenceGateTile.textures[id];
     }
 
-    public onInteract(mob: Mob, item?: Item): boolean {
-        if (!item && !this.levelTile.hasEntity()) {
-            this.states.open = !this.states.open;
-            this.onUpdate();
-            return true;
-        }
-        if (item instanceof ToolItem) {
-            switch (item.type) {
-                case ToolType.axe:
-                    this.onDestroy();
-                    return true;
-            }
-        }
-        return false;
+    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
+        const t = super.setGroundTile(tile);
+        if (!t) return undefined;
+        this.states.groundTile = t.getKeys().idx;
+        return t;
     }
 
     protected onDestroy() {

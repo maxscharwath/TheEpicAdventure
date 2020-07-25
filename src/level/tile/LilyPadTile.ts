@@ -9,8 +9,8 @@ import Tiles from "./Tiles";
 import Renderer from "../../core/Renderer";
 
 export default class LilyPadTile extends Tile {
-    public static readonly TAG = "lilypad";
     public static readonly COLOR: number = 0x0cb516;
+    public static readonly TAG = "lilypad";
 
     private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
     private sprite?: PIXI.Sprite;
@@ -24,15 +24,6 @@ export default class LilyPadTile extends Tile {
         this.sortableContainer.addChild(this.sprite);
     }
 
-    public onTick(): void {
-        super.onTick();
-    }
-
-    public onRender() {
-        super.onRender();
-        this.sprite?.pivot.set(0, Math.sin(Renderer.ticks / 6) / 4);
-    }
-
     public mayPass(e: Entity): boolean {
         return true;
     }
@@ -40,6 +31,15 @@ export default class LilyPadTile extends Tile {
     public onInteract(mob: Mob, item?: Item): boolean {
         this.onDestroy();
         return true;
+    }
+
+    public onRender() {
+        super.onRender();
+        this.sprite?.pivot.set(0, Math.sin(Renderer.ticks / 6) / 4);
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
     protected onDestroy() {

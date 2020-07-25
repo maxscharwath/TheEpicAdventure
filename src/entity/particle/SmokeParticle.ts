@@ -5,7 +5,6 @@ import * as PIXI from "pixi.js";
 import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default class SmokeParticle extends Particle {
-    private readonly sprite: PIXI.AnimatedSprite;
 
     constructor(x: number, y: number, startFrame = 0) {
         super(x, y);
@@ -25,10 +24,7 @@ export default class SmokeParticle extends Particle {
         this.sprite.gotoAndPlay(startFrame);
         this.addChild(this.sprite);
     }
-
-    public onTick() {
-        super.onTick();
-    }
+    private readonly sprite: PIXI.AnimatedSprite;
 
     public onRender() {
         super.onRender();
@@ -41,5 +37,9 @@ export default class SmokeParticle extends Particle {
         this.a.z -= this.gravity;
         this.sprite.rotation += 0.05;
         this.sprite.alpha = 1 - this.lifePercent() * this.lifePercent() * this.lifePercent();
+    }
+
+    public onTick() {
+        super.onTick();
     }
 }

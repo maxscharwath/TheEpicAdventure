@@ -3,13 +3,32 @@ import electron from "electron";
 const app: electron.App = (electron.app || electron.remote.app);
 export default class Version {
 
-    private readonly valid: boolean = true;
-    private readonly major: number = 0;
-    private readonly minor: number = 0;
-    private readonly dev: number = 0;
+    private static compare(a: number, b: number): number {
+        if (a < b) {
+            return -1;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return 0;
+    }
+
+    private static Number(n: any): number {
+        if (isNaN(Number(n))) {
+            throw new Error("Not a number");
+        }
+        return Number(n);
+    }
+
+    private static parseInt(n: any): number {
+        if (isNaN(Number(n))) {
+            throw new Error("Not a number");
+        }
+        return parseInt(n, 10);
+    }
 
     constructor(version: string = app.getVersion()) {
-        const nums: string[] = version.split(".");
+        const nums: Array<string> = version.split(".");
         try {
             if (nums.length > 0) {
                 this.major = Version.parseInt(nums[0]);
@@ -25,7 +44,7 @@ export default class Version {
             }
 
             if (min.includes("-")) {
-                const mindev: string[] = min.split("-");
+                const mindev: Array<string> = min.split("-");
                 this.minor = Version.parseInt(mindev[0]);
                 this.dev = Version.Number(mindev[1].replace("pre", "").replace("dev", ""));
             } else {
@@ -40,34 +59,11 @@ export default class Version {
             this.valid = false;
         }
     }
+    private readonly dev: number = 0;
+    private readonly major: number = 0;
+    private readonly minor: number = 0;
 
-    private static parseInt(n: any): number {
-        if (isNaN(Number(n))) {
-            throw new Error("Not a number");
-        }
-        return parseInt(n, 10);
-    }
-
-    private static Number(n: any): number {
-        if (isNaN(Number(n))) {
-            throw new Error("Not a number");
-        }
-        return Number(n);
-    }
-
-    private static compare(a: number, b: number): number {
-        if (a < b) {
-            return -1;
-        }
-        if (a > b) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public isValid(): boolean {
-        return this.valid;
-    }
+    private readonly valid: boolean = true;
 
     public compareTo(ov: Version): number {
         if (this.major !== ov.major) {
@@ -86,6 +82,10 @@ export default class Version {
             return Version.compare(this.dev, ov.dev);
         }
         return 0;
+    }
+
+    public isValid(): boolean {
+        return this.valid;
     }
 
     public toString(): string {

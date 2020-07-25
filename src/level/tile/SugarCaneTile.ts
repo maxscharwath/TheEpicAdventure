@@ -7,8 +7,8 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default class SugarCaneTile extends Tile {
-    public static readonly TAG = "sugar_cane";
     public static readonly COLOR: number = 0x0cb516;
+    public static readonly TAG = "sugar_cane";
 
     private static tileTextures = SugarCaneTile.loadTextures(System.getResource("tile", "sugar_cane.png"), 4);
     private sprite?: PIXI.Sprite;

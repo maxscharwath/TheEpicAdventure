@@ -3,9 +3,9 @@ import FarmlandTile from "./FarmlandTile";
 import {Entity} from "../../entity";
 
 export default abstract class CropTile extends FarmlandTile {
-    public static readonly TAG: string = "crop";
 
     protected sprite?: PIXI.Sprite;
+    public static readonly TAG: string = "crop";
     private wiggleDelay: number = 0;
 
     public init() {
@@ -13,8 +13,8 @@ export default abstract class CropTile extends FarmlandTile {
         this.initCrop();
     }
 
-    public steppedOn(entity: Entity) {
-        this.wiggleDelay = 5;
+    public onRender() {
+        super.onRender();
     }
 
     public onTick(): void {
@@ -40,14 +40,14 @@ export default abstract class CropTile extends FarmlandTile {
         }
     }
 
-    public onRender() {
-        super.onRender();
-    }
-
-    protected initCrop() {
+    public steppedOn(entity: Entity) {
+        this.wiggleDelay = 5;
     }
 
     protected harvest() {
+    }
+
+    protected initCrop() {
     }
 
 }

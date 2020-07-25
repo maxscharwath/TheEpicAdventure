@@ -8,9 +8,6 @@ import Tiles from "../tile/Tiles";
 import LevelGen from "./LevelGen";
 
 export default class LevelGenCave extends LevelGen {
-    private elevationNoise: SimplexNoise;
-    private moistureNoise: SimplexNoise;
-    private temperatureNoise: SimplexNoise;
 
     constructor(seed: number | string = 0) {
         super(seed);
@@ -18,8 +15,11 @@ export default class LevelGenCave extends LevelGen {
         this.moistureNoise = new SimplexNoise((this.seed + 1) * 16);
         this.temperatureNoise = new SimplexNoise((this.seed + 2) * 32);
     }
+    private elevationNoise: SimplexNoise;
+    private moistureNoise: SimplexNoise;
+    private temperatureNoise: SimplexNoise;
 
-    public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): LevelTile[] {
+    public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): Array<LevelTile> {
         const random = new ChunkRandom(this.seed, cX, cY);
         const t1 = System.nanoTime();
         const map = [];

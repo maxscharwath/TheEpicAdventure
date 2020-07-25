@@ -1,18 +1,18 @@
 export default class Entry {
-    private readonly label: string;
 
     constructor(label: string) {
         this.label = label;
     }
+    private readonly label: string;
 
-    public setValue(value: any): void {
+    public getLabel(): string {
+        return this.label;
     }
 
     public getValue(): any {
     }
 
-    public getLabel(): string {
-        return this.label;
+    public setValue(value: any): void {
     }
 
     public toString(): string {

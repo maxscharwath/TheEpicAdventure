@@ -1,18 +1,9 @@
 export default class Direction {
-    public static NONE: Direction = new Direction(0, 0, -1);
     public static DOWN: Direction = new Direction(0, 1, 0);
-    public static UP: Direction = new Direction(0, -1, 1);
     public static LEFT: Direction = new Direction(-1, 0, 2);
+    public static NONE: Direction = new Direction(0, 0, -1);
     public static RIGHT: Direction = new Direction(1, 0, 3);
-    private readonly x: number;
-    private readonly y: number;
-    private readonly num: number;
-
-    constructor(x: number, y: number, num: number = -1) {
-        this.x = x;
-        this.y = y;
-        this.num = num;
-    }
+    public static UP: Direction = new Direction(0, -1, 1);
 
     public static getDirection(xd: number, yd: number) {
         if (xd === 0 && yd === 0) {
@@ -35,6 +26,15 @@ export default class Direction {
         }
     }
 
+    constructor(x: number, y: number, num: number = -1) {
+        this.x = x;
+        this.y = y;
+        this.num = num;
+    }
+    private readonly num: number;
+    private readonly x: number;
+    private readonly y: number;
+
     public getX() {
         return this.x;
     }
@@ -43,19 +43,19 @@ export default class Direction {
         return this.y;
     }
 
-    public toString() {
-        return `${this.valueOf()}`;
-    }
-
-    public valueOf(): number {
-        return this.num;
+    public isX() {
+        return this.y === 0 && this.x !== 0;
     }
 
     public isY() {
         return this.x === 0 && this.y !== 0;
     }
 
-    public isX() {
-        return this.y === 0 && this.x !== 0;
+    public toString() {
+        return `${this.valueOf()}`;
+    }
+
+    public valueOf(): number {
+        return this.num;
     }
 }

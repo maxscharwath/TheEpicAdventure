@@ -4,8 +4,16 @@ import Items from "../../item/Items";
 import CropTile from "./CropTile";
 
 export default class CornTile extends CropTile {
-    public static readonly TAG: string = "corn";
     public static readonly COLOR: number = 0x94785c;
+    public static readonly TAG: string = "corn";
+
+    protected harvest() {
+        if (this.states.age >= 50) {
+            this.addItemEntity(Items.CORN, [1, 3]);
+        } else {
+            this.addItemEntity(Items.CORN, 1);
+        }
+    }
 
     protected initCrop() {
         super.initCrop();
@@ -15,14 +23,6 @@ export default class CornTile extends CropTile {
         this.sprite.position.set(8, 8);
         this.sortableContainer.addChild(this.sprite);
         this.anchor = 0.75;
-    }
-
-    protected harvest() {
-        if (this.states.age >= 50) {
-            this.addItemEntity(Items.CORN, [1, 3]);
-        } else {
-            this.addItemEntity(Items.CORN, 1);
-        }
     }
 
 }

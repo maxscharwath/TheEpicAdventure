@@ -5,14 +5,14 @@ import Item from "../../item/Item";
 import Game from "../../core/Game";
 
 export default class Craftable extends Furniture {
-    private craftTime: number = 0;
-    private craftRecipe?: Recipe;
-    private readonly recipes: Recipe[];
 
-    constructor(recipes: Recipe[] = []) {
+    constructor(recipes: Array<Recipe> = []) {
         super();
         this.recipes = recipes;
     }
+    private craftRecipe?: Recipe;
+    private craftTime: number = 0;
+    private readonly recipes: Array<Recipe>;
 
     public isCrafting() {
         return (this.craftTime > 0);

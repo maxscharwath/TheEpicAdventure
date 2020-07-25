@@ -10,11 +10,8 @@ import Game from "../core/Game";
 
 class InventorySlot extends PIXI.Container {
     public index: number = 0;
-    public slot: Slot;
     public item?: Item;
-
-    private itemSprite?: PIXI.Sprite;
-    private itemContainer = new PIXI.Container();
+    public slot: Slot;
 
     constructor(slot: Slot, index: number = 0) {
         super();
@@ -29,6 +26,9 @@ class InventorySlot extends PIXI.Container {
         this.addChild(this.itemContainer);
         this.itemContainer.filters = [new DropShadowFilter({blur: 0, distance: 2, rotation: 45, quality: 0})];
     }
+    private itemContainer = new PIXI.Container();
+
+    private itemSprite?: PIXI.Sprite;
 
     public update() {
         if (this.item === this.slot.item) return;
@@ -43,28 +43,17 @@ class InventorySlot extends PIXI.Container {
 
 export default class HotbarDisplay extends Display {
     public hasCommand = true;
-    private slots: InventorySlot[] = [];
-    private selectSprite?: PIXI.Sprite;
-    private itemText?: PIXI.BitmapText;
-    private textDelay: number = 0;
-    private nbSlot: number = 9;
 
     constructor() {
         super();
         this.init();
         this.onResize();
     }
-
-    public onResize() {
-        super.onResize();
-        this.position.x = (Renderer.getScreen().width - this.width) >> 1;
-        this.position.y = Renderer.getScreen().height - this.height - 20;
-    }
-
-    public onTick(): void {
-        super.onTick();
-        this.slots.forEach((slot) => slot.update());
-    }
+    private itemText?: PIXI.BitmapText;
+    private nbSlot: number = 9;
+    private selectSprite?: PIXI.Sprite;
+    private slots: Array<InventorySlot> = [];
+    private textDelay: number = 0;
 
     public onCommand() {
         super.onCommand();
@@ -97,6 +86,17 @@ export default class HotbarDisplay extends Display {
     public onRender() {
         super.onRender();
         this.setCurrentSlot();
+    }
+
+    public onResize() {
+        super.onResize();
+        this.position.x = (Renderer.getScreen().width - this.width) >> 1;
+        this.position.y = Renderer.getScreen().height - this.height - 20;
+    }
+
+    public onTick(): void {
+        super.onTick();
+        this.slots.forEach((slot) => slot.update());
     }
 
     private init() {

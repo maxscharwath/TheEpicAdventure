@@ -4,18 +4,13 @@ import {ItemRegister} from "../item/Items";
 
 export default class Recipe {
     public canCraft = false;
+    public cost: Array<[ItemRegister<Item>, number]> = [];
     public readonly result: ItemRegister<Item>;
-    public cost: [ItemRegister<Item>, number][] = [];
-    private craftTime = 50;
 
     constructor(result: ItemRegister<Item>) {
         this.result = result;
     }
-
-    public setCraftTime(t: number) {
-        this.craftTime = t;
-        return this;
-    }
+    private craftTime = 50;
 
     public addCost(itemRegister: ItemRegister<Item>, count: number) {
         this.cost.push([itemRegister, count]);
@@ -48,5 +43,10 @@ export default class Recipe {
             const count = cost[1];
             mob.inventory.removeItem(item, count);
         }
+    }
+
+    public setCraftTime(t: number) {
+        this.craftTime = t;
+        return this;
     }
 }

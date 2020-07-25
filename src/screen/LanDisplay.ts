@@ -6,6 +6,18 @@ import DraggableDisplay from "./DraggableDisplay";
 
 export default class LanDisplay extends DraggableDisplay {
 
+    public hide() {
+        super.hide();
+        SearchServer.stop();
+    }
+
+    public onRender(): void {
+    }
+
+    public onTick(): void {
+
+    }
+
     public show() {
         super.show();
         SearchServer.start((server) => {
@@ -20,17 +32,5 @@ export default class LanDisplay extends DraggableDisplay {
             text.y = this.children.length * 20;
             this.addChild(text);
         });
-    }
-
-    public hide() {
-        super.hide();
-        SearchServer.stop();
-    }
-
-    public onTick(): void {
-
-    }
-
-    public onRender(): void {
     }
 }

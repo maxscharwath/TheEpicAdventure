@@ -5,13 +5,13 @@ import Item from "./Item";
 import Resource from "./resources/Resource";
 
 export default class ResourceItem extends Item {
-    private readonly resource: Resource;
 
     constructor(tag: string, resource: Resource) {
         super(tag);
         this.resource = resource;
         this.texture = new PIXI.Texture(this.resource.texture);
     }
+    private readonly resource: Resource;
 
     public isStackable(): boolean {
         return true;

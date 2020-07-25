@@ -7,11 +7,11 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class IceTile extends AutoTilingTile {
-    public static readonly TAG = "ice";
-    public static readonly COLOR: number = 0xaac9ff;
-    protected static canConnectTo = ["hole"];
-    protected static autoTileTextures = IceTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     public friction = 0.01;
+    protected static autoTileTextures = IceTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
+    protected static canConnectTo = ["hole"];
+    public static readonly COLOR: number = 0xaac9ff;
+    public static readonly TAG = "ice";
 
     public init() {
         super.init();

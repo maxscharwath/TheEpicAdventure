@@ -9,11 +9,17 @@ import Items from "../../item/Items";
 import HurtParticle from "../../entity/particle/HurtParticle";
 
 export default class CactusTile extends Tile {
-    public static readonly TAG = "cactus";
-    public static DEFAULT_STATES = {damage: 0};
     public static readonly COLOR: number = 0x2a963c;
-    private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
+    public static DEFAULT_STATES = {damage: 0};
+    public static readonly TAG = "cactus";
     public states = TileStates.create(CactusTile.DEFAULT_STATES);
+    private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
+
+    public bumpedInto(entity: Entity) {
+        if (entity instanceof Mob) {
+            entity.hurt(1);
+        }
+    }
 
     public init() {
         super.init();
@@ -28,12 +34,6 @@ export default class CactusTile extends Tile {
 
     public mayPass(): boolean {
         return false;
-    }
-
-    public bumpedInto(entity: Entity) {
-        if (entity instanceof Mob) {
-            entity.hurt(1);
-        }
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {

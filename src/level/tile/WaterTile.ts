@@ -6,15 +6,15 @@ import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
 
 export default class WaterTile extends AutoTilingTile {
-    public static readonly TAG = "water";
-    public static DEFAULT_STATES = {level: 10};
-    public static readonly COLOR: number = 0x1e7cb8;
-    protected static canConnectTo = ["lava", "hole", "ice"];
-    protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
-    protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
-    public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public friction: number = 0.01;
+    public states = TileStates.create(WaterTile.DEFAULT_STATES);
     public z: number = -5;
+    protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
+    protected static canConnectTo = ["lava", "hole", "ice"];
+    public static readonly COLOR: number = 0x1e7cb8;
+    public static DEFAULT_STATES = {level: 10};
+    public static readonly TAG = "water";
+    protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
     private animSprite?: PIXI.AnimatedSprite;
 
     public init() {
@@ -26,6 +26,20 @@ export default class WaterTile extends AutoTilingTile {
             this.animSprite,
         );
         this.initAutoTile();
+    }
+
+    public mayPass(e: Entity): boolean {
+        return e.canSwim() || e.canFly() || e.isSwimming();
+    }
+
+    public onTick(): void {
+        super.onTick();
+        if (this.animSprite && !this.animSprite.playing && Random.probability(1000)) {
+            this.animSprite.gotoAndPlay(1);
+        }
+        if (Random.probability(100000)) {
+            this.levelTile.level.add(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
+        }
     }
 
     public onUpdate() {
@@ -40,20 +54,6 @@ export default class WaterTile extends AutoTilingTile {
         });
         if (nbNeighbour < 4) levelMax--;
         this.states.level = levelMax;
-    }
-
-    public onTick(): void {
-        super.onTick();
-        if (this.animSprite && !this.animSprite.playing && Random.probability(1000)) {
-            this.animSprite.gotoAndPlay(1);
-        }
-        if (Random.probability(100000)) {
-            this.levelTile.level.add(new Fish(), this.levelTile.getLocalX(), this.levelTile.getLocalY(), true);
-        }
-    }
-
-    public mayPass(e: Entity): boolean {
-        return e.canSwim() || e.canFly() || e.isSwimming();
     }
 
 

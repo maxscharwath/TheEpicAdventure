@@ -20,37 +20,49 @@ import LevelGenCave from "../level/levelGen/LevelGenCave";
 import LevelGenOverworld from "../level/levelGen/LevelGenOverworld";
 
 export default class Game {
-    public static player: Player;
-    public static readonly NAME: string = "The Epic Adventure";
-    public static readonly version: Version = new Version("0.2-dev1");
-    public static isOnline: boolean = false;
-    public static isHost: boolean = false;
-    public static isFocus: boolean = false;
-    public static running: boolean = true;
     public static client?: Client;
-    public static server?: Server;
-    public static levels: Level[] = [];
     public static currentLevel: number = 0;
-    public static input: InputHandler;
-    public static mouse: MouseHandler;
     public static GUI: GUI;
+    public static input: InputHandler;
+    public static isFocus: boolean = false;
+    public static isHost: boolean = false;
+    public static isOnline: boolean = false;
 
     public static level: Level;
+    public static levels: Array<Level> = [];
+    public static mouse: MouseHandler;
+    public static readonly NAME: string = "The Epic Adventure";
+    public static player: Player;
+    public static running: boolean = true;
+    public static server?: Server;
+    public static readonly version: Version = new Version("0.2-dev1");
 
-    public static isValidClient(): boolean {
-        return this.isOnline && this.client != null;
+    public static changeLevel(id: number) {
+        this.level.deleteTempDir();
+        this.level.remove(this.player);
+        this.level.flushChunks().then(() => {
+            console.log("DONE");
+        });
+        this.currentLevel = id;
+        this.level = this.levels[this.currentLevel];
+        this.level.add(this.player);
+        Renderer.setLevel(this.level);
+    }
+
+    public static hasConnectedClients(): boolean {
+        return Boolean(this.isValidServer() && this.server?.hasClients());
     }
 
     public static isConnectedClient(): boolean {
         return Boolean(this.isValidClient() && this.client?.isConnected());
     }
 
-    public static isValidServer(): boolean {
-        return Boolean(this.isOnline && this.isHost && this.server);
+    public static isValidClient(): boolean {
+        return this.isOnline && this.client != null;
     }
 
-    public static hasConnectedClients(): boolean {
-        return Boolean(this.isValidServer() && this.server?.hasClients());
+    public static isValidServer(): boolean {
+        return Boolean(this.isOnline && this.isHost && this.server);
     }
 
     public static main(): void {
@@ -86,18 +98,6 @@ export default class Game {
                     });
                     e.returnValue = true;
                 });*/
-    }
-
-    public static changeLevel(id: number) {
-        this.level.deleteTempDir();
-        this.level.remove(this.player);
-        this.level.flushChunks().then(() => {
-            console.log("DONE");
-        });
-        this.currentLevel = id;
-        this.level = this.levels[this.currentLevel];
-        this.level.add(this.player);
-        Renderer.setLevel(this.level);
     }
 
     public static quit() {

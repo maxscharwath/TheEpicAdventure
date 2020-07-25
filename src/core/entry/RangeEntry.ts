@@ -2,8 +2,13 @@ import ArrayEntry from "./ArrayEntry";
 
 export default class RangeEntry extends ArrayEntry {
 
-    private readonly max: number;
-    private readonly min: number;
+    private static getIntegerArray(min: number, max: number): Array<number> {
+        const ints: Array<number> = [];
+        for (let i = 0; i < (max - min + 1); i++) {
+            ints[i] = min + i;
+        }
+        return ints;
+    }
 
     constructor(label: string, min: number, max: number, initial: number) {
         super(label, RangeEntry.getIntegerArray(min, max));
@@ -12,13 +17,8 @@ export default class RangeEntry extends ArrayEntry {
         this.setValue(initial);
     }
 
-    private static getIntegerArray(min: number, max: number): number[] {
-        const ints: number[] = [];
-        for (let i = 0; i < (max - min + 1); i++) {
-            ints[i] = min + i;
-        }
-        return ints;
-    }
+    private readonly max: number;
+    private readonly min: number;
 
     public setValue(o: number) {
         this.setSelection(o - this.min);

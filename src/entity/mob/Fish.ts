@@ -8,27 +8,48 @@ import WaterDropParticle from "../particle/WaterDropParticle";
 export default class Fish extends AquaticMob {
     protected speedMax: number = 1;
 
-    private lifeDuration = 0;
-
-    private vector: Vector = new Vector();
-
-    private points?: PIXI.Point[];
-    private hooked?: Hook;
-    private hookedAt: number = 0;
-    private shadowSprite: PIXI.SimpleRope;
-    private fishSprite: PIXI.Sprite;
-
     constructor() {
         super();
         this.useMask = false;
         this.lifeDuration = 1000;
     }
+    private fishSprite: PIXI.Sprite;
+    private hooked?: Hook;
+    private hookedAt: number = 0;
+
+    private lifeDuration = 0;
+
+    private points?: Array<PIXI.Point>;
+    private shadowSprite: PIXI.SimpleRope;
+
+    private vector: Vector = new Vector();
 
     public canSwim(): boolean {
         return true;
     }
 
     public die(): void {
+    }
+
+    public onRender() {
+        super.onRender();
+
+        if (this.a.magnitude > 0.5) {
+            this.vector.x -= (this.vector.x - this.a.x) / 30;
+            this.vector.y -= (this.vector.y - this.a.y) / 30;
+        }
+        const isSwimming = this.isSwimming();
+        this.fishSprite.visible = !isSwimming;
+        this.shadowSprite.visible = isSwimming;
+
+        if (isSwimming) {
+            this.shadowSprite.rotation = -this.vector.rotation - Math.PI / 2;
+            if (this.points) {
+                this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
+            }
+        } else {
+            this.jump(2);
+        }
     }
 
     public onTick(): void {
@@ -60,37 +81,8 @@ export default class Fish extends AquaticMob {
         }
     }
 
-    public onRender() {
-        super.onRender();
-
-        if (this.a.magnitude > 0.5) {
-            this.vector.x -= (this.vector.x - this.a.x) / 30;
-            this.vector.y -= (this.vector.y - this.a.y) / 30;
-        }
-        const isSwimming = this.isSwimming();
-        this.fishSprite.visible = !isSwimming;
-        this.shadowSprite.visible = isSwimming;
-
-        if (isSwimming) {
-            this.shadowSprite.rotation = -this.vector.rotation - Math.PI / 2;
-            if (this.points) {
-                this.points[2].y = Math.sin(this.ticks) * this.a.get2dMagnitude() * 2;
-            }
-        } else {
-            this.jump(2);
-        }
-    }
-
-    protected newTarget() {
-        if (!this.level || this.hooked) return;
-        if (this.random.probability(8)) {
-            this.level.findEntity(Hook, (hook) => Boolean(hook.isSwimming() && !hook.getRemoved() && !hook.isHooked()))
-                .then((hook) => {
-                    this.target = hook;
-                });
-        } else {
-            super.newTarget();
-        }
+    protected calculateZIndex(): number {
+        return this.isSwimming() ? -Infinity : super.calculateZIndex();
     }
 
     protected init() {
@@ -112,7 +104,15 @@ export default class Fish extends AquaticMob {
         this.container.addChild(this.shadowSprite, this.fishSprite);
     }
 
-    protected calculateZIndex(): number {
-        return this.isSwimming() ? -Infinity : super.calculateZIndex();
+    protected newTarget() {
+        if (!this.level || this.hooked) return;
+        if (this.random.probability(8)) {
+            this.level.findEntity(Hook, (hook) => Boolean(hook.isSwimming() && !hook.getRemoved() && !hook.isHooked()))
+                .then((hook) => {
+                    this.target = hook;
+                });
+        } else {
+            super.newTarget();
+        }
     }
 }

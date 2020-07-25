@@ -1,13 +1,13 @@
 import {Entity} from "../entity";
 
 class Node {
-    public readonly parent?: Node;
+    public f = 0;
     public g = 0;
     public h = 0;
-    public f = 0;
-    public readonly pos: number[];
+    public readonly parent?: Node;
+    public readonly pos: Array<number>;
 
-    constructor(parent?: Node, position: number[] = []) {
+    constructor(parent?: Node, position: Array<number> = []) {
         this.parent = parent;
         this.pos = position;
     }
@@ -23,8 +23,8 @@ export default class PathFinding {
     public static astar(entity: Entity, end: [number, number]) {
         const startNode = new Node(undefined, [entity.x >> 4, entity.y >> 4]);
         const endNode = new Node(undefined, end);
-        const openList: Node[] = [];
-        const closedList: Node[] = [];
+        const openList: Array<Node> = [];
+        const closedList: Array<Node> = [];
         openList.push(startNode);
         let count = 0;
         while (openList.length > 0) {
@@ -36,7 +36,7 @@ export default class PathFinding {
             openList.splice(openList.indexOf(currentNode), 1);
             closedList.push(currentNode);
             if (currentNode.isSame(endNode)) {
-                const path: number[][] = [];
+                const path: Array<Array<number>> = [];
                 let current = currentNode;
                 while (current) {
                     path.push(current.pos);

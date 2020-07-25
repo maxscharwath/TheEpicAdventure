@@ -7,7 +7,9 @@ import System from "../core/System";
 
 export default class FurnitureItem extends Item {
 
-    private readonly furniture: Furniture;
+    public static create(data: any) {
+        return super.create(data) as FurnitureItem;
+    }
 
     constructor(tag: string, furniture: typeof Furniture | Furniture) {
         super(tag);
@@ -20,16 +22,24 @@ export default class FurnitureItem extends Item {
         this.texture = PIXI.Texture.from(System.getResource("items", `${tag}.png`));
     }
 
-    public static create(data: any) {
-        return super.create(data) as FurnitureItem;
+    private readonly furniture: Furniture;
+
+    public canAttack(): boolean {
+        return true;
+    }
+
+    public getFurnitureSprite() {
+        return this.furniture.getSprite();
     }
 
     public isStackable() {
         return false;
     }
 
-    public getFurnitureSprite() {
-        return this.furniture.getSprite();
+    public toBSON(): any {
+        return {
+            ...super.toBSON(),
+        };
     }
 
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
@@ -42,15 +52,5 @@ export default class FurnitureItem extends Item {
             }
         }
         return false;
-    }
-
-    public canAttack(): boolean {
-        return true;
-    }
-
-    public toBSON(): any {
-        return {
-            ...super.toBSON(),
-        };
     }
 }

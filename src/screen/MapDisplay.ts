@@ -7,15 +7,15 @@ import Color from "../utility/Color";
 
 export default class MapDisplay extends Display {
     public hasCommand = true;
-    private map: PIXI.Sprite;
-    private marker: PIXI.Sprite;
-    private container: PIXI.Container;
-    private background: PIXI.Sprite;
 
     constructor() {
         super();
         this.init();
     }
+    private background: PIXI.Sprite;
+    private container: PIXI.Container;
+    private map: PIXI.Sprite;
+    private marker: PIXI.Sprite;
 
     public onCommand(): void {
         super.onCommand();

@@ -3,13 +3,9 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Skeleton extends HostileMob {
-    private static spriteSheet = new SpriteSheet("skeleton.json");
     protected speedMax: number = 1;
+    private static spriteSheet = new SpriteSheet("skeleton.json");
     private sprite?: AnimatedSprite;
-
-    public onTick(): void {
-        super.onTick();
-    }
 
     public onRender() {
         super.onRender();
@@ -18,6 +14,10 @@ export default class Skeleton extends HostileMob {
         } else {
             this.playAnimation("idle");
         }
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
     protected init() {

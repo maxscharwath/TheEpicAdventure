@@ -9,9 +9,9 @@ import Item from "../../item/Item";
 import Rectangle = PIXI.Rectangle;
 
 export default class Chest extends Furniture {
+    public inventory = new Inventory(16);
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "chest.png"));
-    public inventory = new Inventory(16);
 
     public static create({id, inventory, x, y}: any): Chest {
         const e = super.create({id, x, y}) as Chest;

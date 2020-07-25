@@ -2,8 +2,6 @@ import udp from "dgram";
 import Server from "./Server";
 
 export default class ServerUDP {
-    private server: udp.Socket;
-    private PORT = 20000;
 
     constructor(server: Server) {
         this.server = udp.createSocket({type: "udp4", reuseAddr: true});
@@ -21,10 +19,8 @@ export default class ServerUDP {
             console.log("Socket is closed !");
         });
     }
-
-    public startConnection() {
-        this.server.bind(this.PORT);
-    }
+    private PORT = 20000;
+    private server: udp.Socket;
 
     public endConnection(): void {
         console.log("Server closing in 3s");
@@ -33,5 +29,9 @@ export default class ServerUDP {
                 console.log("Server closed!");
             });
         }, 3000);
+    }
+
+    public startConnection() {
+        this.server.bind(this.PORT);
     }
 }

@@ -16,11 +16,11 @@ enum RailDirection {
 }
 
 export default class RailTile extends Tile {
+
+    public states = TileStates.create(RailTile.DEFAULT_STATES);
     public static DEFAULT_STATES = {connected: false, direction: RailDirection.NS, groundTile: 0};
     public static readonly TAG = "rail";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "rail.png"), 6, 16);
-
-    public states = TileStates.create(RailTile.DEFAULT_STATES);
     private sprite: PIXI.Sprite;
 
     public init() {
@@ -35,13 +35,6 @@ export default class RailTile extends Tile {
         if (entity instanceof Mob) {
             this.states.direction = entity.getDir().isY() ? RailDirection.NS : RailDirection.EW;
         }
-    }
-
-    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
-        const t = super.setGroundTile(tile);
-        if (!t) return undefined;
-        this.states.groundTile = t.getKeys().idx;
-        return t;
     }
 
     public onUpdate() {
@@ -66,6 +59,13 @@ export default class RailTile extends Tile {
         }
         this.states.connected = (S && N) || (E && W) || (S && W) || (S && E) || (N && W) || (N && E);
         this.sprite.texture = RailTile.textures[this.states.direction];
+    }
+
+    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
+        const t = super.setGroundTile(tile);
+        if (!t) return undefined;
+        this.states.groundTile = t.getKeys().idx;
+        return t;
     }
 
 }

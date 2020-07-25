@@ -9,31 +9,27 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class DarkGrassTile extends AutoTilingTile {
-    public static readonly TAG = "grass";
-    public static readonly COLOR: number = 0x35a541;
     protected static autoTileTextures = DarkGrassTile.loadMaskTextures(
         System.getResource("tile", "dark_grass_mask.png"),
     );
+    public static readonly COLOR: number = 0x35a541;
+    public static readonly TAG = "grass";
 
     public init() {
         super.init();
         this.initAutoTile();
     }
 
-    public onTick(): void {
-        super.onTick();
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.hoe:
+                case ToolType.HOE:
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
                     this.setTile(Tiles.FARMLAND);
                     return true;
-                case ToolType.shovel:
+                case ToolType.SHOVEL:
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
@@ -42,6 +38,10 @@ export default class DarkGrassTile extends AutoTilingTile {
             }
         }
         return false;
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
 }

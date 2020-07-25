@@ -3,13 +3,9 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Chicken extends HostileMob {
-    private static spriteSheet = new SpriteSheet("chicken.json");
     protected speedMax: number = 1;
+    private static spriteSheet = new SpriteSheet("chicken.json");
     private sprite?: AnimatedSprite;
-
-    public onTick(): void {
-        super.onTick();
-    }
 
     public onRender() {
         super.onRender();
@@ -18,6 +14,10 @@ export default class Chicken extends HostileMob {
         } else {
             this.playAnimation("idle");
         }
+    }
+
+    public onTick(): void {
+        super.onTick();
     }
 
     protected init() {

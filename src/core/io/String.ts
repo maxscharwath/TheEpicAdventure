@@ -1,8 +1,8 @@
 declare global {
     interface String {
-        spinalCase(): string;
 
         equals(str: string): boolean;
+        spinalCase(): string;
     }
 }
 String.prototype.spinalCase = function(): string {
