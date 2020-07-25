@@ -5,14 +5,14 @@ import Crafting from "../../crafting/Crafting";
 
 export default class Anvil extends Craftable {
 
-    public static create({id, x, y}: any): Anvil {
-        return super.create({id, x, y}) as Anvil;
-    }
-
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "anvil.png"));
 
     constructor() {
         super(Crafting.anvilRecipes);
+    }
+
+    public static create({id, x, y}: any): Anvil {
+        return super.create({id, x, y}) as Anvil;
     }
 
     public toBSON(): any {

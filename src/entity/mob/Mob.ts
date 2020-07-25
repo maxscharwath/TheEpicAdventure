@@ -19,6 +19,33 @@ import Tiles from "../../level/tile/Tiles";
 
 export default abstract class Mob extends Entity {
 
+    public isInteractive = true;
+    public maxHealth: number = 20;
+    public health: number = this.maxHealth;
+    public inventory = new Inventory(9);
+    protected speedMax: number = 1;
+    protected potionEffect: PotionEffect[] = [];
+    protected walkDist: number = 0;
+    protected dir: Direction = Direction.DOWN;
+    protected mass = 20;
+    private hurtCooldown: number = 0;
+    private attackCooldown: number = 0;
+    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+    private readonly waveSprite: PIXI.AnimatedSprite;
+
+    protected constructor() {
+        super();
+        this.useMask = true;
+
+        const waveTexture = SpriteSheet.loadTextures(System.getResource("entity", "water_wave.png"), 2, 16, 9);
+        this.waveSprite = new PIXI.AnimatedSprite(waveTexture);
+        this.waveSprite.anchor.set(0.5);
+        this.waveSprite.position.y = 8;
+        this.waveSprite.animationSpeed = 0.1;
+        this.waveSprite.play();
+        this.addChildAt(this.waveSprite, 0);
+    }
+
     protected get speed() {
         return this.speedMax;
     }
@@ -47,32 +74,6 @@ export default abstract class Mob extends Entity {
 
     protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
         return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
-    }
-    public isInteractive = true;
-    public maxHealth: number = 20;
-    public health: number = this.maxHealth;
-    public inventory = new Inventory(9);
-    protected speedMax: number = 1;
-    protected potionEffect: PotionEffect[] = [];
-    protected walkDist: number = 0;
-    protected dir: Direction = Direction.DOWN;
-    protected mass = 20;
-    private hurtCooldown: number = 0;
-    private attackCooldown: number = 0;
-    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    private readonly waveSprite: PIXI.AnimatedSprite;
-
-    protected constructor() {
-        super();
-        this.useMask = true;
-
-        const waveTexture = SpriteSheet.loadTextures(System.getResource("entity", "water_wave.png"), 2, 16, 9);
-        this.waveSprite = new PIXI.AnimatedSprite(waveTexture);
-        this.waveSprite.anchor.set(0.5);
-        this.waveSprite.position.y = 8;
-        this.waveSprite.animationSpeed = 0.1;
-        this.waveSprite.play();
-        this.addChildAt(this.waveSprite, 0);
     }
 
     public getInteractTile(): LevelTile | undefined {
@@ -109,8 +110,8 @@ export default abstract class Mob extends Entity {
             this.a.y = attackDir.getY() * 2;
         }
         this.health -= dmg;
-        this.level.add(new DamageParticle(this.x, this.y, -dmg, 0xc80000));
-        this.level.add(new HurtParticle(this.x, this.y));
+        this.level?.add(new DamageParticle(this.x, this.y, -dmg, 0xc80000));
+        this.level?.add(new HurtParticle(this.x, this.y));
     }
 
     public burn(): boolean {
@@ -127,7 +128,7 @@ export default abstract class Mob extends Entity {
 
     public dropItem(item: Item) {
         const itemEntity = new ItemEntity(item, this.x, this.y);
-        if (this.level.add(itemEntity)) {
+        if (this.level?.add(itemEntity)) {
             this.inventory.removeItem(item, 1);
             const force = this.random.number(0.5, 1.5);
             const range = this.random.number(-0.25, 0.25);

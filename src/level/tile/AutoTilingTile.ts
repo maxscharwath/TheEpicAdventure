@@ -7,6 +7,9 @@ export default abstract class AutoTilingTile extends Tile {
 
     protected static canConnectTo: string[] = [];
     protected static autoTileTextures: PIXI.Texture[];
+    public ["constructor"]: typeof AutoTilingTile;
+    private tilesContainer: PIXI.Container;
+    private sprites: PIXI.Sprite[] = [];
 
     protected static loadMaskTextures(path: string): PIXI.Texture[] {
         const textures = [];
@@ -23,9 +26,6 @@ export default abstract class AutoTilingTile extends Tile {
         }
         return textures;
     }
-    public ["constructor"]: typeof AutoTilingTile;
-    private tilesContainer: PIXI.Container;
-    private sprites: PIXI.Sprite[] = [];
 
     public autoTiling() {
         this.tilesContainer.cacheAsBitmap = false;

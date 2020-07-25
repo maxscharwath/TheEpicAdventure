@@ -2,6 +2,15 @@ import System from "../core/System";
 
 export default class Random {
 
+    private static $ = Random.create();
+    public seed: number;
+    private nextGaussian: number = 0;
+    private haveNextGaussian: boolean = false;
+
+    constructor(seed = System.currentTimeMillis()) {
+        this.seed = seed;
+    }
+
     public static int(num1: number, num2?: number): number {
         return Random.$.int(num1, num2);
     }
@@ -28,15 +37,6 @@ export default class Random {
 
     public static create(seed?: number): Random {
         return new Random(seed);
-    }
-
-    private static $ = Random.create();
-    public seed: number;
-    private nextGaussian: number = 0;
-    private haveNextGaussian: boolean = false;
-
-    constructor(seed = System.currentTimeMillis()) {
-        this.seed = seed;
     }
 
     public random(): number {

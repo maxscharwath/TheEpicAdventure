@@ -57,7 +57,7 @@ export default class BushTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        this.levelTile.setTile(Tiles.GRASS);
+        this.setTile(Tiles.GRASS);
         return true;
     }
 }

@@ -3,13 +3,6 @@ import Game from "../core/Game";
 
 export default class Client {
 
-    private static openSocket(host: string): any {
-        console.log(host);
-        return io(host, {
-            query: {},
-        });
-    }
-
     private readonly socket: SocketIOClient.Socket;
 
     constructor(username: string, hostName: string) {
@@ -21,6 +14,13 @@ export default class Client {
         this.socket.on("connect", (d: any) => {
             console.log(d);
             console.log("Connected to ");
+        });
+    }
+
+    private static openSocket(host: string): any {
+        console.log(host);
+        return io(host, {
+            query: {},
         });
     }
 

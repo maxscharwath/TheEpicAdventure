@@ -6,14 +6,14 @@ import Rectangle = PIXI.Rectangle;
 
 export default class Furnace extends Craftable {
 
-    public static create({id, x, y}: any): Furnace {
-        return super.create({id, x, y}) as Furnace;
-    }
-
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "furnace.png"));
 
     constructor() {
         super(Crafting.furnaceRecipes);
+    }
+
+    public static create({id, x, y}: any): Furnace {
+        return super.create({id, x, y}) as Furnace;
     }
 
     public toBSON(): any {

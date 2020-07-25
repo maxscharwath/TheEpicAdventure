@@ -8,21 +8,6 @@ import Command from "../core/io/Command";
 
 export default class CommandDisplay extends Display {
 
-    public get message() {
-        return this.input.value;
-    }
-
-    public static createInput() {
-        const _commandInput = document.createElement("input");
-        _commandInput.id = "command";
-        _commandInput.type = "text";
-        _commandInput.style.position = "absolute";
-        _commandInput.style.left = "-1000px";
-        _commandInput.style.top = "-1000px";
-        document.body.appendChild(_commandInput);
-        return _commandInput;
-    }
-
     public hasCommand = true;
     private inputText: PIXI.BitmapText;
     private cursorStart: number;
@@ -39,6 +24,21 @@ export default class CommandDisplay extends Display {
         this.init();
     }
 
+    public get message() {
+        return this.input.value;
+    }
+
+    public static createInput() {
+        const _commandInput = document.createElement("input");
+        _commandInput.id = "command";
+        _commandInput.type = "text";
+        _commandInput.style.position = "absolute";
+        _commandInput.style.left = "-1000px";
+        _commandInput.style.top = "-1000px";
+        document.body.appendChild(_commandInput);
+        return _commandInput;
+    }
+
     public show() {
         super.show();
         this.clear();
@@ -52,8 +52,9 @@ export default class CommandDisplay extends Display {
         Game.input.preventDefault = true;
     }
 
-    public sendMessage(msg: string) {
-        this.historicResult.unshift(msg);
+    public sendMessage(msg: any) {
+        if (msg === undefined) return;
+        this.historicResult.unshift(msg.toString());
     }
 
     public execute() {
@@ -69,6 +70,7 @@ export default class CommandDisplay extends Display {
             const name = args.shift();
             const result = Command.execute(this, name, args);
             [].concat(result).forEach((res) => {
+                if (res === undefined) return;
                 this.historicResult.unshift(res.toString());
             });
         }

@@ -70,7 +70,6 @@ export default class Game {
             new Level(Seed.create(123456789), LevelGenCave),
         );
         this.level = this.levels[this.currentLevel];
-        this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         Renderer.setLevel(this.level);
         Initializer.createAndDisplayFrame();

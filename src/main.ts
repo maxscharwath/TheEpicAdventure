@@ -1,4 +1,5 @@
 import Game from "./core/Game";
+
 document.addEventListener("DOMContentLoaded", () => {
     Game.main();
 });

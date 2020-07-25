@@ -34,6 +34,19 @@ import FenceGateTile from "./FenceGateTile";
 
 export class TileRegister<T extends typeof Tile> {
 
+    private static tiles = new KeyedMap<typeof Tile>();
+    public readonly tag: string;
+    public readonly tile: T;
+    public readonly idx: number;
+
+    protected constructor(idx: number, tag: string, tile: T) {
+        this.tag = tag;
+        this.tile = tile;
+        this.idx = idx;
+        TileRegister.tiles.add(this.idx, this.tag, this.tile);
+        console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
+    }
+
     public static add<T extends typeof Tile>(idx: number, tag: string, tile: T) {
         return new TileRegister(idx, tag, tile);
     }
@@ -49,19 +62,6 @@ export class TileRegister<T extends typeof Tile> {
 
     public static getKeys(tile: typeof Tile): { tag: string | undefined; idx: number | undefined } {
         return this.tiles.getKeys(tile);
-    }
-
-    private static tiles = new KeyedMap<typeof Tile>();
-    public readonly tag: string;
-    public readonly tile: T;
-    public readonly idx: number;
-
-    protected constructor(idx: number, tag: string, tile: T) {
-        this.tag = tag;
-        this.tile = tile;
-        this.idx = idx;
-        TileRegister.tiles.add(this.idx, this.tag, this.tile);
-        console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
     }
 
     public getClass(): T {

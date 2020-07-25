@@ -53,8 +53,10 @@ export default class Fish extends AquaticMob {
             this.newTarget();
         }
 
-        if(this.random.probability(1000)){
-            for (let i = 0; i < this.random.number(1,4); ++i) this.level?.add(new WaterDropParticle(this.x, this.y));
+        if (this.random.probability(800)) {
+            for (let i = 0; i < this.random.number(1, 4); ++i) {
+                this.level?.add(new WaterDropParticle(this.x, this.y));
+            }
         }
     }
 

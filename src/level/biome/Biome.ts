@@ -4,6 +4,16 @@ import KeyedMap from "../../utility/KeyedMap";
 
 export default class Biome {
 
+    private static biomes = new KeyedMap<Biome>();
+    public readonly name: string;
+    public readonly color: Color;
+    public tag: string = "";
+
+    constructor(name: string, color: Color) {
+        this.name = name;
+        this.color = color;
+    }
+
     public static add(idx: number, tag: string, biome: Biome): void {
         tag = tag.toLowerCase();
         console.log(`adding ${biome.name} to biome list with tag "${tag}"`);
@@ -14,7 +24,7 @@ export default class Biome {
     public static get(tag: string | number): Biome {
         const biome = this.biomes.get(tag);
         if (!biome) {
-            throw new Error(`this tag '${tag}' doesn't exist!`);
+            return this.biomes.get(0);
         }
         return biome;
     }
@@ -87,16 +97,6 @@ export default class Biome {
             }
         }
         return Biome.get("grassland");
-    }
-
-    private static biomes = new KeyedMap<Biome>();
-    public readonly name: string;
-    public readonly color: Color;
-    public tag: string = "";
-
-    constructor(name: string, color: Color) {
-        this.name = name;
-        this.color = color;
     }
 
     public getDisplayName(): string {

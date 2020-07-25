@@ -61,8 +61,8 @@ export default class Player extends Mob {
             ).then((entities) => {
                 if (entities.length <= 0 && levelTile && item instanceof Item) {
                     item.useOn(levelTile, this);
-                }else{
-                    levelTile.onInteract(this)
+                } else {
+                    levelTile.onInteract(this);
                 }
                 this.attack(5);
                 entities.forEach((e) => {

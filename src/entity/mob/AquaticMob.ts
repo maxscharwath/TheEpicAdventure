@@ -9,14 +9,15 @@ import LevelTile from "../../level/LevelTile";
 
 export default abstract class AquaticMob extends Mob {
 
-    public static spawnCondition(levelTile: LevelTile): boolean {
-        return levelTile.is(Tiles.WATER);
-    }
     protected target = {x: 0, y: 0};
 
     protected constructor() {
         super();
         this.newTarget();
+    }
+
+    public static spawnCondition(levelTile: LevelTile): boolean {
+        return levelTile.is(Tiles.WATER);
     }
 
     public onTick(): void {

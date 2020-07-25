@@ -7,12 +7,6 @@ import Mob from "../entity/mob/Mob";
 
 export default class ToolItem extends Item {
 
-    public static create(data: any) {
-        const item = super.create(data) as ToolItem;
-        item.durability = data.durability;
-        return item;
-    }
-
     public readonly type: ToolType;
     private readonly level: number;
     private readonly durabilityMax: number;
@@ -29,6 +23,12 @@ export default class ToolItem extends Item {
         this.durability = this.durabilityMax;
         this.texture = type.textures[level];
         this.tag = ToolType.levelName[this.level] + "_" + this.type.name;
+    }
+
+    public static create(data: any) {
+        const item = super.create(data) as ToolItem;
+        item.durability = data.durability;
+        return item;
     }
 
     public fix(amount: number) {

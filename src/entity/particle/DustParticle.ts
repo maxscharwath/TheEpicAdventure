@@ -23,7 +23,7 @@ export default class DustParticle extends Particle {
         this.sprite.animationSpeed = 0.2;
         this.sprite.loop = false;
         this.sprite.gotoAndPlay(startFrame);
-        this.sprite.onComplete = ()=>{
+        this.sprite.onComplete = () => {
             this.delete();
         };
         this.addChild(this.sprite);

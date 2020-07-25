@@ -7,10 +7,6 @@ import System from "../core/System";
 
 export default class FurnitureItem extends Item {
 
-    public static create(data: any) {
-        return super.create(data) as FurnitureItem;
-    }
-
     private readonly furniture: Furniture;
 
     constructor(tag: string, furniture: typeof Furniture | Furniture) {
@@ -24,6 +20,10 @@ export default class FurnitureItem extends Item {
         this.texture = PIXI.Texture.from(System.getResource("items", `${tag}.png`));
     }
 
+    public static create(data: any) {
+        return super.create(data) as FurnitureItem;
+    }
+
     public isStackable() {
         return false;
     }
@@ -35,7 +35,7 @@ export default class FurnitureItem extends Item {
     public useOn(levelTile: LevelTile, mob: Mob): boolean {
         if (this.getCooldownTime() <= 5) return false;
         super.useOn(levelTile, mob);
-        if (levelTile.tile?.mayPass(this.furniture)) {
+        if (levelTile.tile?.mayPass(this.furniture) && !levelTile.hasEntity()) {
             if (levelTile.level.add(this.furniture, levelTile.x + 8, levelTile.y + 8)) {
                 mob.inventory.removeItem(this, 1);
                 return true;

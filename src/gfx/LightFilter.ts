@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import LevelFilter from "./LevelFilter";
 import Renderer from "../core/Renderer";
-import Updater from "../core/Updater";
 import Level from "../level/Level";
 
 export default class LightFilter extends LevelFilter {

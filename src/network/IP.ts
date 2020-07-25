@@ -2,6 +2,9 @@ import * as os from "os";
 
 export default class IP {
 
+    private static ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    private static ipv6Regex = /^(::)?(((\d{1,3}\.){3}(\d{1,3}))?([0-9a-f]){0,4}:{0,2}){1,8}(::)?$/i;
+
     public static toBuffer(ip: string, buff?: Buffer, offset: number = 0) {
         offset = ~~offset;
 
@@ -385,9 +388,6 @@ export default class IP {
             (ipl >> 8 & 255) + "." +
             (ipl & 255));
     }
-
-    private static ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-    private static ipv6Regex = /^(::)?(((\d{1,3}\.){3}(\d{1,3}))?([0-9a-f]){0,4}:{0,2}){1,8}(::)?$/i;
 
     private static _normalizeFamily(family?: string) {
         return family ? family.toLowerCase() : "ipv4";

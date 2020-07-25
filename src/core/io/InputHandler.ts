@@ -4,15 +4,6 @@ import "./String";
 
 export default class InputHandler {
 
-    private static isMod(keyName: string): boolean {
-        keyName = keyName.toUpperCase();
-        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
-    }
-
-    private static keyTyped(e: Event): void {
-        e.preventDefault();
-    }
-
     public preventDefault: boolean = true;
     private keymap = new Map();
     private keyboard = new Map();
@@ -25,6 +16,15 @@ export default class InputHandler {
         this.keyboard.set("SHIFT-LEFT", new Key(true));
         this.keyboard.set("CONTROL-LEFT", new Key(true));
         this.keyboard.set("ALT-LEFT", new Key(true));
+    }
+
+    private static isMod(keyName: string): boolean {
+        keyName = keyName.toUpperCase();
+        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
+    }
+
+    private static keyTyped(e: Event): void {
+        e.preventDefault();
     }
 
     public resetKeyBindings(): void {

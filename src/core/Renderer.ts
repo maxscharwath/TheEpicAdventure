@@ -16,6 +16,29 @@ interface CanvasElement extends HTMLCanvasElement {
 
 export default class Renderer {
 
+    public static ticks = 0;
+    public static delta: number;
+    public static readonly DEFAULT_WIDTH: number = 240;
+    public static readonly DEFAULT_HEIGHT: number = 160;
+    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
+    public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
+    public static camera: Camera = new Camera();
+    private static ticksTime: number[] = [];
+    private static mainStage = new PIXI.Container();
+    private static stages = {
+        level: new PIXI.Container(),
+        gui: new PIXI.Container(),
+    };
+    private static renderer = new PIXI.Renderer({
+        width: 960 * 2,
+        height: 540 * 2,
+        backgroundColor: Color.black.getInt(),
+        autoDensity: true,
+        antialias: true,
+        clearBeforeRender: false,
+        powerPreference: "high-performance",
+    });
+
     public static get ZOOM() {
         return 0;
     }
@@ -39,14 +62,6 @@ export default class Renderer {
     public static get yScroll() {
         return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
     }
-
-    public static ticks = 0;
-    public static delta: number;
-    public static readonly DEFAULT_WIDTH: number = 240;
-    public static readonly DEFAULT_HEIGHT: number = 160;
-    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
-    public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
-    public static camera: Camera = new Camera();
 
     public static render(dlt: number): void {
         const t1 = System.milliTime();
@@ -121,21 +136,6 @@ export default class Renderer {
         };
         return reader;
     }
-    private static ticksTime: number[] = [];
-    private static mainStage = new PIXI.Container();
-    private static stages = {
-        level: new PIXI.Container(),
-        gui: new PIXI.Container(),
-    };
-    private static renderer = new PIXI.Renderer({
-        width: 960 * 2,
-        height: 540 * 2,
-        backgroundColor: Color.black.getInt(),
-        autoDensity: true,
-        antialias: true,
-        clearBeforeRender: false,
-        powerPreference: "high-performance",
-    });
 
     private static onResize() {
         this.resize();

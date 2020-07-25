@@ -49,12 +49,6 @@ export default class SnowTile extends AutoTilingTile {
         }
     }
 
-    protected onDestroy() {
-        super.onDestroy();
-        this.addItemEntity(Items.SNOWBALL, [1, 3]);
-        this.levelTile.setTile(Tiles.DIRT);
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
@@ -68,6 +62,12 @@ export default class SnowTile extends AutoTilingTile {
 
     public mayPass(): boolean {
         return true;
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.addItemEntity(Items.SNOWBALL, [1, 3]);
+        this.setTile(Tiles.DIRT);
     }
 
 }

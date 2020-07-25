@@ -13,6 +13,7 @@ import HurtParticle from "../../entity/particle/HurtParticle";
 import Renderer from "../../core/Renderer";
 import LeafParticle from "../../entity/particle/LeafParticle";
 import Random from "../../utility/Random";
+import RainWeather from "../../gfx/weather/RainWeather";
 
 export default class TreeTile extends Tile {
     public static readonly TAG: string = "tree";
@@ -37,8 +38,12 @@ export default class TreeTile extends Tile {
 
     public onRender() {
         super.onRender();
-        // this.sortableContainer.angle = 20 + Math.sin((Renderer.ticks + this.x + this.y) / 5) * 5;
-        // this.leafSprite.angle = Math.sin((Renderer.ticks + this.x + this.y) / 5) * 10;
+
+        if (this.level.weather instanceof RainWeather) {
+            this.sortableContainer.angle = 20 + Math.sin((Renderer.ticks + this.x + this.y) / 5) * 5;
+            this.leafSprite.angle = Math.sin((Renderer.ticks + this.x + this.y) / 5) * 10;
+        }
+
         if (this.wiggleDelay > 0) {
             this.leafSprite.scale.set(
                 1 + Math.sin(Renderer.ticks / 2) / 20,

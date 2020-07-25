@@ -26,33 +26,33 @@ export default class DirtTile extends Tile {
         if (this.levelTile.biome.is("grassland") && Random.probability(500)) {
             const n = this.levelTile.getDirectNeighbourTiles(false);
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.GRASS.tile))) {
-                this.levelTile.setTile(Tiles.GRASS);
+                this.setTile(Tiles.GRASS);
             }
             if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SAND.tile))) {
-                this.levelTile.setTile(Tiles.SAND);
+                this.setTile(Tiles.SAND);
             }
         }
-    }
-
-    protected onDestroy() {
-        super.onDestroy();
-        this.levelTile.setTile(Tiles.HOLE);
-        this.addItemEntity(Items.DIRT);
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
                 case ToolType.hoe:
-                    this.levelTile.setTile(Tiles.FARMLAND);
+                    this.setTile(Tiles.FARMLAND);
                     return true;
                 case ToolType.shovel:
                     this.addItemEntity(Items.DIRT);
-                    this.levelTile.setTile(Tiles.HOLE);
+                    this.setTile(Tiles.HOLE);
                     return true;
             }
         }
         return false;
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.DIRT);
     }
 
 }

@@ -54,7 +54,7 @@ export default class StoneTile extends Tile {
                         if (this.groundTile) {
                             this.setTileToGround();
                         } else {
-                            this.levelTile.setTile(Tiles.DIRT);
+                            this.setTile(Tiles.DIRT);
                         }
                         this.addItemEntity(Items.STONE, 2);
                         if (this.random.probability(40)) this.addItemEntity(Items.DIAMOND, 1);

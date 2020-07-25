@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import System from "../../core/System";
-import {Entity, Mob} from "../../entity";
+import {Mob} from "../../entity";
 import Item from "../../item/Item";
 import Items from "../../item/Items";
 import ToolItem from "../../item/ToolItem";
@@ -27,12 +27,6 @@ export default class GrassTile extends AutoTilingTile {
         super.onTick();
     }
 
-    protected onDestroy() {
-        super.onDestroy();
-        this.levelTile.setTile(Tiles.HOLE);
-        this.addItemEntity(Items.DIRT);
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
@@ -40,16 +34,22 @@ export default class GrassTile extends AutoTilingTile {
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
-                    this.levelTile.setTile(Tiles.FARMLAND);
+                    this.setTile(Tiles.FARMLAND);
                     return true;
                 case ToolType.shovel:
                     if (Random.probability(5)) {
                         this.addItemEntity(Items.SEED_WHEAT);
                     }
-                    this.levelTile.setTile(Tiles.DIRT);
+                    this.setTile(Tiles.DIRT);
                     return true;
             }
         }
         return false;
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.DIRT);
     }
 }

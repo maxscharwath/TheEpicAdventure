@@ -2,12 +2,6 @@ import Game from "./Game";
 import System from "./System";
 
 class Time {
-    public get start(): number {
-        return Updater.dayLength * this.startPercent;
-    }
-    public get end(): number {
-        return Updater.dayLength * this.endPercent;
-    }
     public id: number;
     private readonly startPercent: number;
     private readonly endPercent: number;
@@ -18,6 +12,14 @@ class Time {
         this.endPercent = end;
     }
 
+    public get start(): number {
+        return Updater.dayLength * this.startPercent;
+    }
+
+    public get end(): number {
+        return Updater.dayLength * this.endPercent;
+    }
+
     public ratio(): number {
         const S = this.start;
         const E = this.end;
@@ -26,7 +28,6 @@ class Time {
 }
 
 export default class Updater {
-    public static ticks: number = 0;
     public static readonly dayLength: number = 15000;
     public static readonly sleepEndTime: number = Updater.dayLength / 8;
     public static readonly sleepStartTime: number = Updater.dayLength / 2 + Updater.dayLength / 8;
@@ -36,9 +37,11 @@ export default class Updater {
         Evening: new Time(2, 0.5, 0.6),
         Night: new Time(3, 0.6, 1),
     };
+    public static ticks: number = 0;
     public static time: Time = Updater.Time.Morning;
     public static delta: number;
-    public static tickCount: number = 0;
+    public static tickCount: number = Updater.Time.Day.start;
+    private static ticksTime: number[] = [];
 
     public static getDayRatio() {
         return this.tickCount / this.dayLength;
@@ -82,5 +85,4 @@ export default class Updater {
     public static every(tick: number): boolean {
         return (this.tickCount % tick) === 0;
     }
-    private static ticksTime: number[] = [];
 }

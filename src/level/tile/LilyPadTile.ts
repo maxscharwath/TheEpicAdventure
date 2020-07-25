@@ -37,14 +37,14 @@ export default class LilyPadTile extends Tile {
         return true;
     }
 
-    protected onDestroy() {
-        super.onDestroy();
-        this.levelTile.setTile(Tiles.WATER);
-        this.addItemEntity(Items.LILYPAD);
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         this.onDestroy();
         return true;
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTile(Tiles.WATER);
+        this.addItemEntity(Items.LILYPAD);
     }
 }

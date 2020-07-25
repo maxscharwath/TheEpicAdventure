@@ -1,5 +1,6 @@
 import * as path from "path";
-import {app, BrowserWindow, remote} from "electron";
+import {app, BrowserWindow} from "electron";
+
 let mainWindow: BrowserWindow | null;
 
 function createWindow() {
@@ -12,7 +13,7 @@ function createWindow() {
         },
         show: true,
     });
-    mainWindow.loadFile(path.join(__dirname, "../resources/index.html")).then(()=>{
+    mainWindow.loadFile(path.join(__dirname, "../resources/index.html")).then(() => {
 
     });
     mainWindow.webContents.openDevTools();

@@ -1,15 +1,15 @@
 type ExtendedProperties<T> = { [P in keyof T]: T[P] };
 export default class TileStates<T extends {}> {
 
-    public static create<T>(def: T = {} as T): TileStates<T> & ExtendedProperties<T> {
-        return new TileStates(def) as TileStates<T> & ExtendedProperties<T>;
-    }
-
     private readonly defaultStates: T;
 
     private constructor(defaultStates: T) {
         this.defaultStates = defaultStates;
         this.resetDefault();
+    }
+
+    public static create<T>(def: T = {} as T): TileStates<T> & ExtendedProperties<T> {
+        return new TileStates(def) as TileStates<T> & ExtendedProperties<T>;
     }
 
     public resetDefault() {

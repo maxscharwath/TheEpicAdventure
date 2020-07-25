@@ -17,6 +17,19 @@ type Type<T> = new (...args: any[]) => T;
 
 export class ItemRegister<T extends Item> {
 
+    private static items = new Map<string, ItemRegister<Item>>();
+    public readonly tag: string;
+    public readonly itemClass: Type<T>;
+    public readonly args: any;
+
+    protected constructor(tag: string, itemClass: Type<T>, ...args: any) {
+        this.tag = tag;
+        this.itemClass = itemClass;
+        this.args = args;
+        ItemRegister.items.set(tag, this);
+        console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
+    }
+
     public static get ALL() {
         return Array.from(this.items.values());
     }
@@ -39,19 +52,6 @@ export class ItemRegister<T extends Item> {
                 console.warn(`'${item.tag}' didnt exist on ${Localization.getCurrent()?.getPath()}`);
             }
         });
-    }
-
-    private static items = new Map<string, ItemRegister<Item>>();
-    public readonly tag: string;
-    public readonly itemClass: Type<T>;
-    public readonly args: any;
-
-    protected constructor(tag: string, itemClass: Type<T>, ...args: any) {
-        this.tag = tag;
-        this.itemClass = itemClass;
-        this.args = args;
-        ItemRegister.items.set(tag, this);
-        console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
     }
 
     public instanceOf(item: Item) {

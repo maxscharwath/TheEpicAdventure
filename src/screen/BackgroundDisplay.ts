@@ -5,26 +5,6 @@ import Texture = PIXI.Texture;
 
 export default class BackgroundDisplay extends Display {
 
-    get width(): number {
-        return this._width;
-    }
-
-    set width(value: number) {
-        this._width = value;
-    }
-
-    get height(): number {
-        return this._height;
-    }
-
-    set height(value: number) {
-        this._height = value;
-    }
-
-    private _width: number = 0;
-
-    private _height: number = 0;
-
     constructor() {
         super();
         const container = new PIXI.Container();
@@ -63,6 +43,26 @@ export default class BackgroundDisplay extends Display {
             sprites[8].position.set(width, height);
             container.addChild(...sprites);
         });
+    }
+
+    private _width: number = 0;
+
+    get width(): number {
+        return this._width;
+    }
+
+    set width(value: number) {
+        this._width = value;
+    }
+
+    private _height: number = 0;
+
+    get height(): number {
+        return this._height;
+    }
+
+    set height(value: number) {
+        this._height = value;
     }
 
 

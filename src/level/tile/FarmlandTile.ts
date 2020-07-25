@@ -20,7 +20,7 @@ export default class FarmlandTile extends Tile {
     public onInteract(mob: Mob, item?: Item) {
         if (!item || (item instanceof ToolItem && item.type === ToolType.hoe)) {
             this.harvest();
-            this.levelTile.setTile(Tiles.FARMLAND, {
+            this.setTile(Tiles.FARMLAND, {
                 moisture: this.states.moisture,
             });
             return true;
@@ -50,7 +50,7 @@ export default class FarmlandTile extends Tile {
             }
             this.filter.brightness(this.states.moisture / -40 + 1, false);
             if (this.states.moisture <= -10 && Random.probability(25)) {
-                this.levelTile.setTile(Tiles.DIRT);
+                this.setTile(Tiles.DIRT);
                 this.harvest();
                 return;
             }

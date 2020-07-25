@@ -10,14 +10,6 @@ import System from "../core/System";
 
 export default class Item {
 
-    public static create(data: any): Item | undefined {
-        return Items.get(data.tag)?.item;
-    }
-
-    public static verifyTag(tag: string): boolean {
-        return Localization.verify(`item.${tag}`);
-    }
-
     public craftedBy?: Mob;
     public tag: string;
     public uid: string = uniqid();
@@ -26,6 +18,14 @@ export default class Item {
 
     constructor(tag: string) {
         this.tag = tag;
+    }
+
+    public static create(data: any): Item | undefined {
+        return Items.get(data.tag)?.item;
+    }
+
+    public static verifyTag(tag: string): boolean {
+        return Localization.verify(`item.${tag}`);
     }
 
     public getSprite(centred: boolean = false) {

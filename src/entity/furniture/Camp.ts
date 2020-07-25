@@ -10,12 +10,6 @@ import Entity from "../Entity";
 
 export default class Camp extends Furniture {
 
-    public static create({id, active, x, y}: any): Camp {
-        const e = super.create({id, x, y}) as Camp;
-        e.active = active;
-        return e;
-    }
-
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
     private active: boolean = false;
@@ -24,6 +18,12 @@ export default class Camp extends Furniture {
     constructor() {
         super();
         this.hitbox.set(0, 3, 16, 10);
+    }
+
+    public static create({id, active, x, y}: any): Camp {
+        const e = super.create({id, x, y}) as Camp;
+        e.active = active;
+        return e;
     }
 
     public onRender() {
@@ -50,7 +50,7 @@ export default class Camp extends Furniture {
 
     public touchedBy(entity: Entity) {
         super.touchedBy(entity);
-        if(this.active && entity instanceof Mob){
+        if (this.active && entity instanceof Mob) {
             entity.burn();
         }
     }

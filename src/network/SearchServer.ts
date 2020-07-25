@@ -9,6 +9,11 @@ interface ServerPacket {
 
 export default class SearchServer {
 
+    private static results: ServerPacket[] = [];
+    private static timer?: NodeJS.Timeout;
+    private static searching: boolean = false;
+    private static PORT = 20000;
+
     public static start(callback?: (server: ServerPacket) => void) {
         if (this.searching) return this;
         this.results = [];
@@ -41,10 +46,5 @@ export default class SearchServer {
     public static getResults() {
         return this.results;
     }
-
-    private static results: ServerPacket[] = [];
-    private static timer?: NodeJS.Timeout;
-    private static searching: boolean = false;
-    private static PORT = 20000;
 }
 

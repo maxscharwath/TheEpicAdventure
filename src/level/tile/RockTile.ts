@@ -44,7 +44,7 @@ export default class RockTile extends AutoTilingTile {
                     );
                     this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
                     if (this.damage >= 15) {
-                        this.levelTile.setTile(Tiles.DIRT);
+                        this.setTile(Tiles.DIRT);
                         this.addItemEntity(Items.STONE, 2);
                     }
                     return true;

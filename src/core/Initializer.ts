@@ -5,6 +5,9 @@ import Updater from "./Updater";
 
 export default class Initializer {
 
+    private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
+    private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
+
     public static getCurFps(): number {
         return this.tickerRender.FPS;
     }
@@ -29,9 +32,6 @@ export default class Initializer {
     public static setSpeed(speed: number) {
         this.tickerUpdater.speed = speed;
     }
-
-    private static tickerRender: PIXI.Ticker = new PIXI.Ticker();
-    private static tickerUpdater: PIXI.Ticker = new PIXI.Ticker();
 }
 
 

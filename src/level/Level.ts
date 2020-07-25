@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
 import Updater from "../core/Updater";
-import {Entity, Player, Zombie} from "../entity/";
+import {Entity, Player, Zombie, Mob} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./levelGen/LevelGen";
@@ -16,6 +16,7 @@ import Game from "../core/Game";
 import LevelGenOverworld from "./levelGen/LevelGenOverworld";
 import * as events from "events";
 import {TileRegister} from "./tile/Tiles";
+import RainWeather from "../gfx/weather/RainWeather";
 
 export default class Level {
     private static MOB_SPAWN_FACTOR: number = 100;
@@ -152,7 +153,9 @@ export default class Level {
             if (!generate) return undefined;
             const chunk = Chunk.empty(this, x, y);
             Chunk.fileExist(this, x, y)
-                .then(() => chunk.fromFile())
+                .then(() => {
+                    return chunk.fromFile().catch(e => console.error(e));
+                })
                 .catch(() => chunk.generate());
             this.chunks.set(id, chunk);
         }
@@ -179,10 +182,10 @@ export default class Level {
     }
 
     public onTick(): void {
-        this.deleteQueuedChunk();
         if (Updater.every(50)) {
             this.flushInactiveChunks();
         }
+        this.deleteQueuedChunk();
         const chunks = this.getChunksVisible();
         chunks.forEach((chunk) => {
             if (!this.loadedChunks.includes(chunk)) {
@@ -253,10 +256,9 @@ export default class Level {
         return "Level";
     }
 
-    public save() {
-        return Promise.all(Array.from(this.chunks).map((chunk) => chunk[1].save()));
+    public save(): Promise<void[]> {
+        return Promise.all(Array.from(this.chunks).map(([id, chunk]) => chunk.save()));
     }
-
 
     public findRandomTileInEntityRadius(
         tiles: TileRegister<typeof Tile>[],
@@ -366,13 +368,13 @@ export default class Level {
         }
     }
 
-    private deleteQueuedChunk() {
+    private async deleteQueuedChunk() {
         let nb = 0;
         while (this.chunksToRemove.length > 0) {
             const chunkId = this.chunksToRemove[0];
             const chunk = this.chunks.get(chunkId);
             if (chunk) {
-                chunk.save();
+                await chunk.save();
                 chunk.destroy();
                 nb++;
             }

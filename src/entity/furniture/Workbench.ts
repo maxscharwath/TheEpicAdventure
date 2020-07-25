@@ -5,14 +5,14 @@ import Crafting from "../../crafting/Crafting";
 
 export default class Workbench extends Craftable {
 
-    public static create({id, x, y}: any): Workbench {
-        return super.create({id, x, y}) as Workbench;
-    }
-
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "workbench.png"));
 
     constructor() {
         super(Crafting.workbenchRecipes);
+    }
+
+    public static create({id, x, y}: any): Workbench {
+        return super.create({id, x, y}) as Workbench;
     }
 
     public toBSON(): any {

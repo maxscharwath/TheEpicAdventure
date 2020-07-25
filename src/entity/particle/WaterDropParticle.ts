@@ -10,8 +10,8 @@ export default class WaterDropParticle extends Particle {
     constructor(x: number, y: number, startFrame = 0) {
         super(x, y);
         this.lifeDuration = Random.int(10) + 20;
-        this.x += Random.int(-4,4);
-        this.y += Random.int(-4,4);
+        this.x += Random.int(-4, 4);
+        this.y += Random.int(-4, 4);
         this.a.z = 0.1;
         this.gravity = 0;
         this.sprite = new PIXI.AnimatedSprite(
@@ -23,7 +23,7 @@ export default class WaterDropParticle extends Particle {
         this.sprite.loop = false;
         this.sprite.gotoAndPlay(startFrame);
         this.sprite.scale.set(Random.number(0.3, 0.75));
-        this.sprite.onComplete = ()=>{
+        this.sprite.onComplete = () => {
             this.delete();
         };
         this.addChild(this.sprite);

@@ -4,6 +4,14 @@ import Slot from "./Slot";
 
 export default class Inventory {
 
+    public indexedSlot: number = 0;
+    public slots: Slot[] = [];
+    private STACK_MAX: number = 64;
+
+    constructor(nbSlot: number = 9) {
+        this.addSlots(nbSlot);
+    }
+
     public static create(data: any): Inventory {
         const inventory = new Inventory(data.nbSlots);
         for (const slotData of data.slots) {
@@ -12,14 +20,6 @@ export default class Inventory {
             slot.item = Item.create(slotData.item);
         }
         return inventory;
-    }
-
-    public indexedSlot: number = 0;
-    public slots: Slot[] = [];
-    private STACK_MAX: number = 64;
-
-    constructor(nbSlot: number = 9) {
-        this.addSlots(nbSlot);
     }
 
     public selectedSlot(): Slot {

@@ -1,5 +1,17 @@
 export default class Color {
 
+    public r: number = 0;
+    public g: number = 0;
+    public b: number = 0;
+    public a: number = 1;
+
+    constructor(r: number = 0, g: number = 0, b: number = 0, a: number = 1) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
     static get white() {
         return new Color(255, 255, 255);
     }
@@ -35,18 +47,6 @@ export default class Color {
             ((rgb >> 8) & 0b11111111),
             (rgb & 0b11111111),
         );
-    }
-
-    public r: number = 0;
-    public g: number = 0;
-    public b: number = 0;
-    public a: number = 1;
-
-    constructor(r: number = 0, g: number = 0, b: number = 0, a: number = 1) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
     }
 
     public setAlpha(a: number) {

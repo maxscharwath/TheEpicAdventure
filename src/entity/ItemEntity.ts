@@ -8,11 +8,6 @@ import Updater from "../core/Updater";
 
 export default class ItemEntity extends Entity {
 
-    public static create({id, item, x, y}: any): ItemEntity | undefined {
-        const EntityClass = Entities.getByTag(id);
-        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
-    }
-
     public item: Item;
     private radiusMobs: Mob[] = [];
     private lastCheck = 0;
@@ -22,6 +17,9 @@ export default class ItemEntity extends Entity {
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
         super();
+        if (!(item instanceof Item || item instanceof ItemRegister)) {
+            throw new Error("Item Invalid");
+        }
         if (x) this.x = x;
         if (y) this.y = y;
         this.z = 2;
@@ -35,6 +33,11 @@ export default class ItemEntity extends Entity {
         this.shadow = new DropShadowFilter({blur: 0, distance: 10, rotation: 90, quality: 0});
         this.filters = [this.shadow];
         this.container.addChild(this.fireSprite);
+    }
+
+    public static create({id, item, x, y}: any): ItemEntity | undefined {
+        const EntityClass = Entities.getByTag(id);
+        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
     }
 
     public onTick(): void {

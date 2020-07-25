@@ -6,15 +6,15 @@ import Tiles from "../level/tile/Tiles";
 
 export default class BucketItem extends Item {
 
-    public static create(data: any) {
-        return super.create(data) as BucketItem;
-    }
-
     private content: BucketType;
 
     constructor(tag: string, content = BucketType.EMPTY) {
         super(tag);
         this.setContent(content);
+    }
+
+    public static create(data: any) {
+        return super.create(data) as BucketItem;
     }
 
     public isStackable() {

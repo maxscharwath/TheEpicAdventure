@@ -16,15 +16,6 @@ interface SpriteSheetData {
 
 export default class SpriteSheet {
 
-    public static loadTextures(path: string, nb: number, w: number = 16, h: number = w, oy = 0): PIXI.Texture[] {
-        const bt = PIXI.BaseTexture.from(path);
-        const textures = [];
-        for (let x = 0; x < nb; x++) {
-            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * w, oy, w, h)));
-        }
-        return textures;
-    }
-
     private animations: Map<string, PIXI.Texture[][]> = new Map<string, PIXI.Texture[][]>();
 
     constructor(url: string) {
@@ -44,6 +35,15 @@ export default class SpriteSheet {
                 }));
             }
         });
+    }
+
+    public static loadTextures(path: string, nb: number, w: number = 16, h: number = w, oy = 0): PIXI.Texture[] {
+        const bt = PIXI.BaseTexture.from(path);
+        const textures = [];
+        for (let x = 0; x < nb; x++) {
+            textures.push(new PIXI.Texture(bt, new PIXI.Rectangle(x * w, oy, w, h)));
+        }
+        return textures;
     }
 
     public getAnimation(name: string, dir?: Direction, type: string = "normal"): PIXI.Texture[] {

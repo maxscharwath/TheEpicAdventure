@@ -25,6 +25,7 @@ export default abstract class Tile {
     public friction: number = 0.1;
     public anchor = 0;
     public offset = new PIXI.Point();
+    private isMainTile = true;
     protected random: Random;
     protected levelTile: LevelTile;
     protected groundTile?: Tile;
@@ -61,15 +62,19 @@ export default abstract class Tile {
         return Object.getPrototypeOf(this).constructor;
     }
 
-    public setGroundTile(tile: typeof Tile | Tile): Tile | undefined {
+    public setGroundTile(tile: typeof Tile | Tile | TileRegister<typeof Tile>): Tile | undefined {
         if (tile instanceof Tile) {
             if (this.groundTile?.instanceOf(tile.getClass())) return undefined;
             this.groundTile = tile;
+        } else if (tile instanceof TileRegister) {
+            // @ts-ignore
+            this.groundTile = new tile.tile(this.levelTile);
         } else {
             if (this.groundTile?.instanceOf(tile)) return undefined;
             // @ts-ignore
             this.groundTile = new tile(this.levelTile);
         }
+        this.groundTile.isMainTile = false;
         if (this.groundTile.light > this.light) this.light = this.groundTile.light;
         this.groundContainer.removeChildren();
         this.levelTile.update();
@@ -139,6 +144,19 @@ export default abstract class Tile {
         return Tiles.getKeys(this.getClass());
     }
 
+
+    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(
+        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}, entity?: Entity): void {
+        if (this.isMainTile) {
+            // @ts-ignore
+            this.levelTile.setTile(tile, states, entity);
+        } else {
+            this.setGroundTile(tile);
+        }
+    }
+
     protected addItemEntity(item: Item | ItemRegister<Item>, nb: number | [number, number] = 1): void {
         const x = Array.isArray(nb) ? this.random.int(nb[0], nb[1]) : nb;
         if (x <= 0) return;
@@ -152,8 +170,8 @@ export default abstract class Tile {
         }
     }
 
-    protected setTileToGround(){
-        if (this.groundTile) this.levelTile.setTile(this.groundTile.getClass());
+    protected setTileToGround() {
+        if (this.groundTile) this.setTile(this.groundTile.getClass());
     }
 
     protected onDestroy() {

@@ -5,6 +5,16 @@ import Entity from "../entity/Entity";
 
 export default class Camera {
 
+    private containers: PIXI.Container[] = [];
+    private follow?: { x: number; y: number; };
+    private fx: number = 0;
+    private fy: number = 0;
+    private cx: number = 0;
+    private cy: number = 0;
+
+    constructor() {
+    }
+
     public get x() {
         return (this.cx);
     }
@@ -12,6 +22,8 @@ export default class Camera {
     public get y() {
         return (this.cy);
     }
+
+    private _zoom: number = 6;
 
     public get zoom(): number {
         return this._zoom;
@@ -22,17 +34,6 @@ export default class Camera {
             value = 0.5;
         }
         this._zoom = value;
-    }
-
-    private containers: PIXI.Container[] = [];
-    private follow?: { x: number; y: number; };
-    private fx: number = 0;
-    private fy: number = 0;
-    private cx: number = 0;
-    private cy: number = 0;
-    private _zoom: number = 6;
-
-    constructor() {
     }
 
     public setPos(x: number, y: number) {

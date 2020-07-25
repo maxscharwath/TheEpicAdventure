@@ -8,6 +8,15 @@ import CommandDisplay from "../../screen/CommandDisplay";
 
 export default class Command {
 
+    private static commandList: Map<string, Command> = new Map<string, Command>();
+    private name: string;
+    private callback?: (args: any[], display: CommandDisplay) => any;
+
+    constructor(commandName: string) {
+        this.name = commandName;
+        Command.commandList.set(commandName, this);
+    }
+
     public static execute(display: CommandDisplay, commandName: string, args: any[] = []): any {
         const command = this.commandList.get(commandName);
         if (!command) return `"${commandName}" unknown`;
@@ -18,13 +27,12 @@ export default class Command {
         return new Command(commandName);
     }
 
-    private static commandList: Map<string, Command> = new Map<string, Command>();
-    private name: string;
-    private callback?: (args: any[], display: CommandDisplay) => any;
+    public static getAll() {
+        return this.commandList;
+    }
 
-    constructor(commandName: string) {
-        this.name = commandName;
-        Command.commandList.set(commandName, this);
+    public getName() {
+        return this.name;
     }
 
     public addFunction(callback: (args: any[], display: CommandDisplay) => any) {
@@ -43,6 +51,12 @@ export default class Command {
     }
 }
 
+Command.add("help").addFunction((args, display) => {
+    Command.getAll().forEach((command) => {
+        display.sendMessage(command.getName());
+    });
+});
+
 Command.add("hello").addFunction(() => "world");
 
 Command.add("summon").addFunction((args) => {
@@ -50,7 +64,11 @@ Command.add("summon").addFunction((args) => {
     if (entityClass) {
         const nb = isNaN(parseInt(args[1], 10)) ? 1 : parseInt(args[1], 10);
         for (let i = 0; i < nb; i++) {
-            Game.level.add(new entityClass(), Game.player.x, Game.player.y);
+            try {
+                Game.level.add(new entityClass(), Game.player.x, Game.player.y);
+            } catch (e) {
+                return false;
+            }
         }
         return `Summon ${nb} ${entityClass.name}`;
     }
@@ -80,6 +98,21 @@ Command.add("tp").addFunction((args) => {
 
 Command.add("refresh").addFunction((args, display) => {
     Game.level.flushChunks().then(() => {
+        display.sendMessage("done");
+    });
+    return "pending...";
+});
+
+Command.add("save").addFunction((args, display) => {
+    Game.level.save().then(() => {
+        display.sendMessage("done");
+    }).catch(e => display.sendMessage(e));
+    return "pending...";
+});
+
+Command.add("deleteSave").addFunction((args, display) => {
+    Game.level.flushChunks().then(() => {
+        Game.level.deleteTempDir();
         display.sendMessage("done");
     });
     return "pending...";

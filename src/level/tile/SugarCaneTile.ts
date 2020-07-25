@@ -26,13 +26,13 @@ export default class SugarCaneTile extends Tile {
         return false;
     }
 
-    protected onDestroy() {
-        super.onDestroy();
-        this.levelTile.setTile(Tiles.WATER);
-    }
-
     public onInteract(mob: Mob, item?: Item): boolean {
         this.onDestroy();
         return true;
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTile(Tiles.WATER);
     }
 }

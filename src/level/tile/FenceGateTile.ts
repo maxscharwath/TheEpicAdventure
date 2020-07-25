@@ -15,6 +15,7 @@ export default class FenceGateTile extends Tile {
     public static DEFAULT_STATES = {groundTile: 0, open: false};
     public static readonly TAG = "fence_gate";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence_gate.png"), 4, 16);
+    public anchor = 0.75;
 
     public states = TileStates.create(FenceGateTile.DEFAULT_STATES);
     private sprite: PIXI.Sprite;
@@ -62,7 +63,7 @@ export default class FenceGateTile extends Tile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        if (!item) {
+        if (!item && !this.levelTile.hasEntity()) {
             this.states.open = !this.states.open;
             this.onUpdate();
             return true;

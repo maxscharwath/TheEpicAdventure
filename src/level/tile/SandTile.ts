@@ -28,7 +28,7 @@ export default class SandTile extends AutoTilingTile {
             switch (item.type) {
                 case ToolType.shovel:
                     this.addItemEntity(Items.SAND);
-                    this.levelTile.setTile(Tiles.DIRT);
+                    this.setTile(Tiles.DIRT);
                     return true;
             }
         }
@@ -46,12 +46,6 @@ export default class SandTile extends AutoTilingTile {
         this.initAutoTile();
     }
 
-    protected onDestroy() {
-        super.onDestroy();
-        this.levelTile.setTile(Tiles.HOLE);
-        this.addItemEntity(Items.SAND);
-    }
-
     public onTick(): void {
         super.onTick();
         if (this.step > 0) {
@@ -63,6 +57,12 @@ export default class SandTile extends AutoTilingTile {
             }
             this.footprintSprite.visible = this.step > 0;
         }
+    }
+
+    protected onDestroy() {
+        super.onDestroy();
+        this.setTile(Tiles.HOLE);
+        this.addItemEntity(Items.SAND);
     }
 
 }

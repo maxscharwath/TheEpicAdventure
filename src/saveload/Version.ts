@@ -3,30 +3,6 @@ import electron from "electron";
 const app: electron.App = (electron.app || electron.remote.app);
 export default class Version {
 
-    private static parseInt(n: any): number {
-        if (isNaN(Number(n))) {
-            throw new Error("Not a number");
-        }
-        return parseInt(n, 10);
-    }
-
-    private static Number(n: any): number {
-        if (isNaN(Number(n))) {
-            throw new Error("Not a number");
-        }
-        return Number(n);
-    }
-
-    private static compare(a: number, b: number): number {
-        if (a < b) {
-            return -1;
-        }
-        if (a > b) {
-            return 1;
-        }
-        return 0;
-    }
-
     private readonly valid: boolean = true;
     private readonly major: number = 0;
     private readonly minor: number = 0;
@@ -63,6 +39,30 @@ export default class Version {
         } catch (e) {
             this.valid = false;
         }
+    }
+
+    private static parseInt(n: any): number {
+        if (isNaN(Number(n))) {
+            throw new Error("Not a number");
+        }
+        return parseInt(n, 10);
+    }
+
+    private static Number(n: any): number {
+        if (isNaN(Number(n))) {
+            throw new Error("Not a number");
+        }
+        return Number(n);
+    }
+
+    private static compare(a: number, b: number): number {
+        if (a < b) {
+            return -1;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return 0;
     }
 
     public isValid(): boolean {

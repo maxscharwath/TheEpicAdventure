@@ -39,6 +39,7 @@ Entities.add(12, "oven", Oven);
 Entities.add(13, "alembic", Alembic);
 Entities.add(14, "anvil", Anvil);
 Entities.add(15, "workbench", Workbench);
+Entities.add(16, "musicPlayer", MusicPlayer);
 
 export {
     Entity,

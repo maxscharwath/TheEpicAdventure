@@ -1,5 +1,15 @@
 export default class Vector {
 
+    public x: number = 0;
+    public y: number = 0;
+    private readonly constant: boolean = false;
+
+    constructor(x: number = 0, y: number = 0, constant: boolean = false) {
+        this.x = x;
+        this.y = y;
+        this.constant = constant;
+    }
+
     public get magnitude() {
         return Math.hypot(this.x, this.y);
     }
@@ -29,16 +39,6 @@ export default class Vector {
 
     public static createConstant(x?: number, y?: number) {
         return new Vector(x, y, true);
-    }
-
-    public x: number = 0;
-    public y: number = 0;
-    private readonly constant: boolean = false;
-
-    constructor(x: number = 0, y: number = 0, constant: boolean = false) {
-        this.x = x;
-        this.y = y;
-        this.constant = constant;
     }
 
     public negative(): Vector {

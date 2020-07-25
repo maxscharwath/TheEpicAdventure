@@ -116,6 +116,12 @@ export default class Chunk {
         }
     }
 
+    public spawnMob(mob: Mob): boolean {
+        if (this.mobCap > Chunk.MOB_CAP) return false;
+        this.add(mob);
+        return true;
+    }
+
     public add(tickable: Tickable) {
         if (tickable instanceof Entity) {
             if (!this.entities.includes(tickable)) {
@@ -194,7 +200,7 @@ export default class Chunk {
         });
     }
 
-    public save() {
+    public async save() {
         const tiles = RLE.encode(
             this.map,
             (a, b) => a?.getTileClass() === b?.getTileClass(),
@@ -222,10 +228,9 @@ export default class Chunk {
             temperature: Buffer.from(Uint8Array.from(this.map.map((lt) => lt.temperature)).buffer),
             entities: this.entities,
         });
-        if (!fs.existsSync(System.getAppData("tmp"))) {
-            fs.mkdirSync(System.getAppData("tmp"));
-        }
-        return gzip(bson).then((buffer) => fsp.writeFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`), buffer, "binary"));
+        if (!fs.existsSync(System.getAppData("tmp"))) await fsp.mkdir(System.getAppData("tmp"));
+        const buffer = await gzip(bson);
+        return await fsp.writeFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`), buffer, "binary");
     }
 
     public async fromFile() {
@@ -260,9 +265,10 @@ export default class Chunk {
             map.push(lt);
         });
         for (const data of bson.entities) {
-            const entity = (Entities.get(data.id) as unknown as typeof Entity);
-            if (!entity) continue;
-            this.add(entity.create(data));
+            const entityClass = (Entities.get(data.id) as unknown as typeof Entity);
+            if (!entityClass) continue;
+            const entity = entityClass.create(data);
+            this.level.add(entity);
         }
         console.log(`chunk ${this.x} ${this.y} loaded in ${(System.nanoTime() - t1) / 1000000}ms`);
         this.map = map;
@@ -273,7 +279,7 @@ export default class Chunk {
 
     public async generate() {
         this.map = this.level.levelGen.genChunk(this.x, this.y, this.level);
-        this.save();
+        await this.save();
         this.map.forEach((lt) => lt.init());
         this.generated = true;
         return this;

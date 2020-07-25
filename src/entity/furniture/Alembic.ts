@@ -5,14 +5,14 @@ import Crafting from "../../crafting/Crafting";
 
 export default class Alembic extends Craftable {
 
-    public static create({id, x, y}: any): Alembic {
-        return super.create({id, x, y}) as Alembic;
-    }
-
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "alembic.png"));
 
     constructor() {
         super(Crafting.alembicRecipes);
+    }
+
+    public static create({id, x, y}: any): Alembic {
+        return super.create({id, x, y}) as Alembic;
     }
 
     public toBSON(): any {

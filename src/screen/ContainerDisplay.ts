@@ -13,33 +13,9 @@ enum Direction {
 
 class Container extends PIXI.Container {
 
-    public get select(): number {
-        return this._select;
-    }
-
-    public set select(value: number) {
-        const max = this.getSlots().length;
-        value = (value + max) % max;
-        this._select = isNaN(value) ? 0 : value;
-        this.refresh();
-    }
-
-    public get selected(): boolean {
-        return this._selected;
-    }
-
-    public set selected(value: boolean) {
-        this._selected = value;
-        this.selectSprite.visible = value;
-    }
-
     private inventory: Inventory;
     private readonly selectSprite: PIXI.Sprite;
     private readonly container: PIXI.Container;
-
-    private _select = 0;
-
-    private _selected = true;
 
     constructor(inventory: Inventory, x: number = 0, y: number = 0, direction: Direction = Direction.LEFT) {
         super();
@@ -59,6 +35,30 @@ class Container extends PIXI.Container {
         }
         this.selectSprite.pivot.set(x, y);
         this.addChild(this.selectSprite, this.container);
+    }
+
+    private _select = 0;
+
+    public get select(): number {
+        return this._select;
+    }
+
+    public set select(value: number) {
+        const max = this.getSlots().length;
+        value = (value + max) % max;
+        this._select = isNaN(value) ? 0 : value;
+        this.refresh();
+    }
+
+    private _selected = true;
+
+    public get selected(): boolean {
+        return this._selected;
+    }
+
+    public set selected(value: boolean) {
+        this._selected = value;
+        this.selectSprite.visible = value;
     }
 
     public refresh() {
@@ -117,14 +117,6 @@ class Container extends PIXI.Container {
 
 export default class ContainerDisplay extends Display {
     public static baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "container.png"));
-
-    private static moveItem(A: Container, B: Container) {
-        if (A.selected) {
-            A.swap(B);
-        } else {
-            B.swap(A);
-        }
-    }
     public hasCommand = true;
     private container: Container[] = [];
 
@@ -135,6 +127,14 @@ export default class ContainerDisplay extends Display {
             new Container(inventory, 99, 7, Direction.RIGHT),
         );
         this.init();
+    }
+
+    private static moveItem(A: Container, B: Container) {
+        if (A.selected) {
+            A.swap(B);
+        } else {
+            B.swap(A);
+        }
     }
 
     public onCommand(): void {

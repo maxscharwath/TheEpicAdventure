@@ -9,6 +9,7 @@ import Light from "../gfx/Light";
 import Renderer from "../core/Renderer";
 import {Mob} from "../entity";
 import Item from "../item/Item";
+import Chunk from "./Chunk";
 
 interface LevelTileConstructor {
     level: Level;
@@ -23,38 +24,6 @@ interface LevelTileConstructor {
 }
 
 export default class LevelTile {
-
-    public get z(): number {
-        return this.tile?.z ?? 0;
-    }
-
-    public get x(): number {
-        return this._x;
-    }
-
-    public set x(value: number) {
-        this._x = value;
-        this.groundContainer.x = this._x;
-        this.sortableContainer.x = this._x;
-        this.light.x = this._x;
-        this.sort();
-    }
-
-    public get y(): number {
-        return this._y;
-    }
-
-    public set y(value: number) {
-        this._y = value;
-        this.groundContainer.y = this._y;
-        this.sortableContainer.y = this._y;
-        this.light.y = this._y;
-        this.sort();
-    }
-
-    get tile(): Tile | undefined {
-        return this._tile;
-    }
 
     public static SIZE = 16;
     public skipTick: boolean = false;
@@ -75,12 +44,6 @@ export default class LevelTile {
     private groundContainer = new PIXI.Container();
     private sortableContainer = new PIXI.Container();
 
-    private _x: number;
-
-    private _y: number;
-
-    private _tile?: Tile;
-
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         this.biome = biome;
         this.temperature = temperature;
@@ -91,6 +54,44 @@ export default class LevelTile {
         this.level = level;
         this.tileClass = tileClass;
         this.tileStates = tileStates;
+    }
+
+    public get z(): number {
+        return this.tile?.z ?? 0;
+    }
+
+    private _x: number;
+
+    public get x(): number {
+        return this._x;
+    }
+
+    public set x(value: number) {
+        this._x = value;
+        this.groundContainer.x = this._x;
+        this.sortableContainer.x = this._x;
+        this.light.x = this._x;
+        this.sort();
+    }
+
+    private _y: number;
+
+    public get y(): number {
+        return this._y;
+    }
+
+    public set y(value: number) {
+        this._y = value;
+        this.groundContainer.y = this._y;
+        this.sortableContainer.y = this._y;
+        this.light.y = this._y;
+        this.sort();
+    }
+
+    private _tile?: Tile;
+
+    get tile(): Tile | undefined {
+        return this._tile;
     }
 
     public init() {
@@ -249,6 +250,14 @@ export default class LevelTile {
         return this._tile?.mayPass(entity);
     }
 
+    public getChunk(generate = true): Chunk | undefined {
+        return this.level.getChunk(this.getLocalX() >> 4, this.getLocalY() >> 4, generate);
+    }
+
+    public hasEntity(): boolean {
+        return this.getChunk()?.getEntities().some((e) => e.getTile() === this);
+    }
+
     public bumpedInto(entity: Entity) {
         return this._tile?.bumpedInto(entity);
     }
@@ -312,8 +321,8 @@ export default class LevelTile {
     }
 
     public onInteract(mob: Mob, item?: Item): boolean {
-        if(!this._tile)return false;
-        return this._tile.onInteract(mob,item);
+        if (!this._tile) return false;
+        return this._tile.onInteract(mob, item);
     }
 
     public getColor() {
