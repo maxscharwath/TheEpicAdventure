@@ -21,7 +21,6 @@ export default abstract class Tile {
     public sortableContainer = new PIXI.Container();
     public ["constructor"]: typeof Tile;
     public light: number = 1;
-    public maySpawn: boolean = false;
     public friction: number = 0.1;
     public anchor = 0;
     public offset = new PIXI.Point();
@@ -121,12 +120,6 @@ export default abstract class Tile {
 
     public getDisplayName(): string {
         return Localization.get(`tile.${this.constructor.TAG}`);
-    }
-
-    public setLevelTile(levelTile: LevelTile) {
-        this.levelTile = levelTile;
-        this.init();
-        return this;
     }
 
     public instanceOf(...tileClass: (typeof Tile | TileRegister<typeof Tile>)[]) {

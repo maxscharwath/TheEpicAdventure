@@ -77,6 +77,6 @@ export default class ToolItem extends Item {
     }
 
     public getCooldown(): number {
-        return ((ToolType.nbLevel - this.level) + 1) * 3;
+        return ((ToolType.nbLevel - this.level) + 1) * 2;
     }
 }

@@ -24,10 +24,14 @@ export default class LightFilter extends LevelFilter {
         this.blendFilter.blendMode = PIXI.BLEND_MODES.MULTIPLY;
 
         const blurFilter = new PIXI.filters.BlurFilter();
-        blurFilter.blur = 10;
+        blurFilter.blur = 15 * Renderer.camera.zoom;
         blurFilter.repeatEdgePixels = true;
 
-        this.filters = [blurFilter, this.blendFilter];
+        const blurFilter2 = new PIXI.filters.BlurFilter();
+        blurFilter2.blur = 2 * Renderer.camera.zoom;
+        blurFilter2.repeatEdgePixels = true;
+
+        this.filters = [blurFilter, blurFilter2, this.blendFilter];
     }
 
     public onRender() {

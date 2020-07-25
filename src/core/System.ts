@@ -4,7 +4,7 @@ import {app, remote} from "electron";
 export default class System {
 
     public static appData: string = (app || remote.app).getPath("userData");
-    public static resources: string = path.join(__dirname, '../../resources');
+    public static resources: string = path.join(__dirname, "../../resources");
     private static startTime = new Date().getTime();
 
     public static milliTime(): number {

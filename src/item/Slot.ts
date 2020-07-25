@@ -34,6 +34,6 @@ export default class Slot {
     }
 
     public isEmpty(): boolean {
-        return this.item == null || this.nb == null || this.nb <= 0;
+        return this.item === null || this.nb === null || this.nb <= 0;
     }
 }

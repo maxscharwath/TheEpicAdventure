@@ -106,7 +106,7 @@ Command.add("refresh").addFunction((args, display) => {
 Command.add("save").addFunction((args, display) => {
     Game.level.save().then(() => {
         display.sendMessage("done");
-    }).catch(e => display.sendMessage(e));
+    }).catch((e) => display.sendMessage(e));
     return "pending...";
 });
 

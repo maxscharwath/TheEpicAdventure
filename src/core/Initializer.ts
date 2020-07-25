@@ -21,8 +21,8 @@ export default class Initializer {
     }
 
     public static run() {
-        this.tickerRender.add((dlt) => Renderer.render(dlt), PIXI.UPDATE_PRIORITY.INTERACTION);
-        this.tickerUpdater.add((dlt) => Updater.onTick(dlt), PIXI.UPDATE_PRIORITY.LOW);
+        this.tickerRender.add((dlt: number) => Renderer.render(dlt), PIXI.UPDATE_PRIORITY.INTERACTION);
+        this.tickerUpdater.add((dlt: number) => Updater.onTick(dlt), PIXI.UPDATE_PRIORITY.LOW);
         this.tickerUpdater.minFPS = 20;
         this.tickerUpdater.maxFPS = 20;
         this.tickerRender.start();

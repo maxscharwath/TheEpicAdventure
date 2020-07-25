@@ -154,7 +154,7 @@ export default class Level {
             const chunk = Chunk.empty(this, x, y);
             Chunk.fileExist(this, x, y)
                 .then(() => {
-                    return chunk.fromFile().catch(e => console.error(e));
+                    return chunk.fromFile().catch((e) => console.error(e));
                 })
                 .catch(() => chunk.generate());
             this.chunks.set(id, chunk);

@@ -29,8 +29,6 @@ class Time {
 
 export default class Updater {
     public static readonly dayLength: number = 15000;
-    public static readonly sleepEndTime: number = Updater.dayLength / 8;
-    public static readonly sleepStartTime: number = Updater.dayLength / 2 + Updater.dayLength / 8;
     public static readonly Time = {
         Morning: new Time(0, 0, 0.1),
         Day: new Time(1, 0.1, 0.5),
@@ -40,7 +38,7 @@ export default class Updater {
     public static ticks: number = 0;
     public static time: Time = Updater.Time.Morning;
     public static delta: number;
-    public static tickCount: number = Updater.Time.Day.start;
+    public static tickCount: number = Updater.Time.Night.start;
     private static ticksTime: number[] = [];
 
     public static getDayRatio() {
