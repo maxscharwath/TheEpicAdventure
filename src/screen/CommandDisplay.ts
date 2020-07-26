@@ -9,6 +9,24 @@ import Command from "../core/io/Command";
 export default class CommandDisplay extends Display {
 
     public hasCommand = true;
+    private cursorEnd: number;
+    private cursorStart: number;
+    private cursorTicks: number;
+    private historicCommand: string[] = [];
+    private historicResult: string[] = [];
+    private input: HTMLInputElement;
+    private inputText: PIXI.BitmapText;
+    private selectIndex = 0;
+
+    constructor() {
+        super();
+        this.input = CommandDisplay.createInput();
+        this.init();
+    }
+
+    public get message(): string {
+        return this.input.value;
+    }
 
     public static createInput(): HTMLInputElement {
         const _commandInput = document.createElement("input");
@@ -20,20 +38,6 @@ export default class CommandDisplay extends Display {
         document.body.appendChild(_commandInput);
         return _commandInput;
     }
-
-    constructor() {
-        super();
-        this.input = CommandDisplay.createInput();
-        this.init();
-    }
-    private cursorEnd: number;
-    private cursorStart: number;
-    private cursorTicks: number;
-    private historicCommand: string[] = [];
-    private historicResult: string[] = [];
-    private input: HTMLInputElement;
-    private inputText: PIXI.BitmapText;
-    private selectIndex = 0;
 
     public clear(): void {
         this.input.value = "";
@@ -120,7 +124,7 @@ export default class CommandDisplay extends Display {
         }
     }
 
-    public sendMessage(msg: any): void {
+    public sendMessage(msg?: unknown): void {
         if (msg === undefined) return;
         this.historicResult.unshift(msg.toString());
     }
@@ -129,10 +133,6 @@ export default class CommandDisplay extends Display {
         super.show();
         this.clear();
         Game.input.preventDefault = false;
-    }
-
-    public get message(): string {
-        return this.input.value;
     }
 
     private init(): void {

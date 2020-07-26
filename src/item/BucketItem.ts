@@ -6,22 +6,22 @@ import Tiles from "../level/tile/Tiles";
 
 export default class BucketItem extends Item {
 
-    public static create(data: any) {
-        return super.create(data) as BucketItem;
-    }
+    private content: BucketType;
 
     constructor(tag: string, content = BucketType.EMPTY) {
         super(tag);
         this.setContent(content);
     }
 
-    private content: BucketType;
+    public static create({tag}: { tag: string }): BucketItem {
+        return super.create({tag}) as BucketItem;
+    }
 
     public canAttack(): boolean {
         return true;
     }
 
-    public isStackable() {
+    public isStackable(): boolean {
         return false;
     }
 
@@ -49,7 +49,7 @@ export default class BucketItem extends Item {
         return false;
     }
 
-    private setContent(content = BucketType.EMPTY) {
+    private setContent(content = BucketType.EMPTY): void {
         this.content = content;
         this.texture = content.texture;
     }

@@ -6,10 +6,10 @@ import Tiles from "./Tiles";
 import WaterTile from "./WaterTile";
 
 export default class HoleTile extends AutoTilingTile {
-    protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("tile", "hole.png"));
-    protected static canConnectTo = ["lava", "water"];
     public static readonly COLOR: number = 0x402e29;
     public static readonly TAG = "hole";
+    protected static autoTileTextures = HoleTile.loadMaskTextures(System.getResource("tile", "hole.png"));
+    protected static canConnectTo = ["lava", "water"];
 
     public init(): void {
         super.init();

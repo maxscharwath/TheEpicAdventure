@@ -16,11 +16,11 @@ import Random from "../../utility/Random";
 import RainWeather from "../../gfx/weather/RainWeather";
 
 export default class TreeTile extends Tile {
-    protected damage = 0;
-    protected wiggleDelay = 0;
     public static readonly COLOR: number = 0x19a02a;
     public static readonly TAG: string = "tree";
     public anchor = 1;
+    protected damage = 0;
+    protected wiggleDelay = 0;
     private leafSprite: PIXI.Sprite;
     private leavesDropDelay = 0;
     private treeSprite: PIXI.Sprite;

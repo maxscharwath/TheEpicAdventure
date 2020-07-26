@@ -20,23 +20,27 @@ import WaterDropParticle from "./particle/WaterDropParticle";
 import SmokeParticle from "./particle/SmokeParticle";
 
 export default abstract class Entity extends PIXI.Container implements Tickable {
+    protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
+    private static random = new Random();
     public ["constructor"]: typeof Entity;
     public a: Vector3D = new Vector3D();
-
-    protected get aSpeed(): number {
-        return Math.hypot(this.a.x, this.a.y);
-    }
+    public hitbox: Hitbox = new Hitbox();
+    public isInteractive = false;
+    public offset = new PIXI.Point();
+    public ticks = 0;
+    public x = 0;
+    public y = 0;
+    public z = 0;
     protected container = new PIXI.Container();
     protected deleted = false;
     protected fireDelay: number;
     protected fireSprite: PIXI.AnimatedSprite;
-    public hitbox: Hitbox = new Hitbox();
-    public isInteractive = false;
     protected isMoving = false;
     protected isOnFire = false;
     protected level?: Level;
-    public offset = new PIXI.Point();
     protected random = this.constructor.random;
+    private lastTick: number = Updater.ticks;
+    private uid: string = uniqid();
 
     protected constructor() {
         super();
@@ -52,13 +56,10 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         this.init();
         this.container.addChild(this.fireSprite);
     }
-    public ticks = 0;
-    public x = 0;
-    public y = 0;
-    public z = 0;
 
-    protected static fireFrames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-    private static random = new Random();
+    protected get aSpeed(): number {
+        return Math.hypot(this.a.x, this.a.y);
+    }
 
     public static create({id, x, y}: { id: string, x: number, y: number }): Entity | undefined {
         const EntityClass = Entities.getByTag(id);
@@ -68,8 +69,6 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         e.y = y;
         return e;
     }
-    private lastTick: number = Updater.ticks;
-    private uid: string = uniqid();
 
     public add(): void {
         if (this.parent) this.parent.removeChild(this);
@@ -134,7 +133,7 @@ export default abstract class Entity extends PIXI.Container implements Tickable 
         return this.level?.getChunkNeighbour(this.x >> 8, this.y >> 8) ?? [];
     }
 
-    public getClass(): any{
+    public getClass(): any {
         return Object.getPrototypeOf(this).constructor;
     }
 

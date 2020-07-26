@@ -8,6 +8,10 @@ import Display from "./Display";
 
 export default class InfoDisplay extends Display {
 
+    private nbContainer = 0;
+    private readonly textArea: PIXI.BitmapText;
+    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
+
     constructor() {
         super();
         this.textArea = new PIXI.BitmapText("", {
@@ -24,10 +28,6 @@ export default class InfoDisplay extends Display {
 
         this.addChild(this.textBg, this.textArea);
     }
-    private nbContainer = 0;
-
-    private readonly textArea: PIXI.BitmapText;
-    private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);
 
     public onRender(): void {
     }
@@ -48,7 +48,7 @@ export default class InfoDisplay extends Display {
     private text(): string {
         const tile = Game.player.getInteractTile();
         return [
-            `v : ${Game.version.toString()}`,
+            `v${Game.version.toString()}`,
             `fps : ${Math.round(Initializer.getCurFps())}`,
             `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
             `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,

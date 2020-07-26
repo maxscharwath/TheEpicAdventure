@@ -20,6 +20,8 @@ export default class Renderer {
     public static readonly DEFAULT_WIDTH: number = 240;
     public static delta: number;
     public static HEIGHT: number = Renderer.DEFAULT_HEIGHT;
+    public static ticks = 0;
+    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
     private static mainStage = new PIXI.Container();
     private static renderer = new PIXI.Renderer({
         width: 960 * 2,
@@ -34,10 +36,7 @@ export default class Renderer {
         level: new PIXI.Container(),
         gui: new PIXI.Container(),
     };
-
-    public static ticks = 0;
     private static ticksTime: number[] = [];
-    public static WIDTH: number = Renderer.DEFAULT_WIDTH;
 
     public static addDisplay(display: Display): void {
         this.stages.gui.addChild(display);
@@ -83,11 +82,6 @@ export default class Renderer {
         window.addEventListener("resize", () => this.onResize());
     }
 
-    private static onResize() {
-        this.resize();
-        Game.GUI.onResize();
-    }
-
     public static render(dlt: number): void {
         const t1 = System.milliTime();
         Renderer.delta = dlt;
@@ -113,5 +107,10 @@ export default class Renderer {
         if (level.weather) this.stages.level.addChild(level.weather);
         this.stages.level.addChild(level.lightFilter);
         Renderer.camera.setContainer(level.container, level.lightFilter.lightContainer);
+    }
+
+    private static onResize() {
+        this.resize();
+        Game.GUI.onResize();
     }
 }

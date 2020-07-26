@@ -9,11 +9,11 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class DarkGrassTile extends AutoTilingTile {
+    public static readonly COLOR: number = 0x35a541;
+    public static readonly TAG = "grass";
     protected static autoTileTextures = DarkGrassTile.loadMaskTextures(
         System.getResource("tile", "dark_grass_mask.png"),
     );
-    public static readonly COLOR: number = 0x35a541;
-    public static readonly TAG = "grass";
 
     public init(): void {
         super.init();

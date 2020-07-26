@@ -8,6 +8,15 @@ import Renderer from "../core/Renderer";
 
 export default class CraftingDisplay extends Display {
     public hasCommand = true;
+    private background: PIXI.Sprite;
+    private container: PIXI.Container;
+    private costContainer = new PIXI.Container();
+    private hasText: PIXI.BitmapText;
+    private readonly mob: Mob;
+    private readonly recipes: Recipe[];
+    private recipesContainer = new PIXI.Container();
+    private selected = 0;
+    private selectSprite: PIXI.Sprite;
 
     constructor(recipes: Recipe[], mob: Mob) {
         super();
@@ -21,15 +30,6 @@ export default class CraftingDisplay extends Display {
         });
         this.init();
     }
-    private background: PIXI.Sprite;
-    private container: PIXI.Container;
-    private costContainer = new PIXI.Container();
-    private hasText: PIXI.BitmapText;
-    private readonly mob: Mob;
-    private readonly recipes: Recipe[];
-    private recipesContainer = new PIXI.Container();
-    private selected = 0;
-    private selectSprite: PIXI.Sprite;
 
     public isBlocking(): boolean {
         return true;

@@ -10,23 +10,23 @@ import System from "../core/System";
 
 export default class Item {
 
-    public static create(data: any): Item | undefined {
-        return Items.get(data.tag)?.item;
-    }
-    protected texture: PIXI.Texture = PIXI.Texture.from(System.getResource("no_texture.png"));
-
-    public static verifyTag(tag: string): boolean {
-        return Localization.verify(`item.${tag}`);
-    }
-
     public craftedBy?: Mob;
     public tag: string;
     public uid: string = uniqid();
+    protected texture: PIXI.Texture = PIXI.Texture.from(System.getResource("no_texture.png"));
+    private cooldownTime = 0;
 
     constructor(tag: string) {
         this.tag = tag;
     }
-    private cooldownTime = 0;
+
+    public static create({tag}: { tag: string }): Item | undefined {
+        return Items.get(tag)?.item;
+    }
+
+    public static verifyTag(tag: string): boolean {
+        return Localization.verify(`item.${tag}`);
+    }
 
     public canAttack(): boolean {
         return false;

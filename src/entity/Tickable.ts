@@ -25,4 +25,4 @@ export default interface Tickable extends PIXI.Container {
     remove(): void;
 
     setLevel(level: Level, x: number, y: number): void;
-};
+}

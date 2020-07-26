@@ -5,6 +5,9 @@ import Level from "../level/Level";
 
 export default class LightFilter extends LevelFilter {
     public lightContainer = new PIXI.Container();
+    private readonly ambientLight: PIXI.Sprite;
+    private readonly blendFilter: PIXI.filters.AlphaFilter;
+    private level: Level;
 
     constructor(level: Level) {
         super();
@@ -30,9 +33,6 @@ export default class LightFilter extends LevelFilter {
 
         this.filters = [blurFilter, blurFilter2, this.blendFilter];
     }
-    private readonly ambientLight: PIXI.Sprite;
-    private readonly blendFilter: PIXI.filters.AlphaFilter;
-    private level: Level;
 
     public onRender(): void {
         this.blendFilter.alpha = 1 - (this.level.getAmbientLightLevel() / 20);

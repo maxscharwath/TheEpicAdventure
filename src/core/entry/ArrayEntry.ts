@@ -2,6 +2,9 @@ import Entry from "./Entry";
 
 export default class ArrayEntry extends Entry {
 
+    private readonly options: any[];
+    private selection = 0;
+
     constructor(label: string, ...options: any[]) {
         super(label);
         if (options.length === 1 && options[0] instanceof Array) {
@@ -9,8 +12,6 @@ export default class ArrayEntry extends Entry {
         }
         this.options = options;
     }
-    private readonly options: any[];
-    private selection = 0;
 
     public getSelection(): number {
         return this.selection;
@@ -26,7 +27,7 @@ export default class ArrayEntry extends Entry {
         }
     }
 
-    public setValue(value: any): void {
+    public setValue(value: unknown): void {
         this.setSelection(this.getIndex(value));
     }
 

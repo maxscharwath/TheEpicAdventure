@@ -48,6 +48,7 @@ tile.bush: Bush
 tile.stone: Stone
 tile.fence: Fence
 tile.fence_gate: Fence Gate
+tile.sugar_cane: Sugar Cane
 
 entity.player: Player
 entity.zombie: Zombie

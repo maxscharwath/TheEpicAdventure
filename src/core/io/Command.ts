@@ -9,6 +9,13 @@ import CommandDisplay from "../../screen/CommandDisplay";
 export default class Command {
 
     private static commandList: Map<string, Command> = new Map<string, Command>();
+    private callback?: (args: any[], display: CommandDisplay) => any;
+    private readonly name: string;
+
+    constructor(commandName: string) {
+        this.name = commandName;
+        Command.commandList.set(commandName, this);
+    }
 
     public static add(commandName: string): Command {
         return new Command(commandName);
@@ -23,13 +30,6 @@ export default class Command {
     public static getAll(): Map<string, Command> {
         return this.commandList;
     }
-
-    constructor(commandName: string) {
-        this.name = commandName;
-        Command.commandList.set(commandName, this);
-    }
-    private callback?: (args: any[], display: CommandDisplay) => any;
-    private readonly name: string;
 
     public addFunction(callback: (args: any[], display: CommandDisplay) => any): boolean {
         if (callback instanceof Function) {

@@ -7,13 +7,10 @@ import Mob from "../entity/mob/Mob";
 
 export default class ToolItem extends Item {
 
-    public static create(data: any): ToolItem {
-        const item = super.create(data) as ToolItem;
-        item.durability = data.durability;
-        return item;
-    }
-
     public readonly type: ToolType;
+    private durability: number;
+    private readonly durabilityMax: number;
+    private readonly level: number;
 
     constructor(tag: string, type: ToolType, level = Tiers.WOOD) {
         super(tag);
@@ -27,9 +24,12 @@ export default class ToolItem extends Item {
         this.texture = type.textures[level];
         this.tag = ToolType.getLevelName(this.level) + "_" + this.type.name;
     }
-    private durability: number;
-    private readonly durabilityMax: number;
-    private readonly level: number;
+
+    public static create(data: any): ToolItem {
+        const item = super.create(data) as ToolItem;
+        item.durability = data.durability;
+        return item;
+    }
 
     public canAttack(): boolean {
         return true;

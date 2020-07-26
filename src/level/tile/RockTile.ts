@@ -11,9 +11,9 @@ import HurtParticle from "../../entity/particle/HurtParticle";
 import * as PIXI from "pixi.js";
 
 export default class RockTile extends AutoTilingTile {
-    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock_mask.png"));
     public static readonly COLOR: number = 0x888888;
     public static readonly TAG = "rock";
+    protected static autoTileTextures = RockTile.loadMaskTextures(System.getResource("tile", "rock_mask.png"));
     private static tileTextures = RockTile.loadTextures(System.getResource("tile", "rock.png"), 3);
     private damage = 0;
 

@@ -3,24 +3,6 @@ import Random from "./Random";
 export default class SimplexNoise {
     private static F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
     private static G2 = (3.0 - Math.sqrt(3.0)) / 6.0;
-
-    private static buildPermutationTable(random: Random) {
-        const p = new Uint8Array(256);
-        for (let i = 0; i < 256; i++) {
-            p[i] = i;
-        }
-        for (let i = 0; i < 255; i++) {
-            const r = i + ~~(random.float() * (256 - i));
-            const aux = p[i];
-            p[i] = p[r];
-            p[r] = aux;
-        }
-        return p;
-    }
-
-    constructor(seed?: number) {
-        this.setSeed(seed);
-    }
     private grad3 = new Float32Array([
         1, 1, 0,
         -1, 1, 0,
@@ -42,6 +24,24 @@ export default class SimplexNoise {
     private perm = new Uint8Array(512);
     private permMod12 = new Uint8Array(512);
     private random?: Random;
+
+    constructor(seed?: number) {
+        this.setSeed(seed);
+    }
+
+    private static buildPermutationTable(random: Random) {
+        const p = new Uint8Array(256);
+        for (let i = 0; i < 256; i++) {
+            p[i] = i;
+        }
+        for (let i = 0; i < 255; i++) {
+            const r = i + ~~(random.float() * (256 - i));
+            const aux = p[i];
+            p[i] = p[r];
+            p[r] = aux;
+        }
+        return p;
+    }
 
     public get(x: number, y: number, {
         amplitude = 1,

@@ -18,32 +18,19 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import Tiles from "../../level/tile/Tiles";
 
 export default abstract class Mob extends Entity {
-    protected dir: Direction = Direction.DOWN;
     public health: number;
     public inventory = new Inventory(9);
-
     public isInteractive = true;
-    protected mass = 20;
     public maxHealth = 20;
+    protected dir: Direction = Direction.DOWN;
+    protected mass = 20;
     protected potionEffect: PotionEffect[] = [];
-
-    protected get speed(): number {
-        return this.speedMax;
-    }
     protected speedMax = 1;
-
-    protected set useMask(value: boolean) {
-        if (value) {
-            if (this.container.mask) return;
-            this.container.addChild(this.maskSprite);
-            this.container.mask = this.maskSprite;
-        } else {
-            if (!this.container.mask) return;
-            this.container.removeChild(this.maskSprite);
-            this.container.mask = null;
-        }
-    }
     protected walkDist = 0;
+    private attackCooldown = 0;
+    private hurtCooldown = 0;
+    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+    private readonly waveSprite: PIXI.AnimatedSprite;
 
     protected constructor() {
         super();
@@ -58,23 +45,35 @@ export default abstract class Mob extends Entity {
         this.addChildAt(this.waveSprite, 0);
     }
 
+    protected get speed(): number {
+        return this.speedMax;
+    }
+
+    protected set useMask(value: boolean) {
+        if (value) {
+            if (this.container.mask) return;
+            this.container.addChild(this.maskSprite);
+            this.container.mask = this.maskSprite;
+        } else {
+            if (!this.container.mask) return;
+            this.container.removeChild(this.maskSprite);
+            this.container.mask = null;
+        }
+    }
+
     public static create(data: any): Mob {
         const e = super.create(data) as Mob;
         e.inventory = Inventory.create(data.inventory);
         return e;
     }
 
-    protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
-        return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
-    }
-
     public static spawnCondition(levelTile: LevelTile): boolean {
         return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
     }
-    private attackCooldown = 0;
-    private hurtCooldown = 0;
-    private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    private readonly waveSprite: PIXI.AnimatedSprite;
+
+    protected static getAttackDir(attacker: Entity, hurt: Entity): Direction {
+        return Direction.getDirection(hurt.x - attacker.x, hurt.y - attacker.y);
+    }
 
     public addPotionEffect(type: PotionType): boolean {
         if (!this.checkPotionEffect(type)) {

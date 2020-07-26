@@ -35,7 +35,7 @@ export default class Game {
     public static player: Player;
     public static running = true;
     public static server?: Server;
-    public static readonly version: Version = new Version("0.2-dev1");
+    public static readonly version: Version = Version.fromConfig();
 
     public static changeLevel(id: number): void {
         this.level.deleteTempDir();
@@ -85,10 +85,10 @@ export default class Game {
         this.level.add(this.player, 0, 0, true);
         Renderer.setLevel(this.level);
         Initializer.createAndDisplayFrame();
-        Initializer.run();
         Network.startMultiplayerServer();
         PIXI.Loader.shared.add("Epic", System.getResource("font", "epic.xml")).load(() => {
             this.GUI.init();
+            Initializer.run();
         });
 
         /*        window.addEventListener("beforeunload", (e) => {

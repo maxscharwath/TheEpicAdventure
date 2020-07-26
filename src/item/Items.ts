@@ -17,20 +17,28 @@ type Type<T> = new (...args: any[]) => T;
 
 export class ItemRegister<T extends Item> {
 
-    protected constructor(tag: string, itemClass: Type<T>, ...args: any) {
+    private static items = new Map<string, ItemRegister<Item>>();
+    public readonly args: any;
+    public readonly itemClass: Type<T>;
+    public readonly tag: string;
+
+    protected constructor(tag: string, itemClass: Type<T>, ...args: unknown[]) {
         this.tag = tag;
         this.itemClass = itemClass;
         this.args = args;
         ItemRegister.items.set(tag, this);
         console.log(`adding ${itemClass.name} to item list with tag "${tag}"`);
     }
-    public readonly args: any;
-    public readonly itemClass: Type<T>;
-    public readonly tag: string;
 
-    private static items = new Map<string, ItemRegister<Item>>();
+    public static get ALL(): Array<ItemRegister<Item>> {
+        return Array.from(this.items.values());
+    }
 
-    public static add<T extends Item>(tag: string, itemClass: Type<T>, ...args: any): ItemRegister<T> {
+    public get item(): T {
+        return new this.itemClass(this.tag, ...this.args);
+    }
+
+    public static add<T extends Item>(tag: string, itemClass: Type<T>, ...args: unknown[]): ItemRegister<T> {
         return new ItemRegister(tag, itemClass, ...args);
     }
 
@@ -46,17 +54,9 @@ export class ItemRegister<T extends Item> {
         });
     }
 
-    public static get ALL(): Array<ItemRegister<Item>> {
-        return Array.from(this.items.values());
-    }
-
     public instanceOf(item: Item): boolean {
         if (!(item instanceof Item)) return false;
         return item.tag === this.tag;
-    }
-
-    public get item(): T {
-        return new this.itemClass(this.tag, ...this.args);
     }
 }
 

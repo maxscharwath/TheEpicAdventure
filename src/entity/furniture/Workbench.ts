@@ -7,12 +7,12 @@ export default class Workbench extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "workbench.png"));
 
-    public static create({id, x, y}: { id: string, x: number, y: number }): Workbench {
-        return super.create({id, x, y}) as Workbench;
-    }
-
     constructor() {
         super(Crafting.workbenchRecipes);
+    }
+
+    public static create({id, x, y}: { id: string, x: number, y: number }): Workbench {
+        return super.create({id, x, y}) as Workbench;
     }
 
     public toBSON(): any {

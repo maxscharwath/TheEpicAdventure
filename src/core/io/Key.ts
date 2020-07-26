@@ -3,13 +3,13 @@ export default class Key {
 
     public down = false;
     public sticky = false;
+    private absorbs = 0;
+    private presses = 0;
+    private stayDown = false;
 
     constructor(stayDown = false) {
         this.stayDown = stayDown;
     }
-    private absorbs = 0;
-    private presses = 0;
-    private stayDown = false;
 
     public onTick(): void {
         if (this.absorbs < this.presses) {

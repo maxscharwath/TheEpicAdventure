@@ -3,11 +3,15 @@ import Color from "../../utility/Color";
 import KeyedMap from "../../utility/KeyedMap";
 
 export default class Biome {
+    private static biomes = new KeyedMap<Biome>();
     public readonly color: Color;
     public readonly name: string;
     public tag = "";
 
-    private static biomes = new KeyedMap<Biome>();
+    constructor(name: string, color: Color) {
+        this.name = name;
+        this.color = color;
+    }
 
     public static add(idx: number, tag: string, biome: Biome): void {
         tag = tag.toLowerCase();
@@ -92,11 +96,6 @@ export default class Biome {
         Biome.add(12, "savanna", new Biome("Savanna", Color.fromHex("#9ce749")));
         Biome.add(13, "river", new Biome("River", Color.fromHex("#4cbcff")));
         Biome.add(14, "cave", new Biome("Cave", Color.fromHex("#626262")));
-    }
-
-    constructor(name: string, color: Color) {
-        this.name = name;
-        this.color = color;
     }
 
     public getDisplayName(): string {

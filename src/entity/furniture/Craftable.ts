@@ -6,13 +6,14 @@ import Game from "../../core/Game";
 
 export default abstract class Craftable extends Furniture {
 
+    private craftRecipe?: Recipe;
+    private craftTime = 0;
+    private readonly recipes: Recipe[];
+
     protected constructor(recipes: Recipe[] = []) {
         super();
         this.recipes = recipes;
     }
-    private craftRecipe?: Recipe;
-    private craftTime = 0;
-    private readonly recipes: Recipe[];
 
     public isCrafting(): boolean {
         return (this.craftTime > 0);

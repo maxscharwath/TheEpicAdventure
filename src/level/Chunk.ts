@@ -16,12 +16,29 @@ import Tile from "./tile/Tile";
 import {Mob, Player} from "../entity";
 
 export default class Chunk {
+    public static MOB_CAP = 32;
+    public static SIZE = 16;
+    private static CHUNK_TIMEOUT = 500;
     public readonly level: Level;
     public readonly x: number;
     public readonly y: number;
-    private static CHUNK_TIMEOUT = 500;
-    public static MOB_CAP = 32;
-    public static SIZE = 16;
+    private entities: Entity[] = [];
+    private generated = false;
+    private lastTick = 0;
+    private loaded = false;
+    private map: LevelTile[] = [];
+    private mobCap = 0;
+    private particles: Particle[] = [];
+
+    constructor(level: Level, x: number, y: number, generate = true) {
+        this.level = level;
+        this.lastTick = Updater.ticks;
+        this.x = x;
+        this.y = y;
+        if (generate) {
+            this.generate();
+        }
+    }
 
     public static empty(level: Level, cX: number, cY: number): Chunk {
         return new Chunk(level, cX, cY, false);
@@ -40,23 +57,6 @@ export default class Chunk {
     public static generate(level: Level, cX: number, cY: number): Chunk {
         return new Chunk(level, cX, cY, true);
     }
-
-    constructor(level: Level, x: number, y: number, generate = true) {
-        this.level = level;
-        this.lastTick = Updater.ticks;
-        this.x = x;
-        this.y = y;
-        if (generate) {
-            this.generate();
-        }
-    }
-    private entities: Entity[] = [];
-    private generated = false;
-    private lastTick = 0;
-    private loaded = false;
-    private map: LevelTile[] = [];
-    private mobCap = 0;
-    private particles: Particle[] = [];
 
     public add(tickable: Tickable): void {
         if (tickable instanceof Entity) {

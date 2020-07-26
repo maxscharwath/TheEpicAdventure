@@ -7,22 +7,19 @@ import WaterDropParticle from "../particle/WaterDropParticle";
 
 export default class Fish extends AquaticMob {
     protected speedMax = 1;
+    private fishSprite: PIXI.Sprite;
+    private hooked?: Hook;
+    private hookedAt = 0;
+    private lifeDuration = 0;
+    private points?: PIXI.Point[];
+    private shadowSprite: PIXI.SimpleRope;
+    private vector: Vector = new Vector();
 
     constructor() {
         super();
         this.useMask = false;
         this.lifeDuration = 1000;
     }
-    private fishSprite: PIXI.Sprite;
-    private hooked?: Hook;
-    private hookedAt = 0;
-
-    private lifeDuration = 0;
-
-    private points?: PIXI.Point[];
-    private shadowSprite: PIXI.SimpleRope;
-
-    private vector: Vector = new Vector();
 
     public canSwim(): boolean {
         return true;

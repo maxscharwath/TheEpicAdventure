@@ -6,28 +6,39 @@ import Item from "../../item/Item";
 import {ItemRegister} from "../../item/Items";
 import Random from "../../utility/Random";
 import LevelTile from "../LevelTile";
-import TileStates, {StateType} from "./TileStates";
+import TileStates from "./TileStates";
 import Tiles, {TileRegister} from "./Tiles";
 import Level from "../Level";
 
 export default abstract class Tile {
+    public static readonly COLOR: number = 0x123456;
+    public static DEFAULT_STATES = {};
+    public static readonly TAG: string = "tile";
     public ["constructor"]: typeof Tile;
     public anchor = 0;
     public container = new PIXI.Container();
     public friction = 0.1;
+    public isInit = false;
+    public light = 1;
+    public offset = new PIXI.Point();
+    public sortableContainer = new PIXI.Container();
+    public states = TileStates.create();
+    public z = 0;
     protected groundContainer = new PIXI.Container();
     protected groundTile?: Tile;
-    public isInit = false;
+    protected levelTile: LevelTile;
+    protected random: Random;
+    private isMainTile = true;
+
+    constructor(levelTile: LevelTile) {
+        this.levelTile = levelTile;
+        this.random = levelTile.random;
+        this.container.addChild(this.groundContainer);
+    }
 
     protected get level(): Level {
         return this.levelTile.level;
     }
-    protected levelTile: LevelTile;
-    public light = 1;
-    public offset = new PIXI.Point();
-    protected random: Random;
-    public sortableContainer = new PIXI.Container();
-    public states = TileStates.create();
 
     protected get x(): number {
         return this.levelTile.getLocalX();
@@ -36,11 +47,6 @@ export default abstract class Tile {
     protected get y(): number {
         return this.levelTile.getLocalY();
     }
-    public z = 0;
-    public static readonly COLOR: number = 0x123456;
-
-    public static DEFAULT_STATES = {};
-    public static readonly TAG: string = "tile";
 
     protected static loadTextures(path: string, nb: number): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
@@ -50,13 +56,6 @@ export default abstract class Tile {
         }
         return textures;
     }
-
-    constructor(levelTile: LevelTile) {
-        this.levelTile = levelTile;
-        this.random = levelTile.random;
-        this.container.addChild(this.groundContainer);
-    }
-    private isMainTile = true;
 
     public bumpedInto(entity: Entity): void {
     }
@@ -136,10 +135,10 @@ export default abstract class Tile {
     }
 
 
-    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T, states?: T["DEFAULT_STATES"], entity?: Entity): void;
     public setTile<T extends typeof Tile>(
-        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
-    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: StateType, entity?: Entity): void {
+        tile: TileRegister<T>, states?: T["DEFAULT_STATES"], entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: T["DEFAULT_STATES"], entity?: Entity): void {
         if (this.isMainTile) {
             // @ts-ignore
             this.levelTile.setTile(tile, states, entity);

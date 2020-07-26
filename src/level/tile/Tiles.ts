@@ -34,6 +34,11 @@ import FenceGateTile from "./FenceGateTile";
 
 export class TileRegister<T extends typeof Tile> {
 
+    private static tiles = new KeyedMap<typeof Tile>();
+    public readonly idx: number;
+    public readonly tag: string;
+    public readonly tile: T;
+
     protected constructor(idx: number, tag: string, tile: T) {
         this.tag = tag;
         this.tile = tile;
@@ -41,17 +46,12 @@ export class TileRegister<T extends typeof Tile> {
         TileRegister.tiles.add(this.idx, this.tag, this.tile);
         console.log(`adding ${this.tile.name} => ${this.tag}#${this.idx}`);
     }
-    public readonly idx: number;
-    public readonly tag: string;
-    public readonly tile: T;
 
-    private static tiles = new KeyedMap<typeof Tile>();
-
-    public static add<T extends typeof Tile>(idx: number, tag: string, tile: T): TileRegister<T> {
+    public static add<T extends typeof Tile>(idx: number, tag: string, tile: T, states?: T["DEFAULT_STATES"]): TileRegister<T> {
         return new TileRegister(idx, tag, tile);
     }
 
-    public static get(index: string | number) :typeof Tile{
+    public static get(index: string | number): typeof Tile {
         const tileData = this.tiles.get(index);
         return (!tileData ? Tile : tileData);
     }

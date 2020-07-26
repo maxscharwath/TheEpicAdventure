@@ -12,12 +12,11 @@ import Items from "../../item/Items";
 import FenceGateTile from "./FenceGateTile";
 
 export default class FenceTile extends Tile {
-    public anchor = 0.75;
-
-    public states = TileStates.create(FenceTile.DEFAULT_STATES);
-    public static DEFAULT_STATES = {groundTile: 0};
+    public static DEFAULT_STATES: { groundTile?: number } = {groundTile: 0};
     public static readonly TAG = "fence";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence.png"), 16, 16);
+    public anchor = 0.75;
+    public states = TileStates.create(FenceTile.DEFAULT_STATES);
     private sprite: PIXI.Sprite;
 
     public init(): void {

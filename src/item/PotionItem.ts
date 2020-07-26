@@ -8,11 +8,12 @@ import Items from "./Items";
 
 export default class PotionItem extends Item {
 
+    private readonly potion: PotionType;
+
     constructor(tag: string, type: PotionType) {
         super(tag);
         this.potion = type;
     }
-    private readonly potion: PotionType;
 
     public getSprite(centred = false): PIXI.Sprite {
         const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("items", "potion.png")));

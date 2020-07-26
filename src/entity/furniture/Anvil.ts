@@ -7,12 +7,12 @@ export default class Anvil extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "anvil.png"));
 
-    public static create({id, x, y}: { id: string, x: number, y: number }): Anvil {
-        return super.create({id, x, y}) as Anvil;
-    }
-
     constructor() {
         super(Crafting.anvilRecipes);
+    }
+
+    public static create({id, x, y}: { id: string, x: number, y: number }): Anvil {
+        return super.create({id, x, y}) as Anvil;
     }
 
     public toBSON(): any {

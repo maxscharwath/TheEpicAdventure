@@ -2,6 +2,7 @@ declare global {
     interface String {
 
         equals(str: string): boolean;
+
         spinalCase(): string;
     }
 }

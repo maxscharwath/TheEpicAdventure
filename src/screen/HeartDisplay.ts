@@ -6,13 +6,13 @@ import Game from "../core/Game";
 
 export default class HeartDisplay extends Display {
     private static textures = SpriteSheet.loadTextures(System.getResource("screen", "heart.png"), 3, 8);
+    private health: number;
+    private hearts: PIXI.Sprite[] = [];
 
     constructor() {
         super();
         this.init();
     }
-    private health: number;
-    private hearts: PIXI.Sprite[] = [];
 
     public onRender(): void {
         super.onRender();

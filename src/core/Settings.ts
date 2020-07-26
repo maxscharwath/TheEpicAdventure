@@ -8,6 +8,8 @@ import Language from "./io/Language";
 
 class Settings {
 
+    private options = new Map<string, Entry>();
+
     constructor() {
         this.options.set("sound", new BooleanEntry("Sound", true));
         this.options.set("fps", new RangeEntry("Max FPS", 10, 300, 30));
@@ -16,7 +18,6 @@ class Settings {
         this.options.set("port", new NumberEntry("Server Port", 2250));
         this.options.set("lang", new ArrayEntry("Language", Language.all));
     }
-    private options = new Map<string, Entry>();
 
     public get(option: string): any {
         return this.getEntry(option)?.getValue();

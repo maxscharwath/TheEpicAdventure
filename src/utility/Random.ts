@@ -1,9 +1,14 @@
 import System from "../core/System";
 
 export default class Random {
-    public seed: number;
-
     private static $ = Random.create();
+    public seed: number;
+    private haveNextGaussian = false;
+    private nextGaussian = 0;
+
+    constructor(seed = System.currentTimeMillis()) {
+        this.seed = seed;
+    }
 
     public static boolean(): boolean {
         return Random.$.boolean();
@@ -32,12 +37,6 @@ export default class Random {
     public static probability(prob: number): boolean {
         return Random.$.probability(prob);
     }
-
-    constructor(seed = System.currentTimeMillis()) {
-        this.seed = seed;
-    }
-    private haveNextGaussian = false;
-    private nextGaussian = 0;
 
     public boolean(): boolean {
         return this.random() >= 0.5;

@@ -5,13 +5,13 @@ import System from "../../core/System";
 export default class Bed extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "bed.png"));
 
-    public static create({id, x, y}: { id: string, x: number, y: number }): Bed {
-        return super.create({id, x, y}) as Bed;
-    }
-
     constructor() {
         super();
         this.hitbox.set(0, 3, 16, 10);
+    }
+
+    public static create({id, x, y}: { id: string, x: number, y: number }): Bed {
+        return super.create({id, x, y}) as Bed;
     }
 
     protected init(): void {

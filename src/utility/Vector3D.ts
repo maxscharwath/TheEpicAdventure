@@ -9,14 +9,6 @@ export default class Vector3D {
         this.z = z;
     }
 
-    public get2dMagnitude(): number {
-        return Math.hypot(this.x, this.y);
-    }
-
-    public toString(): string {
-        return `x:${this.x.toFixed(2)} y:${this.y.toFixed(2)} z:${this.z.toFixed(2)}`;
-    }
-
     public get magnitude(): number {
         return Math.hypot(this.x, this.y, this.z);
     }
@@ -32,5 +24,13 @@ export default class Vector3D {
 
     public get rotation(): number {
         return Math.atan2(this.x, this.y);
+    }
+
+    public get2dMagnitude(): number {
+        return Math.hypot(this.x, this.y);
+    }
+
+    public toString(): string {
+        return `x:${this.x.toFixed(2)} y:${this.y.toFixed(2)} z:${this.z.toFixed(2)}`;
     }
 }

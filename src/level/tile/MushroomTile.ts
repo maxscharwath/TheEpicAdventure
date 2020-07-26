@@ -9,9 +9,8 @@ import Tiles from "./Tiles";
 export default class MushroomTile extends Tile {
     public static readonly COLOR: number = 0x0cb516;
     public static readonly TAG = "mushroom";
-    public light = 10;
-
     private static tileTextures = MushroomTile.loadTextures(System.getResource("tile", "mushroom.png"), 3);
+    public light = 10;
     private sprite?: PIXI.Sprite;
 
     public init(): void {

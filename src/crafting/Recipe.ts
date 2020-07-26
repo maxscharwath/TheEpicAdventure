@@ -6,11 +6,11 @@ export default class Recipe {
     public canCraft = false;
     public cost: Array<[ItemRegister<Item>, number]> = [];
     public readonly result: ItemRegister<Item>;
+    private craftTime = 50;
 
     constructor(result: ItemRegister<Item>) {
         this.result = result;
     }
-    private craftTime = 50;
 
     public addCost(itemRegister: ItemRegister<Item>, count: number): this {
         this.cost.push([itemRegister, count]);

@@ -3,6 +3,11 @@ import Display from "./Display";
 
 class DraggableArea extends PIXI.Container {
 
+    private data: any;
+    private dragging = false;
+    private offset = new PIXI.Point();
+    private parentContainer: PIXI.Container;
+
     constructor(parentContainer: PIXI.Container, x = 0, y = 0) {
         super();
         this.x = x;
@@ -19,10 +24,6 @@ class DraggableArea extends PIXI.Container {
 
         this.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
     }
-    private data: any;
-    private dragging = false;
-    private offset = new PIXI.Point();
-    private parentContainer: PIXI.Container;
 
     public disable(): void {
         this.interactive = false;

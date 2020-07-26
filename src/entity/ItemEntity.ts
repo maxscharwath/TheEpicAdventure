@@ -8,12 +8,12 @@ import Updater from "../core/Updater";
 
 export default class ItemEntity extends Entity {
 
-    public static create({id, x, y, item}: { id: string, x: number, y: number, item: any}): ItemEntity | undefined {
-        const EntityClass = Entities.getByTag(id);
-        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
-    }
-
     public item: Item;
+    private lastCheck = 0;
+    private readonly lifeTime: number;
+    private radiusMobs: Mob[] = [];
+    private readonly shadow: PIXI.filters.DropShadowFilter;
+    private time = 0;
 
     constructor(item: Item | ItemRegister<Item>, x?: number, y?: number) {
         super();
@@ -34,11 +34,11 @@ export default class ItemEntity extends Entity {
         this.filters = [this.shadow];
         this.container.addChild(this.fireSprite);
     }
-    private lastCheck = 0;
-    private readonly lifeTime: number;
-    private radiusMobs: Mob[] = [];
-    private readonly shadow: PIXI.filters.DropShadowFilter;
-    private time = 0;
+
+    public static create({id, x, y, item}: { id: string, x: number, y: number, item: any }): ItemEntity | undefined {
+        const EntityClass = Entities.getByTag(id);
+        return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
+    }
 
     public canSwim(): boolean {
         return true;

@@ -4,6 +4,8 @@ import * as PIXI from "pixi.js";
 
 export default class DamageParticle extends Particle {
 
+    private readonly sprite: PIXI.BitmapText;
+
     constructor(x: number, y: number, value = 0, color = 0xffffff) {
         super(x, y);
         this.lifeDuration = Random.int(5) + 10;
@@ -20,7 +22,6 @@ export default class DamageParticle extends Particle {
         this.sprite.anchor = 0.5;
         this.addChild(this.sprite);
     }
-    private readonly sprite: PIXI.BitmapText;
 
     public onRender(): void {
         super.onRender();

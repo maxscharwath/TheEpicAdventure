@@ -47,8 +47,6 @@ export default class BackgroundDisplay extends Display {
 
     private _height = 0;
 
-    private _width = 0;
-
     get height(): number {
         return this._height;
     }
@@ -56,6 +54,8 @@ export default class BackgroundDisplay extends Display {
     set height(value: number) {
         this._height = value;
     }
+
+    private _width = 0;
 
     get width(): number {
         return this._width;

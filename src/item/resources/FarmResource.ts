@@ -7,11 +7,12 @@ import FarmlandTile from "../../level/tile/FarmlandTile";
 
 export default class FarmResource extends Resource {
 
+    private readonly targetTile: typeof Tile;
+
     constructor(path: string, targetTile: TileRegister<typeof Tile>) {
         super(path);
         this.targetTile = targetTile.tile;
     }
-    private readonly targetTile: typeof Tile;
 
     public useOn(levelTile: LevelTile, entity: Entity): boolean {
         if (levelTile.is(Tiles.FARMLAND)) {

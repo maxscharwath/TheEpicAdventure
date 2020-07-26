@@ -5,17 +5,36 @@ import Entity from "../entity/Entity";
 
 export default class Camera {
 
-    constructor() {
-    }
-
-    private _zoom = 6;
-
     private containers: PIXI.Container[] = [];
     private cx = 0;
     private cy = 0;
     private follow?: { x: number; y: number; };
     private fx = 0;
     private fy = 0;
+
+    constructor() {
+    }
+
+    private _zoom = 6;
+
+    public get zoom(): number {
+        return this._zoom;
+    }
+
+    public set zoom(value: number) {
+        if (value < 0.5) {
+            value = 0.5;
+        }
+        this._zoom = value;
+    }
+
+    public get x(): number {
+        return (this.cx);
+    }
+
+    public get y(): number {
+        return (this.cy);
+    }
 
     public setContainer(...containers: PIXI.Container[]): void {
         this.containers = containers;
@@ -38,25 +57,6 @@ export default class Camera {
             container.pivot.set(this.x, this.y);
             container.scale.set(this.zoom);
         });
-    }
-
-    public get x(): number {
-        return (this.cx);
-    }
-
-    public get y(): number {
-        return (this.cy);
-    }
-
-    public get zoom(): number {
-        return this._zoom;
-    }
-
-    public set zoom(value: number) {
-        if (value < 0.5) {
-            value = 0.5;
-        }
-        this._zoom = value;
     }
 
     private move() {

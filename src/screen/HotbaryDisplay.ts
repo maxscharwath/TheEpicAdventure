@@ -12,6 +12,8 @@ class InventorySlot extends PIXI.Container {
     public index = 0;
     public item?: Item;
     public slot: Slot;
+    private itemContainer = new PIXI.Container();
+    private itemSprite?: PIXI.Sprite;
 
     constructor(slot: Slot, index = 0) {
         super();
@@ -26,9 +28,6 @@ class InventorySlot extends PIXI.Container {
         this.addChild(this.itemContainer);
         this.itemContainer.filters = [new DropShadowFilter({blur: 0, distance: 2, rotation: 45, quality: 0})];
     }
-    private itemContainer = new PIXI.Container();
-
-    private itemSprite?: PIXI.Sprite;
 
     public update(): void {
         if (this.item === this.slot.item) return;
@@ -43,17 +42,17 @@ class InventorySlot extends PIXI.Container {
 
 export default class HotbarDisplay extends Display {
     public hasCommand = true;
+    private itemText?: PIXI.BitmapText;
+    private nbSlot = 9;
+    private selectSprite?: PIXI.Sprite;
+    private slots: InventorySlot[] = [];
+    private textDelay = 0;
 
     constructor() {
         super();
         this.init();
         this.onResize();
     }
-    private itemText?: PIXI.BitmapText;
-    private nbSlot = 9;
-    private selectSprite?: PIXI.Sprite;
-    private slots: InventorySlot[] = [];
-    private textDelay = 0;
 
     public onCommand(): void {
         super.onCommand();

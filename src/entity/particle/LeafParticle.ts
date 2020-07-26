@@ -6,6 +6,7 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default class LeafParticle extends Particle {
     private static frames = SpriteSheet.loadTextures(System.getResource("particle", "leaf.png"), 4, 8);
+    private readonly sprite: PIXI.Sprite;
 
     constructor(x: number, y: number) {
         super(x, y);
@@ -21,7 +22,6 @@ export default class LeafParticle extends Particle {
         this.sprite.angle = Random.number(-25, 25);
         this.addChild(this.sprite);
     }
-    private readonly sprite: PIXI.Sprite;
 
     public onRender(): void {
         super.onRender();

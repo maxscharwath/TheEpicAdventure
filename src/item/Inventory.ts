@@ -4,23 +4,23 @@ import Slot from "./Slot";
 
 export default class Inventory {
 
-    public static create(data: any): Inventory {
-        const inventory = new Inventory(data.nbSlots);
-        for (const slotData of data.slots) {
+    public indexedSlot = 0;
+    public slots: Slot[] = [];
+    private STACK_MAX = 64;
+
+    constructor(nbSlot = 9) {
+        this.addSlots(nbSlot);
+    }
+
+    public static create({nbSlots, slots}: { nbSlots: number, slots: Array<{ nb: number, pos: number, item: any }> }): Inventory {
+        const inventory = new Inventory(nbSlots);
+        for (const slotData of slots) {
             const slot = inventory.slots[slotData.pos];
             slot.nb = slotData.nb;
             slot.item = Item.create(slotData.item);
         }
         return inventory;
     }
-
-    public indexedSlot = 0;
-    public slots: Slot[] = [];
-
-    constructor(nbSlot = 9) {
-        this.addSlots(nbSlot);
-    }
-    private STACK_MAX = 64;
 
     public addItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
         if (item instanceof ItemRegister) {

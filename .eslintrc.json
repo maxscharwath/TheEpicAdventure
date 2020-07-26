@@ -17,21 +17,19 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"],
     "indent": [
       "error",
       4
     ],
     "linebreak-style": [
       "error",
-      "windows"
+      "unix"
     ],
     "quotes": [
       "error",
       "double"
-    ],
-    "semi": [
-      "error",
-      "always"
     ],
     "@typescript-eslint/array-type": [
       "error", {
@@ -39,9 +37,7 @@
         "readonly": "array-simple"
       }
     ],
-    "@typescript-eslint/ban-ts-comment": [
-      "off"
-    ],
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/explicit-module-boundary-types": [
       "warn"
     ],

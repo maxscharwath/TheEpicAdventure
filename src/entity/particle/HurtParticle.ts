@@ -4,6 +4,8 @@ import System from "../../core/System";
 
 export default class HurtParticle extends Particle {
 
+    private readonly sprite: PIXI.Sprite;
+
     constructor(x: number, y: number) {
         super(x, y);
         this.lifeDuration = 3;
@@ -11,7 +13,6 @@ export default class HurtParticle extends Particle {
         this.sprite.anchor.set(0.5);
         this.addChild(this.sprite);
     }
-    private readonly sprite: PIXI.Sprite;
 
     protected getZIndex(): number {
         return this.y + this.z + 8;

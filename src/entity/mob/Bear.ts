@@ -3,8 +3,8 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Bear extends HostileMob {
-    protected speedMax = 1;
     private static spriteSheet = new SpriteSheet("bear.json");
+    protected speedMax = 1;
     private sprite?: AnimatedSprite;
 
     public canSwim(): boolean {

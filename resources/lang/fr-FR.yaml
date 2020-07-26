@@ -48,6 +48,7 @@ tile.bush: Buisson
 tile.stone: Pierre
 tile.fence: Barrière
 tile.fence_gate: Portillon
+tile.sugar_cane: Canne à Sucre
 
 entity.player: Joueur
 entity.zombie: Zombie

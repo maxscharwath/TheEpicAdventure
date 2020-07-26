@@ -4,8 +4,8 @@ import {Entity} from "../../entity";
 
 export default abstract class CropTile extends FarmlandTile {
 
-    protected sprite?: PIXI.Sprite;
     public static readonly TAG: string = "crop";
+    protected sprite?: PIXI.Sprite;
     private wiggleDelay = 0;
 
     public init(): void {

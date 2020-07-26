@@ -4,16 +4,17 @@ import {Entity, Mob} from "../../entity";
 import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
-import TileStates from "./TileStates";
 import Items from "../../item/Items";
 import HurtParticle from "../../entity/particle/HurtParticle";
 
+/**
+ * @TODO Damage
+ */
 export default class CactusTile extends Tile {
     public static readonly COLOR: number = 0x2a963c;
-    public static DEFAULT_STATES = {damage: 0};
     public static readonly TAG = "cactus";
-    public states = TileStates.create(CactusTile.DEFAULT_STATES);
     private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
+    private damage = 0;
 
     public bumpedInto(entity: Entity): void {
         if (entity instanceof Mob) {

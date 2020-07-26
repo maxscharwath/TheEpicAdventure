@@ -12,6 +12,13 @@ import Renderer from "../core/Renderer";
 
 export default class Server {
 
+    private io: socketio.Server;
+    private name = "MY SUPER SERVER";
+    private port: number;
+    private readonly server: http.Server;
+    private udp = new ServerUDP(this);
+    private uid: string = uniqid();
+
     constructor() {
         Game.isOnline = true;
         Game.isHost = true;
@@ -49,12 +56,6 @@ export default class Server {
             Renderer.createStream().pipe(res, {end: false});
         });
     }
-    private io: socketio.Server;
-    private name = "MY SUPER SERVER";
-    private port: number;
-    private readonly server: http.Server;
-    private udp = new ServerUDP(this);
-    private uid: string = uniqid();
 
     public endConnection(): void {
         console.log("Server closing in 3s");

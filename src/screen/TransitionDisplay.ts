@@ -5,6 +5,11 @@ import Color from "../utility/Color";
 
 export default class TransitionDisplay extends Display {
 
+    private readonly graphics: PIXI.Graphics;
+    private percent = 0;
+    private readonly speed: number;
+    private readonly transitionOut: boolean;
+
     constructor(out = false) {
         super();
         this.transitionOut = out;
@@ -19,10 +24,6 @@ export default class TransitionDisplay extends Display {
         this.graphics.scale.set(1.2);
         this.addChild(this.graphics);
     }
-    private readonly graphics: PIXI.Graphics;
-    private percent = 0;
-    private readonly speed: number;
-    private readonly transitionOut: boolean;
 
     public onRender(): void {
         super.onRender();

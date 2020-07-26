@@ -11,7 +11,7 @@ import TileStates from "./TileStates";
 
 export default class FarmlandTile extends Tile {
     public static readonly COLOR: number = 0x94785c;
-    public static DEFAULT_STATES = {moisture: 0, age: 0};
+    public static DEFAULT_STATES: { moisture?: number; age?: number } = {moisture: 0, age: 0};
     public static readonly TAG: string = "farmland";
     public states = TileStates.create(FarmlandTile.DEFAULT_STATES);
 
@@ -29,7 +29,7 @@ export default class FarmlandTile extends Tile {
         if (!item || (item instanceof ToolItem && item.type === ToolType.HOE)) {
             this.harvest();
             this.setTile(Tiles.FARMLAND, {
-                moisture: this.states.moisture,
+                moisture: this.states.moisture
             });
             return true;
         }

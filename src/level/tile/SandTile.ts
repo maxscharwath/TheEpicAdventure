@@ -9,9 +9,9 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SandTile extends AutoTilingTile {
-    protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     public static readonly COLOR: number = 0xe0f878;
     public static readonly TAG = "sand";
+    protected static autoTileTextures = SandTile.loadMaskTextures(System.getResource("tile", "sand_mask.png"));
     private footprintSprite?: PIXI.Sprite;
     private step = 0;
     private stepDir = false;

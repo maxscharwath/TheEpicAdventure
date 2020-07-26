@@ -10,6 +10,7 @@ export interface SubnetInfo {
     subnetMaskLength: number;
     numHosts: number;
     length: number;
+
     contains(ip: string): boolean;
 }
 
@@ -17,10 +18,6 @@ export default class IP {
 
     private static ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
     private static ipv6Regex = /^(::)?(((\d{1,3}\.){3}(\d{1,3}))?([0-9a-f]){0,4}:{0,2}){1,8}(::)?$/i;
-
-    private static _normalizeFamily(family?: string) {
-        return family ? family.toLowerCase() : "ipv4";
-    }
 
     public static address(name?: string, family?: string): string {
         const ip = IP.ip(name, family);
@@ -348,7 +345,7 @@ export default class IP {
                     sections.push("0");
                 }
             } else if (sections.length < 8) {
-                for (i = 0; i < sections.length && sections[i] !== ""; i++);
+                for (i = 0; i < sections.length && sections[i] !== ""; i++) ;
                 const argv: [number, number, ...string[]] = [i, 1];
                 for (i = 9 - sections.length; i > 0; i--) {
                     argv.push("0");
@@ -402,5 +399,9 @@ export default class IP {
         }
 
         return result as string;
+    }
+
+    private static _normalizeFamily(family?: string) {
+        return family ? family.toLowerCase() : "ipv4";
     }
 }

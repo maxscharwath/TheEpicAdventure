@@ -25,17 +25,24 @@ interface LevelTileConstructor {
 }
 
 export default class LevelTile {
+    public static SIZE = 16;
     public biome: Biome;
     public readonly elevation: number;
     public level: Level;
     public readonly light = new Light();
-    protected lightLevel = 0;
     public readonly moisture: number;
     public random: TileRandom = new TileRandom(this);
     public skipTick = false;
     public readonly temperature: number;
-
-    public static SIZE = 16;
+    protected lightLevel = 0;
+    private groundContainer = new PIXI.Container();
+    private initByEntity?: Entity;
+    private isInitiated = false;
+    private needToUpdate = true;
+    private sortableContainer = new PIXI.Container();
+    private tileClass?: typeof Tile;
+    private tileStates?: StateType;
+    private visible: boolean;
 
     constructor({level, x, y, biome, temperature, elevation, moisture, tileClass, tileStates}: LevelTileConstructor) {
         this.biome = biome;
@@ -51,17 +58,41 @@ export default class LevelTile {
 
     private _tile?: Tile;
 
+    get tile(): Tile | undefined {
+        return this._tile;
+    }
+
     private _x: number;
 
+    public get x(): number {
+        return this._x;
+    }
+
+    public set x(value: number) {
+        this._x = value;
+        this.groundContainer.x = this._x;
+        this.sortableContainer.x = this._x;
+        this.light.x = this._x;
+        this.sort();
+    }
+
     private _y: number;
-    private groundContainer = new PIXI.Container();
-    private initByEntity?: Entity;
-    private isInitiated = false;
-    private needToUpdate = true;
-    private sortableContainer = new PIXI.Container();
-    private tileClass?: typeof Tile;
-    private tileStates?: StateType;
-    private visible: boolean;
+
+    public get y(): number {
+        return this._y;
+    }
+
+    public set y(value: number) {
+        this._y = value;
+        this.groundContainer.y = this._y;
+        this.sortableContainer.y = this._y;
+        this.light.y = this._y;
+        this.sort();
+    }
+
+    public get z(): number {
+        return this.tile?.z ?? 0;
+    }
 
     public add(): void {
         if (!this.level) {
@@ -126,9 +157,9 @@ export default class LevelTile {
         return l > 20 ? 20 : l;
     }
 
-    public getLocalX = ():number => this._x >> 4;
+    public getLocalX = (): number => this._x >> 4;
 
-    public getLocalY = ():number => this._y >> 4;
+    public getLocalY = (): number => this._y >> 4;
 
     public getNeighbourTiles(radius = 1, generate = true): LevelTile[] {
         const lt = [];
@@ -153,7 +184,7 @@ export default class LevelTile {
         return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
-    public getTileClass(): typeof Tile{
+    public getTileClass(): typeof Tile {
         return this.tileClass;
     }
 
@@ -250,10 +281,12 @@ export default class LevelTile {
         }
     }
 
-    public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
+    public setTile<T extends typeof Tile>(tile: T, states?: T["DEFAULT_STATES"], entity?: Entity): void;
+
     public setTile<T extends typeof Tile>(
-        tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
-    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: StateType, entity?: Entity): void {
+        tile: TileRegister<T>, states?: T["DEFAULT_STATES"], entity?: Entity): void;
+
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: T["DEFAULT_STATES"], entity?: Entity): void {
         this.isInitiated = false;
         this.skipTick = true;
         this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
@@ -296,38 +329,6 @@ export default class LevelTile {
                 }
             }
         }
-    }
-
-    get tile(): Tile | undefined {
-        return this._tile;
-    }
-
-    public get x(): number {
-        return this._x;
-    }
-
-    public set x(value: number) {
-        this._x = value;
-        this.groundContainer.x = this._x;
-        this.sortableContainer.x = this._x;
-        this.light.x = this._x;
-        this.sort();
-    }
-
-    public get y(): number {
-        return this._y;
-    }
-
-    public set y(value: number) {
-        this._y = value;
-        this.groundContainer.y = this._y;
-        this.sortableContainer.y = this._y;
-        this.light.y = this._y;
-        this.sort();
-    }
-
-    public get z(): number {
-        return this.tile?.z ?? 0;
     }
 
     private checkOnScreen(): void {

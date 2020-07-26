@@ -5,10 +5,10 @@ import Time from "./Time";
 export default class Updater {
     public static readonly dayLength: number = 15000;
     public static delta: number;
-    public static tickCount: number = Time.NIGHT.start;
+    public static tickCount: number = Time.DAY.start;
     public static ticks = 0;
-    private static ticksTime: number[] = [];
     public static time: Time = Time.MORNING;
+    private static ticksTime: number[] = [];
 
     public static every(tick: number): boolean {
         return (this.tickCount % tick) === 0;

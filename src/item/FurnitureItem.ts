@@ -7,9 +7,7 @@ import System from "../core/System";
 
 export default class FurnitureItem extends Item {
 
-    public static create(data: any): FurnitureItem {
-        return super.create(data) as FurnitureItem;
-    }
+    private readonly furniture: Furniture;
 
     constructor(tag: string, furniture: typeof Furniture | Furniture) {
         super(tag);
@@ -22,7 +20,9 @@ export default class FurnitureItem extends Item {
         this.texture = PIXI.Texture.from(System.getResource("items", `${tag}.png`));
     }
 
-    private readonly furniture: Furniture;
+    public static create({tag}: { tag: string }): FurnitureItem {
+        return super.create({tag}) as FurnitureItem;
+    }
 
     public canAttack(): boolean {
         return true;

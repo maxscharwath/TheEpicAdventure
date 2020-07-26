@@ -7,13 +7,13 @@ import Game from "../core/Game";
 
 export class Dialogue {
 
-    public static create(name: string): Dialogue {
-        return new Dialogue().setName(name);
-    }
-
     public hasCommand = true;
     public name: string;
     public sentences: string[] = [];
+
+    public static create(name: string): Dialogue {
+        return new Dialogue().setName(name);
+    }
 
     public addSentence(text: string): this {
         this.sentences.push(text);
@@ -29,16 +29,17 @@ export class Dialogue {
 
 class TextAnimation {
 
-    constructor(onUpdate: (text: string, char?: string) => void, onDone?: () => void) {
-        this.onUpdate = onUpdate;
-        this.onDone = onDone;
-    }
     private delay = 1;
     private readonly onDone: () => void;
     private readonly onUpdate: (text: string, char?: string) => void;
     private outputText = "";
     private sourceText: string;
     private started = false;
+
+    constructor(onUpdate: (text: string, char?: string) => void, onDone?: () => void) {
+        this.onUpdate = onUpdate;
+        this.onDone = onDone;
+    }
 
     public onTick(): void {
         if (!this.started || !Updater.every(this.delay)) return;
@@ -61,6 +62,12 @@ class TextAnimation {
 
 export default class DialogueDisplay extends Display {
     public hasCommand = true;
+    private animation: TextAnimation;
+    private dialogue: Dialogue;
+    private readonly nameArea: PIXI.BitmapText;
+    private readonly next: PIXI.Sprite;
+    private sentences: string[] = [];
+    private readonly textArea: PIXI.BitmapText;
 
     constructor() {
         super();
@@ -113,12 +120,6 @@ export default class DialogueDisplay extends Display {
             },
         );
     }
-    private animation: TextAnimation;
-    private dialogue: Dialogue;
-    private readonly nameArea: PIXI.BitmapText;
-    private readonly next: PIXI.Sprite;
-    private sentences: string[] = [];
-    private readonly textArea: PIXI.BitmapText;
 
     public displayNextSentence(): void {
         if (this.sentences.length <= 0) return this.endDialogue();

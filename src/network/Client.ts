@@ -3,12 +3,7 @@ import Game from "../core/Game";
 
 export default class Client {
 
-    private static openSocket(host: string): any {
-        console.log(host);
-        return io(host, {
-            query: {},
-        });
-    }
+    private readonly socket: SocketIOClient.Socket;
 
     constructor(username: string, hostName: string) {
         Game.isOnline = true;
@@ -22,7 +17,12 @@ export default class Client {
         });
     }
 
-    private readonly socket: SocketIOClient.Socket;
+    private static openSocket(host: string): any {
+        console.log(host);
+        return io(host, {
+            query: {},
+        });
+    }
 
     public endConnection(): void {
         this.socket.close();

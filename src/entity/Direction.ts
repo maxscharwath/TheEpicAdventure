@@ -4,6 +4,15 @@ export default class Direction {
     public static NONE: Direction = new Direction(0, 0, -1);
     public static RIGHT: Direction = new Direction(1, 0, 3);
     public static UP: Direction = new Direction(0, -1, 1);
+    private readonly num: number;
+    private readonly x: number;
+    private readonly y: number;
+
+    constructor(x: number, y: number, num = -1) {
+        this.x = x;
+        this.y = y;
+        this.num = num;
+    }
 
     public static getDirection(xd: number, yd: number): Direction {
         if (xd === 0 && yd === 0) {
@@ -25,15 +34,6 @@ export default class Direction {
             }
         }
     }
-
-    constructor(x: number, y: number, num = -1) {
-        this.x = x;
-        this.y = y;
-        this.num = num;
-    }
-    private readonly num: number;
-    private readonly x: number;
-    private readonly y: number;
 
     public getX(): number {
         return this.x;

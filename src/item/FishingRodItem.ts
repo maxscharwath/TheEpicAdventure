@@ -6,21 +6,21 @@ import System from "../core/System";
 
 export default class FishingRodItem extends Item {
 
-    public static create(data: any): FishingRodItem {
-        const item = super.create(data) as FishingRodItem;
-        item.durability = data.durability;
-        return item;
-    }
+    private durability: number;
+    private readonly durabilityMax: number = 50;
+    private hook?: Hook;
 
     constructor() {
         super("fishing_rod");
         this.durability = this.durabilityMax;
         this.texture = PIXI.Texture.from(System.getResource("items", "fishing_rod.png"));
     }
-    private durability: number;
-    private readonly durabilityMax: number = 50;
 
-    private hook?: Hook;
+    public static create({tag, durability}: { tag: string, durability: number }): FishingRodItem {
+        const item = super.create({tag}) as FishingRodItem;
+        item.durability = durability;
+        return item;
+    }
 
     public clearHook(): void {
         this.hook = undefined;

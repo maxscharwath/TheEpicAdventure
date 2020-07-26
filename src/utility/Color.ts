@@ -5,17 +5,11 @@ export default class Color {
 
     public r = 0;
 
-    public static fromHex(hex: string): Color {
-        const rgb = parseInt(hex.replace(/[^0-9A-F]/gi, ""), 16);
-        return Color.fromNumber(rgb);
-    }
-
-    public static fromNumber(rgb: number): Color {
-        return new Color(
-            ((rgb >> 16) & 0b11111111),
-            ((rgb >> 8) & 0b11111111),
-            (rgb & 0b11111111),
-        );
+    constructor(r = 0, g = 0, b = 0, a = 1) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 
     static get black(): Color {
@@ -42,11 +36,17 @@ export default class Color {
         return new Color(255, 255, 0);
     }
 
-    constructor(r = 0, g = 0, b = 0, a = 1) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+    public static fromHex(hex: string): Color {
+        const rgb = parseInt(hex.replace(/[^0-9A-F]/gi, ""), 16);
+        return Color.fromNumber(rgb);
+    }
+
+    public static fromNumber(rgb: number): Color {
+        return new Color(
+            ((rgb >> 16) & 0b11111111),
+            ((rgb >> 8) & 0b11111111),
+            (rgb & 0b11111111),
+        );
     }
 
     public clone(): Color {
@@ -63,6 +63,7 @@ export default class Color {
         this.b = this.b * 0.5 + c.b * 0.5;
         return this;
     }
+
     public toString(): string {
         return `rgba(${this.r},${this.g},${this.b},${this.a})`;
     }

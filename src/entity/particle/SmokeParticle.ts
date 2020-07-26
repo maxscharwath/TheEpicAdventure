@@ -6,6 +6,8 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 
 export default class SmokeParticle extends Particle {
 
+    private readonly sprite: PIXI.AnimatedSprite;
+
     constructor(x: number, y: number, startFrame = 0) {
         super(x, y);
         this.lifeDuration = Random.int(10) + 20;
@@ -24,7 +26,6 @@ export default class SmokeParticle extends Particle {
         this.sprite.gotoAndPlay(startFrame);
         this.addChild(this.sprite);
     }
-    private readonly sprite: PIXI.AnimatedSprite;
 
     public onRender(): void {
         super.onRender();

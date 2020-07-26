@@ -10,9 +10,12 @@ import FurnitureItem from "../../item/FurnitureItem";
 import {Furniture} from "../index";
 
 export default class Player extends Mob {
-    protected speedMax = 1;
-
     private static spriteSheet = new SpriteSheet("player.json");
+    protected speedMax = 1;
+    private holdItem: FurnitureItem;
+    private holdItemContainer: PIXI.Container;
+    private sprite?: PIXI.AnimatedSprite;
+    private targetTile?: PIXI.Sprite;
 
     constructor() {
         super();
@@ -24,10 +27,6 @@ export default class Player extends Mob {
         this.inventory.addItem(Items.WOOD_SWORD);
         this.inventory.addItem(Items.FISHING_ROD);
     }
-    private holdItem: FurnitureItem;
-    private holdItemContainer: PIXI.Container;
-    private sprite?: PIXI.AnimatedSprite;
-    private targetTile?: PIXI.Sprite;
 
     public canSwim(): boolean {
         return true;

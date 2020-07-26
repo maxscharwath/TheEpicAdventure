@@ -6,19 +6,18 @@ import Level from "../../level/Level";
 import Chunk from "../../level/Chunk";
 
 export default class Particle extends PIXI.Container implements Tickable {
+    private static random = new Random();
     public a: Vector3D = new Vector3D();
+    public ticks = 0;
+    public x = 0;
+    public y = 0;
+    public z = 0;
     protected deleted = false;
     protected gravity = 0;
     protected level?: Level;
     protected life = 0;
     protected lifeDuration = 5;
     protected random = Particle.random;
-    public ticks = 0;
-    public x = 0;
-    public y = 0;
-    public z = 0;
-
-    private static random = new Random();
 
     constructor(x: number, y: number) {
         super();

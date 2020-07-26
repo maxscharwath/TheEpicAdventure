@@ -1,9 +1,10 @@
 export default abstract class Entry {
 
+    private readonly label: string;
+
     protected constructor(label: string) {
         this.label = label;
     }
-    private readonly label: string;
 
     public getLabel(): string {
         return this.label;
@@ -11,7 +12,7 @@ export default abstract class Entry {
 
     public abstract getValue(): any;
 
-    public abstract setValue(value: any): void;
+    public abstract setValue(value: unknown): void;
 
     public toString(): string {
         return `${this.getLabel()}: ${this.getValue()}`;

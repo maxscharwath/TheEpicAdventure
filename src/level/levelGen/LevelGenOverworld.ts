@@ -9,15 +9,16 @@ import LevelGen from "./LevelGen";
 
 export default class LevelGenOverworld extends LevelGen {
 
+    private elevationNoise: SimplexNoise;
+    private moistureNoise: SimplexNoise;
+    private temperatureNoise: SimplexNoise;
+
     constructor(seed: number | string = 0) {
         super(seed);
         this.elevationNoise = new SimplexNoise(this.seed);
         this.moistureNoise = new SimplexNoise((this.seed + 1) * 16);
         this.temperatureNoise = new SimplexNoise((this.seed + 2) * 32);
     }
-    private elevationNoise: SimplexNoise;
-    private moistureNoise: SimplexNoise;
-    private temperatureNoise: SimplexNoise;
 
     public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): LevelTile[] {
         const random = new ChunkRandom(this.seed, cX, cY);

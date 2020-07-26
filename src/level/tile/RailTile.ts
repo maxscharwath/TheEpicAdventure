@@ -17,10 +17,14 @@ enum RailDirection {
 
 export default class RailTile extends Tile {
 
-    public states = TileStates.create(RailTile.DEFAULT_STATES);
-    public static DEFAULT_STATES = {connected: false, direction: RailDirection.NS, groundTile: 0};
+    public static DEFAULT_STATES: { connected?: boolean; groundTile?: number; direction?: RailDirection } = {
+        connected: false,
+        direction: RailDirection.NS,
+        groundTile: 0
+    };
     public static readonly TAG = "rail";
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "rail.png"), 6, 16);
+    public states = TileStates.create(RailTile.DEFAULT_STATES);
     private sprite: PIXI.Sprite;
 
     public init(): void {

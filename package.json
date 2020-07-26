@@ -1,6 +1,6 @@
 {
   "name": "tea",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "productName": "The Epic Adventure",
   "description": "The Epic Adventure, the game",
   "license": "MIT",
@@ -8,8 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "yarn build & electron ./dist/index.js && tsc -w",
-    "fix": "eslint --fix ./src/**",
-    "start": "yarn build && electron --enable-gpu ./dist/index.js",
+    "fix": "eslint --fix --ext .ts,.js ./src/",
+    "start": "yarn build && SET APP_DEV=true & electron --enable-gpu ./dist/index.js",
     "packBuilder": "yarn build && electron-builder"
   },
   "author": "Maxime Scharwath",

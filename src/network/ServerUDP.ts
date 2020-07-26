@@ -3,6 +3,9 @@ import Server from "./Server";
 
 export default class ServerUDP {
 
+    private PORT = 20000;
+    private server: udp.Socket;
+
     constructor(server: Server) {
         this.server = udp.createSocket({type: "udp4", reuseAddr: true});
         this.server.on("message", (msg, info) => {
@@ -19,8 +22,6 @@ export default class ServerUDP {
             console.log("Socket is closed !");
         });
     }
-    private PORT = 20000;
-    private server: udp.Socket;
 
     public endConnection(): void {
         console.log("Server closing in 3s");

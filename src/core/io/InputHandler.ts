@@ -4,16 +4,9 @@ import "./String";
 
 export default class InputHandler {
 
-    private static isMod(keyName: string): boolean {
-        keyName = keyName.toUpperCase();
-        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
-    }
-
-    private static keyTyped(e: Event): void {
-        e.preventDefault();
-    }
-
     public preventDefault = true;
+    private keyboard = new Map();
+    private keymap = new Map();
 
     constructor() {
         this.initKeyMap();
@@ -24,8 +17,15 @@ export default class InputHandler {
         this.keyboard.set("CONTROL-LEFT", new Key(true));
         this.keyboard.set("ALT-LEFT", new Key(true));
     }
-    private keyboard = new Map();
-    private keymap = new Map();
+
+    private static isMod(keyName: string): boolean {
+        keyName = keyName.toUpperCase();
+        return keyName.equals("SHIFT-LEFT") || keyName.equals("CONTROL-LEFT") || keyName.equals("ALT-LEFT");
+    }
+
+    private static keyTyped(e: Event): void {
+        e.preventDefault();
+    }
 
     public getAllPressedKeys(): Key[] {
         const keys = [];

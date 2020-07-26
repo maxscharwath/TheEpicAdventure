@@ -10,11 +10,11 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile {
-    public friction = 0.25;
-    public light = 3;
-    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
     public static readonly COLOR: number = 0xf0f0ff;
     public static readonly TAG = "snow";
+    protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
+    public friction = 0.25;
+    public light = 3;
     private footprintSprite?: PIXI.Sprite;
 
     private step = 0;

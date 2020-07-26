@@ -9,14 +9,15 @@ import Level from "../level/Level";
 
 export default class Hook extends Entity {
 
+    private fishingRodItem: FishingRodItem;
+    private hooked?: Fish;
+    private readonly owner: Entity;
+
     constructor(owner: Entity, fishingRod: FishingRodItem) {
         super();
         this.owner = owner;
         this.fishingRodItem = fishingRod;
     }
-    private fishingRodItem: FishingRodItem;
-    private hooked?: Fish;
-    private readonly owner: Entity;
 
     public canSwim(): boolean {
         return true;

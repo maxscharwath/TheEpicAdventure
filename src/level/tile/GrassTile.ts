@@ -10,9 +10,9 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class GrassTile extends AutoTilingTile {
-    protected static autoTileTextures = GrassTile.loadMaskTextures(System.getResource("tile", "grass_mask.png"));
     public static readonly COLOR: number = 0x3abe41;
     public static readonly TAG = "grass";
+    protected static autoTileTextures = GrassTile.loadMaskTextures(System.getResource("tile", "grass_mask.png"));
     private static tileTextures = GrassTile.loadTextures(System.getResource("tile", "grass.png"), 6);
 
     public init(): void {

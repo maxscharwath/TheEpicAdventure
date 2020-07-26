@@ -1,14 +1,37 @@
 export default class Vector {
 
+    public x = 0;
+    public y = 0;
+    private readonly constant: boolean = false;
+
+    constructor(x = 0, y = 0, constant = false) {
+        this.x = x;
+        this.y = y;
+        this.constant = constant;
+    }
+
+    public get magnitude(): number {
+        return Math.hypot(this.x, this.y);
+    }
+
+    public set magnitude(mag: number) {
+        if (this.magnitude === 0) {
+            return;
+        }
+        this.x *= mag / this.magnitude;
+        this.y *= mag / this.magnitude;
+    }
+
+    public get rotation(): number {
+        return Math.atan2(this.x, this.y);
+    }
+
     private get vector(): Vector {
         if (!this.constant) {
             return this;
         }
         return this.clone();
     }
-
-    public x = 0;
-    public y = 0;
 
     public static create(x?: number, y?: number): Vector {
         return new Vector(x, y);
@@ -17,13 +40,6 @@ export default class Vector {
     public static createConstant(x?: number, y?: number): Vector {
         return new Vector(x, y, true);
     }
-
-    constructor(x = 0, y = 0, constant = false) {
-        this.x = x;
-        this.y = y;
-        this.constant = constant;
-    }
-    private readonly constant: boolean = false;
 
     public add(v: Vector | number): Vector {
         if (v instanceof Vector) {
@@ -140,22 +156,6 @@ export default class Vector {
 
     public toArray(n: number): number[] {
         return [this.x, this.y].slice(0, n || 2);
-    }
-
-    public get magnitude(): number {
-        return Math.hypot(this.x, this.y);
-    }
-
-    public set magnitude(mag: number) {
-        if (this.magnitude === 0) {
-            return;
-        }
-        this.x *= mag / this.magnitude;
-        this.y *= mag / this.magnitude;
-    }
-
-    public get rotation(): number {
-        return Math.atan2(this.x, this.y);
     }
 
 

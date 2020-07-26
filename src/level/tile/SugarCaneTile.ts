@@ -5,12 +5,15 @@ import Entity from "../../entity/Entity";
 import Item from "../../item/Item";
 import Tile from "./Tile";
 import Tiles from "./Tiles";
+import TileStates from "./TileStates";
+import Random from "../../utility/Random";
 
 export default class SugarCaneTile extends Tile {
     public static readonly COLOR: number = 0x0cb516;
     public static readonly TAG = "sugar_cane";
-
+    public static DEFAULT_STATES: { age?: number } = {age: 0};
     private static tileTextures = SugarCaneTile.loadTextures(System.getResource("tile", "sugar_cane.png"), 4);
+    public states = TileStates.create(SugarCaneTile.DEFAULT_STATES);
     private sprite?: PIXI.Sprite;
 
     public init(): void {
@@ -31,8 +34,24 @@ export default class SugarCaneTile extends Tile {
         return true;
     }
 
+    public onTick(): void {
+        super.onTick();
+
+        if (Random.probability(100)) {
+            if (this.states.age < 50) {
+                this.states.age++;
+                this.updateSprite();
+            }
+        }
+    }
+
     protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.WATER);
+    }
+
+    private updateSprite() {
+        const i = ~~(this.states.age / 50 * 4);
+        this.sprite.texture = SugarCaneTile.tileTextures[i];
     }
 }

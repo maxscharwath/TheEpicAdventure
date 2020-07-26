@@ -3,8 +3,8 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Chicken extends HostileMob {
-    protected speedMax = 1;
     private static spriteSheet = new SpriteSheet("chicken.json");
+    protected speedMax = 1;
     private sprite?: AnimatedSprite;
 
     public onRender(): void {
