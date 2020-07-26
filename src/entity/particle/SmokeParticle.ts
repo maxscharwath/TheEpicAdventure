@@ -26,7 +26,7 @@ export default class SmokeParticle extends Particle {
     }
     private readonly sprite: PIXI.AnimatedSprite;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (this.z < 0) {
             this.z = 0;
@@ -39,7 +39,4 @@ export default class SmokeParticle extends Particle {
         this.sprite.alpha = 1 - this.lifePercent() * this.lifePercent() * this.lifePercent();
     }
 
-    public onTick() {
-        super.onTick();
-    }
 }

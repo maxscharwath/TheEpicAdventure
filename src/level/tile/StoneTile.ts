@@ -19,7 +19,7 @@ export default class StoneTile extends Tile {
     private damage = 0;
     private sprite?: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.setGroundTile(Tiles.DIRT.tile);
         this.sprite = new PIXI.Sprite(StoneTile.tileTextures[this.random.int(StoneTile.tileTextures.length)]);
@@ -32,32 +32,32 @@ export default class StoneTile extends Tile {
 
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
+            const hurt = item.getAttackDamageBonus();
             switch (item.type) {
-                case ToolType.PICKAXE:
-                    const hurt = item.getAttackDamageBonus();
-                    this.damage += hurt;
-                    this.levelTile.level.add(
-                        new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
-                    );
-                    this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
-                    if (this.damage >= 5) {
-                        if (this.groundTile) {
-                            this.setTileToGround();
-                        } else {
-                            this.setTile(Tiles.DIRT);
-                        }
-                        this.addItemEntity(Items.STONE, 2);
-                        if (this.random.probability(40)) this.addItemEntity(Items.DIAMOND, 1);
-                        if (this.random.probability(30)) this.addItemEntity(Items.GOLD, 1);
-                        if (this.random.probability(20)) this.addItemEntity(Items.IRON, 1);
-                        if (this.random.probability(10)) this.addItemEntity(Items.COAL, 3);
+            case ToolType.PICKAXE:
+                this.damage += hurt;
+                this.levelTile.level.add(
+                    new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                );
+                this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
+                if (this.damage >= 5) {
+                    if (this.groundTile) {
+                        this.setTileToGround();
+                    } else {
+                        this.setTile(Tiles.DIRT);
                     }
-                    return true;
+                    this.addItemEntity(Items.STONE, 2);
+                    if (this.random.probability(40)) this.addItemEntity(Items.DIAMOND, 1);
+                    if (this.random.probability(30)) this.addItemEntity(Items.GOLD, 1);
+                    if (this.random.probability(20)) this.addItemEntity(Items.IRON, 1);
+                    if (this.random.probability(10)) this.addItemEntity(Items.COAL, 3);
+                }
+                return true;
             }
         }
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
         [Tiles.DIRT, Tiles.GRASS, Tiles.SAND, Tiles.SNOW, Tiles.DARK_GRASS].forEach((tile) => {

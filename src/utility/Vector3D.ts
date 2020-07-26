@@ -1,15 +1,15 @@
 export default class Vector3D {
-    public x: number = 0;
-    public y: number = 0;
-    public z: number = 0;
+    public x = 0;
+    public y = 0;
+    public z = 0;
 
-    constructor(x: number = 0, y: number = 0, z: number = 0) {
+    constructor(x = 0, y = 0, z = 0) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public get2dMagnitude() {
+    public get2dMagnitude(): number {
         return Math.hypot(this.x, this.y);
     }
 
@@ -17,7 +17,7 @@ export default class Vector3D {
         return `x:${this.x.toFixed(2)} y:${this.y.toFixed(2)} z:${this.z.toFixed(2)}`;
     }
 
-    public get magnitude() {
+    public get magnitude(): number {
         return Math.hypot(this.x, this.y, this.z);
     }
 
@@ -30,7 +30,7 @@ export default class Vector3D {
         this.z *= mag / this.magnitude;
     }
 
-    public get rotation() {
+    public get rotation(): number {
         return Math.atan2(this.x, this.y);
     }
 }

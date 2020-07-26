@@ -10,7 +10,7 @@ export default class SpruceTreeTile extends TreeTile {
         super.onTick();
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
         if (n.some((l) => !l.skipTick && l.instanceOf(Tiles.SNOW.tile))) {
@@ -21,7 +21,7 @@ export default class SpruceTreeTile extends TreeTile {
         }
     }
 
-    protected initTree() {
+    protected initTree(): void {
         this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tile", "spruce.png"));
     }

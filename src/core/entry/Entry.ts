@@ -1,6 +1,6 @@
-export default class Entry {
+export default abstract class Entry {
 
-    constructor(label: string) {
+    protected constructor(label: string) {
         this.label = label;
     }
     private readonly label: string;
@@ -9,11 +9,9 @@ export default class Entry {
         return this.label;
     }
 
-    public getValue(): any {
-    }
+    public abstract getValue(): any;
 
-    public setValue(value: any): void {
-    }
+    public abstract setValue(value: any): void;
 
     public toString(): string {
         return `${this.getLabel()}: ${this.getValue()}`;

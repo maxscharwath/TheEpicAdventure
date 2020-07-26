@@ -1,15 +1,15 @@
 export default class Key {
-    public clicked: boolean = false;
+    public clicked = false;
 
-    public down: boolean = false;
-    public sticky: boolean = false;
+    public down = false;
+    public sticky = false;
 
-    constructor(stayDown: boolean = false) {
+    constructor(stayDown = false) {
         this.stayDown = stayDown;
     }
-    private absorbs: number = 0;
-    private presses: number = 0;
-    private stayDown: boolean = false;
+    private absorbs = 0;
+    private presses = 0;
+    private stayDown = false;
 
     public onTick(): void {
         if (this.absorbs < this.presses) {

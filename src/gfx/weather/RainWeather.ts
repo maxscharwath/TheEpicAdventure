@@ -4,11 +4,11 @@ import System from "../../core/System";
 import Renderer from "../../core/Renderer";
 
 export default class RainWeather extends Weather {
-    private layers: Array<PIXI.TilingSprite>;
+    private layers: PIXI.TilingSprite[];
     private offset: PIXI.Point;
     private tint: PIXI.Sprite;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         const x = this.cameraX;
         const y = this.cameraY;
@@ -24,7 +24,7 @@ export default class RainWeather extends Weather {
         }
     }
 
-    protected init() {
+    protected init(): void {
         super.init();
         const texture = PIXI.Texture.from(System.getResource("weather", "rain.png"));
         this.layers = [

@@ -23,23 +23,22 @@ export default class RailTile extends Tile {
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "rail.png"), 6, 16);
     private sprite: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.sprite = new PIXI.Sprite();
         this.container.addChild(this.sprite);
         this.setGroundTile(Tiles.get(this.states.groundTile));
     }
 
-    public onSetTile(oldTile: Tile, entity?: Entity) {
+    public onSetTile(oldTile: Tile, entity?: Entity): void {
         this.setGroundTile(oldTile);
         if (entity instanceof Mob) {
             this.states.direction = entity.getDir().isY() ? RailDirection.NS : RailDirection.EW;
         }
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
-
 
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);

@@ -20,27 +20,27 @@ class DraggableArea extends PIXI.Container {
         this.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
     }
     private data: any;
-    private dragging: boolean = false;
+    private dragging = false;
     private offset = new PIXI.Point();
     private parentContainer: PIXI.Container;
 
-    public disable() {
+    public disable(): void {
         this.interactive = false;
         this.visible = false;
     }
 
-    public enable() {
+    public enable(): void {
         this.interactive = true;
         this.visible = false;
     }
 
-    private onDragEnd() {
+    private onDragEnd(): void {
         this.alpha = 1;
         this.dragging = false;
         this.data = null;
     }
 
-    private onDragMove() {
+    private onDragMove(): void {
         if (this.dragging && this.parent) {
             const newPosition = this.data.getLocalPosition(this.parentContainer.parent);
             this.parentContainer.x = newPosition.x - (this.offset.x * this.scale.x);
@@ -48,7 +48,7 @@ class DraggableArea extends PIXI.Container {
         }
     }
 
-    private onDragStart(event: any) {
+    private onDragStart(event: any): void {
         this.data = event.data;
         this.offset = this.data.getLocalPosition(this);
         this.alpha = 0.5;
@@ -56,8 +56,8 @@ class DraggableArea extends PIXI.Container {
     }
 }
 
-export default class DraggableDisplay extends Display {
-    constructor() {
+export default abstract class DraggableDisplay extends Display {
+    protected constructor() {
         super();
         this.addChild(new DraggableArea(this, -2, -2));
     }

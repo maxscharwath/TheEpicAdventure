@@ -1,10 +1,10 @@
 import * as PIXI from "pixi.js";
 
 export default class Hitbox extends PIXI.Sprite {
-    public height: number = 0;
-    public width: number = 0;
-    public x: number = 0;
-    public y: number = 0;
+    public height = 0;
+    public width = 0;
+    public x = 0;
+    public y = 0;
 
     constructor(x = 0, y = 0, width = 0, height = 0) {
         super(PIXI.Texture.WHITE);
@@ -21,7 +21,7 @@ export default class Hitbox extends PIXI.Sprite {
             || (hb.y + hb.height <= this.y));
     }
 
-    public set(x: number, y: number, width: number, height: number) {
+    public set(x: number, y: number, width: number, height: number): void {
         this.x = x;
         this.y = y;
         this.height = height;

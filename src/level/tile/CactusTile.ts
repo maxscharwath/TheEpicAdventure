@@ -15,13 +15,13 @@ export default class CactusTile extends Tile {
     public states = TileStates.create(CactusTile.DEFAULT_STATES);
     private static tileTexture = PIXI.Texture.from(System.getResource("tile", "cactus.png"));
 
-    public bumpedInto(entity: Entity) {
+    public bumpedInto(entity: Entity): void {
         if (entity instanceof Mob) {
             entity.hurt(1);
         }
     }
 
-    public init() {
+    public init(): void {
         super.init();
         this.groundTile = new (Tiles.SAND.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);

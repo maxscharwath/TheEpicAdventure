@@ -50,7 +50,7 @@ export default class Server {
         });
     }
     private io: socketio.Server;
-    private name: string = "MY SUPER SERVER";
+    private name = "MY SUPER SERVER";
     private port: number;
     private readonly server: http.Server;
     private udp = new ServerUDP(this);
@@ -65,7 +65,7 @@ export default class Server {
         }, 3000);
     }
 
-    public getPacketUDP() {
+    public getPacketUDP(): Buffer {
         return Buffer.from(JSON.stringify({
             uid: this.uid,
             ip: IP.address(),
@@ -77,7 +77,7 @@ export default class Server {
         return this.io.sockets.clients.length > 0;
     }
 
-    public startConnection() {
+    public startConnection(): void {
         this.udp.startConnection();
         this.server.listen(this.port);
     }

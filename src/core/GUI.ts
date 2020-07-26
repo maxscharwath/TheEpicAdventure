@@ -12,21 +12,21 @@ import MapDisplay from "../screen/MapDisplay";
 import CommandDisplay from "../screen/CommandDisplay";
 
 export default class GUI {
-    private blocks: boolean = false;
+    private blocks = false;
     private commandDisplay?: CommandDisplay;
     private dialogueDisplay?: DialogueDisplay;
-    private displays: Array<Display> = [];
+    private displays: Display[] = [];
     private hotbarDisplay?: HotbarDisplay;
     private infoDisplay?: InfoDisplay;
     private mainDisplay?: Display;
 
-    public addDisplay(display: Display) {
+    public addDisplay(display: Display): void {
         if (!this.displays.includes(display)) {
             this.displays.push(display);
         }
     }
 
-    public init() {
+    public init(): void {
         this.infoDisplay = new InfoDisplay();
         this.hotbarDisplay = new HotbarDisplay();
         this.dialogueDisplay = new DialogueDisplay();
@@ -37,23 +37,23 @@ export default class GUI {
         this.hotbarDisplay.show();
     }
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return this.blocks;
     }
 
-    public onRender() {
+    public onRender(): void {
         this.displays.forEach((display) => {
             display.onRender();
         });
     }
 
-    public onResize() {
+    public onResize(): void {
         this.displays.forEach((display) => {
             display.onResize();
         });
     }
 
-    public onTick() {
+    public onTick(): void {
         this.blocks = false;
         this.displays.forEach((display, index) => {
             display.onTick();
@@ -80,14 +80,14 @@ export default class GUI {
         }
     }
 
-    public removeDisplay(display: Display) {
+    public removeDisplay(display: Display): void {
         this.displays.splice(this.displays.indexOf(display));
         if (display === this.mainDisplay) {
             this.mainDisplay = undefined;
         }
     }
 
-    public setDisplay(display: Display) {
+    public setDisplay(display: Display): void {
         if (this.mainDisplay) {
             this.mainDisplay.hide();
         }

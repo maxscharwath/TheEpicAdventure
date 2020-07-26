@@ -9,7 +9,7 @@ import TileStates from "./TileStates";
 export default class LavaTile extends AutoTilingTile {
     public light = 19;
     public states = TileStates.create(LavaTile.DEFAULT_STATES);
-    public z: number = -5;
+    public z = -5;
     protected static autoTileTextures = LavaTile.loadMaskTextures(System.getResource("tile", "lava_mask.png"));
     protected static canConnectTo = ["hole", "water"];
     public static readonly COLOR: number = 0xc83000;
@@ -18,7 +18,7 @@ export default class LavaTile extends AutoTilingTile {
     private static tileTextures = LavaTile.loadTextures(System.getResource("tile", "lava.png"), 6);
     private animSprite?: PIXI.AnimatedSprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.animSprite = new PIXI.AnimatedSprite(LavaTile.tileTextures);
         this.animSprite.animationSpeed = 0.1;
@@ -39,7 +39,7 @@ export default class LavaTile extends AutoTilingTile {
         }
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         if (this.levelTile.getDirectNeighbourTiles(false).some((l) => l.instanceOf(Tiles.WATER.tile))) {
             this.setTile(Tiles.ROCK);

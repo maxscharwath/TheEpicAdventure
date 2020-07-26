@@ -7,7 +7,7 @@ export default class Oven extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "oven.png"));
 
-    public static create({id, x, y}: any): Oven {
+    public static create({id, x, y}: { id: string, x: number, y: number }): Oven {
         return super.create({id, x, y}) as Oven;
     }
 
@@ -21,7 +21,7 @@ export default class Oven extends Craftable {
         };
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Oven.baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);

@@ -9,7 +9,7 @@ import Renderer from "../core/Renderer";
 export default class CraftingDisplay extends Display {
     public hasCommand = true;
 
-    constructor(recipes: Array<Recipe>, mob: Mob) {
+    constructor(recipes: Recipe[], mob: Mob) {
         super();
         this.mob = mob;
         this.recipes = Array.from(recipes);
@@ -26,12 +26,12 @@ export default class CraftingDisplay extends Display {
     private costContainer = new PIXI.Container();
     private hasText: PIXI.BitmapText;
     private readonly mob: Mob;
-    private readonly recipes: Array<Recipe>;
+    private readonly recipes: Recipe[];
     private recipesContainer = new PIXI.Container();
-    private selected: number = 0;
+    private selected = 0;
     private selectSprite: PIXI.Sprite;
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return true;
     }
 
@@ -55,11 +55,11 @@ export default class CraftingDisplay extends Display {
         }
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
     }
 
-    public onResize() {
+    public onResize(): void {
         super.onResize();
         this.background.width = Renderer.getScreen().width;
         this.background.height = Renderer.getScreen().height;
@@ -69,7 +69,7 @@ export default class CraftingDisplay extends Display {
         );
     }
 
-    private init() {
+    private init(): void {
         this.container = new PIXI.Container();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "crafting.png"));
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 192, 112)));
@@ -94,7 +94,7 @@ export default class CraftingDisplay extends Display {
         this.onResize();
     }
 
-    private initCost(recipe: Recipe) {
+    private initCost(recipe: Recipe): void {
         if (this.recipes.length === 0) return;
         this.costContainer.removeChildren();
         recipe.cost.forEach(([itemRegister, number], index) => {
@@ -115,7 +115,7 @@ export default class CraftingDisplay extends Display {
         });
     }
 
-    private initRecipe() {
+    private initRecipe(): void {
         if (this.recipes.length === 0) return;
         const maxRow = Math.min(10, this.recipes.length);
         this.recipesContainer.removeChildren();
@@ -140,13 +140,13 @@ export default class CraftingDisplay extends Display {
         this.hasText.text = `${this.mob.inventory.count(this.recipes[this.selected].result.item)}`;
     }
 
-    private refresh() {
+    private refresh(): void {
         this.recipes.forEach((recipe) => recipe.checkCanCraft(this.mob));
         this.initRecipe();
         this.initCost(this.recipes[this.selected]);
     }
 
-    private setSelect(val: number, force: boolean = false) {
+    private setSelect(val: number, force = false): void {
         if (!force && val === this.selected) return;
         this.selected = val;
         this.refresh();

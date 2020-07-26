@@ -12,12 +12,12 @@ export default class Recipe {
     }
     private craftTime = 50;
 
-    public addCost(itemRegister: ItemRegister<Item>, count: number) {
+    public addCost(itemRegister: ItemRegister<Item>, count: number): this {
         this.cost.push([itemRegister, count]);
         return this;
     }
 
-    public checkCanCraft(mob: Mob) {
+    public checkCanCraft(mob: Mob): void {
         for (const cost of this.cost) {
             const item = cost[0];
             const count = cost[1];
@@ -31,13 +31,13 @@ export default class Recipe {
         this.canCraft = true;
     }
 
-    public craft(mob: Mob) {
+    public craft(mob: Mob): boolean {
         const item = this.result.item;
         item.craftedBy = mob;
         return mob.inventory.addItem(item);
     }
 
-    public deductCost(mob: Mob) {
+    public deductCost(mob: Mob): void {
         for (const cost of this.cost) {
             const item = cost[0];
             const count = cost[1];
@@ -45,7 +45,7 @@ export default class Recipe {
         }
     }
 
-    public setCraftTime(t: number) {
+    public setCraftTime(t: number): this {
         this.craftTime = t;
         return this;
     }

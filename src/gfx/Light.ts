@@ -13,11 +13,11 @@ export default class Light extends PIXI.Sprite {
     private brightness = 1;
     private tintColor = 0xffffff;
 
-    public getColor() {
+    public getColor(): number {
         return this.tintColor;
     }
 
-    public setBrightness(value: number) {
+    public setBrightness(value: number): this {
         if (value < 0) value = 0;
         if (value > 1) value = 1;
         if (this.brightness === value) return this;
@@ -26,14 +26,14 @@ export default class Light extends PIXI.Sprite {
         return this;
     }
 
-    public setColor(color: number) {
+    public setColor(color: number): this {
         if (this.tintColor === color) return this;
         this.tintColor = color;
         this.updateTint();
         return this;
     }
 
-    private updateTint() {
+    private updateTint(): void {
         const color = this.tintColor;
         const r = ((color >> 16) & 0b11111111) * this.brightness;
         const g = ((color >> 8) & 0b11111111) * this.brightness;

@@ -2,15 +2,15 @@ import Items from "../item/Items";
 import Recipe from "./Recipe";
 
 export default class Crafting {
-    public static alembicRecipes: Array<Recipe> = [];
-    public static allRecipes: Array<Recipe> = [];
-    public static anvilRecipes: Array<Recipe> = [];
-    public static furnaceRecipes: Array<Recipe> = [];
-    public static handRecipes: Array<Recipe> = [];
-    public static ovenRecipes: Array<Recipe> = [];
-    public static workbenchRecipes: Array<Recipe> = [];
+    public static alembicRecipes: Recipe[] = [];
+    public static allRecipes: Recipe[] = [];
+    public static anvilRecipes: Recipe[] = [];
+    public static furnaceRecipes: Recipe[] = [];
+    public static handRecipes: Recipe[] = [];
+    public static ovenRecipes: Recipe[] = [];
+    public static workbenchRecipes: Recipe[] = [];
 
-    public static initRecipes() {
+    public static initRecipes(): void {
         this.handRecipes = [
             new Recipe(Items.FISHING_ROD)
                 .addCost(Items.STICK, 3),

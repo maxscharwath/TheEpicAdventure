@@ -7,7 +7,7 @@ export default class WheatTile extends CropTile {
     public static readonly COLOR: number = 0x94785c;
     public static readonly TAG: string = "wheat";
 
-    protected harvest() {
+    protected harvest(): void {
         if (this.states.age >= 50) {
             this.addItemEntity(Items.WHEAT, [2, 3]);
             this.addItemEntity(Items.SEED_WHEAT);
@@ -15,7 +15,7 @@ export default class WheatTile extends CropTile {
         this.addItemEntity(Items.SEED_WHEAT);
     }
 
-    protected initCrop() {
+    protected initCrop(): void {
         super.initCrop();
         const baseTexture = new PIXI.BaseTexture(System.getResource("tile", "wheat.png"));
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));

@@ -18,14 +18,14 @@ export default class MusicPlayer extends Furniture {
     private playing = false;
     private sound: Howl;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (this.playing) {
             this.disk.rotation += 0.02;
         }
     }
 
-    public onTick() {
+    public onTick(): void {
         super.onTick();
         if (this.playing) {
             if (Updater.every(10)) {
@@ -42,7 +42,7 @@ export default class MusicPlayer extends Furniture {
         return false;
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(MusicPlayer.baseTexture));
         this.disk = PIXI.Sprite.from(System.getResource("furniture", "disk.png"));
         sprite.anchor.set(0.5);

@@ -9,11 +9,11 @@ import {DropShadowFilter} from "@pixi/filter-drop-shadow";
 import Game from "../core/Game";
 
 class InventorySlot extends PIXI.Container {
-    public index: number = 0;
+    public index = 0;
     public item?: Item;
     public slot: Slot;
 
-    constructor(slot: Slot, index: number = 0) {
+    constructor(slot: Slot, index = 0) {
         super();
         this.index = index;
         this.slot = slot;
@@ -30,7 +30,7 @@ class InventorySlot extends PIXI.Container {
 
     private itemSprite?: PIXI.Sprite;
 
-    public update() {
+    public update(): void {
         if (this.item === this.slot.item) return;
         this.item = this.slot.item;
         this.itemContainer.removeChildren();
@@ -50,12 +50,12 @@ export default class HotbarDisplay extends Display {
         this.onResize();
     }
     private itemText?: PIXI.BitmapText;
-    private nbSlot: number = 9;
+    private nbSlot = 9;
     private selectSprite?: PIXI.Sprite;
-    private slots: Array<InventorySlot> = [];
-    private textDelay: number = 0;
+    private slots: InventorySlot[] = [];
+    private textDelay = 0;
 
-    public onCommand() {
+    public onCommand(): void {
         super.onCommand();
         if (Game.input.getKey("HOTBAR-1").clicked) Game.player.inventory.indexedSlot = 0;
         if (Game.input.getKey("HOTBAR-2").clicked) Game.player.inventory.indexedSlot = 1;
@@ -83,12 +83,12 @@ export default class HotbarDisplay extends Display {
         }
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         this.setCurrentSlot();
     }
 
-    public onResize() {
+    public onResize(): void {
         super.onResize();
         this.position.x = (Renderer.getScreen().width - this.width) >> 1;
         this.position.y = Renderer.getScreen().height - this.height - 20;
@@ -99,7 +99,7 @@ export default class HotbarDisplay extends Display {
         this.slots.forEach((slot) => slot.update());
     }
 
-    private init() {
+    private init(): void {
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "hotbar.png"));
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 112, 16)));
         this.selectSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(112, 0, 16, 16)));
@@ -129,7 +129,7 @@ export default class HotbarDisplay extends Display {
         this.itemText.position.set(this.width / 2, -12);
     }
 
-    private setCurrentSlot() {
+    private setCurrentSlot(): void {
         const index = Game.player.inventory.indexedSlot;
         const slot = Game.player.inventory.getSlot(index);
         let text = "";

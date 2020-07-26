@@ -5,7 +5,7 @@ import Color from "../utility/Color";
 
 export default class TransitionDisplay extends Display {
 
-    constructor(out: boolean = false) {
+    constructor(out = false) {
         super();
         this.transitionOut = out;
         if (this.transitionOut) {
@@ -20,11 +20,11 @@ export default class TransitionDisplay extends Display {
         this.addChild(this.graphics);
     }
     private readonly graphics: PIXI.Graphics;
-    private percent: number = 0;
+    private percent = 0;
     private readonly speed: number;
     private readonly transitionOut: boolean;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         this.drawHole(this.percent);
         this.percent += this.speed;
@@ -34,7 +34,7 @@ export default class TransitionDisplay extends Display {
         }
     }
 
-    private drawHole(percent: number) {
+    private drawHole(percent: number): void {
         if (!this.graphics || percent <= 0 || percent > 1) return;
         this.graphics.pivot.set(Renderer.getScreen().width / 2, Renderer.getScreen().height / 2);
         this.graphics.position.set(Renderer.getScreen().width / 2, Renderer.getScreen().height / 2);

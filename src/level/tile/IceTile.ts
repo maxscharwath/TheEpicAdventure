@@ -13,7 +13,7 @@ export default class IceTile extends AutoTilingTile {
     public static readonly COLOR: number = 0xaac9ff;
     public static readonly TAG = "ice";
 
-    public init() {
+    public init(): void {
         super.init();
         this.container.addChild(
             new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "ice.png"))),
@@ -26,7 +26,7 @@ export default class IceTile extends AutoTilingTile {
         return true;
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.WATER);
         this.addItemEntity(Items.ICE);

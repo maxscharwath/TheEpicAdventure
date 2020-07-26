@@ -5,7 +5,7 @@ import Direction from "../entity/Direction";
 
 interface SpriteSheetData {
     animations: Array<{
-        frames: Array<Array<number>>
+        frames: number[][]
         height: number;
         name: string;
         type: { [key: string]: number; };
@@ -16,7 +16,7 @@ interface SpriteSheetData {
 
 export default class SpriteSheet {
 
-    public static loadTextures(path: string, nb: number, w: number = 16, h: number = w, oy = 0): Array<PIXI.Texture> {
+    public static loadTextures(path: string, nb: number, w = 16, h: number = w, oy = 0): PIXI.Texture[] {
         const bt = PIXI.BaseTexture.from(path);
         const textures = [];
         for (let x = 0; x < nb; x++) {
@@ -30,9 +30,8 @@ export default class SpriteSheet {
         const baseTexture = PIXI.BaseTexture.from(System.getResource(data.url));
         data.animations.forEach((animation) => {
             for (const type in animation.type) {
-                if (!animation.type.hasOwnProperty(type)) continue;
                 const y = animation.type[type];
-                this.animations.set(`${animation.name}-${type}`, animation.frames.map((a: Array<number>) => {
+                this.animations.set(`${animation.name}-${type}`, animation.frames.map((a: number[]) => {
                     return a.map((v: number) => {
                         return new PIXI.Texture(
                             baseTexture,
@@ -44,9 +43,9 @@ export default class SpriteSheet {
         });
     }
 
-    private animations: Map<string, Array<Array<PIXI.Texture>>> = new Map<string, Array<Array<PIXI.Texture>>>();
+    private animations: Map<string, PIXI.Texture[][]> = new Map<string, PIXI.Texture[][]>();
 
-    public getAnimation(name: string, dir?: Direction, type: string = "normal"): Array<PIXI.Texture> {
+    public getAnimation(name: string, dir?: Direction, type = "normal"): PIXI.Texture[] {
         const id = `${name}-${type}`;
         const animation = this.animations.get(id);
         if (!animation) {

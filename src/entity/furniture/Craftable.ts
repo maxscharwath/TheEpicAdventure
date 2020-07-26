@@ -4,28 +4,28 @@ import CraftingDisplay from "../../screen/CraftingDisplay";
 import Item from "../../item/Item";
 import Game from "../../core/Game";
 
-export default class Craftable extends Furniture {
+export default abstract class Craftable extends Furniture {
 
-    constructor(recipes: Array<Recipe> = []) {
+    protected constructor(recipes: Recipe[] = []) {
         super();
         this.recipes = recipes;
     }
     private craftRecipe?: Recipe;
-    private craftTime: number = 0;
-    private readonly recipes: Array<Recipe>;
+    private craftTime = 0;
+    private readonly recipes: Recipe[];
 
-    public isCrafting() {
+    public isCrafting(): boolean {
         return (this.craftTime > 0);
     }
 
-    public isDoneCrafting() {
+    public isDoneCrafting(): boolean {
         return this.craftTime === 0 && this.craftRecipe instanceof Recipe;
     }
 
-    public onCraft() {
+    public onCraft(): void {
     }
 
-    public onTick() {
+    public onTick(): void {
         super.onTick();
         if (this.craft()) {
             this.onCraft();
@@ -37,7 +37,7 @@ export default class Craftable extends Furniture {
         return true;
     }
 
-    protected craft() {
+    protected craft(): boolean {
         if (this.craftTime > 0) {
             this.craftTime--;
             return true;

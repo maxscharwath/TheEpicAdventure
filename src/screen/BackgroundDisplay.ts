@@ -45,9 +45,9 @@ export default class BackgroundDisplay extends Display {
         });
     }
 
-    private _height: number = 0;
+    private _height = 0;
 
-    private _width: number = 0;
+    private _width = 0;
 
     get height(): number {
         return this._height;

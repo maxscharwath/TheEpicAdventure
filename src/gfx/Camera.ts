@@ -8,24 +8,24 @@ export default class Camera {
     constructor() {
     }
 
-    private _zoom: number = 6;
+    private _zoom = 6;
 
-    private containers: Array<PIXI.Container> = [];
-    private cx: number = 0;
-    private cy: number = 0;
+    private containers: PIXI.Container[] = [];
+    private cx = 0;
+    private cy = 0;
     private follow?: { x: number; y: number; };
-    private fx: number = 0;
-    private fy: number = 0;
+    private fx = 0;
+    private fy = 0;
 
-    public setContainer(...containers: Array<PIXI.Container>) {
+    public setContainer(...containers: PIXI.Container[]): void {
         this.containers = containers;
     }
 
-    public setFollow(obj: Entity) {
+    public setFollow(obj: Entity): void {
         this.follow = obj;
     }
 
-    public setPos(x: number, y: number) {
+    public setPos(x: number, y: number): void {
         this.fx = x;
         this.fy = y;
         this.follow = undefined;
@@ -40,11 +40,11 @@ export default class Camera {
         });
     }
 
-    public get x() {
+    public get x(): number {
         return (this.cx);
     }
 
-    public get y() {
+    public get y(): number {
         return (this.cy);
     }
 

@@ -28,7 +28,7 @@ export default class Version {
     }
 
     constructor(version: string = app.getVersion()) {
-        const nums: Array<string> = version.split(".");
+        const nums: string[] = version.split(".");
         try {
             if (nums.length > 0) {
                 this.major = Version.parseInt(nums[0]);
@@ -44,9 +44,9 @@ export default class Version {
             }
 
             if (min.includes("-")) {
-                const mindev: Array<string> = min.split("-");
-                this.minor = Version.parseInt(mindev[0]);
-                this.dev = Version.Number(mindev[1].replace("pre", "").replace("dev", ""));
+                const minDev: string[] = min.split("-");
+                this.minor = Version.parseInt(minDev[0]);
+                this.dev = Version.Number(minDev[1].replace("pre", "").replace("dev", ""));
             } else {
                 if (min !== "") {
                     this.minor = Version.parseInt(min);

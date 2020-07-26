@@ -13,7 +13,7 @@ export default class SugarCaneTile extends Tile {
     private static tileTextures = SugarCaneTile.loadTextures(System.getResource("tile", "sugar_cane.png"), 4);
     private sprite?: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.groundTile = new (Tiles.WATER.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
@@ -31,7 +31,7 @@ export default class SugarCaneTile extends Tile {
         return true;
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.WATER);
     }

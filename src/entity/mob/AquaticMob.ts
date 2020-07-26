@@ -20,7 +20,7 @@ export default abstract class AquaticMob extends Mob {
         return levelTile.is(Tiles.WATER);
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         let speedX = this.speed;
         let speedY = this.speed;
@@ -58,7 +58,7 @@ export default abstract class AquaticMob extends Mob {
         }
     }
 
-    protected getTileZ() {
+    protected getTileZ(): number {
         return 0;
     }
 
@@ -135,7 +135,7 @@ export default abstract class AquaticMob extends Mob {
         return true;
     }
 
-    protected newTarget() {
+    protected newTarget(): void {
         if (!this.level) return;
         const tile = this.level.findRandomTileInEntityRadius([Tiles.WATER], this, 10);
         if (tile) {

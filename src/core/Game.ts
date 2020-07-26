@@ -21,23 +21,23 @@ import LevelGenOverworld from "../level/levelGen/LevelGenOverworld";
 
 export default class Game {
     public static client?: Client;
-    public static currentLevel: number = 0;
+    public static currentLevel = 0;
     public static GUI: GUI;
     public static input: InputHandler;
-    public static isFocus: boolean = false;
-    public static isHost: boolean = false;
-    public static isOnline: boolean = false;
+    public static isFocus = false;
+    public static isHost = false;
+    public static isOnline = false;
 
     public static level: Level;
-    public static levels: Array<Level> = [];
+    public static levels: Level[] = [];
     public static mouse: MouseHandler;
     public static readonly NAME: string = "The Epic Adventure";
     public static player: Player;
-    public static running: boolean = true;
+    public static running = true;
     public static server?: Server;
     public static readonly version: Version = new Version("0.2-dev1");
 
-    public static changeLevel(id: number) {
+    public static changeLevel(id: number): void {
         this.level.deleteTempDir();
         this.level.remove(this.player);
         this.level.flushChunks().then(() => {
@@ -100,7 +100,7 @@ export default class Game {
                 });*/
     }
 
-    public static quit() {
+    public static quit(): Promise<void[][]> {
         if (this.isValidServer()) {
             this.server?.endConnection();
         }

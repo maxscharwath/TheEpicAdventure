@@ -7,7 +7,7 @@ import System from "../core/System";
 
 export default class FurnitureItem extends Item {
 
-    public static create(data: any) {
+    public static create(data: any): FurnitureItem {
         return super.create(data) as FurnitureItem;
     }
 
@@ -28,11 +28,11 @@ export default class FurnitureItem extends Item {
         return true;
     }
 
-    public getFurnitureSprite() {
+    public getFurnitureSprite(): PIXI.DisplayObject {
         return this.furniture.getSprite();
     }
 
-    public isStackable() {
+    public isStackable(): boolean {
         return false;
     }
 

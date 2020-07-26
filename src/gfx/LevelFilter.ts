@@ -1,26 +1,26 @@
 import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 
-export default class LevelFilter extends PIXI.Container {
+export default abstract class LevelFilter extends PIXI.Container {
 
     constructor() {
         super();
         this.init();
     }
 
-    protected get cameraX() {
+    protected get cameraX(): number {
         return Renderer.camera.x * Renderer.camera.zoom;
     }
 
-    protected get cameraY() {
+    protected get cameraY(): number {
         return Renderer.camera.y * Renderer.camera.zoom;
     }
 
-    public onRender() {
+    public onRender(): void {
 
     }
 
-    protected init() {
+    protected init(): void {
 
     }
 }

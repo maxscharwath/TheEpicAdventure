@@ -17,7 +17,7 @@ export default class FarmlandTile extends Tile {
 
     private filter = new PIXI.filters.ColorMatrixFilter();
 
-    public init() {
+    public init(): void {
         super.init();
         const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("tile", "farmland.png")));
         sprite.filters = [this.filter];
@@ -25,7 +25,7 @@ export default class FarmlandTile extends Tile {
         this.filter.brightness(this.states.moisture / -40 + 1, false);
     }
 
-    public onInteract(mob: Mob, item?: Item) {
+    public onInteract(mob: Mob, item?: Item): boolean {
         if (!item || (item instanceof ToolItem && item.type === ToolType.HOE)) {
             this.harvest();
             this.setTile(Tiles.FARMLAND, {
@@ -65,7 +65,7 @@ export default class FarmlandTile extends Tile {
         return Random.probability(initProb / bonus);
     }
 
-    protected harvest() {
+    protected harvest(): void {
 
     }
 }

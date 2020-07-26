@@ -11,11 +11,11 @@ export default class System {
         return (new Date()).getTime();
     }
 
-    public static getAppData(...url: Array<string>): string {
+    public static getAppData(...url: string[]): string {
         return path.join(this.appData, ...url);
     }
 
-    public static getResource(...url: Array<string>): string {
+    public static getResource(...url: string[]): string {
         return path.join(this.resources, ...url);
     }
 

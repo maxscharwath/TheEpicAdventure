@@ -7,7 +7,7 @@ import Mob from "../entity/mob/Mob";
 
 export default class ToolItem extends Item {
 
-    public static create(data: any) {
+    public static create(data: any): ToolItem {
         const item = super.create(data) as ToolItem;
         item.durability = data.durability;
         return item;
@@ -35,7 +35,7 @@ export default class ToolItem extends Item {
         return true;
     }
 
-    public fix(amount: number) {
+    public fix(amount: number): void {
         this.durability = Math.min(this.durability + amount, this.durabilityMax);
     }
 
@@ -56,7 +56,7 @@ export default class ToolItem extends Item {
         return ((ToolType.nbLevel - this.level) + 1) * 2;
     }
 
-    public isStackable() {
+    public isStackable(): boolean {
         return false;
     }
 

@@ -1,6 +1,6 @@
 export default class RLE {
 
-    public static decode(b: Buffer, each?: (id: number, index: number) => void): Array<number> {
+    public static decode(b: Buffer, each?: (id: number, index: number) => void): number[] {
         const data = [];
         for (let j = 0; j < b.length; j += 2) {
             const nb = b[j + 1];
@@ -12,7 +12,7 @@ export default class RLE {
         }
         return data;
     }
-    public static encode<T>(iterable: Array<T>, equality: (a: T, b: T) => boolean, mapped: (a: T) => number): Buffer {
+    public static encode<T>(iterable: T[], equality: (a: T, b: T) => boolean, mapped: (a: T) => number): Buffer {
         const data = [];
         for (let index = 0, howMany = 0; index < iterable.length; index++) {
             const aV = iterable[index + 1];

@@ -5,7 +5,7 @@ import KeyedMap from "../../utility/KeyedMap";
 export default class Biome {
     public readonly color: Color;
     public readonly name: string;
-    public tag: string = "";
+    public tag = "";
 
     private static biomes = new KeyedMap<Biome>();
 
@@ -16,7 +16,7 @@ export default class Biome {
         biome.tag = tag;
     }
 
-    public static from(e: number, m: number, t: number) {
+    public static from(e: number, m: number, t: number): Biome {
         if (e < 6) {
             return Biome.get("deep_ocean");
         }
@@ -76,7 +76,7 @@ export default class Biome {
         return this.biomes.getKeys(biome);
     }
 
-    public static initBiomeList() {
+    public static initBiomeList(): void {
         Biome.add(0, "ocean", new Biome("Ocean", Color.fromHex("#026fff")));
         Biome.add(1, "deep_ocean", new Biome("Deep Ocean", Color.fromHex("#0259bd")));
         Biome.add(2, "warm_ocean", new Biome("Warm Ocean", Color.fromHex("#20abff")));

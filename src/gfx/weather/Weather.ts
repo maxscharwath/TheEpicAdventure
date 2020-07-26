@@ -1,5 +1,5 @@
 import LevelFilter from "../LevelFilter";
 
-export default class Weather extends LevelFilter {
+export default abstract class Weather extends LevelFilter {
 
 }

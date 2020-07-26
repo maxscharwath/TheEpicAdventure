@@ -12,34 +12,34 @@ export default class HeartDisplay extends Display {
         this.init();
     }
     private health: number;
-    private hearts: Array<PIXI.Sprite> = [];
+    private hearts: PIXI.Sprite[] = [];
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         // for (const heart of this.hearts) heart.pivot.y = Math.sin((System.milliTime()) / 80 + heart.x);
     }
 
-    public onTick() {
+    public onTick(): void {
         super.onTick();
         this.updateHeartBar();
     }
 
-    private addHeart() {
+    private addHeart(): void {
         const h = new PIXI.Sprite(HeartDisplay.textures[0]);
         this.hearts.push(h);
         this.addChild(h);
     }
 
-    private init() {
+    private init(): void {
         this.scale.set(4);
     }
 
-    private removeHeart() {
+    private removeHeart(): void {
         const h = this.hearts.pop();
         h?.parent.removeChild(h);
     }
 
-    private updateHeartBar() {
+    private updateHeartBar(): void {
         if (this.health === Game.player.health) {
             return;
         }

@@ -7,7 +7,7 @@ export default class CornTile extends CropTile {
     public static readonly COLOR: number = 0x94785c;
     public static readonly TAG: string = "corn";
 
-    protected harvest() {
+    protected harvest(): void {
         if (this.states.age >= 50) {
             this.addItemEntity(Items.CORN, [1, 3]);
         } else {
@@ -15,7 +15,7 @@ export default class CornTile extends CropTile {
         }
     }
 
-    protected initCrop() {
+    protected initCrop(): void {
         super.initCrop();
         const baseTexture = new PIXI.BaseTexture(System.getResource("tile", "corn.png"));
         this.sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));

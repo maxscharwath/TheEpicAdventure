@@ -6,9 +6,9 @@ import AutoTilingTile from "./AutoTilingTile";
 import TileStates from "./TileStates";
 
 export default class WaterTile extends AutoTilingTile {
-    public friction: number = 0.01;
+    public friction = 0.01;
     public states = TileStates.create(WaterTile.DEFAULT_STATES);
-    public z: number = -5;
+    public z = -5;
     protected static autoTileTextures = WaterTile.loadMaskTextures(System.getResource("tile", "water_mask.png"));
     protected static canConnectTo = ["lava", "hole", "ice"];
     public static readonly COLOR: number = 0x1e7cb8;
@@ -17,7 +17,7 @@ export default class WaterTile extends AutoTilingTile {
     protected static tileTextures = WaterTile.loadTextures(System.getResource("tile", "water.png"), 10);
     private animSprite?: PIXI.AnimatedSprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.animSprite = new PIXI.AnimatedSprite(WaterTile.tileTextures);
         this.animSprite.loop = false;
@@ -42,7 +42,7 @@ export default class WaterTile extends AutoTilingTile {
         }
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         let levelMax = 0;
         let nbNeighbour = 0;

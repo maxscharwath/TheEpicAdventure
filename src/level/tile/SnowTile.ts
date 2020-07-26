@@ -10,17 +10,17 @@ import AutoTilingTile from "./AutoTilingTile";
 import Tiles from "./Tiles";
 
 export default class SnowTile extends AutoTilingTile {
-    public friction: number = 0.25;
+    public friction = 0.25;
     public light = 3;
     protected static autoTileTextures = SnowTile.loadMaskTextures(System.getResource("tile", "snow.png"));
     public static readonly COLOR: number = 0xf0f0ff;
     public static readonly TAG = "snow";
     private footprintSprite?: PIXI.Sprite;
 
-    private step: number = 0;
-    private stepDir: boolean = false;
+    private step = 0;
+    private stepDir = false;
 
-    public init() {
+    public init(): void {
         super.init();
         this.initAutoTile();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("tile", "snow_footprint.png"));
@@ -36,9 +36,9 @@ export default class SnowTile extends AutoTilingTile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.SHOVEL:
-                    this.onDestroy();
-                    return true;
+            case ToolType.SHOVEL:
+                this.onDestroy();
+                return true;
             }
         }
         return false;
@@ -57,14 +57,14 @@ export default class SnowTile extends AutoTilingTile {
         }
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         if (this.step < 550 && entity instanceof Mob) {
             this.step = 600;
             this.stepDir = entity.getDir().isX();
         }
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.addItemEntity(Items.SNOWBALL, [1, 3]);
         this.setTile(Tiles.DIRT);

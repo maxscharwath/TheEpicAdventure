@@ -1,4 +1,17 @@
 import * as os from "os";
+import {NetworkInterfaceInfoIPv4, NetworkInterfaceInfoIPv6} from "os";
+
+export interface SubnetInfo {
+    networkAddress: string;
+    firstAddress: string;
+    lastAddress: string;
+    broadcastAddress: string;
+    subnetMask: string;
+    subnetMaskLength: number;
+    numHosts: number;
+    length: number;
+    contains(ip: string): boolean;
+}
 
 export default class IP {
 
@@ -9,18 +22,18 @@ export default class IP {
         return family ? family.toLowerCase() : "ipv4";
     }
 
-    public static address(name?: string, family?: string) {
+    public static address(name?: string, family?: string): string {
         const ip = IP.ip(name, family);
         return ip ? ip.address : IP.loopback(family);
     }
 
-    public static broadcast(name?: string, family?: string) {
+    public static broadcast(name?: string, family?: string): string | undefined {
         const cidr = IP.ip(name, family)?.cidr;
         if (!cidr) return undefined;
         return IP.cidrSubnet(cidr).broadcastAddress;
     }
 
-    public static cidr(cidrString: string) {
+    public static cidr(cidrString: string): string {
         const cidrParts = cidrString.split("/");
         const addr = cidrParts[0];
         if (cidrParts.length !== 2) {
@@ -30,7 +43,7 @@ export default class IP {
         return IP.mask(addr, mask);
     }
 
-    public static cidrSubnet(cidrString: string) {
+    public static cidrSubnet(cidrString: string): SubnetInfo {
         const cidrParts = cidrString.split("/");
 
         const addr = cidrParts[0];
@@ -41,7 +54,7 @@ export default class IP {
         return IP.subnet(addr, mask);
     }
 
-    public static fromLong(ipl: number) {
+    public static fromLong(ipl: number): string {
         return ((ipl >>> 24) + "." +
             (ipl >> 16 & 255) + "." +
             (ipl >> 8 & 255) + "." +
@@ -74,7 +87,7 @@ export default class IP {
         return IP.toString(buff);
     }
 
-    public static ip(name?: string, family?: string) {
+    public static ip(name?: string, family?: string): undefined | NetworkInterfaceInfoIPv4 | NetworkInterfaceInfoIPv6 {
         const interfaces = os.networkInterfaces();
         family = IP._normalizeFamily(family);
 
@@ -105,7 +118,7 @@ export default class IP {
         return !all.length ? undefined : all[0];
     }
 
-    public static isEqual(a: string, b: string) {
+    public static isEqual(a: string, b: string): boolean {
         let aBuffer = IP.toBuffer(a);
         let bBuffer = IP.toBuffer(b);
 
@@ -139,17 +152,17 @@ export default class IP {
         return true;
     }
 
-    public static isLoopback(addr: string) {
+    public static isLoopback(addr: string): boolean {
         return /^(::f{4}:)?127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/
-                .test(addr) ||
+            .test(addr) ||
             /^fe80::1$/.test(addr) ||
             /^::1$/.test(addr) ||
             /^::$/.test(addr);
     }
 
-    public static isPrivate(addr: string) {
+    public static isPrivate(addr: string): boolean {
         return /^(::f{4}:)?10\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i
-                .test(addr) ||
+            .test(addr) ||
             /^(::f{4}:)?192\.168\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
             /^(::f{4}:)?172\.(1[6-9]|2\d|30|31)\.([0-9]{1,3})\.([0-9]{1,3})$/i
                 .test(addr) ||
@@ -161,19 +174,19 @@ export default class IP {
             /^::$/.test(addr);
     }
 
-    public static isPublic(addr: string) {
+    public static isPublic(addr: string): boolean {
         return !IP.isPrivate(addr);
     }
 
-    public static isV4Format(ip: string) {
+    public static isV4Format(ip: string): boolean {
         return this.ipv4Regex.test(ip);
     }
 
-    public static isV6Format(ip: string) {
+    public static isV6Format(ip: string): boolean {
         return this.ipv6Regex.test(ip);
     }
 
-    public static loopback(family?: string) {
+    public static loopback(family?: string): "127.0.0.1" | "fe80::1" {
         family = IP._normalizeFamily(family);
         if (family !== "ipv4" && family !== "ipv6") {
             throw new Error("family must be ipv4 or ipv6");
@@ -181,7 +194,7 @@ export default class IP {
         return family === "ipv4" ? "127.0.0.1" : "fe80::1";
     }
 
-    public static mask(addr: string, mask: string) {
+    public static mask(addr: string, mask: string): string {
         const addrBuffer = IP.toBuffer(addr);
         const maskBuffer = IP.toBuffer(mask);
 
@@ -220,7 +233,7 @@ export default class IP {
         return IP.toString(result);
     }
 
-    public static not(addr: string) {
+    public static not(addr: string): string {
         const buff = IP.toBuffer(addr);
         for (let i = 0; i < buff.length; i++) {
             buff[i] = 0xff ^ buff[i];
@@ -228,7 +241,7 @@ export default class IP {
         return IP.toString(buff);
     }
 
-    public static or(a: string, b: string) {
+    public static or(a: string, b: string): string {
         const aBuffer = IP.toBuffer(a);
         const bBuffer = IP.toBuffer(b);
 
@@ -257,7 +270,7 @@ export default class IP {
         }
     }
 
-    public static subnet(addr: string, mask: string) {
+    public static subnet(addr: string, mask: string): SubnetInfo {
         const networkAddress = IP.toLong(IP.mask(addr, mask));
 
         // Calculate the mask's length.
@@ -298,7 +311,7 @@ export default class IP {
         };
     }
 
-    public static toBuffer(ip: string, buff?: Buffer, offset: number = 0) {
+    public static toBuffer(ip: string, buff?: Buffer, offset = 0): Buffer {
         offset = ~~offset;
 
         let result;
@@ -335,14 +348,12 @@ export default class IP {
                     sections.push("0");
                 }
             } else if (sections.length < 8) {
-                for (i = 0; i < sections.length && sections[i] !== ""; i++) {
-
-                }
-                const argv: [number, number, ...Array<string>] = [i, 1];
+                for (i = 0; i < sections.length && sections[i] !== ""; i++);
+                const argv: [number, number, ...string[]] = [i, 1];
                 for (i = 9 - sections.length; i > 0; i--) {
                     argv.push("0");
                 }
-                sections.splice.apply(sections, argv);
+                sections.splice(...argv);
             }
 
             result = buff || new Buffer(offset + 16);
@@ -360,7 +371,7 @@ export default class IP {
         return result;
     }
 
-    public static toLong(ip: string) {
+    public static toLong(ip: string): number {
         let ipl = 0;
         ip.split(".").forEach((octet) => {
             ipl <<= 8;
@@ -369,11 +380,11 @@ export default class IP {
         return (ipl >>> 0);
     }
 
-    public static toString(buff: Buffer, offset: number = 0, length?: number): string {
+    public static toString(buff: Buffer, offset = 0, length?: number): string {
         offset = ~~offset;
         length = length || (buff.length - offset);
 
-        let result: Array<any> | string = [];
+        let result: any[] | string = [];
         if (length === 4) {
             // IPv4
             for (let i = 0; i < length; i++) {

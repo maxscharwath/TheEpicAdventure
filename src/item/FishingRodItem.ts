@@ -6,7 +6,7 @@ import System from "../core/System";
 
 export default class FishingRodItem extends Item {
 
-    public static create(data: any) {
+    public static create(data: any): FishingRodItem {
         const item = super.create(data) as FishingRodItem;
         item.durability = data.durability;
         return item;
@@ -22,15 +22,15 @@ export default class FishingRodItem extends Item {
 
     private hook?: Hook;
 
-    public clearHook() {
+    public clearHook(): void {
         this.hook = undefined;
     }
 
-    public fix(amount: number) {
+    public fix(amount: number): void {
         this.durability = Math.min(this.durability + amount, this.durabilityMax);
     }
 
-    public isStackable() {
+    public isStackable(): boolean {
         return false;
     }
 

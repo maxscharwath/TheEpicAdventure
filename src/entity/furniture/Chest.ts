@@ -31,7 +31,7 @@ export default class Chest extends Furniture {
         };
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Chest.baseTexture, new Rectangle(0, 0, 16, 16)));
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);

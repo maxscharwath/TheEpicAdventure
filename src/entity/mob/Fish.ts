@@ -6,7 +6,7 @@ import {Hook} from "../index";
 import WaterDropParticle from "../particle/WaterDropParticle";
 
 export default class Fish extends AquaticMob {
-    protected speedMax: number = 1;
+    protected speedMax = 1;
 
     constructor() {
         super();
@@ -15,11 +15,11 @@ export default class Fish extends AquaticMob {
     }
     private fishSprite: PIXI.Sprite;
     private hooked?: Hook;
-    private hookedAt: number = 0;
+    private hookedAt = 0;
 
     private lifeDuration = 0;
 
-    private points?: Array<PIXI.Point>;
+    private points?: PIXI.Point[];
     private shadowSprite: PIXI.SimpleRope;
 
     private vector: Vector = new Vector();
@@ -31,7 +31,7 @@ export default class Fish extends AquaticMob {
     public die(): void {
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
 
         if (this.a.magnitude > 0.5) {
@@ -85,7 +85,7 @@ export default class Fish extends AquaticMob {
         return this.isSwimming() ? -Infinity : super.calculateZIndex();
     }
 
-    protected init() {
+    protected init(): void {
         super.init();
         this.container.scale.set(this.random.number(0.25, 1));
         this.hitbox.set(0, 0, 8 * this.container.scale.x, 8 * this.container.scale.y);
@@ -104,7 +104,7 @@ export default class Fish extends AquaticMob {
         this.container.addChild(this.shadowSprite, this.fishSprite);
     }
 
-    protected newTarget() {
+    protected newTarget(): void {
         if (!this.level || this.hooked) return;
         if (this.random.probability(8)) {
             this.level.findEntity(Hook, (hook) => Boolean(hook.isSwimming() && !hook.getRemoved() && !hook.isHooked()))

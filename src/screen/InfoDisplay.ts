@@ -24,7 +24,7 @@ export default class InfoDisplay extends Display {
 
         this.addChild(this.textBg, this.textArea);
     }
-    private nbContainer: number = 0;
+    private nbContainer = 0;
 
     private readonly textArea: PIXI.BitmapText;
     private readonly textBg = new PIXI.Sprite(PIXI.Texture.WHITE);

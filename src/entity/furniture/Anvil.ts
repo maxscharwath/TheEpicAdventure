@@ -7,7 +7,7 @@ export default class Anvil extends Craftable {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "anvil.png"));
 
-    public static create({id, x, y}: any): Anvil {
+    public static create({id, x, y}: { id: string, x: number, y: number }): Anvil {
         return super.create({id, x, y}) as Anvil;
     }
 
@@ -21,7 +21,7 @@ export default class Anvil extends Craftable {
         };
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Anvil.baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);

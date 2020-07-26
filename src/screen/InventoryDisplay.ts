@@ -30,7 +30,7 @@ class InventorySlot extends PIXI.Container {
     private itemSprite?: PIXI.Sprite;
     private slot: Slot;
 
-    public update() {
+    public update(): void {
         if (this.item === this.slot.item) return;
         console.log("update");
         this.item = this.slot.item;
@@ -52,9 +52,9 @@ export default class InventoryDisplay extends Display {
         this.init();
     }
     private inventory: Inventory;
-    private slots: Array<InventorySlot> = [];
+    private slots: InventorySlot[] = [];
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return true;
     }
 
@@ -68,7 +68,7 @@ export default class InventoryDisplay extends Display {
         this.slots.forEach((slot) => slot.update());
     }
 
-    private init() {
+    private init(): void {
         const container = new PIXI.Container();
         const background = new PIXI.Sprite(PIXI.Texture.WHITE);
         background.width = Renderer.getScreen().width;

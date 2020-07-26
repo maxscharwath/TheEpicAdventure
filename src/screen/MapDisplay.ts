@@ -22,7 +22,7 @@ export default class MapDisplay extends Display {
         if (Game.input.getKey("EXIT").clicked) this.hide();
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         let x = (Game.player.x >> 4) * (96 / 128);
         let y = (Game.player.y >> 4) * (96 / 128);
@@ -33,7 +33,7 @@ export default class MapDisplay extends Display {
         this.marker.position.set(x, y);
     }
 
-    public onResize() {
+    public onResize(): void {
         super.onResize();
         this.background.width = Renderer.getScreen().width;
         this.background.height = Renderer.getScreen().height;
@@ -43,7 +43,7 @@ export default class MapDisplay extends Display {
         );
     }
 
-    private drawMap(size = 128) {
+    private drawMap(size = 128): void {
         const canvas = new OffscreenCanvas(size, size);
         const ctx = canvas.getContext("2d");
         const imageData = ctx.createImageData(canvas.width, canvas.height);
@@ -67,7 +67,7 @@ export default class MapDisplay extends Display {
         this.map.texture = PIXI.Texture.from(canvas as unknown as HTMLCanvasElement);
     }
 
-    private init() {
+    private init(): void {
         this.container = new PIXI.Container();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("screen", "map.png"));
         const sprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 112, 112)));

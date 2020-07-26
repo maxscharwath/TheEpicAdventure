@@ -19,7 +19,7 @@ export default class Chunk {
     public readonly level: Level;
     public readonly x: number;
     public readonly y: number;
-    private static CHUNK_TIMEOUT: number = 500;
+    private static CHUNK_TIMEOUT = 500;
     public static MOB_CAP = 32;
     public static SIZE = 16;
 
@@ -27,7 +27,7 @@ export default class Chunk {
         return new Chunk(level, cX, cY, false);
     }
 
-    public static fileExist(level: Level, cX: number, cY: number) {
+    public static fileExist(level: Level, cX: number, cY: number): Promise<void> {
         return fsp.access(System.getAppData("tmp", `c.${cX}.${cY}.bin`));
     }
 
@@ -37,11 +37,11 @@ export default class Chunk {
         return chunk;
     }
 
-    public static generate(level: Level, cX: number, cY: number) {
+    public static generate(level: Level, cX: number, cY: number): Chunk {
         return new Chunk(level, cX, cY, true);
     }
 
-    constructor(level: Level, x: number, y: number, generate: boolean = true) {
+    constructor(level: Level, x: number, y: number, generate = true) {
         this.level = level;
         this.lastTick = Updater.ticks;
         this.x = x;
@@ -50,15 +50,15 @@ export default class Chunk {
             this.generate();
         }
     }
-    private entities: Array<Entity> = [];
-    private generated: boolean = false;
+    private entities: Entity[] = [];
+    private generated = false;
     private lastTick = 0;
-    private loaded: boolean = false;
-    private map: Array<LevelTile> = [];
-    private mobCap: number = 0;
-    private particles: Array<Particle> = [];
+    private loaded = false;
+    private map: LevelTile[] = [];
+    private mobCap = 0;
+    private particles: Particle[] = [];
 
-    public add(tickable: Tickable) {
+    public add(tickable: Tickable): void {
         if (tickable instanceof Entity) {
             if (!this.entities.includes(tickable)) {
                 if (tickable instanceof Mob && !(tickable instanceof Player)) {
@@ -76,7 +76,7 @@ export default class Chunk {
         }
     }
 
-    public checkEntity(entity: Entity) {
+    public checkEntity(entity: Entity): void {
         const xc = entity.x >> 8;
         const yc = entity.y >> 8;
         if (xc !== this.x || yc !== this.y) {
@@ -87,7 +87,7 @@ export default class Chunk {
         }
     }
 
-    public destroy() {
+    public destroy(): void {
         this.loaded = false;
         this.generated = false;
         this.map.forEach((tile) => {
@@ -103,9 +103,9 @@ export default class Chunk {
         this.map = [];
     }
 
-    public findEntities(predicate: (value: Entity) => boolean): Promise<Array<Entity>> {
+    public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
         const entities = this.entities.concat();
-        const result: Array<Entity> = [];
+        const result: Entity[] = [];
         return new Promise((resolve) => {
             const action = () => {
                 const entity = entities.shift();
@@ -148,9 +148,9 @@ export default class Chunk {
     }
 
     public findTiles(
-        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<Array<LevelTile>> {
+        tiles: Array<TileRegister<typeof Tile>>, predicate?: (value: LevelTile) => boolean): Promise<LevelTile[]> {
         const map = this.map.concat();
-        const result: Array<LevelTile> = [];
+        const result: LevelTile[] = [];
         return new Promise((resolve) => {
             const action = () => {
                 const tile = map.shift();
@@ -162,11 +162,11 @@ export default class Chunk {
         });
     }
 
-    public async fromFile() {
+    public async fromFile(): Promise<this> {
         const fileBuffer = await fsp.readFile(System.getAppData("tmp", `c.${this.x}.${this.y}.bin`));
         const ungzipBuffer = await ungzip(fileBuffer);
         const bson = BSON.deserialize(ungzipBuffer);
-        const map: Array<LevelTile> = [];
+        const map: LevelTile[] = [];
         const oX = this.x * Chunk.SIZE;
         const oY = this.y * Chunk.SIZE;
         const t1 = System.nanoTime();
@@ -206,7 +206,7 @@ export default class Chunk {
         return this;
     }
 
-    public async generate() {
+    public async generate(): Promise<this> {
         this.map = this.level.levelGen.genChunk(this.x, this.y, this.level);
         await this.save();
         this.map.forEach((lt) => lt.init());
@@ -214,7 +214,7 @@ export default class Chunk {
         return this;
     }
 
-    public getEntities(): Array<Entity> {
+    public getEntities(): Entity[] {
         return this.entities.filter((e) => e.isActive());
     }
 
@@ -223,15 +223,15 @@ export default class Chunk {
         return this.map[x + y * Chunk.SIZE];
     }
 
-    public isActive() {
+    public isActive(): boolean {
         return (Updater.ticks - this.lastTick) < Chunk.CHUNK_TIMEOUT;
     }
 
-    public isGenerated() {
+    public isGenerated(): boolean {
         return this.generated;
     }
 
-    public load() {
+    public load(): void {
         if (!this.generated) return;
         this.loaded = true;
         this.map.forEach((tile) => {
@@ -242,7 +242,7 @@ export default class Chunk {
         });
     }
 
-    public onRender() {
+    public onRender(): void {
         if (!this.isGenerated()) return;
         this.map.forEach((lt) => lt.onRender());
         for (const entity of this.entities) {
@@ -272,7 +272,7 @@ export default class Chunk {
         }
     }
 
-    public async reload() {
+    public async reload(): Promise<this> {
         this.loaded = false;
         this.generated = false;
         await this.save();
@@ -280,7 +280,7 @@ export default class Chunk {
         return this.fromFile();
     }
 
-    public remove(tickable: Tickable) {
+    public remove(tickable: Tickable): void {
         if (tickable instanceof Entity) {
             this.entities = this.entities.filter((item) => item !== tickable);
             if (tickable instanceof Mob && !(tickable instanceof Player)) {
@@ -291,7 +291,7 @@ export default class Chunk {
         tickable.remove();
     }
 
-    public async save() {
+    public async save(): Promise<void> {
         const tiles = RLE.encode(
             this.map,
             (a, b) => a?.getTileClass() === b?.getTileClass(),
@@ -330,7 +330,7 @@ export default class Chunk {
         return true;
     }
 
-    public unload() {
+    public unload(): void {
         this.loaded = false;
         this.map.forEach((tile) => {
             tile.remove();
@@ -344,7 +344,7 @@ export default class Chunk {
         this.particles = [];
     }
 
-    private moveEntity(entity: Entity, chunk: Chunk) {
+    private moveEntity(entity: Entity, chunk: Chunk): void {
         if (!chunk.loaded) {
             entity.remove();
         }
@@ -352,7 +352,7 @@ export default class Chunk {
         chunk.add(entity);
     }
 
-    private async wait(time: number) {
+    private async wait(time: number): Promise<unknown> {
         return new Promise((resolve) => setTimeout(resolve, time));
     }
 }

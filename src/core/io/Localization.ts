@@ -2,7 +2,7 @@ import Language from "./Language";
 
 export default class Localization {
 
-    public static languages: Array<Language> = Language.all;
+    public static languages: Language[] = Language.all;
 
     public static get(id: string): string {
         return Language.loaded?.get(id) ?? id;
@@ -12,7 +12,7 @@ export default class Localization {
         return Language.loaded;
     }
 
-    public static loadLanguage(lang: Language | string) {
+    public static loadLanguage(lang: Language | string): void {
         if (lang instanceof Language) {
             lang.load();
         } else {

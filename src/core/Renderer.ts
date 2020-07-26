@@ -36,21 +36,18 @@ export default class Renderer {
     };
 
     public static ticks = 0;
-    private static ticksTime: Array<number> = [];
+    private static ticksTime: number[] = [];
     public static WIDTH: number = Renderer.DEFAULT_WIDTH;
 
-    public static addDisplay(display: Display) {
+    public static addDisplay(display: Display): void {
         this.stages.gui.addChild(display);
     }
 
-    public static createStream() {
+    public static createStream(): Readable {
         // const audioStream = Howler.ctx.createMediaStreamDestination();
         // Howler.masterGain.disconnect();
         // Howler.masterGain.connect(audioStream);
-        const reader = new Readable({
-            read: () => {
-            },
-        });
+        const reader = new Readable();
         const stream = (this.renderer.view as CanvasElement).captureStream();
         // stream.addTrack(audioStream.stream.getAudioTracks()[0]);
         // @ts-ignore
@@ -64,14 +61,14 @@ export default class Renderer {
         return reader;
     }
 
-    public static getNbChildren() {
+    public static getNbChildren(): number {
         const f = (container: PIXI.Container): number => container.children.length === 0 ? 0 :
             container.children.filter((c) => c.isSprite && c.worldVisible).length +
             container.children.reduce((sum: number, c: PIXI.Container) => (sum + f(c)), 0);
         return f(this.mainStage);
     }
 
-    public static getScreen() {
+    public static getScreen(): PIXI.Rectangle {
         return this.renderer.screen;
     }
 
@@ -79,7 +76,7 @@ export default class Renderer {
         return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
     }
 
-    public static init() {
+    public static init(): void {
         document.body.appendChild(this.renderer.view);
         this.mainStage.addChild(this.stages.level);
         this.mainStage.addChild(this.stages.gui);
@@ -106,39 +103,15 @@ export default class Renderer {
         this.ticksTime.length = Math.min(this.ticksTime.length, 50);
     }
 
-    public static resize() {
+    public static resize(): void {
         this.renderer.resize(window.innerWidth, window.innerHeight);
     }
 
-    public static setLevel(level: Level) {
+    public static setLevel(level: Level): void {
         this.stages.level.removeChildren();
         this.stages.level.addChild(level.container);
         if (level.weather) this.stages.level.addChild(level.weather);
         this.stages.level.addChild(level.lightFilter);
         Renderer.camera.setContainer(level.container, level.lightFilter.lightContainer);
-    }
-
-    public static get clientRect(): any {
-        return null;
-    }
-
-    public static get REAL_HEIGHT() {
-        return this.HEIGHT * this.ZOOM;
-    }
-
-    public static get REAL_WIDTH() {
-        return this.WIDTH * this.ZOOM;
-    }
-
-    public static get xScroll() {
-        return (this.camera.x - this.WIDTH / this.camera.zoom / 2);
-    }
-
-    public static get yScroll() {
-        return (this.camera.y - this.HEIGHT / this.camera.zoom / 2);
-    }
-
-    public static get ZOOM() {
-        return 0;
     }
 }

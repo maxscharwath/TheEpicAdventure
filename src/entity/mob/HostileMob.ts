@@ -19,11 +19,11 @@ export default abstract class HostileMob extends Mob {
     }
 
     public canSwim(): boolean {
-        if (this.isOnFire) return true;
-        return false;
+        return this.isOnFire;
+
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         let speedX = this.speed;
         let speedY = this.speed;
@@ -61,7 +61,7 @@ export default abstract class HostileMob extends Mob {
         }
     }
 
-    protected newTarget() {
+    protected newTarget(): void {
         this.target = {
             x: this.random.int(Renderer.WIDTH * -10, Renderer.WIDTH * 10),
             y: this.random.int(Renderer.HEIGHT * -10, Renderer.HEIGHT * 10),

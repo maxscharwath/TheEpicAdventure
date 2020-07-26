@@ -4,11 +4,11 @@ import Tile from "./Tile";
 import Tiles from "./Tiles";
 
 export default abstract class AutoTilingTile extends Tile {
-    protected static autoTileTextures: Array<PIXI.Texture>;
+    protected static autoTileTextures: PIXI.Texture[];
 
-    protected static canConnectTo: Array<string> = [];
+    protected static canConnectTo: string[] = [];
 
-    protected static loadMaskTextures(path: string): Array<PIXI.Texture> {
+    protected static loadMaskTextures(path: string): PIXI.Texture[] {
         const textures = [];
         const baseTexture = PIXI.BaseTexture.from(path);
         for (let y = 0; y < 3; y++) {
@@ -24,10 +24,10 @@ export default abstract class AutoTilingTile extends Tile {
         return textures;
     }
     public ["constructor"]: typeof AutoTilingTile;
-    private sprites: Array<PIXI.Sprite> = [];
+    private sprites: PIXI.Sprite[] = [];
     private tilesContainer: PIXI.Container;
 
-    public autoTiling() {
+    public autoTiling(): void {
         this.tilesContainer.cacheAsBitmap = false;
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
@@ -50,12 +50,12 @@ export default abstract class AutoTilingTile extends Tile {
         this.tilesContainer.cacheAsBitmap = true;
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         this.autoTiling();
     }
 
-    protected initAutoTile() {
+    protected initAutoTile(): void {
         this.sprites = [new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite(), new PIXI.Sprite()];
         this.tilesContainer = new Container();
         this.sprites[0].position.set(0, 0);

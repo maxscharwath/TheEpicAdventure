@@ -24,13 +24,13 @@ export default abstract class Mob extends Entity {
 
     public isInteractive = true;
     protected mass = 20;
-    public maxHealth: number = 20;
-    protected potionEffect: Array<PotionEffect> = [];
+    public maxHealth = 20;
+    protected potionEffect: PotionEffect[] = [];
 
-    protected get speed() {
+    protected get speed(): number {
         return this.speedMax;
     }
-    protected speedMax: number = 1;
+    protected speedMax = 1;
 
     protected set useMask(value: boolean) {
         if (value) {
@@ -43,7 +43,7 @@ export default abstract class Mob extends Entity {
             this.container.mask = null;
         }
     }
-    protected walkDist: number = 0;
+    protected walkDist = 0;
 
     protected constructor() {
         super();
@@ -71,12 +71,12 @@ export default abstract class Mob extends Entity {
     public static spawnCondition(levelTile: LevelTile): boolean {
         return levelTile.is(Tiles.GRASS, Tiles.DARK_GRASS, Tiles.SNOW, Tiles.SAND, Tiles.DIRT);
     }
-    private attackCooldown: number = 0;
-    private hurtCooldown: number = 0;
+    private attackCooldown = 0;
+    private hurtCooldown = 0;
     private maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
     private readonly waveSprite: PIXI.AnimatedSprite;
 
-    public addPotionEffect(type: PotionType) {
+    public addPotionEffect(type: PotionType): boolean {
         if (!this.checkPotionEffect(type)) {
             this.potionEffect.push(new PotionEffect(type));
             return true;
@@ -90,7 +90,7 @@ export default abstract class Mob extends Entity {
         return true;
     }
 
-    public checkPotionEffect(type: PotionType) {
+    public checkPotionEffect(type: PotionType): false | PotionEffect {
         for (const effect of this.potionEffect) {
             if (effect.type === type) {
                 return effect;
@@ -113,7 +113,7 @@ export default abstract class Mob extends Entity {
         this.delete();
     }
 
-    public dropItem(item: Item) {
+    public dropItem(item: Item): void {
         const itemEntity = new ItemEntity(item, this.x, this.y);
         if (this.level?.add(itemEntity)) {
             this.inventory.removeItem(item, 1);
@@ -152,13 +152,13 @@ export default abstract class Mob extends Entity {
         this.hurt(dmg, Mob.getAttackDir(entity, this));
     }
 
-    public jump(value: number = 3) {
+    public jump(value = 3): boolean {
         if (!this.onGround()) return false;
         this.a.z = value;
         return true;
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         const oy = (-this.z < 0) ? 0 : -this.z;
         this.useMask = oy !== 0;
@@ -208,13 +208,13 @@ export default abstract class Mob extends Entity {
         };
     }
 
-    public touchItem(itemEntity: ItemEntity) {
+    public touchItem(itemEntity: ItemEntity): void {
         if (this.inventory.addItem(itemEntity.item, 1)) {
             itemEntity.take(this);
         }
     }
 
-    protected attack(dmg: number) {
+    protected attack(dmg: number): void {
         if (this.attackCooldown > 0) return;
         this.attackCooldown = 30;
         this.getEntitiesVisible(2).then((entities) => {
@@ -229,11 +229,11 @@ export default abstract class Mob extends Entity {
     protected getEntitiesRadius(
         radius = 2,
         predicate: (value: Entity) => boolean = () => true
-    ): Promise<Array<Entity>> {
+    ): Promise<Entity[]> {
         return this.level.findEntitiesInRadius(predicate, this.x >> 4, this.y >> 4, radius);
     }
 
-    protected getEntitiesVisible(radius: number = 2, fov = 90): Promise<Array<Entity>> {
+    protected getEntitiesVisible(radius = 2, fov = 90): Promise<Entity[]> {
         return this.getEntitiesRadius(radius, (entity) => {
             if (entity === this) return false;
             const a = (Math.atan2(this.y - entity.y, this.x - entity.x) * 180 / Math.PI + 180) % 360;
@@ -288,18 +288,18 @@ export default abstract class Mob extends Entity {
         return super.move(xa, ya);
     }
 
-    protected onChangeDir(dir: Direction) {
+    protected onChangeDir(dir: Direction): void {
 
     }
 
-    protected onFire() {
+    protected onFire(): void {
         super.onFire();
         if (Updater.every(10)) {
             this.hurt(1);
         }
     }
 
-    protected onTileTooHigh() {
+    protected onTileTooHigh(): void {
         this.jump(2);
     }
 }

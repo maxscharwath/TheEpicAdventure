@@ -8,7 +8,7 @@ export default class StringEntry extends Entry {
     }
     private text: string;
 
-    public getValue(): any {
+    public getValue(): string {
         return this.text;
     }
 

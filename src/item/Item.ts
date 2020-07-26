@@ -32,7 +32,7 @@ export default class Item {
         return false;
     }
 
-    public destroy(mob: Mob) {
+    public destroy(mob: Mob): void {
         mob.inventory.removeThisItem(this);
     }
 
@@ -40,7 +40,7 @@ export default class Item {
         return Localization.get(`item.${this.tag}`);
     }
 
-    public getSprite(centred: boolean = false) {
+    public getSprite(centred = false): PIXI.Sprite {
         const texture = (!this.texture.valid) ? PIXI.Texture.from(System.getResource("no_texture.png")) : this.texture;
         const sprite = new PIXI.Sprite(texture);
         if (centred) {
@@ -49,7 +49,7 @@ export default class Item {
         return sprite;
     }
 
-    public getTexture() {
+    public getTexture(): PIXI.Texture {
         return this.texture;
     }
 

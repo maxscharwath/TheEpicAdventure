@@ -10,6 +10,7 @@ import Renderer from "../core/Renderer";
 import {Mob} from "../entity";
 import Item from "../item/Item";
 import Chunk from "./Chunk";
+import {StateType} from "./tile/TileStates";
 
 interface LevelTileConstructor {
     biome: Biome;
@@ -18,7 +19,7 @@ interface LevelTileConstructor {
     moisture: number;
     temperature: number;
     tileClass?: typeof Tile;
-    tileStates?: {};
+    tileStates?: StateType;
     x: number;
     y: number;
 }
@@ -31,7 +32,7 @@ export default class LevelTile {
     protected lightLevel = 0;
     public readonly moisture: number;
     public random: TileRandom = new TileRandom(this);
-    public skipTick: boolean = false;
+    public skipTick = false;
     public readonly temperature: number;
 
     public static SIZE = 16;
@@ -56,13 +57,13 @@ export default class LevelTile {
     private groundContainer = new PIXI.Container();
     private initByEntity?: Entity;
     private isInitiated = false;
-    private needToUpdate: boolean = true;
+    private needToUpdate = true;
     private sortableContainer = new PIXI.Container();
     private tileClass?: typeof Tile;
-    private tileStates?: {};
+    private tileStates?: StateType;
     private visible: boolean;
 
-    public add() {
+    public add(): void {
         if (!this.level) {
             return;
         }
@@ -71,17 +72,17 @@ export default class LevelTile {
         this.level.lightFilter.lightContainer.addChild(this.light);
     }
 
-    public bumpedInto(entity: Entity) {
+    public bumpedInto(entity: Entity): void {
         return this._tile?.bumpedInto(entity);
     }
 
-    public destroy() {
+    public destroy(): void {
         this.groundContainer.destroy({children: true});
         this.sortableContainer.destroy({children: true});
         this.light.destroy({children: true});
     }
 
-    public findTileRadius(radius: number, ...tiles: Array<typeof Tile>) {
+    public findTileRadius(radius: number, ...tiles: Array<typeof Tile>): boolean {
         for (let x = -radius; x < radius; x++) {
             const height = ~~(Math.sqrt(radius * radius - x * x));
             for (let y = -height; y < height; y++) {
@@ -96,11 +97,11 @@ export default class LevelTile {
         return this.level.getChunk(this.getLocalX() >> 4, this.getLocalY() >> 4, generate);
     }
 
-    public getColor() {
+    public getColor(): number {
         return this.tileClass?.COLOR ?? 0;
     }
 
-    public getDirectNeighbourTiles(generate = true): Array<LevelTile> {
+    public getDirectNeighbourTiles(generate = true): LevelTile[] {
         const lt = [];
         for (let i = -1; i < 2; i++) {
             for (let j = -1; j < 2; j++) {
@@ -116,20 +117,20 @@ export default class LevelTile {
         return lt;
     }
 
-    public getFriction() {
+    public getFriction(): number {
         return this._tile?.friction ?? 1;
     }
 
-    public getLightLevel() {
+    public getLightLevel(): number {
         const l = Math.round((this.lightLevel + this.level.getAmbientLightLevel()));
         return l > 20 ? 20 : l;
     }
 
-    public getLocalX = () => this._x >> 4;
+    public getLocalX = ():number => this._x >> 4;
 
-    public getLocalY = () => this._y >> 4;
+    public getLocalY = ():number => this._y >> 4;
 
-    public getNeighbourTiles(radius: number = 1, generate = true): Array<LevelTile> {
+    public getNeighbourTiles(radius = 1, generate = true): LevelTile[] {
         const lt = [];
         const x = this.getLocalX();
         const y = this.getLocalY();
@@ -152,7 +153,7 @@ export default class LevelTile {
         return this.level.getTile(this.getLocalX() + x, this.getLocalY() + y, generate);
     }
 
-    public getTileClass() {
+    public getTileClass(): typeof Tile{
         return this.tileClass;
     }
 
@@ -160,7 +161,7 @@ export default class LevelTile {
         return this.getChunk()?.getEntities().some((e) => e.getTile() === this);
     }
 
-    public init() {
+    public init(): void {
         const oldTile = this._tile;
         // @ts-ignore
         this._tile = new this.tileClass(this);
@@ -184,16 +185,16 @@ export default class LevelTile {
         });
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>): boolean {
         return this._tile?.instanceOf(...tileClass);
     }
 
-    public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>) {
+    public is(...tileClasses: Array<typeof Tile | TileRegister<typeof Tile>>): boolean {
         return tileClasses.some((tileClass) =>
             this._tile?.getClass() === ((tileClass instanceof TileRegister) ? tileClass.getClass() : tileClass));
     }
 
-    public mayPass(entity: Entity) {
+    public mayPass(entity: Entity): boolean {
         return this._tile?.mayPass(entity);
     }
 
@@ -202,7 +203,7 @@ export default class LevelTile {
         return this._tile.onInteract(mob, item);
     }
 
-    public onRender() {
+    public onRender(): void {
         this.checkOnScreen();
         if (!this.isInitiated) {
             this.init();
@@ -217,7 +218,7 @@ export default class LevelTile {
         this.light.setBrightness(this.lightLevel / 20);
     }
 
-    public onTick() {
+    public onTick(): void {
         if (!this.isInitiated) {
             this.init();
         }
@@ -231,19 +232,19 @@ export default class LevelTile {
         this.updateLight();
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         if (this._tile?.isInit) {
             this._tile?.onUpdate();
         }
     }
 
-    public remove() {
+    public remove(): void {
         if (this.groundContainer.parent) this.groundContainer.parent.removeChild(this.groundContainer);
         if (this.sortableContainer.parent) this.sortableContainer.parent.removeChild(this.sortableContainer);
         if (this.light.parent) this.light.parent.removeChild(this.light);
     }
 
-    public setLight(value: number) {
+    public setLight(value: number): void {
         if (value > this.lightLevel) {
             this.lightLevel = value;
         }
@@ -252,7 +253,7 @@ export default class LevelTile {
     public setTile<T extends typeof Tile>(tile: T, states?: typeof tile.DEFAULT_STATES, entity?: Entity): void;
     public setTile<T extends typeof Tile>(
         tile: TileRegister<T>, states?: typeof tile.tile.DEFAULT_STATES, entity?: Entity): void;
-    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: {}, entity?: Entity): void {
+    public setTile<T extends typeof Tile>(tile: T | TileRegister<T>, states?: StateType, entity?: Entity): void {
         this.isInitiated = false;
         this.skipTick = true;
         this.tileClass = (tile instanceof TileRegister) ? tile.tile : tile;
@@ -260,25 +261,25 @@ export default class LevelTile {
         this.initByEntity = entity;
     }
 
-    public setVisible(value: boolean) {
+    public setVisible(value: boolean): void {
         this.visible = value;
         this.groundContainer.visible = this.visible;
         this.sortableContainer.visible = this.visible;
         this.light.visible = this.visible;
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         this._tile?.steppedOn(entity);
     }
 
-    public update() {
+    public update(): void {
         this.needToUpdate = true;
         this.getNeighbourTiles(1, false).forEach((levelTile) => {
             levelTile.needToUpdate = true;
         });
     }
 
-    public updateLight() {
+    public updateLight(): void {
         if (!this.visible) return;
         let lightLevel = this._tile?.light;
         if (!lightLevel || lightLevel === 0) return;
@@ -329,7 +330,7 @@ export default class LevelTile {
         return this.tile?.z ?? 0;
     }
 
-    private checkOnScreen() {
+    private checkOnScreen(): void {
         const p = this.groundContainer.getGlobalPosition();
         const screen = Renderer.getScreen();
         const s = LevelTile.SIZE * Renderer.camera.zoom;
@@ -337,7 +338,7 @@ export default class LevelTile {
         this.setVisible(!(p.x < -s - m || p.x > screen.width + m || p.y < -s - m || p.y > screen.height + m));
     }
 
-    private sort() {
+    private sort(): void {
         if (!this._tile) return;
         this.sortableContainer.zIndex = this._y + LevelTile.SIZE * this._tile.anchor + this._tile.offset.y;
     }

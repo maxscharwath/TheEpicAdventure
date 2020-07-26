@@ -47,11 +47,11 @@ export class TileRegister<T extends typeof Tile> {
 
     private static tiles = new KeyedMap<typeof Tile>();
 
-    public static add<T extends typeof Tile>(idx: number, tag: string, tile: T) {
+    public static add<T extends typeof Tile>(idx: number, tag: string, tile: T): TileRegister<T> {
         return new TileRegister(idx, tag, tile);
     }
 
-    public static get(index: string | number) {
+    public static get(index: string | number) :typeof Tile{
         const tileData = this.tiles.get(index);
         return (!tileData ? Tile : tileData);
     }
@@ -60,7 +60,7 @@ export class TileRegister<T extends typeof Tile> {
         return this.tiles.getKeys(tile);
     }
 
-    public static getSome(...tags: Array<string>) {
+    public static getSome(...tags: string[]): Array<typeof Tile> {
         return this.tiles.getSome(...tags);
     }
 

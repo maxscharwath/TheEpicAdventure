@@ -3,7 +3,7 @@
     "strict": false,
     "module": "commonjs",
     "noImplicitAny": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
     "target": "ES2020",

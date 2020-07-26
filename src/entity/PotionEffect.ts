@@ -9,7 +9,7 @@ export default class PotionEffect {
         this.duration = potionType.duration;
     }
 
-    public remainingPercent() {
+    public remainingPercent(): number {
         return this.duration / this.type.duration * 100;
     }
 }

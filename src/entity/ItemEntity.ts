@@ -8,7 +8,7 @@ import Updater from "../core/Updater";
 
 export default class ItemEntity extends Entity {
 
-    public static create({id, item, x, y}: any): ItemEntity | undefined {
+    public static create({id, x, y, item}: { id: string, x: number, y: number, item: any}): ItemEntity | undefined {
         const EntityClass = Entities.getByTag(id);
         return !EntityClass ? undefined : new EntityClass(Item.create(item), x, y) as unknown as ItemEntity;
     }
@@ -36,19 +36,19 @@ export default class ItemEntity extends Entity {
     }
     private lastCheck = 0;
     private readonly lifeTime: number;
-    private radiusMobs: Array<Mob> = [];
+    private radiusMobs: Mob[] = [];
     private readonly shadow: PIXI.filters.DropShadowFilter;
-    private time: number = 0;
+    private time = 0;
 
     public canSwim(): boolean {
         return true;
     }
 
-    public onFire() {
+    public onFire(): void {
         this.time += 20;
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (this.isSwimming()) {
             this.offset.y = Math.sin(this.ticks / 10) * 1.5;
@@ -85,7 +85,7 @@ export default class ItemEntity extends Entity {
         }
     }
 
-    public take(entity: Entity) {
+    public take(entity: Entity): void {
         this.delete();
     }
 
@@ -96,7 +96,7 @@ export default class ItemEntity extends Entity {
         };
     }
 
-    public touchedBy(entity: Entity) {
+    public touchedBy(entity: Entity): void {
         if (this.deleted) return;
         super.touchedBy(entity);
         if (entity instanceof Mob && this.onGround()) {
@@ -104,15 +104,15 @@ export default class ItemEntity extends Entity {
         }
     }
 
-    protected getTileZ() {
+    protected getTileZ(): number {
         return 0;
     }
 
-    private updateRadiusMob() {
+    private updateRadiusMob(): void {
         if (Updater.ticks - this.lastCheck < 100) return;
         this.lastCheck = Updater.ticks;
         this.level?.findEntitiesInRadius(
             (entity) => entity instanceof Mob, this.x >> 4, this.y >> 4, 10)
-            .then((entities) => this.radiusMobs = entities as Array<Mob>);
+            .then((entities) => this.radiusMobs = entities as Mob[]);
     }
 }

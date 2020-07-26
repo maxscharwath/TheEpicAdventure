@@ -4,11 +4,11 @@ import HostileMob from "./HostileMob";
 import Tiles from "../../level/tile/Tiles";
 
 export default class Zombie extends HostileMob {
-    protected speedMax: number = 0.25;
+    protected speedMax = 0.25;
     private static spriteSheet = new SpriteSheet("zombie.json");
     private sprite?: AnimatedSprite;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
             this.playAnimation("walk");
@@ -24,7 +24,7 @@ export default class Zombie extends HostileMob {
         }
     }
 
-    protected init() {
+    protected init(): void {
         super.init();
         this.sprite = new AnimatedSprite([Texture.EMPTY], true);
         this.sprite.anchor.set(0.5);
@@ -32,7 +32,7 @@ export default class Zombie extends HostileMob {
         this.playAnimation("walk");
     }
 
-    protected newTarget() {
+    protected newTarget(): void {
         super.newTarget();
         if (this.isOnFire) {
             const result = this.level?.findRandomTileInEntityRadius([Tiles.WATER], this, 20);
@@ -42,7 +42,7 @@ export default class Zombie extends HostileMob {
         }
     }
 
-    private playAnimation(name: string, loop: boolean = true): AnimatedSprite | undefined {
+    private playAnimation(name: string, loop = true): AnimatedSprite | undefined {
         const a = Zombie.spriteSheet.getAnimation(name, this.dir);
         if (!this.sprite || this.sprite.textures === a) return;
         this.sprite.textures = a;

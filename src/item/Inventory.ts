@@ -14,13 +14,13 @@ export default class Inventory {
         return inventory;
     }
 
-    public indexedSlot: number = 0;
-    public slots: Array<Slot> = [];
+    public indexedSlot = 0;
+    public slots: Slot[] = [];
 
-    constructor(nbSlot: number = 9) {
+    constructor(nbSlot = 9) {
         this.addSlots(nbSlot);
     }
-    private STACK_MAX: number = 64;
+    private STACK_MAX = 64;
 
     public addItem(item: Item | ItemRegister<Item>, itemNb = 1): boolean {
         if (item instanceof ItemRegister) {
@@ -68,7 +68,7 @@ export default class Inventory {
         }
     }
 
-    public clone() {
+    public clone(): Inventory {
         const inventory = new Inventory();
         for (const slot of this.slots) {
             inventory.slots.push(slot.clone());
@@ -76,7 +76,7 @@ export default class Inventory {
         return inventory;
     }
 
-    public count(item: Item) {
+    public count(item: Item): number {
         let count = 0;
         for (const slot of this.slots) {
             if (slot.item instanceof Item) {
@@ -88,6 +88,7 @@ export default class Inventory {
         return count;
     }
 
+    //@TODO
     public getItem(item: Item): Item | boolean {
         return false;
     }
@@ -96,7 +97,7 @@ export default class Inventory {
         return this.slots[index];
     }
 
-    public hasItem(item: Item | ItemRegister<Item>, count: number) {
+    public hasItem(item: Item | ItemRegister<Item>, count: number): boolean {
         for (const slot of this.slots) {
             if (slot.item instanceof Item) {
                 if (slot.item.tag === item.tag) {
@@ -108,7 +109,7 @@ export default class Inventory {
         return false;
     }
 
-    public move(a: number, b: number) {
+    public move(a: number, b: number): number {
         if (a < 0) {
             a += this.slots.length;
         }
@@ -141,7 +142,7 @@ export default class Inventory {
         return false;
     }
 
-    public removeThisItem(item: Item, itemNb: number = 1) {
+    public removeThisItem(item: Item, itemNb = 1): void {
         for (const slot of this.slots) {
             if (slot.item === item) {
                 slot.removeItem(itemNb);
@@ -159,7 +160,7 @@ export default class Inventory {
         return this.slots[this.indexedSlot];
     }
 
-    public toBSON() {
+    public toBSON(): any {
         const slots: Array<{ item?: Item, nb: number, pos: number }> = [];
         this.slots.forEach((slot, index) => {
             if (slot instanceof Slot && !slot.isEmpty()) {

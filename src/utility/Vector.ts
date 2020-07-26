@@ -7,18 +7,18 @@ export default class Vector {
         return this.clone();
     }
 
-    public x: number = 0;
-    public y: number = 0;
+    public x = 0;
+    public y = 0;
 
-    public static create(x?: number, y?: number) {
+    public static create(x?: number, y?: number): Vector {
         return new Vector(x, y);
     }
 
-    public static createConstant(x?: number, y?: number) {
+    public static createConstant(x?: number, y?: number): Vector {
         return new Vector(x, y, true);
     }
 
-    constructor(x: number = 0, y: number = 0, constant: boolean = false) {
+    constructor(x = 0, y = 0, constant = false) {
         this.x = x;
         this.y = y;
         this.constant = constant;
@@ -138,11 +138,11 @@ export default class Vector {
         return -Math.atan2(-this.y, this.x);
     }
 
-    public toArray(n: number): Array<number> {
+    public toArray(n: number): number[] {
         return [this.x, this.y].slice(0, n || 2);
     }
 
-    public get magnitude() {
+    public get magnitude(): number {
         return Math.hypot(this.x, this.y);
     }
 
@@ -154,7 +154,7 @@ export default class Vector {
         this.y *= mag / this.magnitude;
     }
 
-    public get rotation() {
+    public get rotation(): number {
         return Math.atan2(this.x, this.y);
     }
 

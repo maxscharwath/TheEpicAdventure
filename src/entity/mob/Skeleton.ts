@@ -3,11 +3,11 @@ import SpriteSheet from "../../gfx/SpriteSheet";
 import HostileMob from "./HostileMob";
 
 export default class Skeleton extends HostileMob {
-    protected speedMax: number = 1;
+    protected speedMax = 1;
     private static spriteSheet = new SpriteSheet("skeleton.json");
     private sprite?: AnimatedSprite;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
             this.playAnimation("walk");
@@ -20,7 +20,7 @@ export default class Skeleton extends HostileMob {
         super.onTick();
     }
 
-    protected init() {
+    protected init(): void {
         super.init();
         this.sprite = new AnimatedSprite([Texture.EMPTY], true);
         this.sprite.anchor.set(0.5);
@@ -28,7 +28,7 @@ export default class Skeleton extends HostileMob {
         this.playAnimation("walk");
     }
 
-    private playAnimation(name: string, loop: boolean = true): AnimatedSprite | undefined {
+    private playAnimation(name: string, loop = true): AnimatedSprite | undefined {
         const a = Skeleton.spriteSheet.getAnimation(name, this.dir);
         if (!this.sprite || this.sprite.textures === a) return;
         this.sprite.textures = a;

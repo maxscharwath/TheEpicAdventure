@@ -13,7 +13,7 @@ import PotionType from "./PotionType";
 import BucketItem from "./BucketItem";
 import BucketType from "./BucketType";
 
-type Type<T> = new (...args: Array<any>) => T;
+type Type<T> = new (...args: any[]) => T;
 
 export class ItemRegister<T extends Item> {
 
@@ -30,7 +30,7 @@ export class ItemRegister<T extends Item> {
 
     private static items = new Map<string, ItemRegister<Item>>();
 
-    public static add<T extends Item>(tag: string, itemClass: Type<T>, ...args: any) {
+    public static add<T extends Item>(tag: string, itemClass: Type<T>, ...args: any): ItemRegister<T> {
         return new ItemRegister(tag, itemClass, ...args);
     }
 
@@ -38,7 +38,7 @@ export class ItemRegister<T extends Item> {
         return this.items.get(tag);
     }
 
-    public static verifyTag() {
+    public static verifyTag(): void {
         this.items.forEach((item) => {
             if (!Item.verifyTag(item.tag)) {
                 console.warn(`'${item.tag}' didnt exist on ${Localization.getCurrent()?.getPath()}`);
@@ -46,11 +46,11 @@ export class ItemRegister<T extends Item> {
         });
     }
 
-    public static get ALL() {
+    public static get ALL(): Array<ItemRegister<Item>> {
         return Array.from(this.items.values());
     }
 
-    public instanceOf(item: Item) {
+    public instanceOf(item: Item): boolean {
         if (!(item instanceof Item)) return false;
         return item.tag === this.tag;
     }

@@ -20,7 +20,7 @@ export default class FenceTile extends Tile {
     protected static textures = SpriteSheet.loadTextures(System.getResource("tile", "fence.png"), 16, 16);
     private sprite: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.sprite = new PIXI.Sprite(FenceTile.textures[0]);
         this.sprite.y = -4;
@@ -35,19 +35,19 @@ export default class FenceTile extends Tile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.AXE:
-                    this.onDestroy();
-                    return true;
+            case ToolType.AXE:
+                this.onDestroy();
+                return true;
             }
         }
         return false;
     }
 
-    public onSetTile(oldTile: Tile, entity?: Entity) {
+    public onSetTile(oldTile: Tile, entity?: Entity): void {
         this.setGroundTile(oldTile);
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         const test = (x: number, y: number) => {
             const t = this.levelTile.getRelativeTile(x, y, false);
@@ -68,7 +68,7 @@ export default class FenceTile extends Tile {
         return t;
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTileToGround();
         this.addItemEntity(Items.FENCE);

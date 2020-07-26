@@ -3,7 +3,7 @@ import System from "../core/System";
 
 export default class ToolType {
     public readonly name: string;
-    public readonly textures: Array<PIXI.Texture> = [];
+    public readonly textures: PIXI.Texture[] = [];
     private static readonly levelName = ["wood", "stone", "iron", "gold", "diamond"];
     public static readonly AXE = new ToolType("axe");
     public static readonly HOE = new ToolType("hoe");
@@ -11,11 +11,11 @@ export default class ToolType {
     public static readonly SHOVEL = new ToolType("shovel");
     public static readonly SWORD = new ToolType("sword");
 
-    public static getLevelName(id: number) {
+    public static getLevelName(id: number): string {
         return this.levelName[id];
     }
 
-    public static get nbLevel() {
+    public static get nbLevel(): number {
         return this.levelName.length;
     }
 

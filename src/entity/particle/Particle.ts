@@ -7,16 +7,16 @@ import Chunk from "../../level/Chunk";
 
 export default class Particle extends PIXI.Container implements Tickable {
     public a: Vector3D = new Vector3D();
-    protected deleted: boolean = false;
-    protected gravity: number = 0;
+    protected deleted = false;
+    protected gravity = 0;
     protected level?: Level;
-    protected life: number = 0;
+    protected life = 0;
     protected lifeDuration = 5;
     protected random = Particle.random;
-    public ticks: number = 0;
-    public x: number = 0;
-    public y: number = 0;
-    public z: number = 0;
+    public ticks = 0;
+    public x = 0;
+    public y = 0;
+    public z = 0;
 
     private static random = new Random();
 
@@ -26,7 +26,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         this.y = y;
     }
 
-    public add() {
+    public add(): void {
         this.level?.sortableContainer.addChild(this);
     }
 
@@ -56,7 +56,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         return this.deleted;
     }
 
-    public onRender() {
+    public onRender(): void {
         this.x += this.a.x;
         this.y += this.a.y;
         this.z += this.a.z;
@@ -64,7 +64,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         this.zIndex = this.getZIndex();
     }
 
-    public onTick() {
+    public onTick(): void {
         if (this.life < this.lifeDuration) {
             ++this.life;
         } else {
@@ -72,7 +72,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         }
     }
 
-    public remove() {
+    public remove(): void {
         if (this.parent) {
             this.parent.removeChild(this);
         }
@@ -86,7 +86,7 @@ export default class Particle extends PIXI.Container implements Tickable {
         return this.y + this.z;
     }
 
-    protected lifePercent() {
+    protected lifePercent(): number {
         return this.life / this.lifeDuration;
     }
 }

@@ -13,10 +13,10 @@ export default class SandTile extends AutoTilingTile {
     public static readonly COLOR: number = 0xe0f878;
     public static readonly TAG = "sand";
     private footprintSprite?: PIXI.Sprite;
-    private step: number = 0;
-    private stepDir: boolean = false;
+    private step = 0;
+    private stepDir = false;
 
-    public init() {
+    public init(): void {
         super.init();
         const baseTexture = PIXI.BaseTexture.from(System.getResource("tile", "sand_footprint.png"));
         this.footprintSprite = new PIXI.Sprite(new PIXI.Texture(baseTexture, new PIXI.Rectangle(0, 0, 16, 16)));
@@ -30,10 +30,10 @@ export default class SandTile extends AutoTilingTile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.SHOVEL:
-                    this.addItemEntity(Items.SAND);
-                    this.setTile(Tiles.DIRT);
-                    return true;
+            case ToolType.SHOVEL:
+                this.addItemEntity(Items.SAND);
+                this.setTile(Tiles.DIRT);
+                return true;
             }
         }
         return false;
@@ -52,14 +52,14 @@ export default class SandTile extends AutoTilingTile {
         }
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         if (this.step < 550 && entity instanceof Mob) {
             this.step = 600;
             this.stepDir = entity.getDir().isX();
         }
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.HOLE);
         this.addItemEntity(Items.SAND);

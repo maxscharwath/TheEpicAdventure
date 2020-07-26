@@ -1,6 +1,10 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
+    <JSCodeStyleSettings version="0">
+      <option name="FORCE_SEMICOLON_STYLE" value="true" />
+      <option name="FORCE_QUOTE_STYlE" value="true" />
+    </JSCodeStyleSettings>
     <JSON>
       <option name="ARRAY_WRAPPING" value="1" />
     </JSON>
@@ -13,6 +17,11 @@
       <option name="SPACE_WITHIN_TYPE_ASSERTION" value="true" />
       <option name="IMPORT_SORT_MEMBERS" value="false" />
     </TypeScriptCodeStyleSettings>
+    <codeStyleSettings language="JavaScript">
+      <option name="INDENT_CASE_FROM_SWITCH" value="false" />
+      <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <option name="ALIGN_MULTILINE_FOR" value="false" />
+    </codeStyleSettings>
     <codeStyleSettings language="TypeScript">
       <option name="RIGHT_MARGIN" value="120" />
       <option name="IF_BRACE_FORCE" value="1" />

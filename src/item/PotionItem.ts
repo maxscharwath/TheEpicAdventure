@@ -14,7 +14,7 @@ export default class PotionItem extends Item {
     }
     private readonly potion: PotionType;
 
-    public getSprite(centred: boolean = false) {
+    public getSprite(centred = false): PIXI.Sprite {
         const sprite = new PIXI.Sprite(PIXI.Texture.from(System.getResource("items", "potion.png")));
         const overlay = new PIXI.Sprite(PIXI.Texture.from(System.getResource("items", "potion_overlay.png")));
         overlay.tint = this.potion.color.getInt();

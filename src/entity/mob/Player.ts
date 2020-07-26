@@ -10,7 +10,7 @@ import FurnitureItem from "../../item/FurnitureItem";
 import {Furniture} from "../index";
 
 export default class Player extends Mob {
-    protected speedMax: number = 1;
+    protected speedMax = 1;
 
     private static spriteSheet = new SpriteSheet("player.json");
 
@@ -40,7 +40,7 @@ export default class Player extends Mob {
     public die(): void {
     }
 
-    public onCommand() {
+    public onCommand(): void {
         let ax = 0;
         let ay = 0;
 
@@ -80,7 +80,7 @@ export default class Player extends Mob {
         }
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         const holdItem = this.inventory.selectedItem() instanceof FurnitureItem;
         if (Math.abs(this.a.get2dMagnitude()) > 0.1) {
@@ -115,7 +115,7 @@ export default class Player extends Mob {
         }
     }
 
-    protected init() {
+    protected init(): void {
         super.init();
         this.sprite = new PIXI.AnimatedSprite([PIXI.Texture.EMPTY], true);
         this.sprite.anchor.set(0.5);
@@ -128,12 +128,12 @@ export default class Player extends Mob {
         this.playAnimation("walk");
     }
 
-    protected steppedOn() {
+    protected steppedOn(): void {
         super.steppedOn();
     }
 
     private playAnimation(
-        name: string, type: "normal" | "hold" = "normal", loop: boolean = true): PIXI.AnimatedSprite | undefined {
+        name: string, type: "normal" | "hold" = "normal", loop = true): PIXI.AnimatedSprite | undefined {
         const a = Player.spriteSheet.getAnimation(name, this.dir, type);
         if (!this.sprite || this.sprite.textures === a) return;
         this.sprite.textures = a;

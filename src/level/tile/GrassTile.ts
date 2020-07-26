@@ -15,7 +15,7 @@ export default class GrassTile extends AutoTilingTile {
     public static readonly TAG = "grass";
     private static tileTextures = GrassTile.loadTextures(System.getResource("tile", "grass.png"), 6);
 
-    public init() {
+    public init(): void {
         super.init();
         this.container.addChild(
             new PIXI.Sprite(GrassTile.tileTextures[this.random.int(GrassTile.tileTextures.length)]),
@@ -26,18 +26,18 @@ export default class GrassTile extends AutoTilingTile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.HOE:
-                    if (Random.probability(5)) {
-                        this.addItemEntity(Items.SEED_WHEAT);
-                    }
-                    this.setTile(Tiles.FARMLAND);
-                    return true;
-                case ToolType.SHOVEL:
-                    if (Random.probability(5)) {
-                        this.addItemEntity(Items.SEED_WHEAT);
-                    }
-                    this.setTile(Tiles.DIRT);
-                    return true;
+            case ToolType.HOE:
+                if (Random.probability(5)) {
+                    this.addItemEntity(Items.SEED_WHEAT);
+                }
+                this.setTile(Tiles.FARMLAND);
+                return true;
+            case ToolType.SHOVEL:
+                if (Random.probability(5)) {
+                    this.addItemEntity(Items.SEED_WHEAT);
+                }
+                this.setTile(Tiles.DIRT);
+                return true;
             }
         }
         return false;
@@ -47,7 +47,7 @@ export default class GrassTile extends AutoTilingTile {
         super.onTick();
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.HOLE);
         this.addItemEntity(Items.DIRT);

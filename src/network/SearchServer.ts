@@ -10,15 +10,15 @@ interface ServerPacket {
 export default class SearchServer {
     private static PORT = 20000;
 
-    private static results: Array<ServerPacket> = [];
-    private static searching: boolean = false;
+    private static results: ServerPacket[] = [];
+    private static searching = false;
     private static timer?: NodeJS.Timeout;
 
-    public static getResults() {
+    public static getResults(): ServerPacket[] {
         return this.results;
     }
 
-    public static start(callback?: (server: ServerPacket) => void) {
+    public static start(callback?: (server: ServerPacket) => void): SearchServer {
         if (this.searching) return this;
         this.results = [];
         this.searching = true;
@@ -42,7 +42,7 @@ export default class SearchServer {
         return this;
     }
 
-    public static stop() {
+    public static stop(): void {
         this.searching = false;
         if (this.timer) clearInterval(this.timer);
     }

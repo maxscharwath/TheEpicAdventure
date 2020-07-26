@@ -15,7 +15,7 @@ export default class LilyPadTile extends Tile {
     private static tileTextures = LilyPadTile.loadTextures(System.getResource("tile", "lilypad.png"), 4);
     private sprite?: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.groundTile = new (Tiles.WATER.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
@@ -33,7 +33,7 @@ export default class LilyPadTile extends Tile {
         return true;
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         this.sprite?.pivot.set(0, Math.sin(Renderer.ticks / 6) / 4);
     }
@@ -42,7 +42,7 @@ export default class LilyPadTile extends Tile {
         super.onTick();
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.WATER);
         this.addItemEntity(Items.LILYPAD);

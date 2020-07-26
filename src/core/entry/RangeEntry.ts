@@ -2,8 +2,8 @@ import ArrayEntry from "./ArrayEntry";
 
 export default class RangeEntry extends ArrayEntry {
 
-    private static getIntegerArray(min: number, max: number): Array<number> {
-        const ints: Array<number> = [];
+    private static getIntegerArray(min: number, max: number): number[] {
+        const ints: number[] = [];
         for (let i = 0; i < (max - min + 1); i++) {
             ints[i] = min + i;
         }
@@ -20,7 +20,7 @@ export default class RangeEntry extends ArrayEntry {
     private readonly max: number;
     private readonly min: number;
 
-    public setValue(o: number) {
+    public setValue(o: number): void {
         this.setSelection(o - this.min);
     }
 }

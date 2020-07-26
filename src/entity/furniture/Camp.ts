@@ -12,21 +12,21 @@ export default class Camp extends Furniture {
 
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "camp.png"));
     private static frames = SpriteSheet.loadTextures(System.getResource("fire.png"), 32, 16);
-
-    public static create({id, active, x, y}: any): Camp {
-        const e = super.create({id, x, y}) as Camp;
-        e.active = active;
-        return e;
-    }
+    private active = false;
+    private campFire: PIXI.AnimatedSprite;
 
     constructor() {
         super();
         this.hitbox.set(0, 3, 16, 10);
     }
-    private active: boolean = false;
-    private campFire: PIXI.AnimatedSprite;
 
-    public onRender() {
+    public static create({id, x, y, active}: { id: string, x: number, y: number, active: boolean }): Camp {
+        const e = super.create({id, x, y}) as Camp;
+        e.active = active;
+        return e;
+    }
+
+    public onRender(): void {
         super.onRender();
         this.campFire.visible = this.active;
         if (this.active) {
@@ -34,7 +34,7 @@ export default class Camp extends Furniture {
         }
     }
 
-    public onTick() {
+    public onTick(): void {
         super.onTick();
         if (this.active) {
             this.getTile()?.setLight(15);
@@ -55,14 +55,14 @@ export default class Camp extends Furniture {
         };
     }
 
-    public touchedBy(entity: Entity) {
+    public touchedBy(entity: Entity): void {
         super.touchedBy(entity);
         if (this.active && entity instanceof Mob) {
             entity.burn();
         }
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Camp.baseTexture));
         sprite.anchor.set(0.5);
         this.campFire = new PIXI.AnimatedSprite(Camp.frames);

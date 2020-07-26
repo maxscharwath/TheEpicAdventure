@@ -2,15 +2,15 @@ import Entry from "./Entry";
 
 export default class ArrayEntry extends Entry {
 
-    constructor(label: string, ...options: Array<any>) {
+    constructor(label: string, ...options: any[]) {
         super(label);
         if (options.length === 1 && options[0] instanceof Array) {
             options = options[0];
         }
         this.options = options;
     }
-    private readonly options: Array<any>;
-    private selection: number = 0;
+    private readonly options: any[];
+    private selection = 0;
 
     public getSelection(): number {
         return this.selection;

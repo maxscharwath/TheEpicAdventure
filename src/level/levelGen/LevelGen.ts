@@ -10,11 +10,11 @@ export default abstract class LevelGen {
         this.seed = Seed.create(seed);
     }
 
-    public static create(seed: number | string = 0) {
+    public static create(seed: number | string = 0): LevelGen {
         // @ts-ignore
         return new this(seed);
     }
     public seed = 0;
 
-    public abstract genChunk(cX: number, cY: number, level?: Level, callback?: () => void): Array<LevelTile>;
+    public abstract genChunk(cX: number, cY: number, level?: Level, callback?: () => void): LevelTile[];
 }

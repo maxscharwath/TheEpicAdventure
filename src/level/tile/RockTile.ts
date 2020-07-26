@@ -17,7 +17,7 @@ export default class RockTile extends AutoTilingTile {
     private static tileTextures = RockTile.loadTextures(System.getResource("tile", "rock.png"), 3);
     private damage = 0;
 
-    public init() {
+    public init(): void {
         super.init();
         this.container.addChild(
             new PIXI.Sprite(RockTile.tileTextures[this.random.int(RockTile.tileTextures.length)]),
@@ -31,19 +31,19 @@ export default class RockTile extends AutoTilingTile {
 
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
+            const hurt = item.getAttackDamageBonus();
             switch (item.type) {
-                case ToolType.PICKAXE:
-                    const hurt = item.getAttackDamageBonus();
-                    this.damage += hurt;
-                    this.levelTile.level.add(
-                        new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
-                    );
-                    this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
-                    if (this.damage >= 15) {
-                        this.setTile(Tiles.DIRT);
-                        this.addItemEntity(Items.STONE, 2);
-                    }
-                    return true;
+            case ToolType.PICKAXE:
+                this.damage += hurt;
+                this.levelTile.level.add(
+                    new DamageParticle(this.levelTile.x + 8, this.levelTile.y + 8, -hurt, 0xc80000),
+                );
+                this.levelTile.level.add(new HurtParticle(this.levelTile.x + 8, this.levelTile.y + 8));
+                if (this.damage >= 15) {
+                    this.setTile(Tiles.DIRT);
+                    this.addItemEntity(Items.STONE, 2);
+                }
+                return true;
             }
         }
     }

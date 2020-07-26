@@ -10,7 +10,7 @@ export default class CommandDisplay extends Display {
 
     public hasCommand = true;
 
-    public static createInput() {
+    public static createInput(): HTMLInputElement {
         const _commandInput = document.createElement("input");
         _commandInput.id = "command";
         _commandInput.type = "text";
@@ -29,18 +29,18 @@ export default class CommandDisplay extends Display {
     private cursorEnd: number;
     private cursorStart: number;
     private cursorTicks: number;
-    private historicCommand: Array<string> = [];
-    private historicResult: Array<string> = [];
+    private historicCommand: string[] = [];
+    private historicResult: string[] = [];
     private input: HTMLInputElement;
     private inputText: PIXI.BitmapText;
-    private selectIndex: number = 0;
+    private selectIndex = 0;
 
-    public clear() {
+    public clear(): void {
         this.input.value = "";
         this.inputText.text = "";
     }
 
-    public execute() {
+    public execute(): boolean {
         if (this.message === "") return false;
         this.selectIndex = 0;
         this.historicCommand.unshift(this.message);
@@ -60,18 +60,18 @@ export default class CommandDisplay extends Display {
         this.clear();
     }
 
-    public hide() {
+    public hide(): void {
         super.hide();
         this.clear();
         this.input.blur();
         Game.input.preventDefault = true;
     }
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return true;
     }
 
-    public onCommand() {
+    public onCommand(): void {
         super.onCommand();
         if (Game.input.getKey("EXIT").clicked) this.hide();
         if (!this.active) return;
@@ -90,16 +90,16 @@ export default class CommandDisplay extends Display {
         }
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
     }
 
-    public onResize() {
+    public onResize(): void {
         super.onResize();
         this.inputText.y = Renderer.getScreen().height;
     }
 
-    public onTick() {
+    public onTick(): void {
         super.onTick();
         while (this.historicResult.length > 15) {
             this.historicResult.pop();
@@ -120,22 +120,22 @@ export default class CommandDisplay extends Display {
         }
     }
 
-    public sendMessage(msg: any) {
+    public sendMessage(msg: any): void {
         if (msg === undefined) return;
         this.historicResult.unshift(msg.toString());
     }
 
-    public show() {
+    public show(): void {
         super.show();
         this.clear();
         Game.input.preventDefault = false;
     }
 
-    public get message() {
+    public get message(): string {
         return this.input.value;
     }
 
-    private init() {
+    private init(): void {
         this.inputText = new PIXI.BitmapText("", {
             fontName: "Epic",
             fontSize: 16,

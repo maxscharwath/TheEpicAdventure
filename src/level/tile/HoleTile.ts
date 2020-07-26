@@ -11,7 +11,7 @@ export default class HoleTile extends AutoTilingTile {
     public static readonly COLOR: number = 0x402e29;
     public static readonly TAG = "hole";
 
-    public init() {
+    public init(): void {
         super.init();
         this.initAutoTile();
     }

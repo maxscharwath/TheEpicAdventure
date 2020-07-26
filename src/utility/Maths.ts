@@ -2,7 +2,7 @@ import Vector from "./Vector";
 import Vector3D from "./Vector3D";
 
 export default class Maths {
-    public static abs(n: number) {
+    public static abs(n: number): number {
         return Number(n < 0 ? n * -1 : n);
     }
 

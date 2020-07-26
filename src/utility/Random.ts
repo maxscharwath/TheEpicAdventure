@@ -36,8 +36,8 @@ export default class Random {
     constructor(seed = System.currentTimeMillis()) {
         this.seed = seed;
     }
-    private haveNextGaussian: boolean = false;
-    private nextGaussian: number = 0;
+    private haveNextGaussian = false;
+    private nextGaussian = 0;
 
     public boolean(): boolean {
         return this.random() >= 0.5;

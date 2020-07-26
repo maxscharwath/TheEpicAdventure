@@ -123,7 +123,7 @@ export default class SimplexNoise {
         return (70.0 * (n0 + n1 + n2) + 1) * 0.5; // return value [0,1];
     }
 
-    public setSeed(seed?: number) {
+    public setSeed(seed?: number): void {
         this.random = new Random(seed);
         this.p = SimplexNoise.buildPermutationTable(this.random);
         for (let i = 0; i < 512; i++) {

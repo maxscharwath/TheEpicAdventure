@@ -3,14 +3,14 @@ import Item from "./Item";
 export default class Slot {
     public item?: Item;
 
-    public nb: number = 0;
+    public nb = 0;
 
-    constructor(item?: Item, nb: number = 0) {
+    constructor(item?: Item, nb = 0) {
         this.nb = nb;
         this.item = item;
     }
 
-    public clear() {
+    public clear(): void {
         this.item = undefined;
         this.nb = 0;
     }
@@ -23,7 +23,7 @@ export default class Slot {
         return this.item === null || this.nb === null || this.nb <= 0;
     }
 
-    public isItem() {
+    public isItem(): boolean {
         return this.item instanceof Item;
     }
 

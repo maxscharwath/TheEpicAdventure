@@ -5,12 +5,16 @@ import System from "../../core/System";
 export default class Bed extends Furniture {
     private static baseTexture = PIXI.BaseTexture.from(System.getResource("furniture", "bed.png"));
 
+    public static create({id, x, y}: { id: string, x: number, y: number }): Bed {
+        return super.create({id, x, y}) as Bed;
+    }
+
     constructor() {
         super();
         this.hitbox.set(0, 3, 16, 10);
     }
 
-    protected init() {
+    protected init(): void {
         const sprite = new PIXI.Sprite(new PIXI.Texture(Bed.baseTexture));
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);

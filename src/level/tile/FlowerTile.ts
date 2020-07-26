@@ -13,9 +13,9 @@ export default class FlowerTile extends Tile {
 
     private static tileTextures = FlowerTile.loadTextures(System.getResource("tile", "flower.png"), 4);
     private sprite?: PIXI.Sprite;
-    private wiggleDelay: number = 0;
+    private wiggleDelay = 0;
 
-    public init() {
+    public init(): void {
         super.init();
         this.groundTile = new (Tiles.GRASS.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
@@ -35,7 +35,7 @@ export default class FlowerTile extends Tile {
         return true;
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
     }
 
@@ -54,7 +54,7 @@ export default class FlowerTile extends Tile {
         }
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         this.wiggleDelay = 1;
     }
 }

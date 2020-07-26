@@ -7,7 +7,7 @@ interface KeyData<T> {
 export default class KeyedMap<T> {
     private data: Array<KeyData<T>> = [];
 
-    public add(idx: number, tag: string, data: T) {
+    public add(idx: number, tag: string, data: T): boolean {
         if (this.getByIdx(idx) || this.getByTag(tag)) {
             return false;
         }
@@ -35,7 +35,7 @@ export default class KeyedMap<T> {
         };
     }
 
-    public getSome(...tags: Array<string>): Array<T> {
+    public getSome(...tags: string[]): T[] {
         return this.data.flatMap((kd) => tags.includes(kd.tag) ? [kd.data] : []);
     }
 }

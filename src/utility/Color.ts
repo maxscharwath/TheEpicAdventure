@@ -1,16 +1,16 @@
 export default class Color {
-    public a: number = 1;
-    public b: number = 0;
-    public g: number = 0;
+    public a = 1;
+    public b = 0;
+    public g = 0;
 
-    public r: number = 0;
+    public r = 0;
 
-    public static fromHex(hex: string) {
+    public static fromHex(hex: string): Color {
         const rgb = parseInt(hex.replace(/[^0-9A-F]/gi, ""), 16);
         return Color.fromNumber(rgb);
     }
 
-    public static fromNumber(rgb: number) {
+    public static fromNumber(rgb: number): Color {
         return new Color(
             ((rgb >> 16) & 0b11111111),
             ((rgb >> 8) & 0b11111111),
@@ -18,31 +18,31 @@ export default class Color {
         );
     }
 
-    static get black() {
+    static get black(): Color {
         return new Color(0, 0, 0);
     }
 
-    static get blue() {
+    static get blue(): Color {
         return new Color(0, 0, 255);
     }
 
-    static get green() {
+    static get green(): Color {
         return new Color(0, 255, 0);
     }
 
-    static get red() {
+    static get red(): Color {
         return new Color(255, 0, 0);
     }
 
-    static get white() {
+    static get white(): Color {
         return new Color(255, 255, 255);
     }
 
-    static get yellow() {
+    static get yellow(): Color {
         return new Color(255, 255, 0);
     }
 
-    constructor(r: number = 0, g: number = 0, b: number = 0, a: number = 1) {
+    constructor(r = 0, g = 0, b = 0, a = 1) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -63,12 +63,6 @@ export default class Color {
         this.b = this.b * 0.5 + c.b * 0.5;
         return this;
     }
-
-    public setAlpha(a: number) {
-        this.a = a;
-        return this;
-    }
-
     public toString(): string {
         return `rgba(${this.r},${this.g},${this.b},${this.a})`;
     }

@@ -13,9 +13,9 @@ export default class BushTile extends Tile {
     public anchor = 0.9;
 
     private sprite?: PIXI.Sprite;
-    private wiggleDelay: number = 0;
+    private wiggleDelay = 0;
 
-    public init() {
+    public init(): void {
         super.init();
         this.groundTile = new (Tiles.GRASS.tile)(this.levelTile);
         this.container.addChild(this.groundTile.container);
@@ -38,10 +38,6 @@ export default class BushTile extends Tile {
         return true;
     }
 
-    public onRender() {
-        super.onRender();
-    }
-
     public onTick(): void {
         super.onTick();
         if (this.wiggleDelay > 0) {
@@ -57,7 +53,7 @@ export default class BushTile extends Tile {
         }
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         this.wiggleDelay = 5;
     }
 }

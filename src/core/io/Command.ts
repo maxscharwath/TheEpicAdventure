@@ -10,17 +10,17 @@ export default class Command {
 
     private static commandList: Map<string, Command> = new Map<string, Command>();
 
-    public static add(commandName: string) {
+    public static add(commandName: string): Command {
         return new Command(commandName);
     }
 
-    public static execute(display: CommandDisplay, commandName: string, args: Array<any> = []): any {
+    public static execute(display: CommandDisplay, commandName: string, args: any[] = []): any {
         const command = this.commandList.get(commandName);
         if (!command) return `"${commandName}" unknown`;
         return command.execute(args, display);
     }
 
-    public static getAll() {
+    public static getAll(): Map<string, Command> {
         return this.commandList;
     }
 
@@ -28,10 +28,10 @@ export default class Command {
         this.name = commandName;
         Command.commandList.set(commandName, this);
     }
-    private callback?: (args: Array<any>, display: CommandDisplay) => any;
-    private name: string;
+    private callback?: (args: any[], display: CommandDisplay) => any;
+    private readonly name: string;
 
-    public addFunction(callback: (args: Array<any>, display: CommandDisplay) => any) {
+    public addFunction(callback: (args: any[], display: CommandDisplay) => any): boolean {
         if (callback instanceof Function) {
             this.callback = callback;
             return true;
@@ -39,14 +39,14 @@ export default class Command {
         return false;
     }
 
-    public execute(args: Array<any> = [], display: CommandDisplay) {
+    public execute(args: any[] = [], display: CommandDisplay): any {
         if (this.callback instanceof Function) {
             return this.callback(args, display);
         }
         return false;
     }
 
-    public getName() {
+    public getName(): string {
         return this.name;
     }
 }

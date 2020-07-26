@@ -3,8 +3,8 @@ import YAML from "yaml";
 import System from "../System";
 
 export default class Language {
-    public isLoaded: boolean = false;
-    public static all: Array<Language> = (() => {
+    public isLoaded = false;
+    public static all: Language[] = (() => {
         return fs.readdirSync(System.getResource("lang")).map((file) => new Language(file));
     })();
     public static loaded?: Language = Language.all[0];

@@ -14,7 +14,7 @@ export default class DirtTile extends Tile {
     public static readonly TAG = "dirt";
     private static tileTextures = DirtTile.loadTextures(System.getResource("tile", "dirt.png"), 4);
 
-    public init() {
+    public init(): void {
         super.init();
         this.container.addChild(
             new PIXI.Sprite(DirtTile.tileTextures[this.random.int(DirtTile.tileTextures.length)]),
@@ -24,13 +24,13 @@ export default class DirtTile extends Tile {
     public onInteract(mob: Mob, item?: Item): boolean {
         if (item instanceof ToolItem) {
             switch (item.type) {
-                case ToolType.HOE:
-                    this.setTile(Tiles.FARMLAND);
-                    return true;
-                case ToolType.SHOVEL:
-                    this.addItemEntity(Items.DIRT);
-                    this.setTile(Tiles.HOLE);
-                    return true;
+            case ToolType.HOE:
+                this.setTile(Tiles.FARMLAND);
+                return true;
+            case ToolType.SHOVEL:
+                this.addItemEntity(Items.DIRT);
+                this.setTile(Tiles.HOLE);
+                return true;
             }
         }
         return false;
@@ -49,7 +49,7 @@ export default class DirtTile extends Tile {
         }
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTile(Tiles.HOLE);
         this.addItemEntity(Items.DIRT);

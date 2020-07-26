@@ -17,20 +17,20 @@ import RainWeather from "../../gfx/weather/RainWeather";
 
 export default class TreeTile extends Tile {
     protected damage = 0;
-    protected wiggleDelay: number = 0;
+    protected wiggleDelay = 0;
     public static readonly COLOR: number = 0x19a02a;
     public static readonly TAG: string = "tree";
     public anchor = 1;
     private leafSprite: PIXI.Sprite;
-    private leavesDropDelay: number = 0;
+    private leavesDropDelay = 0;
     private treeSprite: PIXI.Sprite;
 
-    public bumpedInto(entity: Entity) {
+    public bumpedInto(entity: Entity): void {
         super.bumpedInto(entity);
         this.leavesDrop();
     }
 
-    public init() {
+    public init(): void {
         super.init();
         this.initTree();
     }
@@ -43,17 +43,17 @@ export default class TreeTile extends Tile {
         if (!item) {
             this.hurt(1);
         } else if (item instanceof ToolItem) {
+            const hurt = item.getAttackDamageBonus();
             switch (item.type) {
-                case ToolType.AXE:
-                    const hurt = item.getAttackDamageBonus();
-                    this.hurt(hurt);
-                    return true;
+            case ToolType.AXE:
+                this.hurt(hurt);
+                return true;
             }
         }
         return false;
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
 
         if (this.level.weather instanceof RainWeather) {
@@ -77,23 +77,23 @@ export default class TreeTile extends Tile {
         if (this.leavesDropDelay > 0) this.leavesDropDelay--;
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
     }
 
-    protected initTree() {
+    protected initTree(): void {
         this.setGroundTile(Tiles.GRASS.tile);
         this.treeTilingInit(System.getResource("tile", "tree.png"));
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTileToGround();
         this.addItemEntity(Items.WOOD);
         this.addItemEntity(Items.STICK, [0, 2]);
     }
 
-    protected treeTilingInit(source: string) {
+    protected treeTilingInit(source: string): void {
         const texture = PIXI.BaseTexture.from(source);
         this.treeSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(32, 0, 32, 32)));
         this.leafSprite = new PIXI.Sprite(new PIXI.Texture(texture, new PIXI.Rectangle(0, 0, 32, 32)));
@@ -110,7 +110,7 @@ export default class TreeTile extends Tile {
         this.sortableContainer.addChild(this.treeSprite, this.leafSprite);
     }
 
-    private hurt(dmg: number) {
+    private hurt(dmg: number): void {
         const x = this.levelTile.x + 8 + this.offset.x;
         const y = this.levelTile.y + 8 + this.offset.y;
         this.damage += dmg;
@@ -125,7 +125,7 @@ export default class TreeTile extends Tile {
         }
     }
 
-    private leavesDrop() {
+    private leavesDrop(): void {
         if (this.leavesDropDelay > 0) return;
         this.leavesDropDelay = 20;
         this.wiggleDelay = 10;

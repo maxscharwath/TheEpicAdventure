@@ -10,7 +10,7 @@ export default class ChunkRandom extends Random {
     private readonly x: number;
     private readonly y: number;
 
-    public random() {
+    public random(): number {
         const x = Math.sin(this.seed++ + this.x * this.y) * 10000;
         return x - Math.floor(x);
     }

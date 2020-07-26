@@ -23,7 +23,7 @@ export default class LeafParticle extends Particle {
     }
     private readonly sprite: PIXI.Sprite;
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
         if (this.z < 0) {
             this.z = 0;
@@ -33,9 +33,5 @@ export default class LeafParticle extends Particle {
         }
         this.a.z -= this.gravity;
         this.sprite.alpha = 1 - this.lifePercent() * this.lifePercent() * this.lifePercent();
-    }
-
-    public onTick() {
-        super.onTick();
     }
 }

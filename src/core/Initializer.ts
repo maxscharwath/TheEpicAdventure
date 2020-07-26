@@ -20,7 +20,7 @@ export default class Initializer {
         return this.tickerRender.FPS;
     }
 
-    public static run() {
+    public static run(): void {
         this.tickerRender.add((dlt: number) => Renderer.render(dlt), PIXI.UPDATE_PRIORITY.INTERACTION);
         this.tickerUpdater.add((dlt: number) => Updater.onTick(dlt), PIXI.UPDATE_PRIORITY.LOW);
         this.tickerUpdater.minFPS = 20;
@@ -29,7 +29,7 @@ export default class Initializer {
         this.tickerUpdater.start();
     }
 
-    public static setSpeed(speed: number) {
+    public static setSpeed(speed: number): void {
         this.tickerUpdater.speed = speed;
     }
 }

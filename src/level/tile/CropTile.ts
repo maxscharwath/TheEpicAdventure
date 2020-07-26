@@ -6,14 +6,14 @@ export default abstract class CropTile extends FarmlandTile {
 
     protected sprite?: PIXI.Sprite;
     public static readonly TAG: string = "crop";
-    private wiggleDelay: number = 0;
+    private wiggleDelay = 0;
 
-    public init() {
+    public init(): void {
         super.init();
         this.initCrop();
     }
 
-    public onRender() {
+    public onRender(): void {
         super.onRender();
     }
 
@@ -40,14 +40,14 @@ export default abstract class CropTile extends FarmlandTile {
         }
     }
 
-    public steppedOn(entity: Entity) {
+    public steppedOn(entity: Entity): void {
         this.wiggleDelay = 5;
     }
 
-    protected harvest() {
+    protected harvest(): void {
     }
 
-    protected initCrop() {
+    protected initCrop(): void {
     }
 
 }

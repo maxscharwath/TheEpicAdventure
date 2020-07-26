@@ -7,20 +7,20 @@ import Game from "../core/Game";
 
 export class Dialogue {
 
-    public static create(name: string) {
+    public static create(name: string): Dialogue {
         return new Dialogue().setName(name);
     }
 
     public hasCommand = true;
     public name: string;
-    public sentences: Array<string> = [];
+    public sentences: string[] = [];
 
-    public addSentence(text: string) {
+    public addSentence(text: string): this {
         this.sentences.push(text);
         return this;
     }
 
-    public setName(name: string) {
+    public setName(name: string): this {
         this.name = name;
         return this;
     }
@@ -36,11 +36,11 @@ class TextAnimation {
     private delay = 1;
     private readonly onDone: () => void;
     private readonly onUpdate: (text: string, char?: string) => void;
-    private outputText: string = "";
+    private outputText = "";
     private sourceText: string;
     private started = false;
 
-    public onTick() {
+    public onTick(): void {
         if (!this.started || !Updater.every(this.delay)) return;
         const i = this.outputText.length;
         const char = this.sourceText.charAt(i);
@@ -52,7 +52,7 @@ class TextAnimation {
         }
     }
 
-    public start(text: string) {
+    public start(text: string): void {
         this.sourceText = text;
         this.outputText = "";
         this.started = true;
@@ -117,25 +117,25 @@ export default class DialogueDisplay extends Display {
     private dialogue: Dialogue;
     private readonly nameArea: PIXI.BitmapText;
     private readonly next: PIXI.Sprite;
-    private sentences: Array<string> = [];
+    private sentences: string[] = [];
     private readonly textArea: PIXI.BitmapText;
 
-    public displayNextSentence() {
+    public displayNextSentence(): void {
         if (this.sentences.length <= 0) return this.endDialogue();
         const sentence = this.sentences.shift();
         this.animation.start(sentence);
         console.log(sentence);
     }
 
-    public endDialogue() {
+    public endDialogue(): void {
         this.hide();
     }
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return true;
     }
 
-    public onCommand() {
+    public onCommand(): void {
         super.onCommand();
         if (Game.input.getKey("NEXT").clicked || Game.input.getKey("ENTER").clicked) this.displayNextSentence();
     }
@@ -148,7 +148,7 @@ export default class DialogueDisplay extends Display {
         this.animation.onTick();
     }
 
-    public startDialogue(dialogue: Dialogue) {
+    public startDialogue(dialogue: Dialogue): void {
         if (!this.active) this.show();
         this.dialogue = dialogue;
         this.sentences.push(...this.dialogue.sentences);

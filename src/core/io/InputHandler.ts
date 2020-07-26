@@ -13,7 +13,7 @@ export default class InputHandler {
         e.preventDefault();
     }
 
-    public preventDefault: boolean = true;
+    public preventDefault = true;
 
     constructor() {
         this.initKeyMap();
@@ -27,7 +27,7 @@ export default class InputHandler {
     private keyboard = new Map();
     private keymap = new Map();
 
-    public getAllPressedKeys(): Array<Key> {
+    public getAllPressedKeys(): Key[] {
         const keys = [];
         for (const key of this.keyboard.values()) {
             if (key.down) {
@@ -37,24 +37,24 @@ export default class InputHandler {
         return keys;
     }
 
-    public getKey(keytext: string, getFromMap: boolean = true): Key {
-        if (keytext == null || keytext.length === 0) {
+    public getKey(keyText: string, getFromMap = true): Key {
+        if (keyText == null || keyText.length === 0) {
             return new Key();
         }
         let key: Key;
-        keytext = keytext.toUpperCase();
+        keyText = keyText.toUpperCase();
 
         if (getFromMap) {
-            if (this.keymap.has(keytext)) {
-                keytext = this.keymap.get(keytext);
+            if (this.keymap.has(keyText)) {
+                keyText = this.keymap.get(keyText);
             }
         }
 
-        const fullKeytext: string = keytext;
+        const fullKeyText: string = keyText;
 
-        if (keytext.includes("|")) {
+        if (keyText.includes("|")) {
             key = new Key();
-            for (const keypos of keytext.split("|")) {
+            for (const keypos of keyText.split("|")) {
                 const aKey: Key = this.getKey(keypos, false);
                 key.down = key.down || aKey.down;
                 key.clicked = key.clicked || aKey.clicked;
@@ -63,35 +63,35 @@ export default class InputHandler {
         }
 
 
-        if (keytext.includes("&")) {
-            keytext = keytext.substring(keytext.lastIndexOf("&") + 1);
+        if (keyText.includes("&")) {
+            keyText = keyText.substring(keyText.lastIndexOf("&") + 1);
         }
 
-        if (this.keyboard.has(keytext)) {
-            key = this.keyboard.get(keytext);
+        if (this.keyboard.has(keyText)) {
+            key = this.keyboard.get(keyText);
         } else {
             key = new Key();
-            this.keyboard.set(keytext, key);
-            console.log(`Added new key: ${keytext}`);
+            this.keyboard.set(keyText, key);
+            console.log(`Added new key: ${keyText}`);
         }
 
 
-        keytext = fullKeytext;
+        keyText = fullKeyText;
 
-        if (keytext.equals("SHIFT-LEFT") || keytext.equals("CONTROL-LEFT") || keytext.equals("ALT-LEFT")) {
+        if (keyText.equals("SHIFT-LEFT") || keyText.equals("CONTROL-LEFT") || keyText.equals("ALT-LEFT")) {
             return key;
         }
 
-        let foundS: boolean = false, foundC: boolean = false, foundA: boolean = false;
-        if (keytext.includes("&")) {
-            for (const keyname of keytext.split("&")) {
-                if (keyname.equals("SHIFT-LEFT")) {
+        let foundS = false, foundC = false, foundA = false;
+        if (keyText.includes("&")) {
+            for (const keyName of keyText.split("&")) {
+                if (keyName.equals("SHIFT-LEFT")) {
                     foundS = true;
                 }
-                if (keyname.equals("CONTROL-LEFT")) {
+                if (keyName.equals("CONTROL-LEFT")) {
                     foundC = true;
                 }
-                if (keyname.equals("ALT-LEFT")) {
+                if (keyName.equals("ALT-LEFT")) {
                     foundA = true;
                 }
             }
@@ -102,7 +102,7 @@ export default class InputHandler {
             this.getKey("CONTROL-LEFT").down === foundC &&
             this.getKey("ALT-LEFT").down === foundA;
 
-        if (keytext.includes("&")) {
+        if (keyText.includes("&")) {
             const mainKey: Key = key;
             key = new Key();
             key.down = modMatch && mainKey.down;
@@ -113,7 +113,7 @@ export default class InputHandler {
         return key;
     }
 
-    public onTick() {
+    public onTick(): void {
         if (!Game.isFocus) {
             this.releaseAll();
         }
@@ -133,10 +133,10 @@ export default class InputHandler {
         this.initKeyMap();
     }
 
-    private getPhysKey(keytext: string): Key {
-        keytext = keytext.toUpperCase();
-        if (this.keyboard.has(keytext)) {
-            return this.keyboard.get(keytext);
+    private getPhysKey(keyText: string): Key {
+        keyText = keyText.toUpperCase();
+        if (this.keyboard.has(keyText)) {
+            return this.keyboard.get(keyText);
         } else {
             return new Key();
         }

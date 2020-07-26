@@ -14,7 +14,7 @@ export default class MushroomTile extends Tile {
     private static tileTextures = MushroomTile.loadTextures(System.getResource("tile", "mushroom.png"), 3);
     private sprite?: PIXI.Sprite;
 
-    public init() {
+    public init(): void {
         super.init();
         this.setGroundTile(Tiles.DIRT.tile);
         this.sprite = new PIXI.Sprite(MushroomTile.tileTextures[this.random.int(MushroomTile.tileTextures.length)]);
@@ -30,7 +30,7 @@ export default class MushroomTile extends Tile {
         return true;
     }
 
-    public onUpdate() {
+    public onUpdate(): void {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
         [Tiles.DIRT, Tiles.GRASS].forEach((tile) => {
@@ -40,7 +40,7 @@ export default class MushroomTile extends Tile {
         });
     }
 
-    protected onDestroy() {
+    protected onDestroy(): void {
         super.onDestroy();
         this.setTileToGround();
     }

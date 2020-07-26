@@ -19,7 +19,7 @@ export default class LevelGenOverworld extends LevelGen {
     private moistureNoise: SimplexNoise;
     private temperatureNoise: SimplexNoise;
 
-    public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): Array<LevelTile> {
+    public genChunk(cX: number, cY: number, level?: Level, callback?: () => void): LevelTile[] {
         const random = new ChunkRandom(this.seed, cX, cY);
         const t1 = System.nanoTime();
         const map = [];
@@ -93,9 +93,11 @@ export default class LevelGenOverworld extends LevelGen {
                     tile.setTile(Tiles.GRASS);
                     if (random.probability(4)) {
                         tile.setTile(Tiles.TREE);
-                    } else if (random.probability(4)) {
+                    }
+                    if (random.probability(4)) {
                         tile.setTile(Tiles.BIRCH);
-                    } else if (random.probability(4)) {
+                    }
+                    if (random.probability(4)) {
                         tile.setTile(Tiles.SPRUCE);
                     }
                     if (random.probability(20)) {

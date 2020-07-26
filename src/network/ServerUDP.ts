@@ -31,7 +31,7 @@ export default class ServerUDP {
         }, 3000);
     }
 
-    public startConnection() {
+    public startConnection(): void {
         this.server.bind(this.PORT);
     }
 }

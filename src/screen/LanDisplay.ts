@@ -5,8 +5,11 @@ import {shell} from "electron";
 import DraggableDisplay from "./DraggableDisplay";
 
 export default class LanDisplay extends DraggableDisplay {
+    constructor() {
+        super();
+    }
 
-    public hide() {
+    public hide(): void {
         super.hide();
         SearchServer.stop();
     }
@@ -18,7 +21,7 @@ export default class LanDisplay extends DraggableDisplay {
 
     }
 
-    public show() {
+    public show(): void {
         super.show();
         SearchServer.start((server) => {
             const text = new PIXI.BitmapText(`${server.ip}:${server.port}`, {

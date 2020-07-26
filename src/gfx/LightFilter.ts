@@ -34,11 +34,7 @@ export default class LightFilter extends LevelFilter {
     private readonly blendFilter: PIXI.filters.AlphaFilter;
     private level: Level;
 
-    public onRender() {
+    public onRender(): void {
         this.blendFilter.alpha = 1 - (this.level.getAmbientLightLevel() / 20);
-    }
-
-    protected init() {
-
     }
 }

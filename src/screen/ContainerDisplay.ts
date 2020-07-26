@@ -13,7 +13,7 @@ enum Direction {
 
 class Container extends PIXI.Container {
 
-    constructor(inventory: Inventory, x: number = 0, y: number = 0, direction: Direction = Direction.LEFT) {
+    constructor(inventory: Inventory, x = 0, y = 0, direction: Direction = Direction.LEFT) {
         super();
         this.position.set(x, y);
         this.width = 88;
@@ -135,9 +135,9 @@ export default class ContainerDisplay extends Display {
         );
         this.init();
     }
-    private container: Array<Container> = [];
+    private container: Container[] = [];
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return true;
     }
 

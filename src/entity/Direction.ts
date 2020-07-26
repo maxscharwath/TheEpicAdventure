@@ -5,7 +5,7 @@ export default class Direction {
     public static RIGHT: Direction = new Direction(1, 0, 3);
     public static UP: Direction = new Direction(0, -1, 1);
 
-    public static getDirection(xd: number, yd: number) {
+    public static getDirection(xd: number, yd: number): Direction {
         if (xd === 0 && yd === 0) {
             return Direction.NONE;
         } // the attack was from the same entity, probably; or at least the exact same space.
@@ -26,7 +26,7 @@ export default class Direction {
         }
     }
 
-    constructor(x: number, y: number, num: number = -1) {
+    constructor(x: number, y: number, num = -1) {
         this.x = x;
         this.y = y;
         this.num = num;
@@ -35,23 +35,23 @@ export default class Direction {
     private readonly x: number;
     private readonly y: number;
 
-    public getX() {
+    public getX(): number {
         return this.x;
     }
 
-    public getY() {
+    public getY(): number {
         return this.y;
     }
 
-    public isX() {
+    public isX(): boolean {
         return this.y === 0 && this.x !== 0;
     }
 
-    public isY() {
+    public isY(): boolean {
         return this.x === 0 && this.y !== 0;
     }
 
-    public toString() {
+    public toString(): string {
         return `${this.valueOf()}`;
     }
 

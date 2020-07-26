@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import Renderer from "../core/Renderer";
 import System from "../core/System";
 import Updater from "../core/Updater";
-import {Entity, Player, Zombie, Mob} from "../entity/";
+import {Entity, Player, Zombie} from "../entity/";
 import Random from "../utility/Random";
 import Chunk from "./Chunk";
 import LevelGen from "./levelGen/LevelGen";
@@ -16,7 +16,6 @@ import Game from "../core/Game";
 import LevelGenOverworld from "./levelGen/LevelGenOverworld";
 import * as events from "events";
 import {TileRegister} from "./tile/Tiles";
-import RainWeather from "../gfx/weather/RainWeather";
 import Time from "../core/Time";
 
 export default class Level {
@@ -25,11 +24,16 @@ export default class Level {
     public groundContainer: PIXI.Container = new PIXI.Container();
     public levelGen: LevelGen;
     public lightFilter: LightFilter;
-
     public readonly seed: number;
     public sortableContainer: PIXI.Container = new PIXI.Container();
     public weather?: Weather;
-    private static MOB_SPAWN_FACTOR: number = 100;
+    private chunks = new Map<string, Chunk>();
+    private chunksToRemove: string[] = [];
+    private eventEmitter = new events.EventEmitter();
+    private loadedChunks: Chunk[] = [];
+    private players: Player[] = [];
+    private tickablesToAdd: Tickable[] = [];
+    private tickablesToRemove: Tickable[] = [];
 
     constructor(seed: number, generator: typeof LevelGen = LevelGenOverworld) {
         this.seed = seed;
@@ -40,16 +44,8 @@ export default class Level {
         this.lightFilter = new LightFilter(this);
         // this.weather = new RainWeather();
     }
-    private chunks = new Map<string, Chunk>();
-    private chunksToRemove: Array<string> = [];
-    private eventEmitter = new events.EventEmitter();
-    private loadedChunks: Array<Chunk> = [];
-    private players: Array<Player> = [];
-    private random: Random = new Random();
-    private tickablesToAdd: Array<Tickable> = [];
-    private tickablesToRemove: Array<Tickable> = [];
 
-    public add(tickable?: Tickable, x?: number, y?: number, tileCoords: boolean = false): boolean {
+    public add(tickable?: Tickable, x?: number, y?: number, tileCoords = false): boolean {
         if (!tickable) return false;
         if (x === undefined || y === undefined) {
             x = tickable.x;
@@ -68,17 +64,17 @@ export default class Level {
         return false;
     }
 
-    public deleteChunk(chunk: Chunk) {
+    public deleteChunk(chunk: Chunk): void {
         this.chunksToRemove.push(chunk.x + ":" + chunk.y);
     }
 
-    public deleteTempDir() {
+    public deleteTempDir(): void {
         rimraf.sync(System.getAppData("tmp"));
     }
 
-    public findEntities(predicate: (value: Entity) => boolean): Promise<Array<Entity>> {
+    public findEntities(predicate: (value: Entity) => boolean): Promise<Entity[]> {
         const chunksId = Array.from(this.chunks.keys());
-        const result: Array<Promise<Array<Entity>>> = [];
+        const result: Array<Promise<Entity[]>> = [];
         return new Promise((resolve) => {
             const action = () => {
                 const chunk = this.chunks.get(chunksId.shift() ?? "");
@@ -97,9 +93,9 @@ export default class Level {
         x: number,
         y: number,
         radius: number,
-    ): Promise<Array<Entity>> {
-        const result: Array<Promise<Array<Entity>>> = [];
-        const chunks: Array<Chunk> = [];
+    ): Promise<Entity[]> {
+        const result: Array<Promise<Entity[]>> = [];
+        const chunks: Chunk[] = [];
         for (let cx = (x - radius) >> 4; cx <= (x + radius) >> 4; cx++) {
             for (let cy = (y - radius) >> 4; cy <= (y + radius) >> 4; cy++) {
                 const chunk = this.getChunk(cx, cy, false);
@@ -173,7 +169,7 @@ export default class Level {
 
     public flushChunks(): Promise<number> {
         this.chunksToRemove.push(...this.chunks.keys());
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.eventEmitter.once("deleteQueuedChunk", resolve);
         });
     }
@@ -184,24 +180,24 @@ export default class Level {
                 this.deleteChunk(chunk);
             }
         });
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.eventEmitter.once("deleteQueuedChunk", resolve);
         });
     }
 
-    public getAmbientLightLevel() {
+    public getAmbientLightLevel(): number {
         const ease = (x: number) => x * x * (3 - 2 * x);
         if (this.levelGen instanceof LevelGenOverworld) {
             const r = Updater.time.ratio();
             switch (Updater.time) {
-                case Time.MORNING:
-                    return ease(r) * 20;
-                case Time.DAY:
-                    return 20;
-                case Time.EVENING:
-                    return (1 - ease(r)) * 20;
-                case Time.NIGHT:
-                    return 0;
+            case Time.MORNING:
+                return ease(r) * 20;
+            case Time.DAY:
+                return 20;
+            case Time.EVENING:
+                return (1 - ease(r)) * 20;
+            case Time.NIGHT:
+                return 0;
             }
         } else {
             return 0;
@@ -225,7 +221,7 @@ export default class Level {
         return this.chunks.get(id);
     }
 
-    public getChunkNeighbour(x: number, y: number): Array<Chunk> {
+    public getChunkNeighbour(x: number, y: number): Chunk[] {
         x = ~~x;
         y = ~~y;
         const chunks = [];
@@ -238,11 +234,11 @@ export default class Level {
         return chunks;
     }
 
-    public getChunks() {
+    public getChunks(): Chunk[] {
         return Array.from(this.chunks.values());
     }
 
-    public getChunksRadius(r: number = 1): Array<Chunk> {
+    public getChunksRadius(r = 1): Chunk[] {
         const chunks = [];
         for (let x = -r; x < r; x++) {
             for (let y = -r; y < r; y++) {
@@ -257,7 +253,7 @@ export default class Level {
         return chunks;
     }
 
-    public getChunksVisible() {
+    public getChunksVisible(): Chunk[] {
         const s = Chunk.SIZE * LevelTile.SIZE;
         let {width, height} = Renderer.getScreen();
         width /= Renderer.camera.zoom;
@@ -289,7 +285,7 @@ export default class Level {
         return chunk.getTile(((x % 16) + 16) % 16, ((y % 16) + 16) % 16);
     }
 
-    public onRender() {
+    public onRender(): void {
         if (!this.players[0]) return;
         this.weather?.onRender();
         this.lightFilter?.onRender();
@@ -348,7 +344,7 @@ export default class Level {
         }
     }
 
-    public save(): Promise<Array<void>> {
+    public save(): Promise<void[]> {
         return Promise.all(Array.from(this.chunks).map(([id, chunk]) => chunk.save()));
     }
 
@@ -356,7 +352,7 @@ export default class Level {
         return "Level";
     }
 
-    private async deleteQueuedChunk() {
+    private async deleteQueuedChunk(): Promise<void> {
         let nb = 0;
         while (this.chunksToRemove.length > 0) {
             const chunkId = this.chunksToRemove[0];

@@ -2,21 +2,21 @@ import * as PIXI from "pixi.js";
 import Game from "../core/Game";
 import Renderer from "../core/Renderer";
 
-export default class Display extends PIXI.Container {
-    public active: boolean = false;
+export default abstract class Display extends PIXI.Container {
+    public active = false;
     public hasCommand = false;
 
-    constructor() {
+    protected constructor() {
         super();
     }
 
-    public hide() {
+    public hide(): void {
         this.active = false;
         this.parent.removeChild(this);
         Game.GUI.removeDisplay(this);
     }
 
-    public isBlocking() {
+    public isBlocking(): boolean {
         return false;
     }
 
@@ -36,13 +36,13 @@ export default class Display extends PIXI.Container {
 
     }
 
-    public show() {
+    public show(): void {
         this.active = true;
         Renderer.addDisplay(this);
         Game.GUI.addDisplay(this);
     }
 
-    public toggle() {
+    public toggle(): void {
         if (this.active) {
             this.hide();
         } else {

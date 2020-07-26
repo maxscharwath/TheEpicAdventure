@@ -8,8 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "yarn build & electron ./dist/index.js && tsc -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
-    "fix": "tslint -c tslint.json -p tsconfig.json --fix",
+    "fix": "eslint --fix ./src/**",
     "start": "yarn build && electron --enable-gpu ./dist/index.js",
     "packBuilder": "yarn build && electron-builder"
   },
@@ -29,11 +28,13 @@
     "@types/socket.io-client": "1.4.33",
     "@types/uniqid": "5.2.0",
     "@types/webfontloader": "1.6.32",
+    "@typescript-eslint/eslint-plugin": "^3.7.0",
+    "@typescript-eslint/parser": "^3.7.0",
     "electron": "9.1.1",
     "electron-builder": "^22.5.1",
     "electron-reload": "^1.5.0",
+    "eslint": "^7.5.0",
     "socket.io-client": "^2.3.0",
-    "tslint": "6.1.2",
     "typescript": "3.9.7"
   },
   "dependencies": {
