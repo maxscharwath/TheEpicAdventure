@@ -20,6 +20,7 @@ biome.jungle: Jungle
 biome.savanna: Savanna
 biome.river: River
 biome.cave: Cave
+biome.swamp: Swamp
 
 tile.water: Water
 tile.sand: Sand
@@ -37,6 +38,7 @@ tile.spruce: Spruce Tree
 tile.palm: Palm Tree
 tile.acacia: Acacia Tree
 tile.birch: Birch Tree
+tile.swamp_tree: Swamp Tree
 tile.rock: Rock
 tile.hole: Hole
 tile.snow: Snow

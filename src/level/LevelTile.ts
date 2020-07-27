@@ -239,10 +239,6 @@ export default class LevelTile {
         if (!this.isInitiated) {
             this.init();
         }
-        if (this.needToUpdate) {
-            this.needToUpdate = false;
-            this.onUpdate();
-        }
         if (this._tile?.isInit) {
             this._tile.onRender();
         }
@@ -256,6 +252,10 @@ export default class LevelTile {
         if (this.skipTick) {
             this.skipTick = false;
             return;
+        }
+        if (this.needToUpdate) {
+            this.needToUpdate = false;
+            this.onUpdate();
         }
         if (this._tile?.isInit) {
             this._tile?.onTick();

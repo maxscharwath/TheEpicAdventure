@@ -69,19 +69,19 @@ export default class Game {
         console.info(`\n${this.NAME} ${this.version.toString()}\nA game by Maxime Scharwath\n`);
         Crafting.initRecipes();
         Biome.initBiomeList();
-        Localization.loadLanguage("fr-FR.yaml");
+        Localization.loadLanguage("en-US.yaml");
         Items.verifyTag();
         this.levels = [];
         this.input = new InputHandler();
         this.mouse = new MouseHandler();
         this.GUI = new GUI();
         this.player = new Player();
-
         this.levels.push(
             new Level(Seed.create(123456789), LevelGenOverworld),
             new Level(Seed.create(123456789), LevelGenCave),
         );
         this.level = this.levels[this.currentLevel];
+        this.level.deleteTempDir();
         this.level.add(this.player, 0, 0, true);
         Renderer.setLevel(this.level);
         Initializer.createAndDisplayFrame();

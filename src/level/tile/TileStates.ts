@@ -31,6 +31,7 @@ export default class TileStates<T extends StateType> {
 
     public set(data: T = {} as T): TileStates<T> {
         Object.keys(data).forEach((key: any) => {
+            if (!this[key]) return;
             this[key] = data[key];
         });
         return this;

@@ -31,6 +31,7 @@ import CornTile from "./CornTile";
 import SugarCaneTile from "./SugarCaneTile";
 import FenceTile from "./FenceTile";
 import FenceGateTile from "./FenceGateTile";
+import SwampTreeTile from "./SwampTreeTile";
 
 export class TileRegister<T extends typeof Tile> {
 
@@ -70,36 +71,37 @@ export class TileRegister<T extends typeof Tile> {
 }
 
 export default class Tiles extends TileRegister<typeof Tile> {
-    public static ACACIA = Tiles.add(17, "acacia", AcaciaTreeTile);
-    public static BIRCH = Tiles.add(14, "birch", BirchTreeTile);
-    public static BUSH = Tiles.add(24, "bush", BushTile);
-    public static CACTUS = Tiles.add(18, "cactus", CactusTile);
-    public static CARROT = Tiles.add(11, "carrot", CarrotTile);
-    public static CORN = Tiles.add(12, "corn", CornTile);
-    public static DARK_GRASS = Tiles.add(22, "dark_grass", DarkGrassTile);
     public static DIRT = Tiles.add(0, "dirt", DirtTile);
-    public static FARMLAND = Tiles.add(8, "farmland", FarmlandTile);
-    public static FENCE = Tiles.add(29, "fence", FenceTile);
-    public static FENCE_GATE = Tiles.add(30, "fence_gate", FenceGateTile);
-    public static FLOWER = Tiles.add(25, "flower", FlowerTile);
     public static GRASS = Tiles.add(1, "grass", GrassTile);
-    public static HOLE = Tiles.add(7, "hole", HoleTile);
-    public static ICE = Tiles.add(20, "ice", IceTile);
+    public static WATER = Tiles.add(2, "water", WaterTile);
     public static LAVA = Tiles.add(3, "lava", LavaTile);
     public static LILYPAD = Tiles.add(4, "lilypad", LilyPadTile);
-    public static MUSHROOM = Tiles.add(27, "mushroom", MushroomTile);
-    public static PALM = Tiles.add(15, "palm", PalmTreeTile);
-    public static PLANK = Tiles.add(21, "plank", PlankTile);
-    public static POTATO = Tiles.add(10, "potato", PotatoTile);
-    public static RAIL = Tiles.add(23, "rail", RailTile);
-    public static ROCK = Tiles.add(6, "rock", RockTile);
     public static SAND = Tiles.add(5, "sand", SandTile);
-    public static SNOW = Tiles.add(19, "snow", SnowTile);
-    public static SPRUCE = Tiles.add(16, "spruce", SpruceTreeTile);
-    public static STONE = Tiles.add(26, "stone", StoneTile);
-    public static SUGAR_CANE = Tiles.add(28, "sugar_cane", SugarCaneTile);
-    public static TREE = Tiles.add(13, "tree", TreeTile);
-    public static WATER = Tiles.add(2, "water", WaterTile);
+    public static ROCK = Tiles.add(6, "rock", RockTile);
+    public static HOLE = Tiles.add(7, "hole", HoleTile);
+    public static FARMLAND = Tiles.add(8, "farmland", FarmlandTile);
     public static WHEAT = Tiles.add(9, "wheat", WheatTile);
+    public static POTATO = Tiles.add(10, "potato", PotatoTile);
+    public static CARROT = Tiles.add(11, "carrot", CarrotTile);
+    public static CORN = Tiles.add(12, "corn", CornTile);
+    public static TREE = Tiles.add(13, "tree", TreeTile);
+    public static BIRCH = Tiles.add(14, "birch", BirchTreeTile);
+    public static PALM = Tiles.add(15, "palm", PalmTreeTile);
+    public static SPRUCE = Tiles.add(16, "spruce", SpruceTreeTile);
+    public static ACACIA = Tiles.add(17, "acacia", AcaciaTreeTile);
+    public static SWAMP_TREE = Tiles.add(18, "swamp_tree", SwampTreeTile);
+    public static CACTUS = Tiles.add(19, "cactus", CactusTile);
+    public static SNOW = Tiles.add(20, "snow", SnowTile);
+    public static ICE = Tiles.add(21, "ice", IceTile);
+    public static PLANK = Tiles.add(22, "plank", PlankTile);
+    public static DARK_GRASS = Tiles.add(23, "dark_grass", DarkGrassTile);
+    public static RAIL = Tiles.add(24, "rail", RailTile);
+    public static BUSH = Tiles.add(25, "bush", BushTile);
+    public static FLOWER = Tiles.add(26, "flower", FlowerTile);
+    public static STONE = Tiles.add(27, "stone", StoneTile);
+    public static MUSHROOM = Tiles.add(28, "mushroom", MushroomTile);
+    public static SUGAR_CANE = Tiles.add(29, "sugar_cane", SugarCaneTile);
+    public static FENCE = Tiles.add(30, "fence", FenceTile);
+    public static FENCE_GATE = Tiles.add(31, "fence_gate", FenceGateTile);
 
 }

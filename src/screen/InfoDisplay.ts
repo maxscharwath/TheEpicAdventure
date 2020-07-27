@@ -50,7 +50,7 @@ export default class InfoDisplay extends Display {
         return [
             `v${Game.version.toString()}`,
             `fps : ${Math.round(Initializer.getCurFps())}`,
-            `tUpdater : ${Updater.getTickTime().toFixed(2)}ms`,
+            `tUpdater : ${Updater.getTickTime().toFixed(2)}ms (${Updater.getPercentUsage()}%)`,
             `tRenderer : ${Renderer.getTickTime().toFixed(2)}ms`,
             `time : ${Updater.ticks} (${Updater.time.id})`,
             `seed : ${Game.level?.seed}`,

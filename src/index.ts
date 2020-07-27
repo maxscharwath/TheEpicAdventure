@@ -1,5 +1,5 @@
-import * as path from "path";
 import {app, BrowserWindow} from "electron";
+import * as path from "path";
 
 const isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
 
@@ -12,8 +12,8 @@ let mainWindow: BrowserWindow | null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 1280,
+        height: 720,
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, "main.js"),
@@ -23,7 +23,11 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, "../resources/index.html")).then(() => {
 
     });
-    if (isDev) mainWindow.webContents.openDevTools();
+    if (isDev) {
+        mainWindow.webContents.openDevTools();
+    }else{
+        mainWindow.removeMenu();
+    }
     mainWindow.on("closed", () => {
         mainWindow = null;
     });

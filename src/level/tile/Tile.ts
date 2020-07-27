@@ -76,10 +76,10 @@ export default abstract class Tile {
         this.isInit = true;
     }
 
-    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile>>): boolean {
+    public instanceOf(...tileClass: Array<typeof Tile | TileRegister<typeof Tile> | Tile>): boolean {
         const ground = this.groundTile;
         return tileClass.some((t) => {
-            const c = t instanceof TileRegister ? t.tile : t;
+            const c = t instanceof TileRegister ? t.tile : t instanceof Tile ? t.getClass() : t;
             return this instanceof c || ground instanceof c;
         });
     }
@@ -114,17 +114,9 @@ export default abstract class Tile {
     }
 
     public setGroundTile(tile: typeof Tile | Tile | TileRegister<typeof Tile>): Tile | undefined {
-        if (tile instanceof Tile) {
-            if (this.groundTile?.instanceOf(tile.getClass())) return undefined;
-            this.groundTile = tile;
-        } else if (tile instanceof TileRegister) {
-            // @ts-ignore
-            this.groundTile = new tile.tile(this.levelTile);
-        } else {
-            if (this.groundTile?.instanceOf(tile)) return undefined;
-            // @ts-ignore
-            this.groundTile = new tile(this.levelTile);
-        }
+        if (this.groundTile?.instanceOf(tile)) return undefined;
+        // @ts-ignore
+        this.groundTile = tile instanceof Tile ? tile : tile instanceof TileRegister ? new tile.tile(this.levelTile) : new tile(this.levelTile);
         this.groundTile.isMainTile = false;
         if (this.groundTile.light > this.light) this.light = this.groundTile.light;
         this.groundContainer.removeChildren();

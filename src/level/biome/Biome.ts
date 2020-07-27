@@ -49,6 +49,13 @@ export default class Biome {
                 return Biome.get("savanna");
             }
         }
+
+        if (t > 100) {
+            if (m > 200) {
+                return Biome.get("swamp");
+            }
+        }
+
         if (t < 45) {
             return Biome.get("snow");
         }
@@ -96,6 +103,7 @@ export default class Biome {
         Biome.add(12, "savanna", new Biome("Savanna", Color.fromHex("#9ce749")));
         Biome.add(13, "river", new Biome("River", Color.fromHex("#4cbcff")));
         Biome.add(14, "cave", new Biome("Cave", Color.fromHex("#626262")));
+        Biome.add(15, "swamp", new Biome("Swamp", Color.fromHex("#407905")));
     }
 
     public getDisplayName(): string {

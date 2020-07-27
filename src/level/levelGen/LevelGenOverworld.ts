@@ -146,6 +146,22 @@ export default class LevelGenOverworld extends LevelGen {
                     }
                 }
 
+                if (biome.is("swamp")) {
+                    tile.setTile(Tiles.DIRT);
+                    if (random.probability(5)) {
+                        tile.setTile(Tiles.DARK_GRASS);
+                    }
+                    if (random.probability(15)) {
+                        tile.setTile(Tiles.SWAMP_TREE);
+                    }
+                    if (random.probability(30)) {
+                        tile.setTile(Tiles.STONE);
+                    }
+                    if (random.probability(25)) {
+                        tile.setTile(Tiles.WATER);
+                    }
+                }
+
                 if (elevation > 210) {
                     tile.setTile(Tiles.ROCK);
                 }

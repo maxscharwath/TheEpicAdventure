@@ -20,6 +20,7 @@ biome.jungle: Jungle
 biome.savanna: Savane
 biome.river: Rivière
 biome.cave: Grotte
+biome.swamp: Marais
 
 tile.water: Eau
 tile.sand:  Sable
@@ -37,6 +38,7 @@ tile.spruce: Sapin
 tile.palm: Palmier
 tile.acacia: Acacia
 tile.birch: Bouleau
+tile.swamp_tree: Arbre des Marais
 tile.rock: Roche
 tile.hole: Trou
 tile.snow: Neige

@@ -82,7 +82,7 @@ export default class Renderer {
         window.addEventListener("resize", () => this.onResize());
     }
 
-    public static render(dlt: number): void {
+    public static onRender(dlt: number): void {
         const t1 = System.milliTime();
         Renderer.delta = dlt;
         if (!Game.isFocus) {

@@ -22,6 +22,10 @@ export default class Updater {
         return this.ticksTime.reduce((p, c) => p + c, 0) / this.ticksTime.length;
     }
 
+    public static getPercentUsage(): number {
+        return this.getTickTime()<<1;
+    }
+
     public static onTick(dlt: number): void {
         const t1 = System.milliTime();
         this.delta = dlt;

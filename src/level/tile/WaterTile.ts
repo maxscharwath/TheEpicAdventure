@@ -52,7 +52,7 @@ export default class WaterTile extends AutoTilingTile {
                 levelMax = Math.max(levelMax, t.tile.states.level);
             }
         });
-        if (nbNeighbour < 4) levelMax--;
+        if (nbNeighbour > 0 && nbNeighbour < 4) levelMax--;
         this.states.level = levelMax;
     }
 

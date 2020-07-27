@@ -2,9 +2,9 @@ import System from "../../core/System";
 import Tiles from "./Tiles";
 import TreeTile from "./TreeTile";
 
-export default class SpruceTreeTile extends TreeTile {
+export default class SwampTreeTile extends TreeTile {
     public static readonly COLOR: number = 0x108a4d;
-    public static readonly TAG: string = "spruce";
+    public static readonly TAG: string = "swamp_tree";
 
     public onTick(): void {
         super.onTick();
@@ -13,7 +13,7 @@ export default class SpruceTreeTile extends TreeTile {
     public onUpdate(): void {
         super.onUpdate();
         const n = this.levelTile.getDirectNeighbourTiles(false);
-        [Tiles.DIRT,Tiles.DARK_GRASS,Tiles.SNOW,Tiles.GRASS].forEach((t)=>{
+        [Tiles.DIRT,Tiles.DARK_GRASS,Tiles.WATER,Tiles.GRASS].forEach((t)=>{
             if (n.some((l) => !l.skipTick && l.instanceOf(t))) {
                 this.setGroundTile(t);
             }
@@ -21,7 +21,7 @@ export default class SpruceTreeTile extends TreeTile {
     }
 
     protected initTree(): void {
-        this.setGroundTile(Tiles.GRASS.tile);
-        this.treeTilingInit(System.getResource("tile", "spruce.png"));
+        this.setGroundTile(Tiles.DARK_GRASS.tile);
+        this.treeTilingInit(System.getResource("tile", "swamp_tree.png"));
     }
 }
